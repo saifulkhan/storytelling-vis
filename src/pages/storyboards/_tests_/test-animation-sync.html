@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D3.js Circle Animation</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    circle {
+      fill: steelblue;
+    }
+  </style>
+</head>
+<body>
+
+<svg width="400" height="400"></svg>
+
+<script>
+  // Draw a circle
+  const svg = d3.select("svg");
+
+  const circle = svg.append("circle")
+    .attr("cx", 200)
+    .attr("cy", 200)
+    .attr("r", 20)
+    .style("opacity", 0); // Initially hide the circle
+
+  // Function to animate showing the circle
+  function showCircle(duration, delay) {
+    return new Promise((resolve, reject) => {
+      circle.transition()
+        .delay(delay)
+        .duration(duration)
+        .style("opacity", 1)
+        .on("end", () => {
+          resolve(duration + delay); // Resolve the promise with total of delay and duration
+        });
+    });
+  }
+
+  // Function to animate hiding the circle
+  function hideCircle(duration, delay) {
+    return new Promise((resolve, reject) => {
+      circle.transition()
+        .delay(delay)
+        .duration(duration)
+        .style("opacity", 0)
+        .on("end", () => {
+          resolve(duration + delay); // Resolve the promise with total of delay and duration
+        });
+    });
+  }
+
+  // Call showCircle and hideCircle in a loop
+  async function animate() {
+    while (true) {
+      const totalShowTime = await showCircle(500, 0); // Show the circle with duration 500ms and no delay
+      const totalHideTime = await hideCircle(500, 1000); // Hide the circle with duration 500ms and delay of 1000ms
+      console.log(`Total show time: ${totalShowTime}ms`);
+      console.log(`Total hide time: ${totalHideTime}ms`);
+    }
+  }
+
+  animate(); // Start the animation loop
+
+</script>
+
+</body>
+</html>

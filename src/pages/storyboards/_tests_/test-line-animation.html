@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3 Line Plot Animation</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        svg {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .dot {
+            fill: steelblue;
+        }
+    </style>
+</head>
+<body>
+    <svg width="600" height="400"></svg>
+
+    <script>
+        // Sample data
+        const data = [
+            { x: 0, y: 30 },
+            { x: 1, y: 40 },
+            { x: 2, y: 35 },
+            { x: 3, y: 45 },
+            { x: 4, y: 55 },
+            { x: 5, y: 50 },
+            { x: 6, y: 60 },
+            { x: 7, y: 55 },
+            { x: 8, y: 65 },
+            { x: 9, y: 70 }
+        ];
+
+        const svg = d3.select("svg");
+
+        // Set up scales
+        const xScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.x)])
+            .range([50, 550]);
+
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.y)])
+            .range([350, 50]);
+
+        // Draw the line
+        const line = d3.line()
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y));
+
+        // Append the line
+        svg.append("path")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2)
+            .attr("d", line([{ x: 0, y: 0 }])); // Initial empty line
+
+        // Draw dots
+        const dots = svg.selectAll(".dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", d => xScale(0)) // Initial position
+            .attr("cy", d => yScale(0)) // Initial position
+            .attr("r", 4);
+
+        // Animate the line and dots
+        svg.select("path")
+            .transition()
+            .duration(2000)
+            .attr("d", line(data))
+            .on("end", function() {
+                dots.transition()
+                    .duration(500)
+                    .delay((d, i) => i * 100)
+                    .attr("cx", d => xScale(d.x))
+                    .attr("cy", d => yScale(d.y));
+            });
+    </script>
+</body>
+</html>
