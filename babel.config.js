@@ -1,0 +1,26 @@
+module.exports = (api) => {
+  const target = api.caller((caller) => caller.target);
+
+  api.cache.using(() => JSON.stringify({ target }));
+
+  const presets = ["next/babel"];
+  const plugins = [];
+
+  // Enable optimizations only for the `web` bundle.
+  if (target === "web") {
+    plugins.push([
+      "babel-plugin-direct-import",
+      {
+        modules: [
+          "@mui/lab",
+          "@mui/material",
+          "@mui/system",
+          "@mui/icons-material",
+          "react-feather",
+        ],
+      },
+    ]);
+  }
+
+  return { presets, plugins };
+};
