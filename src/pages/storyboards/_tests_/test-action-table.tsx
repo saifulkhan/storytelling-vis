@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { ActionEnum } from "src/components/storyboards/actions/ActionEnum";
-import ActionTable from "src/components/storyboards/tables/ActionTable";
-import { ActionTableRowType } from "src/components/storyboards/tables/FeatureActionTableRowType";
+import { ActionTableRowType } from "../../../components/storyboards/tables/FeatureActionTableRowType";
+import { ActionEnum } from "../../../components/storyboards/actions/ActionEnum";
+import ActionTable from "../../../components/storyboards/tables/ActionTable";
 
 const mockData: ActionTableRowType[] = [
   {
     action: ActionEnum.DOT,
     properties: {
-      id: "dot1",
+      id: "Dot",
       size: 5,
       color: "#FF0000",
       opacity: 0.7,
@@ -16,7 +16,7 @@ const mockData: ActionTableRowType[] = [
   {
     action: ActionEnum.CIRCLE,
     properties: {
-      id: "circle1",
+      id: "Circle",
       size: 10,
       strokeWidth: 2,
       color: "#00FF00",
@@ -26,7 +26,7 @@ const mockData: ActionTableRowType[] = [
   {
     action: ActionEnum.TEXT_BOX,
     properties: {
-      id: "textbox1",
+      id: "TextBox",
       title: "Example Text",
       message: "Lorem ipsum dolor sit amet",
       backgroundColor: "#0000FF",
@@ -36,7 +36,7 @@ const mockData: ActionTableRowType[] = [
   {
     action: ActionEnum.CONNECTOR,
     properties: {
-      id: "connector1",
+      id: "Connector",
       stroke: "#FFFF00",
       opacity: 0.8,
     },

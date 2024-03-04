@@ -1,12 +1,12 @@
-import { ActionEnum } from "src/components/storyboards/actions/ActionEnum";
-import { CircleProperties } from "src/components/storyboards/actions/Circle";
-import { ConnectorProperties } from "src/components/storyboards/actions/Connector";
-import { DotProperties } from "src/components/storyboards/actions/Dot";
-import { TextBoxProperties } from "src/components/storyboards/actions/TextBox";
-import { NumericalFeatureEnum } from "src/utils/storyboards/feature/NumericalFeatureEnum";
-import { PeakProperties } from "src/utils/storyboards/feature/Peak";
-import { SlopeProperties } from "src/utils/storyboards/feature/Slope";
-import { FeatureActionTableRowType } from "src/components/storyboards/tables/FeatureActionTableRowType";
+import { ActionEnum } from "../components/storyboards/actions/ActionEnum";
+import { CircleProperties } from "../components/storyboards/actions/Circle";
+import { ConnectorProperties } from "../components/storyboards/actions/Connector";
+import { DotProperties } from "../components/storyboards/actions/Dot";
+import { TextBoxProperties } from "../components/storyboards/actions/TextBox";
+import { FeatureActionTableRowType } from "../components/storyboards/tables/FeatureActionTableRowType";
+import { NumericalFeatureEnum } from "../utils/storyboards/feature/NumericalFeatureEnum";
+import { PeakProperties } from "../utils/storyboards/feature/Peak";
+import { SlopeProperties } from "../utils/storyboards/feature/Slope";
 
 export const featureActionTable1: FeatureActionTableRowType[] = [
   {
@@ -26,17 +26,28 @@ export const featureActionTable1: FeatureActionTableRowType[] = [
       {
         action: ActionEnum.TEXT_BOX,
         properties: {
+          title: "{DATE}",
           message: "On {DATE}, number of cases peaked at {VALUE}",
+          backgroundColor: "#FFA500",
+          width: 500,
         } as TextBoxProperties,
       },
 
       {
         action: ActionEnum.CONNECTOR,
-        properties: {} as ConnectorProperties,
+        properties: {
+          stroke: "#FFA500",
+          opacity: 0.6,
+        } as ConnectorProperties,
       },
       {
         action: ActionEnum.DOT,
-        properties: { color: "#FFA500" } as DotProperties,
+        properties: {
+          color: "#FFA500",
+          size: 10,
+          strokeWidth: 2,
+          opacity: 0.6,
+        } as DotProperties,
       },
     ],
   },
@@ -51,11 +62,14 @@ export const featureActionTable1: FeatureActionTableRowType[] = [
         properties: {
           message:
             "By {DATE}, the number of cases continued to climb higher in {REGION}.",
+          title: "{DATE}",
+          backgroundColor: "#FFA500",
+          width: 500,
         } as TextBoxProperties,
       },
       {
         action: ActionEnum.CONNECTOR,
-        properties: {} as ConnectorProperties,
+        properties: { stroke: "#FFA500", opacity: 0.6 } as ConnectorProperties,
       },
     ],
   },
@@ -69,11 +83,14 @@ export const featureActionTable1: FeatureActionTableRowType[] = [
         properties: {
           message:
             "By {DATE}, the number of cases remained low. We should continue to be vigilant",
+          title: "{DATE}",
+          backgroundColor: "#FFA500",
+          width: 500,
         } as TextBoxProperties,
       },
       {
         action: ActionEnum.CONNECTOR,
-        properties: {} as ConnectorProperties,
+        properties: { stroke: "#FFA500", opacity: 0.6 } as ConnectorProperties,
       },
     ],
   },

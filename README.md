@@ -34,3 +34,46 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Tests
+
+### Run Unit Tests
+
+```sh
+yarn test
+```
+
+### Test & Debug
+
+Test and debug visualizations & components
+
+- <http://localhost:3000/storyboards/_tests_/test-features>
+- <http://localhost:3000/storyboards/_tests_/test-actions>
+- <http://localhost:3000/storyboards/_tests_/test-line-chart>
+- <http://localhost:3000/storyboards/_tests_/test-properties-table>
+- <http://localhost:3000/storyboards/_tests_/test-action-table>
+- <http://localhost:3000/storyboards/_tests_/test-feature-action-table>
+
+## Documentation
+
+Create object
+
+```ts
+visObject = new VISObject()
+                .properties({...})
+                .draw(svg)
+                .coordinate(x, y, x0, y0)
+```
+
+Animate object
+
+```ts
+await visObject.show(delay, duration);
+await visObject.hide(delay, duration);
+```
+
+## References
+
+- For the Observable prototypes developed during the initial phases of RAMPVIS project, [see](https://observablehq.com/d/0a6e9c35a809660e>).
+- Bootstrapped with [Next.js](https://github.com/vercel/next.js)
+- Using [React MUI dashboard style](https://mui.com)

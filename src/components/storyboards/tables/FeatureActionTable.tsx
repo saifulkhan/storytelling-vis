@@ -12,16 +12,21 @@ import {
   IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-
+import RemoveIcon from "@mui/icons-material/Remove";
 import PropertiesTable from "./PropertiesTable";
-import { ActionTableRowType } from "./FeatureActionTableRowType";
+import {
+  ActionTableRowType,
+  FeatureActionTableRowType,
+} from "./FeatureActionTableRowType";
 import { ActionEnum } from "../actions/ActionEnum";
+
 import { defaultDotProperties } from "../actions/Dot";
 import { defaultCircleProperties } from "../actions/Circle";
 import { defaultTextBoxProperties } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
+import { NumericalFeatureEnum } from "../../../utils/storyboards/feature/NumericalFeatureEnum";
+import ActionTable from "./ActionTable";
 
 const getInitialProperties = (action: ActionEnum) => {
   switch (action) {
@@ -46,8 +51,8 @@ const useStyles = makeStyles({
   // button: {
   //   margin: "10px",
   // },
-  actionCell: {
-    width: "20%",
+  featureCell: {
+    width: "10%",
     // display: "flex",
     // alignItems: "center",
     fontSize: "12px",
@@ -56,9 +61,22 @@ const useStyles = makeStyles({
   },
 
   propertyCell: {
-    width: "80%",
+    width: "10%",
     fontSize: "12px",
     padding: "2px", // reduce padding
+    // border: "none", // remove border
+  },
+
+  actionCell: {
+    width: "60%",
+    // fontSize: "12px",
+    // padding: "2px", // reduce padding
+    // border: "none", // remove border
+  },
+  rankCell: {
+    width: "10%",
+    // fontSize: "12px",
+    // padding: "2px", // reduce padding
     // border: "none", // remove border
   },
   // inputField: {
@@ -75,16 +93,19 @@ const useStyles = makeStyles({
   },
 });
 
-interface ActionTableProps {
-  data: ActionTableRowType[];
-  setData: React.Dispatch<React.SetStateAction<ActionTableRowType[]>>;
+interface FeatureActionTableProps {
+  data: FeatureActionTableRowType[];
+  setData: React.Dispatch<React.SetStateAction<FeatureActionTableRowType[]>>;
 }
 
-const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
-  console.log("ActionTable: re-rendered");
+const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
+  data,
+  setData,
+}) => {
+  console.log("FeatureActionTable: re-rendered");
 
   const classes = useStyles();
-  const [rows, setRows] = useState<ActionTableRowType[]>(data);
+  const [rows, setRows] = useState<FeatureActionTableRowType[]>(data);
 
   // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
@@ -104,40 +125,44 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, action: ActionEnum) => {
-    console.log("ActionTable: index = ", index, ", action = ", action);
+  const handleActionChange = (index: number, feature: NumericalFeatureEnum) => {
+    console.log("FeatureActionTable: index = ", index, ", action = ", feature);
 
+    /*
     const newRows = [...rows];
-    newRows[index].action = action; // create a new object for the row;
-    newRows[index].properties = getInitialProperties(action);
+    newRows[index].action = feature; // create a new object for the row;
+    newRows[index].properties = getInitialProperties(feature);
     setRows(newRows);
+    */
   };
 
   const handlePropertyChange = (index: number, properties: any) => {
-    console.log("ActionTable: index = ", index, ", properties = ", properties);
+    // prettier-ignore
+    console.log("FeatureActionTable: index = ", index, ", properties = ", properties);
 
+    /*
     const newRows = [...rows];
     newRows[index].properties = properties;
     setRows(newRows);
+    */
   };
 
   return (
     <div>
       <Table className={classes.table}>
-        {/* 
         <TableHead>
           <TableRow>
-            <TableCell>Action</TableCell>
-
+            <TableCell>Feature</TableCell>
             <TableCell>Properties</TableCell>
+            <TableCell>Action -- Properties</TableCell>
+            <TableCell>Rank</TableCell>
           </TableRow>
-        </TableHead> 
-        */}
+        </TableHead>
         <TableBody>
           {rows.map((row, index) => (
             <TableRow key={index}>
-              {/* Action */}
-              <TableCell className={classes.actionCell}>
+              {/* Feature */}
+              <TableCell className={classes.featureCell}>
                 <IconButton
                   onClick={() => handleRemoveRow(index)}
                   aria-label="delete"
@@ -146,14 +171,17 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                 </IconButton>
                 <Select
                   className={classes.selectField}
-                  value={row.action}
+                  value={row.feature}
                   onChange={(e) =>
-                    handleActionChange(index, e.target.value as ActionEnum)
+                    handleActionChange(
+                      index,
+                      e.target.value as NumericalFeatureEnum
+                    )
                   }
                 >
-                  {Object.values(ActionEnum).map((action) => (
-                    <MenuItem key={action} value={action}>
-                      {action}
+                  {Object.values(NumericalFeatureEnum).map((feature) => (
+                    <MenuItem key={feature} value={feature}>
+                      {feature}
                     </MenuItem>
                   ))}
                 </Select>
@@ -169,6 +197,25 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                   }
                 />
               </TableCell>
+
+              {/* Actions */}
+              <TableCell className={classes.actionCell}>
+                <ActionTable
+                  key={index} // ensure each instance has a unique key
+                  data={row.actions}
+                  setData={() => {}}
+                />
+              </TableCell>
+
+              {/* Rank */}
+              <TableCell className={classes.rankCell}>
+                {/* <ActionTable
+                  key={index} // ensure each instance has a unique key
+                  data={row.actions}
+                  setData={() => {}}
+                /> */}
+                {row.rank}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -180,4 +227,4 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   );
 };
 
-export default ActionTable;
+export default FeatureActionTable;

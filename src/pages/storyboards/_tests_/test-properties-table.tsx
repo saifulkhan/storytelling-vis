@@ -1,8 +1,7 @@
 import React, { useState } from "react";
+import PropertiesTable from "../../../components/storyboards/tables/PropertiesTable";
 
-import ActionPropertiesTable from "src/components/storyboards/tables/ActionPropertiesTable";
-
-const TestActionPropertiesTable = () => {
+const TestPropertiesTable = () => {
   const [data, setData] = useState({
     id: "textbox1",
     title: "Example Text",
@@ -13,9 +12,9 @@ const TestActionPropertiesTable = () => {
 
   return (
     <div>
-      <ActionPropertiesTable data={data} setData={setData} />
+      <PropertiesTable data={data} setData={setData} />
     </div>
   );
 };
 
-export default TestActionPropertiesTable;
+export default TestPropertiesTable;
