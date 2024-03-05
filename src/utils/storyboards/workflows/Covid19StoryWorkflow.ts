@@ -9,7 +9,7 @@ import { TimeseriesFeatureDetectorProperties } from "../feature/TimeseriesFeatur
 import { findIndexOfDate, findIndicesOfDates } from "../processing/common";
 
 import { DateActionsMap } from "../processing/FeatureActionMaps";
-import { featureActionTable1 } from "../../../mocks/covid19-feature-action";
+import { featureActionTableStory1 } from "../../../mocks/covid19-feature-action-table";
 import { LineChart } from "../../../components/storyboards/plots/LineChart";
 import {
   AbstractAction,
@@ -19,6 +19,10 @@ import {
 const WINDOW = 3;
 
 export class Covid19StoryWorkflow extends AbstractWorkflow {
+  protected _allRegionData: Record<string, TimeseriesDataType[]> = {};
+  protected _data: TimeseriesDataType[];
+  protected _key: string;
+
   private _nts: NumericalFeature[];
   private _cts: CategoricalFeature[];
 
@@ -26,7 +30,7 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
     super();
   }
 
-  protected async load() {
+  protected async data() {
     const file = "/static/storyboards/newCasesByPublishDateRollingSum.csv";
     const csv: any[] = await readCSVFile(file);
     // console.log("Covid19StoryWorkflow:load: file = ", file, ", csv = ", csv);
@@ -36,24 +40,31 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
       const date = new Date(row.date);
       const cases = +row.newCasesByPublishDateRollingSum;
 
-      if (!this._allData[region]) {
-        this._allData[region] = [];
+      if (!this._allRegionData[region]) {
+        this._allRegionData[region] = [];
       }
 
-      this._allData[region].push({ date: date, y: cases });
+      this._allRegionData[region].push({ date: date, y: cases });
     });
 
-    for (const region in this._allData) {
-      this._allData[region].sort(
+    for (const region in this._allRegionData) {
+      this._allRegionData[region].sort(
         (d1: TimeseriesDataType, d2: TimeseriesDataType) =>
           d1.date.getTime() - d2.date.getTime()
       );
     }
 
-    console.log("Covid19StoryWorkflow:load: data = ", this._allData);
+    console.log("Covid19StoryWorkflow:load: data = ", this._allRegionData);
   }
 
-  protected create() {
+  keys(): string[] {
+    return Object.keys(this._allRegionData).sort();
+  }
+
+  create(key: string) {
+    this._key = key;
+    this._data = this._allRegionData[key];
+
     if (!this._key) return;
 
     // this.nts = nts(this.data, "Cases/day", WINDOW);
@@ -62,7 +73,7 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
     // console.log("execute: ranked cts = ", this.cts);
 
     const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator(
-      featureActionTable1,
+      featureActionTableStory1,
       this._data,
       {
         metric: "Cases/day",

@@ -8,7 +8,7 @@ import { NumericalFeatureEnum } from "../utils/storyboards/feature/NumericalFeat
 import { PeakProperties } from "../utils/storyboards/feature/Peak";
 import { SlopeProperties } from "../utils/storyboards/feature/Slope";
 
-export const featureActionTable1: FeatureActionTableRowType[] = [
+export const featureActionTableStory1: FeatureActionTableRowType[] = [
   {
     feature: NumericalFeatureEnum.PEAK,
     properties: {} as PeakProperties,
@@ -28,23 +28,23 @@ export const featureActionTable1: FeatureActionTableRowType[] = [
         properties: {
           title: "{DATE}",
           message: "On {DATE}, number of cases peaked at {VALUE}",
-          backgroundColor: "#FFA500",
-          width: 500,
+          backgroundColor: "#d3d3d3",
+          width: 300,
         } as TextBoxProperties,
       },
 
       {
         action: ActionEnum.CONNECTOR,
         properties: {
-          stroke: "#FFA500",
+          stroke: "black",
           opacity: 0.6,
         } as ConnectorProperties,
       },
       {
         action: ActionEnum.DOT,
         properties: {
-          color: "#FFA500",
-          size: 10,
+          color: "red",
+          size: 5,
           strokeWidth: 2,
           opacity: 0.6,
         } as DotProperties,
@@ -63,13 +63,13 @@ export const featureActionTable1: FeatureActionTableRowType[] = [
           message:
             "By {DATE}, the number of cases continued to climb higher in {REGION}.",
           title: "{DATE}",
-          backgroundColor: "#FFA500",
-          width: 500,
+          backgroundColor: "#d3d3d3",
+          width: 300,
         } as TextBoxProperties,
       },
       {
         action: ActionEnum.CONNECTOR,
-        properties: { stroke: "#FFA500", opacity: 0.6 } as ConnectorProperties,
+        properties: { stroke: "black", opacity: 0.6 } as ConnectorProperties,
       },
     ],
   },
@@ -84,13 +84,13 @@ export const featureActionTable1: FeatureActionTableRowType[] = [
           message:
             "By {DATE}, the number of cases remained low. We should continue to be vigilant",
           title: "{DATE}",
-          backgroundColor: "#FFA500",
-          width: 500,
+          backgroundColor: "#d3d3d3",
+          width: 300,
         } as TextBoxProperties,
       },
       {
         action: ActionEnum.CONNECTOR,
-        properties: { stroke: "#FFA500", opacity: 0.6 } as ConnectorProperties,
+        properties: { stroke: "black", opacity: 0.6 } as ConnectorProperties,
       },
     ],
   },

@@ -33,8 +33,9 @@ const TestActions = () => {
         // .attr("transform", `translate(${margin.left},${margin.top})`)
         .node();
 
-      const src: Coordinate = [200, 200];
-      const dest: Coordinate = [200, 100];
+      const src: Coordinate = [400, 300];
+      const dest: Coordinate = [400, 200];
+      const dest1: Coordinate = [400, 100];
 
       const textBox = new TextBox()
         .properties({
@@ -44,13 +45,13 @@ const TestActions = () => {
         })
         .svg(svg)
         .draw()
-        .coordinate(src, dest);
+        .coordinate(dest, dest1);
 
       const dot = new Dot()
         .properties({
-          // size: 5,
-          // color: "#FF0000",
-          // opacity: 0.3,
+          size: 5,
+          color: "#FF0000",
+          opacity: 0.5,
         })
         .svg(svg)
         .draw()
@@ -90,6 +91,7 @@ const TestActions = () => {
           circle.hide(),
           connector.hide(),
         ]);
+
         await Promise.all([
           textBox.show(),
           dot.show(),
@@ -101,11 +103,11 @@ const TestActions = () => {
         // test all together
         //
         /*
-      const actions = [textBox, dot, circle, connector];
-      await AbstractAction.show(actions);
-      await AbstractAction.hide(actions);
-      await AbstractAction.show(actions);
-      */
+        const actions = [textBox, dot, circle, connector];
+        await AbstractAction.show(actions);
+        await AbstractAction.hide(actions);
+        await AbstractAction.show(actions);
+       */
       };
 
       animate();

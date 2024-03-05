@@ -30,7 +30,7 @@ import { Covid19StoryWorkflow } from "../../utils/storyboards/workflows/Covid19S
 
 const workflow = new Covid19StoryWorkflow();
 
-const Covid19Story = () => {
+const Covid19Story1 = () => {
   const [loading, setLoading] = useState(true);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
@@ -81,8 +81,8 @@ const Covid19Story = () => {
     // prettier-ignore
     console.log("StorySingle:handleSelection: selectedRegion = ", selectedRegion);
     if (selectedRegion) {
-      workflow.draw("#chartId");
-      workflow.filter(selectedRegion);
+      workflow.drawOn("#chartId");
+      workflow.create(selectedRegion);
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);
@@ -117,7 +117,7 @@ const Covid19Story = () => {
   return (
     <>
       <Head>
-        <title>Story-1</title>
+        <title>Covid19 Story 1</title>
       </Head>
       {/* <DashboardLayout> */}
       <Box
@@ -248,4 +248,4 @@ const Covid19Story = () => {
   );
 };
 
-export default Covid19Story;
+export default Covid19Story1;
