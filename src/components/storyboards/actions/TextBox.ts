@@ -19,7 +19,7 @@ export const defaultTextBoxProperties: TextBoxProperties = {
 };
 
 const PADDING = 3;
-const FONT_FAMILY = "Arial";
+const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
 export class TextBox extends AbstractAction {
@@ -28,6 +28,7 @@ export class TextBox extends AbstractAction {
   protected _titleNode: SVGTextElement;
   protected _messageNode: SVGTextElement;
   protected _textNode: SVGGElement;
+  protected _connectorNode: SVGAElement;
   protected _spaceWidth;
 
   constructor() {
@@ -54,6 +55,7 @@ export class TextBox extends AbstractAction {
       .create("svg")
       .append("text")
       .attr("font-size", FONT_SIZE)
+      .attr("font-family", FONT_FAMILY)
       .attr("fill", "black")
       .attr("font-weight", "bold")
       .node();
@@ -62,6 +64,7 @@ export class TextBox extends AbstractAction {
       .create("svg")
       .append("text")
       .attr("font-size", FONT_SIZE)
+      .attr("font-family", FONT_FAMILY)
       .attr("fill", "black")
       .node();
 
@@ -71,9 +74,18 @@ export class TextBox extends AbstractAction {
       .attr("fill", this._properties.backgroundColor)
       .node();
 
+    this._connectorNode = d3
+      .create("svg")
+      .append("line")
+      .attr("stroke", "#808080")
+      .attr("opacity", 1)
+      .style("stroke-dasharray", "3,3")
+      .node();
+
     this._textNode.append(this._titleNode);
     this._textNode.append(this._messageNode);
     this._node.appendChild(this._textNode);
+    this._node.appendChild(this._connectorNode);
 
     // wrap title and message
     this.wrap(this._titleNode, this._properties.title);
@@ -100,10 +112,10 @@ export class TextBox extends AbstractAction {
 
     const calculateTextWidth = (
       element: SVGTextElement,
-      word: string,
+      word: string
     ): number => {
       const wordElem = element.appendChild(
-        d3.create("svg").append("tspan").text(word).node(),
+        d3.create("svg").append("tspan").text(word).node()
       );
 
       // console.log("TextBox:_wrap wordElem =", wordElem);
@@ -122,7 +134,7 @@ export class TextBox extends AbstractAction {
           .attr("x", 0)
           .attr("dy", "1.1em")
           .text(words.join(" ") + " ")
-          .node(),
+          .node()
       );
     };
 
@@ -130,7 +142,7 @@ export class TextBox extends AbstractAction {
     const wordWidthArr: { word: string; width: number }[] = words.map(
       (word) => {
         return { word: word, width: calculateTextWidth(element, word) };
-      },
+      }
     );
     console.log("TextBox:_wrap wordWidthArr =", wordWidthArr);
 
@@ -138,7 +150,7 @@ export class TextBox extends AbstractAction {
     this._spaceWidth = calculateTextWidth(element, "-");
     console.log("TextBox:_wrap _spaceWidth = ", this._spaceWidth);
 
-    // Keep adding words to row until width exceeds span then create new row
+    // keep adding words to row until width exceeds span then create new row
     let accumulatedWidth = 0;
     let wordsInLine = [];
     const messageWidth = this._properties.width - PADDING;
@@ -172,14 +184,13 @@ export class TextBox extends AbstractAction {
   public coordinate(src: Coordinate, dest: Coordinate) {
     this._src = src;
     this._dest = dest;
-    const [x1, y1] = this._dest;
 
     const { width, height } = this._rectNode.getBoundingClientRect();
 
     // left align
-    if (false) {
-      const x = this._dest[0] - width;
-    }
+    // const x = this._dest[0] - width;
+    // center aligned
+    // const x = this._dest[0] - width / 2;
     // right align
     const x = this._dest[0];
     const y = this._dest[1] - height;
@@ -196,13 +207,23 @@ export class TextBox extends AbstractAction {
 
       // aligns tspan elements based on chosen alignment
       Array.from(textElem.children).forEach((tspan: any) =>
-        tspan.setAttribute("x", alignToX()),
+        tspan.setAttribute("x", alignToX())
       );
     };
 
     // align texts
     correctTextAlignment(this._titleNode, width, "middle");
     correctTextAlignment(this._messageNode, width);
+
+    const [x1, y1] = this._src;
+    const [x2, y2] = this._dest;
+
+    // connector
+    d3.select(this._connectorNode)
+      .attr("x1", x1)
+      .attr("y1", y1)
+      .attr("x2", x2)
+      .attr("y2", y2);
 
     return this;
   }

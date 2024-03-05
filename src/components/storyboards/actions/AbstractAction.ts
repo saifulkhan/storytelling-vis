@@ -16,7 +16,7 @@ export abstract class AbstractAction {
     //
   }
 
-  public abstract properties(properties: unknown);
+  public abstract properties(properties: unknown): this;
 
   public get id(): string {
     return this._properties?.id;
@@ -40,8 +40,9 @@ export abstract class AbstractAction {
     return this;
   }
 
-  public abstract draw();
-  public abstract coordinate(src: Coordinate, dest: Coordinate);
+  public abstract draw(): this;
+  // we need src & dest both for connector, text box
+  public abstract coordinate(src: Coordinate, dest: Coordinate): this;
 
   public show(delay = 2000, duration = 1000) {
     return new Promise<number>((resolve, reject) => {
@@ -85,7 +86,7 @@ export abstract class AbstractAction {
   public static draw(actions: ActionsType) {
     actions.sort(
       (a: AbstractAction, b: AbstractAction) =>
-        ActionEnumZOrder[b.type] - ActionEnumZOrder[a.type],
+        ActionEnumZOrder[b.type] - ActionEnumZOrder[a.type]
     );
     actions.map((d: AbstractAction) => d.draw());
     return this;
@@ -94,7 +95,7 @@ export abstract class AbstractAction {
   public static coordinate(
     actions: ActionsType,
     src: Coordinate,
-    dest: Coordinate,
+    dest: Coordinate
   ) {
     actions.map((d: AbstractAction) => d.coordinate(src, dest));
     return this;

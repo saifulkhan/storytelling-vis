@@ -52,7 +52,6 @@ export class Circle extends AbstractAction {
     const [x2, y2] = (this._dest = dest);
 
     d3.select(this._circleNode).attr("cx", x2).attr("cy", y2);
-
     return this;
   }
 }
