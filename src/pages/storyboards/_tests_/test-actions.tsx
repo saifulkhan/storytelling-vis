@@ -57,12 +57,15 @@ const TestActions = () => {
         .draw()
         .coordinate(src, dest);
 
+      /*
       const connector = new Connector()
         .properties({})
         .svg(svg)
         .draw()
         .coordinate(src, dest);
 
+        */
+      /*
       const circle = new Circle()
         .properties({
           size: 10,
@@ -72,12 +75,17 @@ const TestActions = () => {
         .svg(svg)
         .draw()
         .coordinate(src, dest);
+      */
 
       const animate = async () => {
-        //
-        // test individually
-        //
+        await textBox.show();
+        await textBox.move([400, 300]);
 
+        await dot.show();
+        // await dot.move([400, 300]);
+
+        // animate individually
+        /*
         await Promise.all([
           textBox.show(),
           dot.show(),
@@ -99,10 +107,8 @@ const TestActions = () => {
           connector.show(),
         ]);
 
-        //
-        // test all together
-        //
-        /*
+        // animate together
+        
         const actions = [textBox, dot, circle, connector];
         await AbstractAction.show(actions);
         await AbstractAction.hide(actions);

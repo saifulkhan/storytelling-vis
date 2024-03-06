@@ -72,13 +72,23 @@ export abstract class AbstractAction {
     });
   }
 
+  public abstract move(
+    dest: Coordinate,
+    delay: number,
+    duration: number
+  ): Promise<any>;
+
   public remove() {
     // TODO: use id?
     //d3.select(svg).select("svg").remove();
     return this;
   }
 
-  public static svg(actions: ActionsType, svg) {
+  /**
+   ** Static methods
+   **/
+
+  public static svg(actions: ActionsType, svg: SVGGElement) {
     actions.map((d: AbstractAction) => d.svg(svg));
     return this;
   }

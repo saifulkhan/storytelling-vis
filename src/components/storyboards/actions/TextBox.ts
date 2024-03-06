@@ -8,6 +8,7 @@ export type TextBoxProperties = {
   message?: string;
   backgroundColor?: string;
   width?: number;
+  showConnector?: boolean;
 };
 
 export const defaultTextBoxProperties: TextBoxProperties = {
@@ -16,6 +17,7 @@ export const defaultTextBoxProperties: TextBoxProperties = {
   message: "Message text goes here ...",
   backgroundColor: "#E0E0E0",
   width: 300,
+  showConnector: false,
 };
 
 const PADDING = 3;
@@ -144,11 +146,11 @@ export class TextBox extends AbstractAction {
         return { word: word, width: calculateTextWidth(element, word) };
       }
     );
-    console.log("TextBox:_wrap wordWidthArr =", wordWidthArr);
+    // console.log("TextBox:_wrap wordWidthArr =", wordWidthArr);
 
     // calculate the width of the backspace text
     this._spaceWidth = calculateTextWidth(element, "-");
-    console.log("TextBox:_wrap _spaceWidth = ", this._spaceWidth);
+    // console.log("TextBox:_wrap _spaceWidth = ", this._spaceWidth);
 
     // keep adding words to row until width exceeds span then create new row
     let accumulatedWidth = 0;
@@ -161,7 +163,7 @@ export class TextBox extends AbstractAction {
 
       if (accumulatedWidth + width < messageWidth) {
         // prettier-ignore
-        console.log("TextBox:_wrap wordsInLine = ", wordsInLine, ", accumulatedWidth + width = ", accumulatedWidth + width, "this._messageWidth = ", this._messageWidth)
+        // console.log("TextBox:_wrap wordsInLine = ", wordsInLine, ", accumulatedWidth + width = ", accumulatedWidth + width, "this._messageWidth = ", this._messageWidth)
         // keep adding words to be displayed in a line
         accumulatedWidth += width;
         wordsInLine.push(word);
@@ -184,6 +186,8 @@ export class TextBox extends AbstractAction {
   public coordinate(src: Coordinate, dest: Coordinate) {
     this._src = src;
     this._dest = dest;
+    const [x1, y1] = this._src;
+    const [x2, y2] = this._dest;
 
     const { width, height } = this._rectNode.getBoundingClientRect();
 
@@ -195,36 +199,78 @@ export class TextBox extends AbstractAction {
     const x = this._dest[0];
     const y = this._dest[1] - height;
 
-    this._rectNode.setAttribute("transform", `translate(${x},${y})`);
-    this._textNode.setAttribute("transform", `translate(${x + PADDING},${y})`);
-
-    const correctTextAlignment = (textElem, width, align = undefined) => {
-      const alignToX = () => {
-        // uses the width and alignment of text to calculate correct x values of
-        // tspan elements
-        return (width / 2) * (align == "middle" ? 1 : align == "end" ? 2 : 0);
-      };
-
-      // aligns tspan elements based on chosen alignment
-      Array.from(textElem.children).forEach((tspan: any) =>
-        tspan.setAttribute("x", alignToX())
-      );
-    };
+    d3.select(this._rectNode).attr("transform", `translate(${x},${y})`);
+    d3.select(this._textNode).attr(
+      "transform",
+      `translate(${x + PADDING},${y})`
+    );
 
     // align texts
-    correctTextAlignment(this._titleNode, width, "middle");
-    correctTextAlignment(this._messageNode, width);
-
-    const [x1, y1] = this._src;
-    const [x2, y2] = this._dest;
+    this.correctTextAlignment(this._titleNode, width, "middle");
+    this.correctTextAlignment(this._messageNode, width);
 
     // connector
-    d3.select(this._connectorNode)
-      .attr("x1", x1)
-      .attr("y1", y1)
-      .attr("x2", x2)
-      .attr("y2", y2);
+    if (this._properties.showConnector) {
+      d3.select(this._connectorNode)
+        .attr("x1", x1)
+        .attr("y1", y1)
+        .attr("x2", x2)
+        .attr("y2", y2);
+    }
 
     return this;
+  }
+
+  public move(dest: Coordinate, delay = 0, duration = 1500) {
+    const { width, height } = this._rectNode.getBoundingClientRect();
+
+    // left align
+    // const x = dest[0] - width;
+    // center aligned
+    // const x = dest[0] - width / 2;
+    // right align
+    const x = dest[0];
+    const y = dest[1] - height;
+
+    const promise1 = new Promise<number>((resolve, reject) => {
+      d3.select(this._rectNode)
+        .transition()
+        .ease(d3.easeQuadIn)
+        .duration(duration)
+        .attr("transform", `translate(${x},${y})`)
+        .on("end", () => {
+          resolve(delay + duration);
+        });
+    });
+
+    const promise2 = new Promise<number>((resolve, reject) => {
+      d3.select(this._textNode)
+        .transition()
+        .ease(d3.easeQuadIn)
+        .duration(duration)
+        .attr("transform", `translate(${x + PADDING},${y})`)
+        .on("end", () => {
+          resolve(delay + duration);
+        });
+    });
+
+    // align texts
+    this.correctTextAlignment(this._titleNode, width, "middle");
+    this.correctTextAlignment(this._messageNode, width);
+
+    return Promise.all([promise1, promise2]);
+  }
+
+  private correctTextAlignment(textElem, width, align = undefined) {
+    const alignToX = () => {
+      // uses the width and alignment of text to calculate correct x values of
+      // tspan elements
+      return (width / 2) * (align == "middle" ? 1 : align == "end" ? 2 : 0);
+    };
+
+    // aligns tspan elements based on chosen alignment
+    Array.from(textElem.children).forEach((tspan: any) =>
+      tspan.setAttribute("x", alignToX())
+    );
   }
 }
