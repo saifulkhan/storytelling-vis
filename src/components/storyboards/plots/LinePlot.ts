@@ -1,9 +1,9 @@
 import * as d3 from "d3";
 
-import { findDateIdx } from "src/utils/storyboards/processing/common";
 import { AbstractPlot } from "./AbstractPlot";
-import { TimeseriesDataType } from "src/utils/storyboards/processing/TimeseriesDataType";
 import { Coordinate } from "../actions/AbstractAction";
+import { TimeseriesDataType } from "../../../utils/storyboards/processing/TimeseriesDataType";
+import { findDateIdx } from "../../../utils/storyboards/processing/common";
 
 const MARGIN = { top: 50, right: 50, bottom: 50, left: 50 };
 const ID_AXIS_SELECTION = "#id-axes-selection",
@@ -13,7 +13,10 @@ const ID_AXIS_SELECTION = "#id-axes-selection",
   LINE_STROKE_WIDTH = 2,
   LINE_STROKE = "#2a363b";
 
-export type ChartProperties = {
+// TODO: Should we merge these properties?
+// TODO: What would be a good name that applies to all plots?
+
+export type LinePlotProperties = {
   title?: string;
   ticks?: boolean;
   xLabel?: string;
@@ -28,10 +31,10 @@ export type LineProperties = {
   onRightAxis?: boolean /* This is ... */;
 };
 
-export class LineChart extends AbstractPlot {
+export class LinePlot extends AbstractPlot {
   _data: TimeseriesDataType[][];
   _lineProperties: LineProperties[] = [];
-  _chartProperties: ChartProperties;
+  _linePlotProperties: LinePlotProperties;
 
   _svg: SVGSVGElement;
   _selector;
@@ -51,8 +54,8 @@ export class LineChart extends AbstractPlot {
     super();
   }
 
-  public chartProperties(p: ChartProperties) {
-    this._chartProperties = {
+  public chartProperties(p: LinePlotProperties) {
+    this._linePlotProperties = {
       ...p,
       title: p.title || "title...",
       ticks: p.ticks || true,
@@ -66,7 +69,7 @@ export class LineChart extends AbstractPlot {
 
   public lineProperties(p: LineProperties[] = []) {
     if (!this._data) {
-      throw new Error("LineChart: Can not set line properties before data!");
+      throw new Error("LinePlot: Can not set line properties before data!");
     }
 
     this._data.forEach((_, i: number) => {
@@ -80,23 +83,23 @@ export class LineChart extends AbstractPlot {
       });
     });
 
-    console.log("LineChart: _lineProperties = ", this._lineProperties);
+    console.log("LinePlot: _lineProperties = ", this._lineProperties);
 
     return this;
   }
 
   public data(data: TimeseriesDataType[][]) {
     this._data = data;
-    console.log("LineChart: data = ", this._data);
+    console.log("LinePlot: data = ", this._data);
     return this;
   }
 
   public svg(svg: SVGSVGElement) {
     this._svg = svg;
     const bounds = svg.getBoundingClientRect();
-    this._height = 500; // bounds.height;
-    this._width = 1000; // bounds.width;
-    console.log("LineChart: bounds = ", bounds);
+    this._height = bounds.height;
+    this._width = bounds.width;
+    console.log("LinePlot: bounds = ", bounds);
 
     this._selector = d3
       .select(this._svg)
@@ -155,7 +158,7 @@ export class LineChart extends AbstractPlot {
    **/
   public animate(lineNo: number, start: number, stop: number) {
     // prettier-ignore
-    // console.log(`LineChart: lineNo = ${lineNo}, start = ${start}, stop = ${stop}`)
+    // console.log(`LinePlot: lineNo = ${lineNo}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineNo]);
 
     const data = this._data[lineNo].slice(start, stop + 1);
@@ -220,13 +223,13 @@ export class LineChart extends AbstractPlot {
       }
     });
 
-    console.log("LineChart: dataOnLeft = ", dataOnLeft);
-    console.log("LineChart: dataOnRight = ", dataOnRight);
+    console.log("LinePlot: dataOnLeft = ", dataOnLeft);
+    console.log("LinePlot: dataOnRight = ", dataOnRight);
 
     this._xAxis = this.xScale(
       dataOnLeft.concat(dataOnRight),
       this._width,
-      this._margin,
+      this._margin
     );
     this._leftAxis = this.yScale(dataOnLeft, this._height, this._margin);
     this._rightAxis = this.yScale(dataOnRight, this._height, this._margin);
@@ -244,7 +247,7 @@ export class LineChart extends AbstractPlot {
       .attr("text-anchor", "start")
       .attr("x", this._width / 2)
       .attr("y", this._height - 5)
-      .text(`${this._chartProperties.xLabel}→`);
+      .text(`${this._linePlotProperties.xLabel}→`);
 
     // draw left axis and label
     if (dataOnLeft.length) {
@@ -252,7 +255,7 @@ export class LineChart extends AbstractPlot {
         .append("g")
         .attr("transform", `translate(${this._margin.left}, 0)`)
         .call(
-          d3.axisLeft(this._leftAxis),
+          d3.axisLeft(this._leftAxis)
           // .tickFormat((d) => {
           //   let prefix = d3.formatPrefix(".00", d);
           //   return prefix(d);
@@ -266,7 +269,7 @@ export class LineChart extends AbstractPlot {
         .attr("text-anchor", "start")
         .attr("x", -this._height / 2)
         .attr("y", YAXIS_LABEL_OFFSET)
-        .text(`${this._chartProperties.leftAxisLabel}→`);
+        .text(`${this._linePlotProperties.leftAxisLabel}→`);
     }
 
     // draw right axis and label
@@ -275,7 +278,7 @@ export class LineChart extends AbstractPlot {
         .append("g")
         .attr("transform", `translate(${this._width - this._margin.right},0)`)
         .call(
-          d3.axisRight(this._rightAxis),
+          d3.axisRight(this._rightAxis)
           // .tickFormat((d) => {
           //   let prefix = d3.formatPrefix(".0", d);
           //   return prefix(d);
@@ -289,7 +292,7 @@ export class LineChart extends AbstractPlot {
         .attr("y", -this._width + YAXIS_LABEL_OFFSET)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
-        .text(`←${this._chartProperties.rightAxisLabel}`);
+        .text(`←${this._linePlotProperties.rightAxisLabel}`);
     }
 
     // draw plot title
@@ -302,7 +305,7 @@ export class LineChart extends AbstractPlot {
       .style("font-size", TITLE_FONT_SIZE)
       .attr("x", this._width / 2)
       .attr("y", this._margin.top + MAGIC_NO)
-      .text(this._chartProperties.title);
+      .text(this._linePlotProperties.title);
 
     return this;
   }
@@ -334,7 +337,7 @@ export class LineChart extends AbstractPlot {
   }
 
   /*
-   * Given a date of the LineChart, return the corresponding [x, y, x0, y0]
+   * Given a date of the LinePlot, return the corresponding [x, y, x0, y0]
    * coordinates
    */
   public coordinates(lineNo: number, date: Date): [Coordinate, Coordinate] {

@@ -1,5 +1,3 @@
-import * as d3 from "d3";
-
 export abstract class AbstractWorkflow {
   protected _initPromise: Promise<void>;
   protected _svg: SVGSVGElement;
@@ -16,20 +14,8 @@ export abstract class AbstractWorkflow {
     return this._initPromise;
   }
 
-  protected abstract data();
-  public abstract create(key: string);
-
-  public drawOn(selector: string) {
-    this._svg = d3
-      .select(selector)
-      .append("svg")
-      .attr("width", 1200)
-      .attr("height", 500)
-      .node();
-
-    console.log("Workflow:draw: svg = ", this._svg);
-  }
-
+  protected abstract data(): void;
   public abstract keys(): string[];
-  public abstract key(key: string): void;
+  public abstract create(key: string): this;
+  public abstract selector(id: string): this;
 }

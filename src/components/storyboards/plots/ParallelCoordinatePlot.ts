@@ -1,8 +1,8 @@
 import * as d3 from "d3";
-import { AnimationType } from "src/models/AnimationType";
 import { Color } from "../Colors";
 import { GraphAnnotation, PCPAnnotation } from "./GraphAnnotation";
-import { NumericalFeatureType } from "../../../utils/storyboards/processing/NumericalFeatureType";
+import { AbstractPlot } from "./AbstractPlot";
+import { getObjectKeysArray } from "../../../utils/common";
 
 const WIDTH = 800,
   HEIGHT = 600,
@@ -31,17 +31,17 @@ const xScaleMap = (data, keys, width, margin) => {
       if (key === "date") {
         scale = d3.scaleTime(
           d3.extent(data, (d) => d[key]),
-          [margin.left, width - margin.right],
+          [margin.left, width - margin.right]
         );
       } else {
         scale = d3.scaleLinear(
           d3.extent(data, (d) => +d[key]),
-          [margin.left, width - margin.right],
+          [margin.left, width - margin.right]
         );
       }
 
       return [key, scale];
-    }),
+    })
   );
 };
 
@@ -49,13 +49,13 @@ const yScale = (keys, height, margin) => {
   return d3.scalePoint(keys, [margin.top, height - margin.bottom]);
 };
 
-export class ParallelCoordinatePlot {
+export class ParallelCoordinatePlot extends AbstractPlot {
   _selector: string;
   _svg: SVGSVGElement;
 
   _width: number;
   _height: number;
-  _margin: any;
+  _margin = MARGIN;
 
   _data: any[];
   _AxisNames: string[];
@@ -69,53 +69,38 @@ export class ParallelCoordinatePlot {
   _animationCounter = 0;
 
   constructor() {
-    //
+    super();
   }
 
-  /**************************************************************************************************************
-   * Setters
-   **************************************************************************************************************/
-
-  /**
-   * We pass height, width & margin here to keep it consistent with the svg() method.
-   * All stories except story 3 use this method.
-   */
-  selector(selector, height = HEIGHT, width = WIDTH, margin = MARGIN) {
-    this._selector = selector;
-    this._height = height;
-    this._width = width;
-    this._margin = margin;
-
-    d3.select(this._selector).select("svg").remove();
-
-    this._svg = d3
-      .select(this._selector)
-      .append("svg")
-      .attr("width", this._width)
-      .attr("height", this._height)
-      .node();
-
-    return this;
-  }
-
-  data(data: any[], keys: string[], selectedAxis: string) {
+  data(data: any[], key: string) {
     this._data = data;
-    this._AxisNames = keys;
-    this._selectedAxis = selectedAxis;
+    this._AxisNames = getObjectKeysArray(data);
+    this._selectedAxis = key;
 
     console.log("ParallelCoordinate: data = ", this._data);
     // prettier-ignore
-    console.log("ParallelCoordinate: data: selector = ", this._selector, ", _AxisNames = ", this._AxisNames, ", _selectedAxis = ", this._selectedAxis);
+    console.log("ParallelCoordinate: data: _AxisNames = ", this._AxisNames, ", _selectedAxis = ", this._selectedAxis);
 
     return this;
   }
 
-  /*********************************************************************************************************
+  svg(svg: SVGSVGElement) {
+    this._svg = svg;
+    const bounds = svg.getBoundingClientRect();
+    this._height = bounds.height;
+    this._width = bounds.width;
+
+    // d3.select(this._selector).select("svg").remove();
+
+    return this;
+  }
+
+  /*****************************************************************************
    * Static drawing - draw all lines
-   *********************************************************************************************************/
+   ****************************************************************************/
 
   plot() {
-    this.drawAxisAndLabels();
+    this.drawAxis();
 
     const line = d3
       .line()
@@ -148,7 +133,7 @@ export class ParallelCoordinatePlot {
         const l = line(a);
         return l;
       })
-      .attr("id", (d) => `id-line-${d.index}`);
+      .attr("id", (d) => `id-line-${d.date}`);
 
     //
     // Append circles to the line
@@ -161,7 +146,7 @@ export class ParallelCoordinatePlot {
       .append("g")
       .attr("id", (d) => {
         // d is a row of the data, e.g., {kernel_size: 11, layers: 13, ...}
-        return `id-circles-${d.index}`;
+        return `id-circles-${d.date}`;
       })
       .selectAll("circle")
       .data((d) => cross(d))
@@ -180,7 +165,7 @@ export class ParallelCoordinatePlot {
     return this;
   }
 
-  private drawAxisAndLabels() {
+  private drawAxis() {
     // Clear existing axis and labels
     d3.select(this._svg).selectAll("svg > *").remove();
 
@@ -188,12 +173,12 @@ export class ParallelCoordinatePlot {
       this._data,
       this._AxisNames,
       this._width,
-      this._margin,
+      this._margin
     );
     this._yScale = yScale(this._AxisNames, this._height, this._margin);
     this._colorScale = d3.scaleSequential(
       this._xScaleMap.get(this._selectedAxis).domain().reverse(),
-      STATIC_LINE_COLORMAP,
+      STATIC_LINE_COLORMAP
     );
     // prettier-ignore
     console.log("ParallelCoordinate: _drawAxisAndLabels: _xScaleMap = ", this._xScaleMap);
@@ -229,17 +214,17 @@ export class ParallelCoordinatePlot {
           .attr("text-anchor", "start")
           .attr("fill", (d) =>
             // change color of the selected axis label for d = keyz
-            d === this._selectedAxis ? SELECTED_AXIS_COLOR : "currentColor",
+            d === this._selectedAxis ? SELECTED_AXIS_COLOR : "currentColor"
           )
-          .text((d) => d),
+          .text((d) => d)
       );
 
     return this;
   }
 
-  /*********************************************************************************************************
-   * Animation used in story 6
-   *********************************************************************************************************/
+  /*****************************************************************************
+   * Animation
+   ****************************************************************************/
 
   /**
    * Set annotations.
@@ -250,7 +235,7 @@ export class ParallelCoordinatePlot {
     console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
 
     // We need to draw the axis and labels before we can compute the coordinates of the annotations
-    this.drawAxisAndLabels();
+    this.drawAxis();
     this.createLinesAndDots();
     this.createAnnotations();
 
@@ -415,7 +400,7 @@ export class ParallelCoordinatePlot {
     currAnn?.graphAnnotation?.showAnnotation(0);
     currAnn?.graphAnnotation?.updatePosAnimate(
       currAnn.destination[0],
-      currAnn.destination[1],
+      currAnn.destination[1]
     );
 
     // Hide previous line & its dots

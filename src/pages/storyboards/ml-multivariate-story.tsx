@@ -23,14 +23,14 @@ import { makeStyles } from "@mui/styles";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
 import { blue } from "@mui/material/colors";
-import { Covid19StoryWorkflow } from "../../utils/storyboards/workflows/Covid19StoryWorkflow";
+
+import { MLMultiVariateStoryWorkflow } from "../../utils/storyboards/workflows/MLMultivariateStoryWorkflow";
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const workflow = new Covid19StoryWorkflow();
+const workflow = new MLMultiVariateStoryWorkflow();
 
-const Covid19Story1 = () => {
+const MLMultivariateStory = () => {
   const [loading, setLoading] = useState(true);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
@@ -43,7 +43,7 @@ const Covid19Story1 = () => {
     let ignore = false;
 
     // if (!chartRef.current) return;
-    console.log("Covid19Story: useEffect triggered");
+    console.log("MLMultivariateStory: useEffect triggered");
 
     setLoading(true);
 
@@ -67,7 +67,7 @@ const Covid19Story1 = () => {
 
   const handleChangeSlider = (event) => {
     const selectedSegment = event.target.value;
-    console.log("StorySingle: selectedSegment = ", selectedSegment);
+    console.log("MLMultivariateStory: selectedSegment = ", selectedSegment);
     if (selectedSegment && selectedSegment !== segment) {
       // setSegment(selectedSegment);
       // segmentData(selectedSegment);
@@ -77,11 +77,11 @@ const Covid19Story1 = () => {
   };
 
   const handleSelection = (event: SelectChangeEvent) => {
-    const selectedRegion = event.target.value;
+    const selectedKey = event.target.value;
     // prettier-ignore
-    console.log("StorySingle:handleSelection: selectedRegion = ", selectedRegion);
-    if (selectedRegion) {
-      workflow.selector("#chartId").create(selectedRegion);
+    console.log("MLMultivariateStory:handleSelection: selectedRegion = ", selectedKey);
+    if (selectedKey) {
+      workflow.selector("#chartId").create(selectedKey);
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);
@@ -93,7 +93,7 @@ const Covid19Story1 = () => {
     const count = 0;
 
     setAnimationCounter(count);
-    console.log("StorySingle: animationCounter = ", count);
+    console.log("MLMultivariateStory: animationCounter = ", count);
     onClickAnimate(count, "#chart1");
   };
 
@@ -102,21 +102,21 @@ const Covid19Story1 = () => {
     if (count < 0) return;
 
     setAnimationCounter(count);
-    console.log("StorySingle: animationCounter = ", count);
+    console.log("MLMultivariateStory: animationCounter = ", count);
     onClickAnimate(count, "#chart1");
   };
 
   const handlePlayButton = () => {
     const count = animationCounter + 1;
     setAnimationCounter(count);
-    console.log("StorySingle: animationCounter = ", count);
+    console.log("MLMultivariateStory: animationCounter = ", count);
     onClickAnimate(count, "#chart1");
   };
 
   return (
     <>
       <Head>
-        <title>Covid19 Story 1</title>
+        <title>ML Multivariate Story</title>
       </Head>
       {/* <DashboardLayout> */}
       <Box
@@ -127,15 +127,15 @@ const Covid19Story1 = () => {
         }}
       >
         <Container>
-          <Card sx={{ minWidth: 1200 }}>
+          <Card sx={{}}>
             <CardHeader
               avatar={
                 <Avatar style={{ backgroundColor: blue[500] }}>
                   <AutoStoriesIcon />
                 </Avatar>
               }
-              title="Story-1"
-              subheader="Choose a segment value, a region, and click play to animate the story"
+              title="ML Multivariate Story"
+              subheader="Choose a hyperparameter, and click play to animate the story"
             />
             <CardContent sx={{ pt: "8px" }}>
               {loading ? (
@@ -161,28 +161,9 @@ const Covid19Story1 = () => {
                       },
                     }}
                   >
-                    <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
-                      Set segment value
-                    </InputLabel>
-                    <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                      <Slider
-                        // labelId="segment-slider"
-                        aria-label="Segments"
-                        defaultValue={3}
-                        getAriaValueText={valuetext}
-                        step={1}
-                        marks
-                        min={0}
-                        max={5}
-                        value={segment}
-                        valueLabelDisplay="auto"
-                        onChange={handleChangeSlider}
-                      />
-                    </FormControl>
-
                     <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
                       <InputLabel id="select-region-label">
-                        Select region
+                        Select hyperparameter
                       </InputLabel>
                       <Select
                         labelId="select-region-label"
@@ -190,7 +171,7 @@ const Covid19Story1 = () => {
                         displayEmpty
                         onChange={handleSelection}
                         value={region}
-                        input={<OutlinedInput label="Select region" />}
+                        input={<OutlinedInput label="Select hyperparameter" />}
                       >
                         {regions.map((d) => (
                           <MenuItem key={d} value={d}>
@@ -247,4 +228,4 @@ const Covid19Story1 = () => {
   );
 };
 
-export default Covid19Story1;
+export default MLMultivariateStory;

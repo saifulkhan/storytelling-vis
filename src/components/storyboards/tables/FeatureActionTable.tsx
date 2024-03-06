@@ -154,8 +154,8 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
           <TableRow>
             <TableCell>Feature</TableCell>
             <TableCell>Properties</TableCell>
-            <TableCell>Action -- Properties</TableCell>
             <TableCell>Rank</TableCell>
+            <TableCell>Action & Properties</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -198,15 +198,6 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                 />
               </TableCell>
 
-              {/* Actions */}
-              <TableCell className={classes.actionCell}>
-                <ActionTable
-                  key={index} // ensure each instance has a unique key
-                  data={row.actions}
-                  setData={() => {}}
-                />
-              </TableCell>
-
               {/* Rank */}
               <TableCell className={classes.rankCell}>
                 {/* <ActionTable
@@ -215,6 +206,15 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   setData={() => {}}
                 /> */}
                 {row.rank}
+              </TableCell>
+
+              {/* Actions */}
+              <TableCell className={classes.actionCell}>
+                <ActionTable
+                  key={index} // ensure each instance has a unique key
+                  data={row.actions}
+                  setData={() => {}}
+                />
               </TableCell>
             </TableRow>
           ))}

@@ -54,22 +54,58 @@ Test and debug visualizations & components
 - <http://localhost:3000/storyboards/_tests_/test-action-table>
 - <http://localhost:3000/storyboards/_tests_/test-feature-action-table>
 
+Pages
+
+- <http://localhost:3000/storyboards/_tests_/test-feature-action-table>
+
 ## Documentation
 
-Create object
+### Workflow
+
+Create workflow of a story:
 
 ```ts
-visObject = new VISObject()
+const workflow = new ...Workflow()
+                    .selector(id)
+                    .create(key);
+```
+
+### Feature detection
+
+Detection & feature creation:
+
+```ts
+
+```
+
+### Plotting
+
+```ts
+const plot = new ...Plot()
+                    .data(data)
+                    .properties({})
+                    .svg(svg)
+                    .draw(); // static plot
+
+plot.animate(<feature, action>) // animation 
+```
+
+### Feature draw
+
+Feature objects:
+
+```ts
+feature = new ...Feature()
                 .properties({...})
                 .draw(svg)
                 .coordinate(x, y, x0, y0)
 ```
 
-Animate object
+Animate feature
 
 ```ts
-await visObject.show(delay, duration);
-await visObject.hide(delay, duration);
+await feature.show(delay, duration);
+await feature.hide(delay, duration);
 ```
 
 ## References

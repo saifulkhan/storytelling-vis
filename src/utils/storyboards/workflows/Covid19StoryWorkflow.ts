@@ -1,16 +1,16 @@
+import * as d3 from "d3";
+
 import { AbstractWorkflow } from "./AbstractWorkflow";
 import { readCSVFile } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
-
 import { TimeseriesDataType } from "../processing/TimeseriesDataType";
 import { FeatureActionTableTranslator } from "../processing/FeatureActionTableTranslator";
 import { TimeseriesFeatureDetectorProperties } from "../feature/TimeseriesFeatureDetector";
 import { findIndexOfDate, findIndicesOfDates } from "../processing/common";
-
 import { DateActionsMap } from "../processing/FeatureActionMaps";
-import { featureActionTableStory1 } from "../../../mocks/covid19-feature-action-table";
-import { LineChart } from "../../../components/storyboards/plots/LineChart";
+import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
+import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import {
   AbstractAction,
   ActionsType,
@@ -55,10 +55,24 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
     }
 
     console.log("Covid19StoryWorkflow:load: data = ", this._allRegionData);
+    return this;
   }
 
   keys(): string[] {
     return Object.keys(this._allRegionData).sort();
+  }
+
+  selector(id: string) {
+    this._svg = d3
+      .select(id)
+      .append("svg")
+      .attr("width", 1200)
+      .attr("height", 500)
+      .node();
+
+    console.log("Covid19StoryWorkflow:selector: _svg = ", this._svg);
+
+    return this;
   }
 
   create(key: string) {
@@ -92,7 +106,7 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
     // prettier-ignore
     console.log("Covid19StoryWorkflow: dates = ", dates,  ", indices = ", indices);
 
-    const plot = new LineChart()
+    const plot = new LinePlot()
       .data([this._data])
       .chartProperties({})
       .lineProperties()
@@ -140,5 +154,7 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
         console.error("Error:", error);
       }
     })();
+
+    return this;
   }
 }
