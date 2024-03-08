@@ -25,10 +25,10 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
 
-import { MLMultiVariateStoryWorkflow } from "../../utils/storyboards/workflows/MLMultivariateStoryWorkflow";
+import { ML_Story1Builder } from "../../utils/storyboards/story-builder/ML_Story1Builder";
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const workflow = new MLMultiVariateStoryWorkflow();
+const workflow = new ML_Story1Builder();
 
 const MLMultivariateStory = () => {
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,7 @@ const MLMultivariateStory = () => {
     // prettier-ignore
     console.log("MLMultivariateStory:handleSelection: selectedRegion = ", selectedKey);
     if (selectedKey) {
-      workflow.selector("#chartId").create(selectedKey);
+      workflow.selector("#chartId").build(selectedKey);
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);
@@ -116,7 +116,7 @@ const MLMultivariateStory = () => {
   return (
     <>
       <Head>
-        <title>ML Multivariate Story</title>
+        <title>ML Story 1</title>
       </Head>
       {/* <DashboardLayout> */}
       <Box

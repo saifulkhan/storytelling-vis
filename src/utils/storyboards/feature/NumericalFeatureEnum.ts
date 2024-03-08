@@ -9,6 +9,6 @@ export enum NumericalFeatureEnum {
   FALL = "FALL",
   RAISE = "RAISE",
   SLOPE = "SLOPE",
-  MAX_ML = "MAX_ML",
-  MIN_ML = "MIN_ML",
+  ML_MAX = "ML_MAX",
+  ML_MIN = "ML_MIN",
 }

@@ -5,7 +5,7 @@ import { NumericalFeatureEnum } from "../utils/storyboards/feature/NumericalFeat
 
 export const multiVariateStory: FeatureActionTableRowType[] = [
   {
-    feature: NumericalFeatureEnum.MIN_ML,
+    feature: NumericalFeatureEnum.ML_MIN,
     properties: {},
     rank: 5,
     actions: [
@@ -22,7 +22,7 @@ export const multiVariateStory: FeatureActionTableRowType[] = [
     ],
   },
   {
-    feature: NumericalFeatureEnum.MAX_ML,
+    feature: NumericalFeatureEnum.ML_MAX,
     properties: {},
     rank: 7,
     actions: [

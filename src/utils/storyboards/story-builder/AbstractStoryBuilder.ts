@@ -1,4 +1,4 @@
-export abstract class AbstractWorkflow {
+export abstract class AbstractStoryBuilder {
   protected _initPromise: Promise<void>;
   protected _svg: SVGSVGElement;
 
@@ -16,6 +16,6 @@ export abstract class AbstractWorkflow {
 
   protected abstract data(): void;
   public abstract keys(): string[];
-  public abstract create(key: string): this;
   public abstract selector(id: string): this;
+  public abstract build(key: string): this;
 }

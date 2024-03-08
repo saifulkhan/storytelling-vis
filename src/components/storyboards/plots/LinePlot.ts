@@ -54,7 +54,7 @@ export class LinePlot extends AbstractPlot {
     super();
   }
 
-  public chartProperties(p: LinePlotProperties) {
+  public properties(p: LinePlotProperties) {
     this._linePlotProperties = {
       ...p,
       title: p.title || "title...",

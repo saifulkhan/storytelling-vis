@@ -23,12 +23,12 @@ import { makeStyles } from "@mui/styles";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
 import { blue } from "@mui/material/colors";
-import { Covid19StoryWorkflow } from "../../utils/storyboards/workflows/Covid19StoryWorkflow";
+import { Covid19_Story1Builder } from "../../utils/storyboards/story-builder/Covid19_Story1Builder";
+
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const workflow = new Covid19StoryWorkflow();
+const storyBuilder = new Covid19_Story1Builder();
 
 const Covid19Story1 = () => {
   const [loading, setLoading] = useState(true);
@@ -48,10 +48,10 @@ const Covid19Story1 = () => {
     setLoading(true);
 
     // Wait for initialization to complete before further actions
-    workflow
+    storyBuilder
       .waitForInit()
       .then(() => {
-        const _regions = workflow.keys();
+        const _regions = storyBuilder.keys();
         if (!ignore) setRegions([..._regions]);
         setLoading(false);
       })
@@ -81,7 +81,7 @@ const Covid19Story1 = () => {
     // prettier-ignore
     console.log("StorySingle:handleSelection: selectedRegion = ", selectedRegion);
     if (selectedRegion) {
-      workflow.selector("#chartId").create(selectedRegion);
+      storyBuilder.selector("#chartId").build(selectedRegion);
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);

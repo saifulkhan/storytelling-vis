@@ -1,4 +1,7 @@
-import { TimeseriesDataType } from "./TimeseriesDataType";
+import {
+  ML_TimeseriesDataType,
+  TimeseriesDataType,
+} from "./TimeseriesDataType";
 import { AbstractFeature, FeaturesType } from "../feature/AbstractFeature";
 import { ActionBuilder } from "./ActionBuilder";
 import {
@@ -7,29 +10,36 @@ import {
 } from "../../../components/storyboards/tables/FeatureActionTableRowType";
 import {
   TimeseriesFeatureDetector,
-  TimeseriesFeatureDetectorProperties,
+  FeatureDetectorProperties,
 } from "../feature/TimeseriesFeatureDetector";
-import { ActionsType } from "src/components/storyboards/actions/AbstractAction";
 import {
   DateActionsMap,
   DateFeaturesMap,
   FeatureActionsMap,
 } from "./FeatureActionMaps";
 import { setOrUpdateMap } from "./common";
+import { ActionsType } from "../../../components/storyboards/actions/AbstractAction";
 
 export class FeatureActionTableTranslator {
-  private _data: TimeseriesDataType[];
+  private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
   private _table: FeatureActionTableRowType[];
-  private _properties: TimeseriesFeatureDetectorProperties;
+  private _properties: FeatureDetectorProperties;
 
-  constructor(
-    table: FeatureActionTableRowType[],
-    data: TimeseriesDataType[],
-    properties: TimeseriesFeatureDetectorProperties,
-  ) {
-    this._table = table;
-    this._data = data;
+  constructor() {}
+
+  public properties(properties: FeatureDetectorProperties) {
     this._properties = properties;
+    return this;
+  }
+
+  public table(table: FeatureActionTableRowType[]) {
+    this._table = table;
+    return this;
+  }
+
+  public data(data: TimeseriesDataType[] | ML_TimeseriesDataType[]) {
+    this._data = data;
+    return this;
   }
 
   public translate() {
@@ -39,7 +49,7 @@ export class FeatureActionTableTranslator {
 
     const featureDetector = new TimeseriesFeatureDetector(
       this._data,
-      this._properties,
+      this._properties
     );
     const actionBuilder = new ActionBuilder();
 

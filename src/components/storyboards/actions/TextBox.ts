@@ -110,7 +110,7 @@ export class TextBox extends AbstractAction {
    */
   private wrap(element: SVGTextElement, text: string) {
     const words: string[] = text.split(" ");
-    console.log("TextBox:_wrap words =", words);
+    // console.log("TextBox:_wrap words =", words);
 
     const calculateTextWidth = (
       element: SVGTextElement,

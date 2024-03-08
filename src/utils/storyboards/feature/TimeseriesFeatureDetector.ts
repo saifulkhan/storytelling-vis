@@ -4,22 +4,25 @@ import { searchPeaks, searchSlopes } from "./feature-search";
 import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
 import { FallProperties } from "./Fall";
 import { RaiseProperties } from "./Raise";
-import { TimeseriesDataType } from "../processing/TimeseriesDataType";
+import {
+  ML_TimeseriesDataType,
+  TimeseriesDataType,
+} from "../processing/TimeseriesDataType";
 import { AbstractFeature } from "./AbstractFeature";
 import { AbstractFeatureDetector } from "./AbstractFeatureDetector";
 
-export type TimeseriesFeatureDetectorProperties = {
+export type FeatureDetectorProperties = {
   metric?: string;
   window?: number;
 };
 
 export class TimeseriesFeatureDetector extends AbstractFeatureDetector {
-  private _data: TimeseriesDataType[];
-  private _properties: TimeseriesFeatureDetectorProperties;
+  private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
+  private _properties: FeatureDetectorProperties;
 
   constructor(
-    data: TimeseriesDataType[],
-    timeseriesProcessingProperties: TimeseriesFeatureDetectorProperties,
+    data: TimeseriesDataType[] | ML_TimeseriesDataType[],
+    timeseriesProcessingProperties: FeatureDetectorProperties
   ) {
     super();
     this._data = data;
@@ -37,8 +40,8 @@ export class TimeseriesFeatureDetector extends AbstractFeatureDetector {
       | PeakProperties
       | RaiseProperties
       | SlopeProperties
-      | FallProperties,
-  ): AbstractFeature[] {
+      | FallProperties
+  ): AbstractFeature[] | undefined {
     // prettier-ignore
     console.log("FeatureDetector:detect: timeseriesProcessingProperties =", this._properties);
     // prettier-ignore
@@ -63,7 +66,7 @@ export class TimeseriesFeatureDetector extends AbstractFeatureDetector {
     const peaks = searchPeaks(
       this._data,
       this._properties.metric,
-      this._properties.window,
+      this._properties.window
     );
 
     return peaks;

@@ -1,24 +1,19 @@
 import * as d3 from "d3";
-import { AbstractWorkflow } from "./AbstractWorkflow";
+import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
 import { readCSVFile } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
+import { DateActionsMap } from "../processing/FeatureActionMaps";
+import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
+import { FeatureDetectorProperties } from "../feature/TimeseriesFeatureDetector";
+import { FeatureActionTableTranslator } from "../processing/FeatureActionTableTranslator";
+import { ML_TimeseriesDataType } from "../processing/TimeseriesDataType";
 
 const FILE = "/static/storyboards/ml/data.csv";
 
-// TODO: should it be a type?
-const parameters = [
-  "date",
-  "mean_test_accuracy",
-  "mean_training_accuracy",
-  "channels",
-  "kernel_size",
-  "layers",
-  "samples_per_class",
-];
 const KEYS = ["channels", "kernel_size", "layers", "samples_per_class"];
 
-export class MLMultiVariateStoryWorkflow extends AbstractWorkflow {
-  protected _data: any[] = [];
+export class ML_Story1Builder extends AbstractStoryBuilder {
+  protected _data: ML_TimeseriesDataType[] = [];
   protected _key: string;
 
   constructor() {
@@ -30,9 +25,8 @@ export class MLMultiVariateStoryWorkflow extends AbstractWorkflow {
     // prettier-ignore
     // console.log("MLMultivariateStoryWorkflow:load: FILE = ", FILE, ", csv = ", csv);
 
-    // Convert to integer and date
+    // convert string to number and date
     csv.forEach((row) => {
-
       this._data.push({
         "date" :new Date(row.date),
         "mean_test_accuracy" : +row.mean_test_accuracy,
@@ -44,7 +38,6 @@ export class MLMultiVariateStoryWorkflow extends AbstractWorkflow {
       });
     });
 
-    // parameters = data.columns.slice(1);
     // prettier-ignore
     console.log("MLMultiVariateStoryWorkflow: loadData: _data = ", this._data);
   }
@@ -65,21 +58,22 @@ export class MLMultiVariateStoryWorkflow extends AbstractWorkflow {
     return this;
   }
 
-  create(key: string) {
+  public build(key: string) {
     this._key = key;
-
-    //
-
     // prettier-ignore
     console.log("create: key = ", key);
 
-    // Sort data by selected keyz, e.g, "kernel_size"
-    let idx = 0;
+    // Sort data by selected key, e.g, "kernel_size"
     let data = this._data
       .slice()
       .sort((a, b) => d3.ascending(a[key], b[key]))
       .sort((a, b) => d3.ascending(a["date"], b["date"]));
-    // .map((d) => ({ ...d, index: idx++ })); // update index of the reordered data 0, 1, 2,...
+
+    // const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator()
+    //   .properties({})
+    //   .table(multiVariateStory)
+    //   .data(this._data)
+    //   .translate();
 
     const [localMin, localMax] = this.findLocalMinMax(
       data,
@@ -97,7 +91,7 @@ export class MLMultiVariateStoryWorkflow extends AbstractWorkflow {
     let plot = new ParallelCoordinatePlot()
       .svg(this._svg)
       .data(data, key)
-      .plot();
+      .draw();
 
     return this;
   }
@@ -159,8 +153,8 @@ export class MLMultiVariateStoryWorkflow extends AbstractWorkflow {
         }
         prevEqual = false;
       } else if (!prevEqual) {
-        // if the previous value is different and the next are equal
-        // then we've found a min/max
+        // if the previous value is different and the next are equal then we've
+        // found a min/max
         prevEqual = true;
         direction === -1 && outputMin.push(input[i]);
         direction === 1 && outputMax.push(input[i]);

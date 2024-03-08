@@ -53,6 +53,7 @@ Test and debug visualizations & components
 - <http://localhost:3000/storyboards/_tests_/test-properties-table>
 - <http://localhost:3000/storyboards/_tests_/test-action-table>
 - <http://localhost:3000/storyboards/_tests_/test-feature-action-table>
+- <http://localhost:3000/storyboards/_tests_/test-feature-action-table-1>
 
 Pages
 
@@ -90,12 +91,12 @@ const plot = new ...Plot()
 plot.animate(<feature, action>) // animation 
 ```
 
-### Feature draw
+### Action draw
 
-Feature objects:
+Action objects:
 
 ```ts
-feature = new ...Feature()
+feature = new Action()
                 .properties({...})
                 .draw(svg)
                 .coordinate(x, y, x0, y0)

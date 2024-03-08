@@ -3,6 +3,10 @@ import { Color } from "../Colors";
 import { GraphAnnotation, PCPAnnotation } from "./GraphAnnotation";
 import { AbstractPlot } from "./AbstractPlot";
 import { getObjectKeysArray } from "../../../utils/common";
+import { Coordinate } from "../actions/AbstractAction";
+import { AnimationType } from "./AnimationType";
+
+export type ParallelCoordinatePlotProperties = {};
 
 const WIDTH = 800,
   HEIGHT = 600,
@@ -72,7 +76,12 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     super();
   }
 
-  data(data: any[], key: string) {
+  public properties(properties: unknown) {
+    throw new Error("Method not implemented.");
+    return this;
+  }
+
+  public data(data: any[], key: string) {
     this._data = data;
     this._AxisNames = getObjectKeysArray(data);
     this._selectedAxis = key;
@@ -84,7 +93,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     return this;
   }
 
-  svg(svg: SVGSVGElement) {
+  public svg(svg: SVGSVGElement) {
     this._svg = svg;
     const bounds = svg.getBoundingClientRect();
     this._height = bounds.height;
@@ -95,11 +104,11 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     return this;
   }
 
-  /*****************************************************************************
-   * Static drawing - draw all lines
-   ****************************************************************************/
+  /**
+   ** Draw parallel coordinate lines & axis (static)
+   **/
 
-  plot() {
+  public draw() {
     this.drawAxis();
 
     const line = d3
@@ -222,47 +231,53 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     return this;
   }
 
-  /*****************************************************************************
-   * Animation
-   ****************************************************************************/
+  /**
+   ** Animation
+   **/
 
   /**
    * Set annotations.
    */
-  public annotations(pcAnnotations: PCPAnnotation[]) {
-    this._annotations = pcAnnotations;
+  // public annotations(pcAnnotations: PCPAnnotation[]) {
+  //   this._annotations = pcAnnotations;
+  //   // prettier-ignore
+  //   console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
+
+  //   // We need to draw the axis and labels before we can compute the coordinates of the annotations
+  //   this.drawAxis();
+  //   this.createLinesAndDots();
+  //   this.createAnnotations();
+
+  //   // prettier-ignore
+  //   console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
+  //   return this;
+  // }
+
+  /**
+   *
+   */
+  public animate() {
+    // public animate(animationType: AnimationType) {
+    // console.log("TimeSeries: animate: animationType = ", animationType);
+
+    // if (animationType === "back" && this._animationCounter >= 0) {
+    //   this._animateBack();
+    // } else if (animationType === "beginning") {
+    //   this._animateBeginning();
+    // } else if (
+    //   animationType === "play" &&
+    //   this._animationCounter <= this._annotations.length - 1
+    // ) {
+    //   this._animateForward();
+    // }
+
     // prettier-ignore
-    console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
+    // console.log("TimeSeries: animate: _animationCounter: ", this._animationCounter)
 
     // We need to draw the axis and labels before we can compute the coordinates of the annotations
     this.drawAxis();
     this.createLinesAndDots();
     this.createAnnotations();
-
-    // prettier-ignore
-    console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
-    return this;
-  }
-
-  /**
-   *
-   */
-  public animate(animationType: AnimationType) {
-    console.log("TimeSeries: animate: animationType = ", animationType);
-
-    if (animationType === "back" && this._animationCounter >= 0) {
-      this._animateBack();
-    } else if (animationType === "beginning") {
-      this._animateBeginning();
-    } else if (
-      animationType === "play" &&
-      this._animationCounter <= this._annotations.length - 1
-    ) {
-      this._animateForward();
-    }
-
-    // prettier-ignore
-    console.log("TimeSeries: animate: _animationCounter: ", this._animationCounter)
   }
 
   private createLinesAndDots() {
@@ -300,7 +315,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
         const l = line(a);
         return l;
       })
-      .attr("id", (d) => `id-line-${d?.data?.index}`);
+      .attr("id", (d) => `id-line-${d?.data.date}`);
 
     //
     // Append circles to the line
@@ -314,7 +329,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
       .append("g")
       .attr("id", (d) => {
         // d is a row of the data, e.g., {kernel_size: 11, layers: 13, ...}
-        return `id-circles-${d?.data?.index}`;
+        return `id-circles-${d?.data.date}`;
       })
       .selectAll("circle")
       .data((d) => cross(d?.data))

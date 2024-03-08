@@ -1,12 +1,10 @@
 import * as d3 from "d3";
-
-import { AbstractWorkflow } from "./AbstractWorkflow";
 import { readCSVFile } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesDataType } from "../processing/TimeseriesDataType";
 import { FeatureActionTableTranslator } from "../processing/FeatureActionTableTranslator";
-import { TimeseriesFeatureDetectorProperties } from "../feature/TimeseriesFeatureDetector";
+import { FeatureDetectorProperties } from "../feature/TimeseriesFeatureDetector";
 import { findIndexOfDate, findIndicesOfDates } from "../processing/common";
 import { DateActionsMap } from "../processing/FeatureActionMaps";
 import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
@@ -15,10 +13,11 @@ import {
   AbstractAction,
   ActionsType,
 } from "../../../components/storyboards/actions/AbstractAction";
+import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
 
 const WINDOW = 3;
 
-export class Covid19StoryWorkflow extends AbstractWorkflow {
+export class Covid19_Story1Builder extends AbstractStoryBuilder {
   protected _allRegionData: Record<string, TimeseriesDataType[]> = {};
   protected _data: TimeseriesDataType[];
   protected _key: string;
@@ -75,7 +74,7 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
     return this;
   }
 
-  create(key: string) {
+  public build(key: string) {
     this._key = key;
     this._data = this._allRegionData[key];
 
@@ -86,14 +85,14 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
 
-    const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator(
-      featureActionTableStory1,
-      this._data,
-      {
+    const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator()
+      .properties({
         metric: "Cases/day",
         window: WINDOW,
-      } as TimeseriesFeatureDetectorProperties
-    ).translate();
+      } as FeatureDetectorProperties)
+      .table(featureActionTableStory1)
+      .data(this._data)
+      .translate();
 
     // console.log("Covid19StoryWorkflow: dateFeatureMap = ", dateFeatureMap);
     // console.log("Covid19StoryWorkflow: featureActionMap = ", featureActionMap);
@@ -108,7 +107,7 @@ export class Covid19StoryWorkflow extends AbstractWorkflow {
 
     const plot = new LinePlot()
       .data([this._data])
-      .chartProperties({})
+      .properties({})
       .lineProperties()
       .svg(this._svg);
 
