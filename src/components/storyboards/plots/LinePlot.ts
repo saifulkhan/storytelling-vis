@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { AbstractPlot } from "./AbstractPlot";
 import { Coordinate } from "../actions/AbstractAction";
 import { TimeseriesDataType } from "../../../utils/storyboards/data-processing/TimeseriesDataType";
-import { findDateIdx } from "../../../utils/storyboards/feature-action-builder/common";
+import { findDateIdx } from "../../../utils/common";
 
 const MARGIN = { top: 50, right: 50, bottom: 50, left: 50 };
 const ID_AXIS_SELECTION = "#id-axes-selection",

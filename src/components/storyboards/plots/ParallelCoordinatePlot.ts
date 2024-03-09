@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Color } from "../Colors";
 import { AbstractPlot } from "./AbstractPlot";
-import { getObjectKeysArray } from "../../../utils/storyboards/feature-action-builder/common";
+import { getObjectKeysArray } from "../../../utils/common";
 
 export type ParallelCoordinatePlotProperties = {};
 

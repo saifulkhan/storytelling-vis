@@ -5,7 +5,7 @@ import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
 import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
 import { AbstractFeature } from "./AbstractFeature";
 import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
-import { createPredicate } from "../feature-action-builder/common";
+import { createPredicate } from "../../common";
 import { Min } from "./Min";
 import { Max } from "./Max";
 import { ConditionType } from "./ConditionType";

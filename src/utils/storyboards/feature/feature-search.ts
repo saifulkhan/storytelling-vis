@@ -1,6 +1,6 @@
 import { Peak } from "./Peak";
 import { Slope } from "./Slope";
-import { findDateIdx, mean } from "../feature-action-builder/common";
+import { findDateIdx, mean } from "../../common";
 import { CategoricalFeature } from "./CategoricalFeature";
 import { CategoricalFeatureEnum } from "./CategoricalFeatureEnum";
 import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";

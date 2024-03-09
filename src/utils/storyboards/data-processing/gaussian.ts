@@ -1,7 +1,7 @@
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { Peak } from "../feature/Peak";
 import { TimeseriesDataType } from "./TimeseriesDataType";
-import { findDateIdx } from "../feature-action-builder/common";
+import { findDateIdx } from "../../common";
 
 /*
     Given an an array of events it calculates gaussian curves to represent their ranks.

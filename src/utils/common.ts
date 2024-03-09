@@ -1,4 +1,4 @@
-import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
+import { TimeseriesDataType } from "./storyboards/data-processing/TimeseriesDataType";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;

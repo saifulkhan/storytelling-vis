@@ -4,10 +4,7 @@ import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
-import {
-  findIndexOfDate,
-  findIndicesOfDates,
-} from "../feature-action-builder/common";
+import { findIndexOfDate, findIndicesOfDates } from "../../common";
 import { DateActionsMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";

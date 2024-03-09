@@ -12,7 +12,7 @@ import {
   DateFeaturesMapType,
   FeatureActionsMapType,
 } from "./FeatureActionMapsType";
-import { setOrUpdateMap } from "./common";
+import { setOrUpdateMap } from "../../common";
 import { ActionsType } from "../../../components/storyboards/actions/AbstractAction";
 import { FeatureFactory } from "../feature/FeatureFactory";
 
