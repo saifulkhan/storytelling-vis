@@ -4,17 +4,15 @@ import { readCSVFile } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
 import { DateActionsMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
-import { FeatureProperties } from "../feature/FeatureFactory";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
-import { ML_TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
+import { ML_TimeseriesDataType } from "../feature-action-builder/ML_TimeseriesDataType";
 
 const FILE = "/static/storyboards/ml/data.csv";
-
-const KEYS = ["channels", "kernel_size", "layers", "samples_per_class"];
+const NAMES = ["channels", "kernel_size", "layers", "samples_per_class"];
 
 export class ML_Story1Builder extends AbstractStoryBuilder {
   protected _data: ML_TimeseriesDataType[] = [];
-  protected _key: string;
+  protected _name = "";
 
   constructor() {
     super();
@@ -42,8 +40,13 @@ export class ML_Story1Builder extends AbstractStoryBuilder {
     console.log("MLMultiVariateStoryWorkflow: loadData: _data = ", this._data);
   }
 
-  keys(): string[] {
-    return KEYS;
+  names(): string[] {
+    return NAMES;
+  }
+
+  name(name: string): this {
+    this._name = name;
+    return this;
   }
 
   public selector(id: string) {
@@ -58,38 +61,32 @@ export class ML_Story1Builder extends AbstractStoryBuilder {
     return this;
   }
 
-  public build(key: string) {
-    this._key = key;
-    // prettier-ignore
-    console.log("create: key = ", key);
-
-    // Sort data by selected key, e.g, "kernel_size"
+  public build() {
+    // sort data by selected key, e.g, "kernel_size"
     let data = this._data
       .slice()
-      .sort((a, b) => d3.ascending(a[key], b[key]))
+      .sort((a, b) => d3.ascending(a[this._name], b[this._name]))
       .sort((a, b) => d3.ascending(a["date"], b["date"]));
 
     // console.log("After sorting, data = ", data);
-    // // prettier-ignore
+    // prettier-ignore
     // console.log("globalMin = ", globalMin, ", globalMax = ", globalMax);
 
     const dataActionsMap: DateActionsMapType = new FeatureActionBuilder()
       .properties({ metric: "accuracy" })
       .table(multiVariateStory)
       .data(this._data)
-      .translate();
+      .name(this._name)
+      .build();
 
     console.log("dataActionsMap = ", dataActionsMap);
 
     let plot = new ParallelCoordinatePlot()
       .svg(this._svg)
-      .data(data, key)
+      .data(data)
+      .name(this._name)
       .draw();
 
     return this;
   }
-
-  //
-  //
-  //
 }

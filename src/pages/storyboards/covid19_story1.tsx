@@ -51,7 +51,7 @@ const Covid19Story1 = () => {
     storyBuilder
       .waitForInit()
       .then(() => {
-        const _regions = storyBuilder.keys();
+        const _regions = storyBuilder.names();
         if (!ignore) setRegions([..._regions]);
         setLoading(false);
       })
@@ -77,11 +77,11 @@ const Covid19Story1 = () => {
   };
 
   const handleSelection = (event: SelectChangeEvent) => {
-    const selectedRegion = event.target.value;
+    const selectedName = event.target.value;
     // prettier-ignore
-    console.log("StorySingle:handleSelection: selectedRegion = ", selectedRegion);
-    if (selectedRegion) {
-      storyBuilder.selector("#chartId").build(selectedRegion);
+    console.log("StorySingle:handleSelection: selectedRegion = ", selectedName);
+    if (selectedName) {
+      storyBuilder.name(selectedName).selector("#chartId").build();
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);

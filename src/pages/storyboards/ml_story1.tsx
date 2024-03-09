@@ -28,7 +28,7 @@ import { blue } from "@mui/material/colors";
 import { ML_Story1Builder } from "../../utils/storyboards/story-builder/ML_Story1Builder";
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const workflow = new ML_Story1Builder();
+const storyBuilder = new ML_Story1Builder();
 
 const MLMultivariateStory = () => {
   const [loading, setLoading] = useState(true);
@@ -48,10 +48,10 @@ const MLMultivariateStory = () => {
     setLoading(true);
 
     // Wait for initialization to complete before further actions
-    workflow
+    storyBuilder
       .waitForInit()
       .then(() => {
-        const _regions = workflow.keys();
+        const _regions = storyBuilder.names();
         if (!ignore) setRegions([..._regions]);
         setLoading(false);
       })
@@ -77,11 +77,11 @@ const MLMultivariateStory = () => {
   };
 
   const handleSelection = (event: SelectChangeEvent) => {
-    const selectedKey = event.target.value;
+    const selectedName = event.target.value;
     // prettier-ignore
-    console.log("MLMultivariateStory:handleSelection: selectedRegion = ", selectedKey);
-    if (selectedKey) {
-      workflow.selector("#chartId").build(selectedKey);
+    console.log("MLMultivariateStory:handleSelection: selectedRegion = ", selectedName);
+    if (selectedName) {
+      storyBuilder.name(selectedName).selector("#chartId").build();
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);

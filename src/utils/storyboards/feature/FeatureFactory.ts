@@ -12,47 +12,29 @@ import { ConditionType } from "./ConditionType";
 import { Current } from "./Current";
 import { Last } from "./Last";
 
-export type FeatureSearchProperties = {
-  metric?: string;
-  window?: number;
-};
+const METRIC = "Cases/day",
+  WINDOW = 20;
 
 export class FeatureFactory {
-  private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
-  private _properties: FeatureSearchProperties;
+  private _data: TimeseriesDataType[] | ML_TimeseriesDataType[] = [];
+  private _properties: any;
+  private _name = "";
 
-  constructor(
-    data: TimeseriesDataType[] | ML_TimeseriesDataType[],
-    featureSearchProperties: FeatureSearchProperties
-  ) {
-    this._data = data;
-    this._properties = featureSearchProperties;
+  constructor() {}
 
-    // prettier-ignore
-    console.log("FeatureSearch: featureSearchProperties =", this._properties);
-    // prettier-ignore
-    console.log("FeatureSearch: data =", this._data);
+  public properties(properties: any) {
+    this._properties = properties;
+    return this;
   }
 
-  protected predicate(
-    key: string,
-    value: number | string,
-    attr: string
-  ): (...args: unknown[]) => unknown {
-    switch (key) {
-      case "eq":
-        return createPredicate(`obj.${attr} == ${value}`);
-      case "le":
-        return createPredicate(`obj.${attr} <= ${value}`);
-      case "ge":
-        return createPredicate(`obj.${attr}>= ${value}`);
-      case "lt":
-        return createPredicate(`obj.${attr} < ${value}`);
-      case "gt":
-        return createPredicate(`obj.${attr} > ${value}`);
-      case "ne":
-        return createPredicate(`obj.${attr} != ${value}`);
-    }
+  public data(data: TimeseriesDataType[] | ML_TimeseriesDataType[]) {
+    this._data = data;
+    return this;
+  }
+
+  public name(name: string) {
+    this._name = name;
+    return this;
   }
 
   public detect(
@@ -60,9 +42,9 @@ export class FeatureFactory {
     condition: ConditionType | string
   ): AbstractFeature[] | undefined {
     // prettier-ignore
-    console.log("FeatureSearch:detect: _properties =", this._properties);
+    console.log("FeatureFactory:detect: _properties =", this._properties);
     // prettier-ignore
-    console.log("FeatureSearch:detect: data =", this._data);
+    console.log("FeatureFactory:detect: data =", this._data);
 
     switch (feature) {
       case NumericalFeatureEnum.SLOPE:
@@ -76,37 +58,42 @@ export class FeatureFactory {
       case NumericalFeatureEnum.CURRENT:
         return this.detectCurrent();
       case NumericalFeatureEnum.LAST:
-        return this.detectLast();
+        return this.detectLast(this._name);
       default:
         console.error(`Feature ${feature} is not implemented!`);
     }
   }
 
-  detectLast(key: string): Last[] {
+  detectLast(): Last[] {
+    if (this._name) {
+      // prettier-ignore
+      console.error(`FeatureFactory:detectLast: the value of name = ${this._name}`);
+    }
     let last = this._data[this._data.length - 1];
-    return [new Last(last.date, "", last[key] && last.y)];
+    return [new Last(last.date, "", last[this._name])];
   }
+
   detectCurrent(): Current[] {
-    this._data.map((d) => new Current(d.date, "", d[key] || d.y));
+    if (this._name) {
+      // prettier-ignore
+      console.error(`FeatureFactory:detectCurrent: the value of name = ${this._name}`);
+    }
+    return this._data.map((d) => new Current(d.date, "", d[this._name]));
   }
 
   private detectPeaks(condition: ConditionType): Peak[] {
     // prettier-ignore
-    console.log("FeatureSearch:detectPeaks: timeseriesProcessingProperties =", this._properties);
+    console.log("FeatureFactory:detectPeaks: timeseriesProcessingProperties =", this._properties);
     // prettier-ignore
-    console.log("FeatureSearch:detectPeaks: data =", this._data);
+    console.log("FeatureFactory:detectPeaks: data =", this._data);
 
-    const peaks = searchPeaks(
-      this._data,
-      this._properties.metric,
-      this._properties.window
-    );
+    const peaks = searchPeaks(this._data, METRIC, WINDOW);
 
     return peaks;
   }
 
   private detectSlopes(condition: ConditionType): Slope[] {
-    let slopes = searchSlopes(this._data, this._properties.window);
+    let slopes = searchSlopes(this._data, WINDOW);
     // console.log("detectSlopes: slopes = ", slopes);
     // console.log("detectSlopes: properties = ", properties);
 
@@ -126,5 +113,26 @@ export class FeatureFactory {
   private detectMax(key: string): Max[] {
     const [globalMin, globalMax] = searchMinMax(this._data, key);
     return [globalMax];
+  }
+
+  private predicate(
+    key: string,
+    value: number | string,
+    attr: string
+  ): (...args: unknown[]) => unknown {
+    switch (key) {
+      case "eq":
+        return createPredicate(`obj.${attr} == ${value}`);
+      case "le":
+        return createPredicate(`obj.${attr} <= ${value}`);
+      case "ge":
+        return createPredicate(`obj.${attr}>= ${value}`);
+      case "lt":
+        return createPredicate(`obj.${attr} < ${value}`);
+      case "gt":
+        return createPredicate(`obj.${attr} > ${value}`);
+      case "ne":
+        return createPredicate(`obj.${attr} != ${value}`);
+    }
   }
 }

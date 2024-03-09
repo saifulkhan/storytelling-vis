@@ -4,7 +4,6 @@ import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
-import { FeatureProperties } from "../feature/FeatureFactory";
 import {
   findIndexOfDate,
   findIndicesOfDates,
@@ -17,13 +16,14 @@ import {
   ActionsType,
 } from "../../../components/storyboards/actions/AbstractAction";
 import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
+import { FeatureFactoryProperties } from "../feature/FeatureFactory";
 
 const WINDOW = 3;
 
 export class Covid19_Story1Builder extends AbstractStoryBuilder {
   protected _allRegionData: Record<string, TimeseriesDataType[]> = {};
   protected _data: TimeseriesDataType[];
-  protected _key: string;
+  protected _name: string;
 
   private _nts: NumericalFeature[];
   private _cts: CategoricalFeature[];
@@ -60,8 +60,13 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
     return this;
   }
 
-  keys(): string[] {
+  names(): string[] {
     return Object.keys(this._allRegionData).sort();
+  }
+
+  name(name: string): this {
+    this._name = name;
+    return this;
   }
 
   selector(id: string) {
@@ -77,11 +82,10 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
     return this;
   }
 
-  public build(key: string) {
-    this._key = key;
-    this._data = this._allRegionData[key];
+  public build() {
+    this._data = this._allRegionData[this._name];
 
-    if (!this._key) return;
+    if (!this._name) return;
 
     // this.nts = nts(this.data, "Cases/day", WINDOW);
     // this.cts = cts();
@@ -92,10 +96,10 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
       .properties({
         metric: "Cases/day",
         window: WINDOW,
-      } as FeatureProperties)
+      } as FeatureFactoryProperties)
       .table(featureActionTableStory1)
       .data(this._data)
-      .translate();
+      .build();
 
     // console.log("Covid19StoryWorkflow: dateFeatureMap = ", dateFeatureMap);
     // console.log("Covid19StoryWorkflow: featureActionMap = ", featureActionMap);

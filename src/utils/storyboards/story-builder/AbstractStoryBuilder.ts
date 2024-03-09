@@ -15,7 +15,8 @@ export abstract class AbstractStoryBuilder {
   }
 
   protected abstract data(): void;
-  public abstract keys(): string[];
+  public abstract names(): string[];
+  public abstract name(name: string): this;
   public abstract selector(id: string): this;
-  public abstract build(key: string): this;
+  public abstract build(name: string): this;
 }

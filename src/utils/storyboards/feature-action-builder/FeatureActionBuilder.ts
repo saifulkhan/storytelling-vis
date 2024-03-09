@@ -14,16 +14,17 @@ import {
 } from "./FeatureActionMapsType";
 import { setOrUpdateMap } from "./common";
 import { ActionsType } from "../../../components/storyboards/actions/AbstractAction";
-import { FeatureProperties, FeatureFactory } from "../feature/FeatureFactory";
+import { FeatureFactory } from "../feature/FeatureFactory";
 
 export class FeatureActionBuilder {
   private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
   private _table: FeatureActionTableRowType[];
-  private _properties: FeatureProperties;
+  private _properties: any;
+  private _name = "";
 
   constructor() {}
 
-  public properties(properties: FeatureProperties) {
+  public properties(properties: any) {
     this._properties = properties;
     return this;
   }
@@ -38,18 +39,23 @@ export class FeatureActionBuilder {
     return this;
   }
 
-  public translate() {
+  public name(name: string) {
+    this._name = name;
+    return this;
+  }
+
+  public build() {
     const dateFeaturesMap: DateFeaturesMapType = new Map();
     const dataActionsMap: DateActionsMapType = new Map();
     const featureActionMap: FeatureActionsMapType = new Map();
 
-    const featureSearch = new FeatureFactory(this._data, this._properties);
-    const actionBuilder = new ActionFactory();
+    const featureFactory = new FeatureFactory().data(this._data);
+    const actionFactory = new ActionFactory();
 
     this._table.forEach((row: FeatureActionTableRowType) => {
       // prettier-ignore
       // console.log("FeatureActionTableTranslator: feature = ", d.feature, ", properties = ", d.properties);
-      const features: FeaturesType = featureSearch.detect(
+      const features: FeaturesType = featureFactory.detect(
         row.feature,
         row.properties,
       );
@@ -60,7 +66,7 @@ export class FeatureActionBuilder {
       row.actions.forEach((rowIn: ActionTableRowType) => {
         // prettier-ignore
         // console.log("FeatureActionTableTranslator: action = ", d1.action,  ", properties = ", d1.properties);
-        const action = actionBuilder.create(rowIn.action, rowIn.properties);
+        const action = actionFactory.create(rowIn.action, rowIn.properties);
         // prettier-ignore
         // console.log("FeatureActionTableTranslator: action = ", action);
         actions.push(action);

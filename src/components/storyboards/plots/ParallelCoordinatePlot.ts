@@ -72,6 +72,8 @@ export class ParallelCoordinatePlot extends AbstractPlot {
   _annotations: PCPAnnotation[] = [];
   _animationCounter = 0;
 
+  _name = "";
+
   constructor() {
     super();
   }
@@ -81,14 +83,26 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     return this;
   }
 
-  public data(data: any[], key: string) {
+  public data(data: any[]) {
     this._data = data;
-    this._AxisNames = getObjectKeysArray(data);
-    this._selectedAxis = key;
 
-    console.log("ParallelCoordinate: data = ", this._data);
+    this._data = this._data
+      .slice()
+      .sort((a, b) => d3.ascending(a[this._name], b[this._name]))
+      .sort((a, b) => d3.ascending(a["date"], b["date"]));
+
+    this._AxisNames = getObjectKeysArray(data);
+    console.log("ParallelCoordinate:data = ", this._data);
+    console.log("ParallelCoordinate:data: _AxisNames = ", this._AxisNames);
+
+    return this;
+  }
+
+  public name(name: string) {
+    this._name = name;
+    this._selectedAxis = name;
     // prettier-ignore
-    console.log("ParallelCoordinate: data: _AxisNames = ", this._AxisNames, ", _selectedAxis = ", this._selectedAxis);
+    console.log("ParallelCoordinate:name: _selectedAxis = ", this._selectedAxis);
 
     return this;
   }
