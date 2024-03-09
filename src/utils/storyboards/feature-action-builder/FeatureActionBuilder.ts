@@ -1,32 +1,29 @@
 import { TimeseriesDataType } from "./TimeseriesDataType";
 import { ML_TimeseriesDataType } from "./ML_TimeseriesDataType";
 import { AbstractFeature, FeaturesType } from "../feature/AbstractFeature";
-import { ActionBuilder } from "./ActionBuilder";
+import { ActionFactory } from "../../../components/storyboards/actions/ActionFactory";
 import {
   ActionTableRowType,
   FeatureActionTableRowType as FeatureActionTableRowType,
 } from "../../../components/storyboards/tables/FeatureActionTableRowType";
 
 import {
-  DateActionsMap,
-  DateFeaturesMap,
-  FeatureActionsMap,
-} from "./FeatureActionMaps";
+  DateActionsMapType,
+  DateFeaturesMapType,
+  FeatureActionsMapType,
+} from "./FeatureActionMapsType";
 import { setOrUpdateMap } from "./common";
 import { ActionsType } from "../../../components/storyboards/actions/AbstractAction";
-import {
-  FeatureSearchProperties,
-  FeatureSearch,
-} from "../feature/FeatureSearch";
+import { FeatureProperties, FeatureFactory } from "../feature/FeatureFactory";
 
-export class FeatureActionTableTranslator {
+export class FeatureActionBuilder {
   private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
   private _table: FeatureActionTableRowType[];
-  private _properties: FeatureSearchProperties;
+  private _properties: FeatureProperties;
 
   constructor() {}
 
-  public properties(properties: FeatureSearchProperties) {
+  public properties(properties: FeatureProperties) {
     this._properties = properties;
     return this;
   }
@@ -42,12 +39,12 @@ export class FeatureActionTableTranslator {
   }
 
   public translate() {
-    const dateFeaturesMap: DateFeaturesMap = new Map();
-    const dataActionsMap: DateActionsMap = new Map();
-    const featureActionMap: FeatureActionsMap = new Map();
+    const dateFeaturesMap: DateFeaturesMapType = new Map();
+    const dataActionsMap: DateActionsMapType = new Map();
+    const featureActionMap: FeatureActionsMapType = new Map();
 
-    const featureSearch = new FeatureSearch(this._data, this._properties);
-    const actionBuilder = new ActionBuilder();
+    const featureSearch = new FeatureFactory(this._data, this._properties);
+    const actionBuilder = new ActionFactory();
 
     this._table.forEach((row: FeatureActionTableRowType) => {
       // prettier-ignore

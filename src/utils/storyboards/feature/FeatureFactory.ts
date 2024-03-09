@@ -17,7 +17,7 @@ export type FeatureSearchProperties = {
   window?: number;
 };
 
-export class FeatureSearch {
+export class FeatureFactory {
   private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
   private _properties: FeatureSearchProperties;
 

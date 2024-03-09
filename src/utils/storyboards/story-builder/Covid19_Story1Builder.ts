@@ -3,13 +3,13 @@ import { readCSVFile } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
-import { FeatureActionTableTranslator } from "../feature-action-builder/FeatureActionTableTranslator";
-import { FeatureSearchProperties } from "../feature/FeatureSearch";
+import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
+import { FeatureProperties } from "../feature/FeatureFactory";
 import {
   findIndexOfDate,
   findIndicesOfDates,
 } from "../feature-action-builder/common";
-import { DateActionsMap } from "../feature-action-builder/FeatureActionMaps";
+import { DateActionsMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import {
@@ -88,11 +88,11 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
 
-    const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator()
+    const dataActionsMap: DateActionsMapType = new FeatureActionBuilder()
       .properties({
         metric: "Cases/day",
         window: WINDOW,
-      } as FeatureSearchProperties)
+      } as FeatureProperties)
       .table(featureActionTableStory1)
       .data(this._data)
       .translate();

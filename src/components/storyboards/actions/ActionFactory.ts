@@ -1,20 +1,11 @@
-import { Dot, DotProperties } from "src/components/storyboards/actions/Dot";
-import { AbstractAction } from "src/components/storyboards/actions/AbstractAction";
-import { ActionEnum } from "src/components/storyboards/actions/ActionEnum";
-import {
-  TextBox,
-  TextBoxProperties,
-} from "src/components/storyboards/actions/TextBox";
-import {
-  Circle,
-  CircleProperties,
-} from "src/components/storyboards/actions/Circle";
-import {
-  Connector,
-  ConnectorProperties,
-} from "src/components/storyboards/actions/Connector";
+import { AbstractAction } from "./AbstractAction";
+import { ActionEnum } from "./ActionEnum";
+import { Circle, CircleProperties } from "./Circle";
+import { Connector, ConnectorProperties } from "./Connector";
+import { Dot, DotProperties } from "./Dot";
+import { TextBox, TextBoxProperties } from "./TextBox";
 
-export class ActionBuilder {
+export class ActionFactory {
   constructor() {
     //
   }
@@ -25,8 +16,8 @@ export class ActionBuilder {
       | CircleProperties
       | ConnectorProperties
       | DotProperties
-      | TextBoxProperties,
-  ): AbstractAction {
+      | TextBoxProperties
+  ): AbstractAction | undefined {
     // prettier-ignore
     // console.log("ActionBuilder:create: action = ", action, ", properties = ", properties);
 
