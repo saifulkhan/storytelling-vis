@@ -1,7 +1,7 @@
 import React from "react";
-import { calculateSum } from "./TestFunction";
+import { calculateSum } from "./example-function";
 
-function TestComponent({ number1, number2 }) {
+function ExampleComponent({ number1, number2 }) {
   const sum = calculateSum(number1, number2);
 
   return (
@@ -11,4 +11,4 @@ function TestComponent({ number1, number2 }) {
   );
 }
 
-export default TestComponent;
+export default ExampleComponent;
