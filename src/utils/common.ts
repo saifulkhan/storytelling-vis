@@ -124,3 +124,57 @@ export function getObjectKeysArray(obj: any[]): string[] {
   const keys = Object.keys(obj[0]);
   return keys;
 }
+
+export function maxIndex(values, valueof?) {
+  let max;
+  let maxIndex = -1;
+  let index = -1;
+  if (valueof === undefined) {
+    for (const value of values) {
+      ++index;
+      if (
+        value != null &&
+        (max < value || (max === undefined && value >= value))
+      ) {
+        (max = value), (maxIndex = index);
+      }
+    }
+  } else {
+    for (let value of values) {
+      if (
+        (value = valueof(value, ++index, values)) != null &&
+        (max < value || (max === undefined && value >= value))
+      ) {
+        (max = value), (maxIndex = index);
+      }
+    }
+  }
+  return maxIndex;
+}
+
+export default function minIndex(values, valueof?) {
+  let min;
+  let minIndex = -1;
+  let index = -1;
+  if (valueof === undefined) {
+    for (const value of values) {
+      ++index;
+      if (
+        value != null &&
+        (min > value || (min === undefined && value >= value))
+      ) {
+        (min = value), (minIndex = index);
+      }
+    }
+  } else {
+    for (let value of values) {
+      if (
+        (value = valueof(value, ++index, values)) != null &&
+        (min > value || (min === undefined && value >= value))
+      ) {
+        (min = value), (minIndex = index);
+      }
+    }
+  }
+  return minIndex;
+}
