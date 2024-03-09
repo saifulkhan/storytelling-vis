@@ -4,7 +4,12 @@ import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
 export class NumericalFeature extends AbstractFeature {
   protected _metric: string;
 
-  constructor(date, start = undefined, end = undefined, metric = undefined) {
+  constructor(
+    date: Date,
+    start = undefined,
+    end = undefined,
+    metric = undefined
+  ) {
     super(date, start, end);
     this._metric = metric;
     this._type = NumericalFeatureEnum.DEFAULT;

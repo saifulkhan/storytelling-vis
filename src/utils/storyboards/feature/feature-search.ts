@@ -1,9 +1,11 @@
 import { Peak } from "./Peak";
 import { Slope } from "./Slope";
-import { findDateIdx, mean } from "../processing/common";
+import { findDateIdx, mean } from "../feature-action-builder/common";
 import { CategoricalFeature } from "./CategoricalFeature";
 import { CategoricalFeatureEnum } from "./CategoricalFeatureEnum";
-import { TimeseriesDataType } from "../processing/TimeseriesDataType";
+import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
+import { Min } from "./Min";
+import { Max } from "./Max";
 
 const MAX_RANK = 5;
 
@@ -13,7 +15,7 @@ const MAX_RANK = 5;
 export function nts(
   data: TimeseriesDataType[],
   metric: string,
-  window: number,
+  window: number
 ) {
   const nts: Peak[] = searchPeaks(data, metric, window);
 
@@ -38,21 +40,21 @@ export function cts() {
     new Date("2020-03-24"),
     "Start of First Lockdown.",
     CategoricalFeatureEnum.LOCKDOWN_START,
-    5,
+    5
   );
 
   const b = new CategoricalFeature(
     new Date("2021-01-05"),
     "Start of Second Lockdown.",
     CategoricalFeatureEnum.LOCKDOWN_END,
-    3,
+    3
   );
 
   const c = new CategoricalFeature(
     new Date("2020-05-28"),
     "End of First Lockdown.",
     CategoricalFeatureEnum.LOCKDOWN_END,
-    5,
+    5
   );
 
   const cts = [a, b, c];
@@ -68,7 +70,7 @@ export function cts() {
 export function searchPeaks(
   data: TimeseriesDataType[],
   metric: string,
-  window: number,
+  window: number
 ) {
   const peaks: Peak[] = [];
   const maxes = searchMaxes(data, window);
@@ -87,8 +89,8 @@ export function searchPeaks(
         metric,
         data[idx].y,
         (end - start) / norm.length,
-        norm[idx],
-      ),
+        norm[idx]
+      )
     );
   }
 
@@ -127,11 +129,11 @@ export function searchPeaks(
 
 export function searchSlopes(
   data: TimeseriesDataType[],
-  window: number,
+  window: number
 ): Slope[] {
   if (data.length <= 1 || window <= 1 || window > data.length) {
     throw new Error(
-      "Invalid input: time series length should be greater than 1 and window size should be a positive number less than or equal to the time series length.",
+      "Invalid input: time series length should be greater than 1 and window size should be a positive number less than or equal to the time series length."
     );
   }
 
@@ -161,8 +163,8 @@ export function searchSlopes(
         windowData[0].date,
         windowData[windowData.length - 1].date,
         "",
-        slope,
-      ),
+        slope
+      )
     );
   }
 
@@ -259,7 +261,7 @@ function normalise(data: number[]) {
     .slice(1)
     .reduce(
       (res, d) => [Math.min(d, res[0]), Math.max(d, res[1])],
-      [data[0], data[0]],
+      [data[0], data[0]]
     );
 
   // normalise y values to be between 0 and 1
@@ -315,4 +317,100 @@ function linRegGrad(y) {
 
   slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
   return slope;
+}
+
+/**
+ ** Given a list of numbers, find the local minimum and maximum data points.
+ ** Example usage:
+ **   const [localMin, localMax] = this.findLocalMinMax(data,
+ **                                                     "mean_test_accuracy");
+ **/
+
+export function findLocalMinMax(input: any[], key: string, window = 2): any {
+  // prettier-ignore
+  // console.log("findLocalMinMax: input = ", input, ", keyz = ", key);
+
+  // Given two numbers, return -1, 0, or 1
+  const compare = (a: number, b: number): number => {
+    if (a === b) {
+      return 0;
+    }
+    if (a < b) {
+      return -1;
+    }
+    return 1;
+  };
+
+  const outputMin = [];
+  const outputMax = [];
+
+  // keep track of the direction: down vs up
+  let direction = 0;
+  let prevEqual = true;
+
+  // if 0th != 1st, 0th is a local min / max
+  if (input[0][key] !== input[1][key]) {
+    direction = compare(input[0][key], input[1][key]);
+    prevEqual = false;
+
+    direction === -1 && outputMin.push(input[0]);
+    direction === 1 && outputMax.push(input[0]);
+  }
+
+  // loop through other numbers
+  for (let i = 1; i < input.length - 1; i++) {
+    // compare this to next
+    const nextDirection = compare(input[i][key], input[i + 1][key]);
+    if (nextDirection !== 0) {
+      if (nextDirection !== direction) {
+        direction = nextDirection;
+        // if we didn't already count value, add it here
+        if (!prevEqual) {
+          direction === -1 && outputMin.push(input[i]);
+          direction === 1 && outputMax.push(input[i]);
+        }
+      }
+      prevEqual = false;
+    } else if (!prevEqual) {
+      // if the previous value is different and the next are equal then we've
+      // found a min/max
+      prevEqual = true;
+      direction === -1 && outputMin.push(input[i]);
+      direction === 1 && outputMax.push(input[i]);
+    }
+  }
+
+  // check last index
+  if (
+    compare(input[input.length - 2][key], input[input.length - 1][key]) !== 0
+  ) {
+    direction === -1 && outputMin.push(input[input.length - 1]);
+    direction === 1 && outputMax.push(input[input.length - 1]);
+  }
+
+  // prettier-ignore
+  // console.log("findLocalMinMax: outputMin = ", outputMin);
+  // console.log("findLocalMinMax: outputMax = ", outputMax);
+
+  return [outputMin, outputMax];
+}
+
+/**
+ **
+ ** Example usage:
+ ** const [globalMin, globalMax] = this.findGlobalMinMax(data,
+ **                                                      "mean_test_accuracy);
+ **/
+export function searchMinMax(input: any[], key: string, window = 2): any {
+  const outputMin = input.reduce((min, curr) =>
+    min[key] < curr[key] ? min : curr
+  );
+  const outputMax = input.reduce((max, curr) =>
+    max[key] > curr[key] ? max : curr
+  );
+
+  return [
+    new Min(outputMin.date, "", outputMin[key]),
+    new Max(outputMax.date, "", outputMax[key]),
+  ];
 }

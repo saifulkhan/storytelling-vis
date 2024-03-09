@@ -4,8 +4,6 @@ import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
 // TODO: Why?
 const CONST = 0.2;
 
-export type PeakProperties = unknown;
-
 export class Peak extends NumericalFeature {
   protected _height: number;
   protected _normHeight: number;
@@ -19,7 +17,7 @@ export class Peak extends NumericalFeature {
     metric = undefined,
     height = undefined,
     normWidth = undefined,
-    normHeight = undefined,
+    normHeight = undefined
   ) {
     super(date, start, end, metric);
     this._type = NumericalFeatureEnum.PEAK;

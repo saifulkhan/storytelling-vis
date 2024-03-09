@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { ScaleLinear } from "d3";
 import { AnimationType } from "src/models/AnimationType";
-import { NumericalFeatureType } from "../../../utils/storyboards/processing/NumericalFeatureType";
+import { NumericalFeatureType } from "../../../utils/storyboards/feature-action-builder/NumericalFeatureType";
 import { GraphAnnotation, LCPAnnotation } from "./GraphAnnotation";
 
 export type LearningCurveData = {
@@ -49,7 +49,7 @@ const TIME_100MS = 1000,
 const filterByYValue = (
   data: LearningCurveData[],
   minY: number,
-  maxY: number,
+  maxY: number
 ) => data.filter((d) => d.y >= minY && d.y <= maxY);
 
 // Return  [[x1, y1], [x2, y2], ... ],
@@ -164,7 +164,7 @@ export class LearningCurve {
       .attr("id", "id-focus")
       .attr(
         "transform",
-        `translate(${this.margin1.left}, ${this.margin1.top})`,
+        `translate(${this.margin1.left}, ${this.margin1.top})`
       );
 
     this.context = this.svg
@@ -173,7 +173,7 @@ export class LearningCurve {
       .attr("id", "id-context")
       .attr(
         "transform",
-        `translate(${this.margin2.left}, ${this.margin2.top})`,
+        `translate(${this.margin2.left}, ${this.margin2.top})`
       );
 
     //
@@ -218,7 +218,7 @@ export class LearningCurve {
           "focus",
           that.animationCounter - 1,
           that._dotHighlightColor,
-          DOT_RADIUS * 2,
+          DOT_RADIUS * 2
         );
       }
     }
@@ -384,8 +384,8 @@ export class LearningCurve {
       // Select min and max data points and draw brush around them
       .call(this.brush.move, () =>
         [d3.min(this._data, (d) => d.y), d3.max(this._data, (d) => d.y)].map(
-          this.y2Scale,
-        ),
+          this.y2Scale
+        )
       )
       .style("fill", "#D3D3D3")
       .style("opacity", 0.2);
@@ -479,12 +479,12 @@ export class LearningCurve {
       .append("circle")
       // .attr("id", (d) => `id-${type}-dots-${d?.index}`) // used with animation
       .attr("r", (d) =>
-        this._maxPoint.index === d.index ? DOT_RADIUS * 2 : DOT_RADIUS,
+        this._maxPoint.index === d.index ? DOT_RADIUS * 2 : DOT_RADIUS
       )
       .attr("cx", (d) => xScale(d.x))
       .attr("cy", (d) => yScale(d.y))
       .style("fill", (d) =>
-        this._maxPoint.index === d.index ? "none" : this._dotColor,
+        this._maxPoint.index === d.index ? "none" : this._dotColor
       )
       .style("opacity", (d) => (this._maxPoint.index === d.index ? 0 : 0.4));
 
@@ -559,7 +559,7 @@ export class LearningCurve {
 
   public annotate(
     annotationsFocus: LCPAnnotation[],
-    annotationsContext: LCPAnnotation[],
+    annotationsContext: LCPAnnotation[]
   ) {
     this.focusAnnotations = annotationsFocus;
     this.contextAnnotations = annotationsContext;
@@ -578,7 +578,7 @@ export class LearningCurve {
       this._focusedData,
       this.focusAnnotations,
       this.x1Scale,
-      this.y1Scale,
+      this.y1Scale
     );
 
     this.focusDotElements = this.createDots(
@@ -586,7 +586,7 @@ export class LearningCurve {
       this._focusedData,
       this.focusAnnotations,
       this.x1Scale,
-      this.y1Scale,
+      this.y1Scale
     );
 
     this.contextLineElements = this.createLineElements(
@@ -594,7 +594,7 @@ export class LearningCurve {
       this._data,
       this.contextAnnotations,
       this.x2Scale,
-      this.y2Scale,
+      this.y2Scale
     );
 
     this.contextDotElements = this.createDots(
@@ -602,7 +602,7 @@ export class LearningCurve {
       this._data,
       this.focusAnnotations,
       this.x2Scale,
-      this.y2Scale,
+      this.y2Scale
     );
 
     this.createAnnotations(
@@ -611,7 +611,7 @@ export class LearningCurve {
       this.x1Scale,
       this.y1Scale,
       this.height1,
-      this.margin1,
+      this.margin1
     );
 
     this.createAnnotations(
@@ -620,7 +620,7 @@ export class LearningCurve {
       this.x2Scale,
       this.y2Scale,
       this.height2,
-      this.margin2,
+      this.margin2
     );
 
     return this;
@@ -650,7 +650,7 @@ export class LearningCurve {
           d3
             .line()
             .x((d) => xScale(d.x))
-            .y((d) => yScale(d.y))(points),
+            .y((d) => yScale(d.y))(points)
         );
 
       const length = path.node().getTotalLength();
@@ -708,7 +708,7 @@ export class LearningCurve {
         xScale(d.unscaledTarget[0]),
         yScale(d.unscaledTarget[1]),
         false,
-        undefined,
+        undefined
       );
 
       // Add to svg
@@ -727,7 +727,7 @@ export class LearningCurve {
           graphAnnotation._tx,
           graphAnnotation._ty,
           height,
-          margin,
+          margin
         );
       }
 
@@ -904,7 +904,7 @@ export class LearningCurve {
     type: "context" | "focus",
     counter: number,
     color: string,
-    radius: number = DOT_RADIUS,
+    radius: number = DOT_RADIUS
   ) {
     selection
       .select(`#id-${type}`) // returns group

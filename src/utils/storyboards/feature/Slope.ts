@@ -1,15 +1,6 @@
 import { NumericalFeature } from "./NumericalFeature";
 import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
 
-export type SlopeProperties = {
-  eq?: number;
-  le?: number;
-  ge?: number;
-  lt?: number;
-  gt?: number;
-  ne?: number;
-};
-
 export class Slope extends NumericalFeature {
   protected _slope: string;
 
@@ -18,7 +9,7 @@ export class Slope extends NumericalFeature {
     start = undefined,
     end = undefined,
     metric = undefined,
-    slope = undefined,
+    slope = undefined
   ) {
     super(date, start, end, metric);
     this._slope = slope;

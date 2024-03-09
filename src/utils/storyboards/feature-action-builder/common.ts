@@ -7,7 +7,7 @@ export function mean(data: number[]): number {
 export function sliceTimeseriesByDate(
   data: TimeseriesDataType[],
   start: Date,
-  end: Date,
+  end: Date
 ): TimeseriesDataType[] {
   return data.filter((item) => item.date >= start && item.date <= end);
 }
@@ -17,13 +17,13 @@ interface FilterCondition {
 }
 
 export function createPredicate(
-  predicateString: string,
+  predicateString: string
 ): FilterCondition | null {
   try {
     // wrapping the predicateString in a function and returning the predicate function
     const predicateFunction = new Function(
       "obj",
-      `return ${predicateString};`,
+      `return ${predicateString};`
     ) as FilterCondition;
     return predicateFunction;
   } catch (error) {
@@ -42,7 +42,7 @@ export function findDateIdx(date: Date, data: TimeseriesDataType[]): number {
 
 export function findIndexOfDate(
   data: TimeseriesDataType[],
-  date: Date,
+  date: Date
 ): number {
   return data.findIndex((d) => {
     for (const key in d) {
@@ -63,7 +63,7 @@ export function findIndexOfDate(
  **/
 export function findIndicesOfDates(
   data: TimeseriesDataType[],
-  dates: Date[],
+  dates: Date[]
 ): number[] {
   const indices: number[] = [];
 
@@ -84,7 +84,7 @@ export function findIndicesOfDates(
 export function setOrUpdateMap(
   map: Map<unknown, unknown>,
   key: unknown,
-  value: unknown[] | unknown,
+  value: unknown[] | unknown
 ) {
   if (map.has(key)) {
     const existingValue = map.get(key);

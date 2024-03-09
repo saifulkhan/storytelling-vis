@@ -5,10 +5,10 @@ export class CategoricalFeature extends AbstractFeature {
   protected _description: string;
 
   constructor(
-    date,
+    date: Date,
     description = undefined,
     type = CategoricalFeatureEnum.DEFAULT,
-    rank = undefined,
+    rank = undefined
   ) {
     super(date);
     this._type = type;

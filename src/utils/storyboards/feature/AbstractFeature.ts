@@ -10,7 +10,7 @@ export abstract class AbstractFeature {
   protected _rank: number;
   protected _type: CategoricalFeatureEnum | NumericalFeatureEnum;
 
-  constructor(date, start = undefined, end = undefined) {
+  constructor(date: Date, start = undefined, end = undefined) {
     this._date = date;
     this._start = start;
     this._end = end;

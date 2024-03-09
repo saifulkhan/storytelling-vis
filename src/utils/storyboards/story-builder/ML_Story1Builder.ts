@@ -2,11 +2,11 @@ import * as d3 from "d3";
 import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
 import { readCSVFile } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { DateActionsMap } from "../processing/FeatureActionMaps";
+import { DateActionsMap } from "../feature-action-builder/FeatureActionMaps";
 import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
-import { FeatureDetectorProperties } from "../feature/TimeseriesFeatureDetector";
-import { FeatureActionTableTranslator } from "../processing/FeatureActionTableTranslator";
-import { ML_TimeseriesDataType } from "../processing/TimeseriesDataType";
+import { FeatureSearchProperties } from "../feature/FeatureSearch";
+import { FeatureActionTableTranslator } from "../feature-action-builder/FeatureActionTableTranslator";
+import { ML_TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
 
 const FILE = "/static/storyboards/ml/data.csv";
 
@@ -69,24 +69,17 @@ export class ML_Story1Builder extends AbstractStoryBuilder {
       .sort((a, b) => d3.ascending(a[key], b[key]))
       .sort((a, b) => d3.ascending(a["date"], b["date"]));
 
-    // const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator()
-    //   .properties({})
-    //   .table(multiVariateStory)
-    //   .data(this._data)
-    //   .translate();
+    // console.log("After sorting, data = ", data);
+    // // prettier-ignore
+    // console.log("globalMin = ", globalMin, ", globalMax = ", globalMax);
 
-    const [localMin, localMax] = this.findLocalMinMax(
-      data,
-      "mean_test_accuracy"
-    );
-    const [globalMin, globalMax] = this.findGlobalMinMax(
-      data,
-      "mean_test_accuracy"
-    );
+    const dataActionsMap: DateActionsMap = new FeatureActionTableTranslator()
+      .properties({ metric: "accuracy" })
+      .table(multiVariateStory)
+      .data(this._data)
+      .translate();
 
-    console.log("After sorting, data = ", data);
-    // prettier-ignore
-    console.log("globalMin = ", globalMin, ", globalMax = ", globalMax);
+    console.log("dataActionsMap = ", dataActionsMap);
 
     let plot = new ParallelCoordinatePlot()
       .svg(this._svg)
@@ -99,98 +92,4 @@ export class ML_Story1Builder extends AbstractStoryBuilder {
   //
   //
   //
-
-  /**
-   ** Given a list of numbers, find the local minimum and maximum data points.
-   ** Example usage:
-   **   const [localMin, localMax] = this.findLocalMinMax(data,
-   **                                                     "mean_test_accuracy");
-   **/
-
-  findLocalMinMax(input: any[], key: string, window = 2): any {
-    // prettier-ignore
-    // console.log("findLocalMinMax: input = ", input, ", keyz = ", key);
-
-    // Given two numbers, return -1, 0, or 1
-    const compare = (a: number, b: number): number => {
-      if (a === b) {
-        return 0;
-      }
-      if (a < b) {
-        return -1;
-      }
-      return 1;
-    };
-
-    const outputMin = [];
-    const outputMax = [];
-
-    // keep track of the direction: down vs up
-    let direction = 0;
-    let prevEqual = true;
-
-    // if 0th != 1st, 0th is a local min / max
-    if (input[0][key] !== input[1][key]) {
-      direction = compare(input[0][key], input[1][key]);
-      prevEqual = false;
-
-      direction === -1 && outputMin.push(input[0]);
-      direction === 1 && outputMax.push(input[0]);
-    }
-
-    // loop through other numbers
-    for (let i = 1; i < input.length - 1; i++) {
-      // compare this to next
-      const nextDirection = compare(input[i][key], input[i + 1][key]);
-      if (nextDirection !== 0) {
-        if (nextDirection !== direction) {
-          direction = nextDirection;
-          // if we didn't already count value, add it here
-          if (!prevEqual) {
-            direction === -1 && outputMin.push(input[i]);
-            direction === 1 && outputMax.push(input[i]);
-          }
-        }
-        prevEqual = false;
-      } else if (!prevEqual) {
-        // if the previous value is different and the next are equal then we've
-        // found a min/max
-        prevEqual = true;
-        direction === -1 && outputMin.push(input[i]);
-        direction === 1 && outputMax.push(input[i]);
-      }
-    }
-
-    // check last index
-    if (
-      compare(input[input.length - 2][key], input[input.length - 1][key]) !== 0
-    ) {
-      direction === -1 && outputMin.push(input[input.length - 1]);
-      direction === 1 && outputMax.push(input[input.length - 1]);
-    }
-
-    // prettier-ignore
-    // console.log("findLocalMinMax: outputMin = ", outputMin);
-    // console.log("findLocalMinMax: outputMax = ", outputMax);
-
-    return [outputMin, outputMax];
-  }
-
-  /**
-   **
-   ** Example usage:
-   ** const [globalMin, globalMax] = this.findGlobalMinMax(data,
-   **                                                      "mean_test_accuracy);
-   **/
-
-  findGlobalMinMax(input: any[], key: string, window = 2): any {
-    const outputMin = input.reduce((min, curr) =>
-      min[key] < curr[key] ? min : curr
-    );
-    const outputMax = input.reduce((max, curr) =>
-      max[key] > curr[key] ? max : curr
-    );
-
-    return [outputMin, outputMax];
-  }
 }

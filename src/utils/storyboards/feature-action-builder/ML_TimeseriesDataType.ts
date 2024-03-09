@@ -1,9 +1,5 @@
-export type TimeseriesDataType = {
+export type ML_TimeseriesDataType = {
   date: Date;
-  y: number;
-};
-
-export type ML_TimeseriesDataType = Omit<TimeseriesDataType, "y"> & {
   mean_test_accuracy: number;
   mean_training_accuracy: number;
   channels: number;

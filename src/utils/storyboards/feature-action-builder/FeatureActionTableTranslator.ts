@@ -1,17 +1,12 @@
-import {
-  ML_TimeseriesDataType,
-  TimeseriesDataType,
-} from "./TimeseriesDataType";
+import { TimeseriesDataType } from "./TimeseriesDataType";
+import { ML_TimeseriesDataType } from "./ML_TimeseriesDataType";
 import { AbstractFeature, FeaturesType } from "../feature/AbstractFeature";
 import { ActionBuilder } from "./ActionBuilder";
 import {
   ActionTableRowType,
   FeatureActionTableRowType as FeatureActionTableRowType,
 } from "../../../components/storyboards/tables/FeatureActionTableRowType";
-import {
-  TimeseriesFeatureDetector,
-  FeatureDetectorProperties,
-} from "../feature/TimeseriesFeatureDetector";
+
 import {
   DateActionsMap,
   DateFeaturesMap,
@@ -19,15 +14,19 @@ import {
 } from "./FeatureActionMaps";
 import { setOrUpdateMap } from "./common";
 import { ActionsType } from "../../../components/storyboards/actions/AbstractAction";
+import {
+  FeatureSearchProperties,
+  FeatureSearch,
+} from "../feature/FeatureSearch";
 
 export class FeatureActionTableTranslator {
   private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
   private _table: FeatureActionTableRowType[];
-  private _properties: FeatureDetectorProperties;
+  private _properties: FeatureSearchProperties;
 
   constructor() {}
 
-  public properties(properties: FeatureDetectorProperties) {
+  public properties(properties: FeatureSearchProperties) {
     this._properties = properties;
     return this;
   }
@@ -47,21 +46,18 @@ export class FeatureActionTableTranslator {
     const dataActionsMap: DateActionsMap = new Map();
     const featureActionMap: FeatureActionsMap = new Map();
 
-    const featureDetector = new TimeseriesFeatureDetector(
-      this._data,
-      this._properties
-    );
+    const featureSearch = new FeatureSearch(this._data, this._properties);
     const actionBuilder = new ActionBuilder();
 
     this._table.forEach((row: FeatureActionTableRowType) => {
       // prettier-ignore
       // console.log("FeatureActionTableTranslator: feature = ", d.feature, ", properties = ", d.properties);
-      const features: FeaturesType = featureDetector.detect(
+      const features: FeaturesType = featureSearch.detect(
         row.feature,
         row.properties,
       );
       // prettier-ignore
-      // console.log("FeatureActionTableTranslator: features = ", features);
+      console.log("FeatureActionTableTranslator: features = ", features);
 
       const actions: ActionsType = [];
       row.actions.forEach((rowIn: ActionTableRowType) => {

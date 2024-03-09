@@ -109,6 +109,10 @@ await feature.show(delay, duration);
 await feature.hide(delay, duration);
 ```
 
+### Feature Search or Detection
+
+Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
+
 ## References
 
 - For the Observable prototypes developed during the initial phases of RAMPVIS project, [see](https://observablehq.com/d/0a6e9c35a809660e>).

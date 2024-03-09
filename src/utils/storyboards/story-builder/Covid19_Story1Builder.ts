@@ -2,11 +2,14 @@ import * as d3 from "d3";
 import { readCSVFile } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
-import { TimeseriesDataType } from "../processing/TimeseriesDataType";
-import { FeatureActionTableTranslator } from "../processing/FeatureActionTableTranslator";
-import { FeatureDetectorProperties } from "../feature/TimeseriesFeatureDetector";
-import { findIndexOfDate, findIndicesOfDates } from "../processing/common";
-import { DateActionsMap } from "../processing/FeatureActionMaps";
+import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
+import { FeatureActionTableTranslator } from "../feature-action-builder/FeatureActionTableTranslator";
+import { FeatureSearchProperties } from "../feature/FeatureSearch";
+import {
+  findIndexOfDate,
+  findIndicesOfDates,
+} from "../feature-action-builder/common";
+import { DateActionsMap } from "../feature-action-builder/FeatureActionMaps";
 import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import {
@@ -89,7 +92,7 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
       .properties({
         metric: "Cases/day",
         window: WINDOW,
-      } as FeatureDetectorProperties)
+      } as FeatureSearchProperties)
       .table(featureActionTableStory1)
       .data(this._data)
       .translate();
