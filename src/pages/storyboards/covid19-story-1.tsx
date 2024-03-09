@@ -24,7 +24,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { Covid19_Story1Builder } from "../../utils/storyboards/story-builder/Covid19_Story1Builder";
+import { Covid19_Story1Builder } from "../../utils/storyboards/story-builder/Covid19Story1Builder";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 

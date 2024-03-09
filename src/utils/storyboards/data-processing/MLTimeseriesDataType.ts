@@ -1,4 +1,4 @@
-export type ML_TimeseriesDataType = {
+export type MLTimeseriesDataType = {
   date: Date;
   mean_test_accuracy: number;
   mean_training_accuracy: number;

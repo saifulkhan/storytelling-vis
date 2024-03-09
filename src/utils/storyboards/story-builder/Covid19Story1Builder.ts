@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { readCSVFile } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
-import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
+import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import {
   findIndexOfDate,

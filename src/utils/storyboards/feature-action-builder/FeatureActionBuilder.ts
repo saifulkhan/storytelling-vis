@@ -1,6 +1,6 @@
-import { TimeseriesDataType } from "./TimeseriesDataType";
-import { ML_TimeseriesDataType } from "./ML_TimeseriesDataType";
-import { AbstractFeature, FeaturesType } from "../feature/AbstractFeature";
+import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
+import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
+import { AbstractFeature } from "../feature/AbstractFeature";
 import { ActionFactory } from "../../../components/storyboards/actions/ActionFactory";
 import {
   ActionTableRowType,
@@ -17,7 +17,7 @@ import { ActionsType } from "../../../components/storyboards/actions/AbstractAct
 import { FeatureFactory } from "../feature/FeatureFactory";
 
 export class FeatureActionBuilder {
-  private _data: TimeseriesDataType[] | ML_TimeseriesDataType[];
+  private _data: TimeseriesDataType[] | MLTimeseriesDataType[];
   private _table: FeatureActionTableRowType[];
   private _properties: any;
   private _name = "";
@@ -34,7 +34,7 @@ export class FeatureActionBuilder {
     return this;
   }
 
-  public data(data: TimeseriesDataType[] | ML_TimeseriesDataType[]) {
+  public data(data: TimeseriesDataType[] | MLTimeseriesDataType[]) {
     this._data = data;
     return this;
   }
@@ -55,7 +55,7 @@ export class FeatureActionBuilder {
     this._table.forEach((row: FeatureActionTableRowType) => {
       // prettier-ignore
       // console.log("FeatureActionTableTranslator: feature = ", d.feature, ", properties = ", d.properties);
-      const features: FeaturesType = featureFactory.detect(
+      const features: AbstractFeature[] = featureFactory.detect(
         row.feature,
         row.properties,
       );

@@ -5,13 +5,13 @@ import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/Pa
 import { DateActionsMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
-import { ML_TimeseriesDataType } from "../feature-action-builder/ML_TimeseriesDataType";
+import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
 
 const FILE = "/static/storyboards/ml/data.csv";
 const NAMES = ["channels", "kernel_size", "layers", "samples_per_class"];
 
-export class ML_Story1Builder extends AbstractStoryBuilder {
-  protected _data: ML_TimeseriesDataType[] = [];
+export class MLStory1Builder extends AbstractStoryBuilder {
+  protected _data: MLTimeseriesDataType[] = [];
   protected _name = "";
 
   constructor() {
@@ -82,9 +82,9 @@ export class ML_Story1Builder extends AbstractStoryBuilder {
     console.log("dataActionsMap = ", dataActionsMap);
 
     let plot = new ParallelCoordinatePlot()
-      .svg(this._svg)
-      .data(data)
       .name(this._name)
+      .data(data)
+      .svg(this._svg)
       .draw();
 
     return this;

@@ -2,9 +2,9 @@ import { Peak } from "./Peak";
 import { Slope } from "./Slope";
 import { searchMinMax, searchPeaks, searchSlopes } from "./feature-search";
 import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
-import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
+import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
 import { AbstractFeature } from "./AbstractFeature";
-import { ML_TimeseriesDataType } from "../feature-action-builder/ML_TimeseriesDataType";
+import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
 import { createPredicate } from "../feature-action-builder/common";
 import { Min } from "./Min";
 import { Max } from "./Max";
@@ -16,7 +16,7 @@ const METRIC = "Cases/day",
   WINDOW = 20;
 
 export class FeatureFactory {
-  private _data: TimeseriesDataType[] | ML_TimeseriesDataType[] = [];
+  private _data: TimeseriesDataType[] | MLTimeseriesDataType[] = [];
   private _properties: any;
   private _name = "";
 
@@ -27,7 +27,7 @@ export class FeatureFactory {
     return this;
   }
 
-  public data(data: TimeseriesDataType[] | ML_TimeseriesDataType[]) {
+  public data(data: TimeseriesDataType[] | MLTimeseriesDataType[]) {
     this._data = data;
     return this;
   }
@@ -86,9 +86,7 @@ export class FeatureFactory {
     console.log("FeatureFactory:detectPeaks: timeseriesProcessingProperties =", this._properties);
     // prettier-ignore
     console.log("FeatureFactory:detectPeaks: data =", this._data);
-
     const peaks = searchPeaks(this._data, METRIC, WINDOW);
-
     return peaks;
   }
 
@@ -133,6 +131,9 @@ export class FeatureFactory {
         return createPredicate(`obj.${attr} > ${value}`);
       case "ne":
         return createPredicate(`obj.${attr} != ${value}`);
+      default:
+        // prettier-ignore
+        console.error(`FeatureFactory:predicate: condition = ${key} not implemented!`)
     }
   }
 }

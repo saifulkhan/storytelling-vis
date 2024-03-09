@@ -1,7 +1,7 @@
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { Peak } from "../feature/Peak";
 import { TimeseriesDataType } from "./TimeseriesDataType";
-import { findDateIdx } from "./common";
+import { findDateIdx } from "../feature-action-builder/common";
 
 /*
     Given an an array of events it calculates gaussian curves to represent their ranks.
@@ -10,7 +10,7 @@ import { findDateIdx } from "./common";
   */
 export const toGaussian = function (
   features: Peak[] | CategoricalFeature[],
-  data: TimeseriesDataType[],
+  data: TimeseriesDataType[]
 ) {
   const gauss_arr = features.map((e) => {
     const dateIdx = findDateIdx(e._date, data);

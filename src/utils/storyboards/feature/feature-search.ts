@@ -3,7 +3,7 @@ import { Slope } from "./Slope";
 import { findDateIdx, mean } from "../feature-action-builder/common";
 import { CategoricalFeature } from "./CategoricalFeature";
 import { CategoricalFeatureEnum } from "./CategoricalFeatureEnum";
-import { TimeseriesDataType } from "../feature-action-builder/TimeseriesDataType";
+import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
 import { Min } from "./Min";
 import { Max } from "./Max";
 

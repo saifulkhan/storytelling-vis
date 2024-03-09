@@ -1,10 +1,7 @@
 import * as d3 from "d3";
 import { Color } from "../Colors";
-import { GraphAnnotation, PCPAnnotation } from "./GraphAnnotation";
 import { AbstractPlot } from "./AbstractPlot";
-import { getObjectKeysArray } from "../../../utils/common";
-import { Coordinate } from "../actions/AbstractAction";
-import { AnimationType } from "./AnimationType";
+import { getObjectKeysArray } from "../../../utils/storyboards/feature-action-builder/common";
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -84,9 +81,8 @@ export class ParallelCoordinatePlot extends AbstractPlot {
   }
 
   public data(data: any[]) {
-    this._data = data;
-
-    this._data = this._data
+    // sort data by selected key, e.g, "kernel_size"
+    this._data = data
       .slice()
       .sort((a, b) => d3.ascending(a[this._name], b[this._name]))
       .sort((a, b) => d3.ascending(a["date"], b["date"]));
