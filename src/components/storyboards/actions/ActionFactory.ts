@@ -1,13 +1,16 @@
 import { AbstractAction } from "./AbstractAction";
 import { ActionEnum } from "./ActionEnum";
 import { Circle, CircleProperties } from "./Circle";
+import { CompositeAction } from "./CompositeAction";
 import { Connector, ConnectorProperties } from "./Connector";
 import { Dot, DotProperties } from "./Dot";
 import { TextBox, TextBoxProperties } from "./TextBox";
 
 export class ActionFactory {
+  _action: CompositeAction;
+
   constructor() {
-    //
+    this._action = new CompositeAction();
   }
 
   public create(
@@ -34,5 +37,16 @@ export class ActionFactory {
         console.error(`Action ${action} is not implemented!`);
         alert(`Action ${action} is not implemented!`)
     }
+  }
+
+  public createComposite(
+    action: ActionEnum,
+    properties:
+      | CircleProperties
+      | ConnectorProperties
+      | DotProperties
+      | TextBoxProperties
+  ): CompositeAction {
+    return this._action.push(this.create(action, properties));
   }
 }

@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Dot } from "src/components/storyboards/actions/Dot";
-import { TextBox } from "src/components/storyboards/actions/TextBox";
-import { Connector } from "src/components/storyboards/actions/Connector";
-import { Circle } from "src/components/storyboards/actions/Circle";
-import {
-  AbstractAction,
-  Coordinate,
-} from "src/components/storyboards/actions/AbstractAction";
+import { Coordinate } from "../../../components/storyboards/actions/AbstractAction";
+import { Dot } from "../../../components/storyboards/actions/Dot";
+import { TextBox } from "../../../components/storyboards/actions/TextBox";
+import { Connector } from "../../../components/storyboards/actions/Connector";
+import { Circle } from "../../../components/storyboards/actions/Circle";
+import { CompositeAction } from "../../../components/storyboards/actions/CompositeAction";
 
 const TestActions = () => {
   const chartRef = useRef(null);
@@ -57,15 +55,12 @@ const TestActions = () => {
         .draw()
         .coordinate(src, dest);
 
-      /*
       const connector = new Connector()
         .properties({})
         .svg(svg)
         .draw()
         .coordinate(src, dest);
 
-        */
-      /*
       const circle = new Circle()
         .properties({
           size: 10,
@@ -75,16 +70,16 @@ const TestActions = () => {
         .svg(svg)
         .draw()
         .coordinate(src, dest);
-      */
 
       const animate = async () => {
         await textBox.show();
         await textBox.move([400, 300]);
-
         await dot.show();
         // await dot.move([400, 300]);
+        await circle.show();
+        // await circle.move([400, 300]);
+        await connector.show();
 
-        // animate individually
         /*
         await Promise.all([
           textBox.show(),
@@ -92,31 +87,28 @@ const TestActions = () => {
           circle.show(),
           connector.show(),
         ]);
-
-        await Promise.all([
-          textBox.hide(),
-          dot.hide(),
-          circle.hide(),
-          connector.hide(),
-        ]);
-
-        await Promise.all([
-          textBox.show(),
-          dot.show(),
-          circle.show(),
-          connector.show(),
-        ]);
-
-        // animate together
-        
-        const actions = [textBox, dot, circle, connector];
-        await AbstractAction.show(actions);
-        await AbstractAction.hide(actions);
-        await AbstractAction.show(actions);
-       */
+        */
       };
 
-      animate();
+      const animateComposite = async () => {
+        const actions = new CompositeAction([textBox, dot, circle, connector])
+          .svg(svg)
+          .draw()
+          .coordinate(src, dest)
+          .show();
+
+        // await actions.move([400, 300]);
+      };
+
+      //
+      // Test individually
+      //
+      // animate();
+
+      //
+      // Test composite
+      //
+      animateComposite();
     }
 
     return () => {

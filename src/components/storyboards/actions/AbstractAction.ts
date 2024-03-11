@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { ActionEnum, ActionEnumZOrder } from "./ActionEnum";
 
-export type ActionsType = AbstractAction[];
 export type Coordinate = [number, number];
 
 export abstract class AbstractAction {
@@ -12,9 +11,7 @@ export abstract class AbstractAction {
   protected _src;
   protected _dest;
 
-  constructor() {
-    //
-  }
+  constructor() {}
 
   public abstract properties(properties: unknown): this;
 
@@ -32,8 +29,10 @@ export abstract class AbstractAction {
       .create("svg")
       .append("g")
       .attr("id", this._properties?.id)
-      // .attr("display", "none") // hide
-      .style("opacity", 0) // hide
+      // hide option 1
+      // .attr("display", "none")
+      // hide option 2
+      .style("opacity", 0)
       .node();
 
     d3.select(this._svg).append(() => this._node);
@@ -48,11 +47,14 @@ export abstract class AbstractAction {
     return new Promise<number>((resolve, reject) => {
       d3.select(this._node)
         .transition()
-        .delay(0) // delay before transition
-        .duration(duration) // duration of the opacity transition
+        // delay before transition
+        .delay(0)
+        // duration of the opacity transition
+        .duration(duration)
         .style("opacity", 1)
         .transition()
-        .delay(delay) // delay after the opacity transition ends
+        // delay after the opacity transition ends
+        .delay(delay)
         .on("end", () => {
           resolve(delay + duration);
         });
@@ -79,45 +81,8 @@ export abstract class AbstractAction {
   ): Promise<any>;
 
   public remove() {
-    // TODO: use id?
+    // TODO: not implemented; use id?
     //d3.select(svg).select("svg").remove();
     return this;
-  }
-
-  /**
-   ** Static methods
-   **/
-
-  public static svg(actions: ActionsType, svg: SVGGElement) {
-    actions.map((d: AbstractAction) => d.svg(svg));
-    return this;
-  }
-
-  public static draw(actions: ActionsType) {
-    actions.sort(
-      (a: AbstractAction, b: AbstractAction) =>
-        ActionEnumZOrder[b.type] - ActionEnumZOrder[a.type]
-    );
-    actions.map((d: AbstractAction) => d.draw());
-    return this;
-  }
-
-  public static coordinate(
-    actions: ActionsType,
-    src: Coordinate,
-    dest: Coordinate
-  ) {
-    actions.map((d: AbstractAction) => d.coordinate(src, dest));
-    return this;
-  }
-
-  public static show(actions: ActionsType): Promise<any[]> {
-    const promises = actions.map((d: AbstractAction) => d.show());
-    return Promise.all(promises);
-  }
-
-  public static hide(actions: ActionsType) {
-    const promises = actions.map((d: AbstractAction) => d.hide());
-    return Promise.all(promises);
   }
 }

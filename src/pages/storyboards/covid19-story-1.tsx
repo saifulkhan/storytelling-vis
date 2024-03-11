@@ -24,11 +24,11 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { Covid19_Story1Builder } from "../../utils/storyboards/story-builder/Covid19Story1Builder";
+import { Covid19Story1Builder } from "../../utils/storyboards/story-builder/Covid19Story1Builder";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const storyBuilder = new Covid19_Story1Builder();
+const storyBuilder = new Covid19Story1Builder();
 
 const Covid19Story1 = () => {
   const [loading, setLoading] = useState(true);

@@ -8,12 +8,11 @@ import {
 } from "../../../components/storyboards/tables/FeatureActionTableRowType";
 
 import {
-  DateActionsMapType,
+  DateActionMapType,
   DateFeaturesMapType,
-  FeatureActionsMapType,
+  FeatureActionMapType,
 } from "./FeatureActionMapsType";
 import { setOrUpdateMap } from "../../common";
-import { ActionsType } from "../../../components/storyboards/actions/AbstractAction";
 import { FeatureFactory } from "../feature/FeatureFactory";
 
 export class FeatureActionBuilder {
@@ -46,11 +45,10 @@ export class FeatureActionBuilder {
 
   public build() {
     const dateFeaturesMap: DateFeaturesMapType = new Map();
-    const dataActionsMap: DateActionsMapType = new Map();
-    const featureActionMap: FeatureActionsMapType = new Map();
+    const dataActionsMap: DateActionMapType = new Map();
+    const featureActionMap: FeatureActionMapType = new Map();
 
     const featureFactory = new FeatureFactory().data(this._data);
-    const actionFactory = new ActionFactory();
 
     this._table.forEach((row: FeatureActionTableRowType) => {
       // prettier-ignore
@@ -62,20 +60,23 @@ export class FeatureActionBuilder {
       // prettier-ignore
       console.log("FeatureActionTableTranslator: features = ", features);
 
-      const actions: ActionsType = [];
+      const actionFactory = new ActionFactory();
+      let action;
+
       row.actions.forEach((rowIn: ActionTableRowType) => {
         // prettier-ignore
         // console.log("FeatureActionTableTranslator: action = ", d1.action,  ", properties = ", d1.properties);
-        const action = actionFactory.create(rowIn.action, rowIn.properties);
+        // const action = actionFactory.create(rowIn.action, rowIn.properties);
         // prettier-ignore
         // console.log("FeatureActionTableTranslator: action = ", action);
-        actions.push(action);
+        action = actionFactory.createComposite(rowIn.action, rowIn.properties);
       });
+      console.log("FeatureActionBuilder: action = ", action);
 
       features.forEach((feature: AbstractFeature) => {
         setOrUpdateMap(dateFeaturesMap, feature.date, feature);
-        setOrUpdateMap(featureActionMap, feature, actions);
-        setOrUpdateMap(dataActionsMap, feature.date, actions);
+        featureActionMap.set(feature, action);
+        dataActionsMap.set(feature.date, action);
       });
     });
 

@@ -5,19 +5,15 @@ import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { findIndexOfDate, findIndicesOfDates } from "../../common";
-import { DateActionsMapType } from "../feature-action-builder/FeatureActionMapsType";
+import { DateActionMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
-import {
-  AbstractAction,
-  ActionsType,
-} from "../../../components/storyboards/actions/AbstractAction";
+import { AbstractAction } from "../../../components/storyboards/actions/AbstractAction";
 import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
-import { FeatureFactoryProperties } from "../feature/FeatureFactory";
 
 const WINDOW = 3;
 
-export class Covid19_Story1Builder extends AbstractStoryBuilder {
+export class Covid19Story1Builder extends AbstractStoryBuilder {
   protected _allRegionData: Record<string, TimeseriesDataType[]> = {};
   protected _data: TimeseriesDataType[];
   protected _name: string;
@@ -32,7 +28,7 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
   protected async data() {
     const file = "/static/storyboards/newCasesByPublishDateRollingSum.csv";
     const csv: any[] = await readCSVFile(file);
-    // console.log("Covid19StoryWorkflow:load: file = ", file, ", csv = ", csv);
+    // console.log("Covid19Story1Builder:load: file = ", file, ", csv = ", csv);
 
     csv.forEach((row) => {
       const region = row.areaName;
@@ -53,7 +49,7 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
       );
     }
 
-    console.log("Covid19StoryWorkflow:load: data = ", this._allRegionData);
+    console.log("Covid19Story1Builder:load: data = ", this._allRegionData);
     return this;
   }
 
@@ -74,7 +70,7 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
       .attr("height", 500)
       .node();
 
-    console.log("Covid19StoryWorkflow:selector: _svg = ", this._svg);
+    console.log("Covid19Story1Builder:selector: _svg = ", this._svg);
 
     return this;
   }
@@ -89,25 +85,25 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
 
-    const dataActionsMap: DateActionsMapType = new FeatureActionBuilder()
+    const dataActionMap: DateActionMapType = new FeatureActionBuilder()
       .properties({
         metric: "Cases/day",
         window: WINDOW,
-      } as FeatureFactoryProperties)
+      })
       .table(featureActionTableStory1)
       .data(this._data)
       .build();
 
-    // console.log("Covid19StoryWorkflow: dateFeatureMap = ", dateFeatureMap);
-    // console.log("Covid19StoryWorkflow: featureActionMap = ", featureActionMap);
-    console.log("Covid19StoryWorkflow: dataActionsMap = ", dataActionsMap);
+    // console.log("Covid19Story1Builder: dateFeatureMap = ", dateFeatureMap);
+    // console.log("Covid19Story1Builder: featureActionMap = ", featureActionMap);
+    console.log("Covid19Story1Builder: dataActionsMap = ", dataActionMap);
 
-    const dates: Date[] = [...dataActionsMap.keys()];
+    const dates: Date[] = [...dataActionMap.keys()];
     dates.sort((d1: Date, d2: Date) => d1.getTime() - d2.getTime());
 
     const indices = findIndicesOfDates(this._data, dates);
     // prettier-ignore
-    console.log("Covid19StoryWorkflow: dates = ", dates,  ", indices = ", indices);
+    console.log("Covid19Story1Builder: dates = ", dates,  ", indices = ", indices);
 
     const plot = new LinePlot()
       .data([this._data])
@@ -124,26 +120,23 @@ export class Covid19_Story1Builder extends AbstractStoryBuilder {
       try {
         for (const date of dates) {
           // prettier-ignore
-          console.log("Covid19StoryWorkflow: index = ", findIndexOfDate(this._data, date));
+          console.log("Covid19Story1Builder: index = ", findIndexOfDate(this._data, date));
 
-          const actionsArray: ActionsType[] = dataActionsMap.get(date);
-          console.log("Covid19StoryWorkflow: actionsArray = ", actionsArray);
+          const action: AbstractAction = dataActionMap.get(date);
+          console.log("Covid19Story1Builder: action = ", action);
 
           const end = findIndexOfDate(this._data, date);
           await plot.animate(0, start, end);
 
-          console.log("Covid19StoryWorkflow: length = ", actionsArray.length);
+          action
+            .svg(this._svg)
+            .draw()
+            .coordinate(...plot.coordinates(0, date));
 
-          for (const actions of actionsArray) {
-            console.log("Covid19StoryWorkflow: actions = ", actions);
-            AbstractAction.svg(actions, this._svg);
-            AbstractAction.draw(actions);
-            AbstractAction.coordinate(actions, ...plot.coordinates(0, date));
-            let res = await AbstractAction.show(actions);
-            console.log("res 1 = ", res);
-            res = await AbstractAction.hide(actions);
-            console.log("res 2 = ", res);
-          }
+          let response = await action.show();
+          console.log("Covid19Story1Builder:  show returns = ", response);
+          response = await action.hide();
+          console.log("Covid19Story1Builder: hide returns = ", response);
 
           start = end;
         }

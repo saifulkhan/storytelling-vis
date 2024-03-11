@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
 import { readCSVFile } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { DateActionsMapType } from "../feature-action-builder/FeatureActionMapsType";
+import { DateActionMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
@@ -72,7 +72,7 @@ export class MLStory1Builder extends AbstractStoryBuilder {
     // prettier-ignore
     // console.log("globalMin = ", globalMin, ", globalMax = ", globalMax);
 
-    const dataActionsMap: DateActionsMapType = new FeatureActionBuilder()
+    const dataActionsMap: DateActionMapType = new FeatureActionBuilder()
       .properties({ metric: "accuracy" })
       .table(multiVariateStory)
       .data(this._data)
