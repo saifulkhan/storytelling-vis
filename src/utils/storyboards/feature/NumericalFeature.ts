@@ -1,7 +1,7 @@
-import { AbstractFeature } from "./AbstractFeature";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
+import { Feature } from "./Feature";
+import { NumericalFeatures } from "./NumericalFeatures";
 
-export class NumericalFeature extends AbstractFeature {
+export class NumericalFeature extends Feature {
   protected _metric: string;
 
   constructor(
@@ -12,7 +12,7 @@ export class NumericalFeature extends AbstractFeature {
   ) {
     super(date, start, end);
     this._metric = metric;
-    this._type = NumericalFeatureEnum.DEFAULT;
+    this._type = NumericalFeatures.DEFAULT;
   }
 
   set metric(metric) {

@@ -1,4 +1,4 @@
-export abstract class AbstractStoryBuilder {
+export abstract class StoryBuilder {
   protected _initPromise: Promise<void>;
   protected _svg: SVGSVGElement;
 

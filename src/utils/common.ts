@@ -1,14 +1,14 @@
-import { TimeseriesDataType } from "./storyboards/data-processing/TimeseriesDataType";
+import { TimeseriesData } from "./storyboards/data-processing/TimeseriesData";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
 }
 
 export function sliceTimeseriesByDate(
-  data: TimeseriesDataType[],
+  data: TimeseriesData[],
   start: Date,
   end: Date
-): TimeseriesDataType[] {
+): TimeseriesData[] {
   return data.filter((item) => item.date >= start && item.date <= end);
 }
 
@@ -36,14 +36,11 @@ export function createPredicate(
  **  Function to find index of a date in the timeseries data
  **/
 
-export function findDateIdx(date: Date, data: TimeseriesDataType[]): number {
+export function findDateIdx(date: Date, data: TimeseriesData[]): number {
   return data.findIndex((d) => d.date.getTime() == date.getTime());
 }
 
-export function findIndexOfDate(
-  data: TimeseriesDataType[],
-  date: Date
-): number {
+export function findIndexOfDate(data: TimeseriesData[], date: Date): number {
   return data.findIndex((d) => {
     for (const key in d) {
       if (
@@ -62,7 +59,7 @@ export function findIndexOfDate(
  **  Function to find indices of dates in the time series data
  **/
 export function findIndicesOfDates(
-  data: TimeseriesDataType[],
+  data: TimeseriesData[],
   dates: Date[]
 ): number[] {
   const indices: number[] = [];

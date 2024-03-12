@@ -1,4 +1,4 @@
-export type ConditionType = {
+export type Condition = {
   eq?: number;
   le?: number;
   ge?: number;

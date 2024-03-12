@@ -1,14 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
-
-export type FallProperties = {
-  eq?: number;
-  le?: number;
-  ge?: number;
-  lt?: number;
-  gt?: number;
-  ne?: number;
-};
+import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Fall extends NumericalFeature {
   _height;
@@ -21,10 +12,10 @@ export class Fall extends NumericalFeature {
     end = undefined,
     metric = undefined,
     height = undefined,
-    grad = undefined,
+    grad = undefined
   ) {
     super(date, start, end, metric);
-    this._type = NumericalFeatureEnum.FALL;
+    this._type = NumericalFeatures.FALL;
     this._height = height;
     this._grad = grad;
   }

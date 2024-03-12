@@ -1,6 +1,6 @@
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { Peak } from "../feature/Peak";
-import { TimeseriesDataType } from "./TimeseriesDataType";
+import { TimeseriesData } from "./TimeseriesData";
 import { findDateIdx } from "../../common";
 
 /*
@@ -10,7 +10,7 @@ import { findDateIdx } from "../../common";
   */
 export const toGaussian = function (
   features: Peak[] | CategoricalFeature[],
-  data: TimeseriesDataType[]
+  data: TimeseriesData[]
 ) {
   const gauss_arr = features.map((e) => {
     const dateIdx = findDateIdx(e._date, data);

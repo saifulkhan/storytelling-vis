@@ -1,24 +1,22 @@
-import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
-import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
-import { AbstractFeature } from "../feature/AbstractFeature";
+import {
+  MLTimeseriesData,
+  TimeseriesData,
+} from "../data-processing/TimeseriesData";
+import { Feature } from "../feature/Feature";
 import { ActionFactory } from "../../../components/storyboards/actions/ActionFactory";
 import {
-  ActionTableRowType,
-  FeatureActionTableRowType as FeatureActionTableRowType,
-} from "../../../components/storyboards/tables/FeatureActionTableRowType";
+  ActionTableRow,
+  FeatureActionTableRow as FeatureActionTableRow,
+} from "../../../components/storyboards/tables/TableRows";
 
-import {
-  DateActionArray,
-  DateFeaturesMapType,
-  FeatureActionMapType,
-} from "./FeatureActionMapsType";
 import { setOrUpdateMap } from "../../common";
 import { FeatureFactory } from "../feature/FeatureFactory";
-import { AbstractAction } from "../../../components/storyboards/actions/AbstractAction";
+import { Action } from "../../../components/storyboards/actions/Action";
+import { DateActionArray } from "./FeatureActionTypes";
 
 export class FeatureActionBuilder {
-  private _data: TimeseriesDataType[] | MLTimeseriesDataType[];
-  private _table: FeatureActionTableRowType[];
+  private _data: TimeseriesData[] | MLTimeseriesData[];
+  private _table: FeatureActionTableRow[];
   private _properties: any;
   private _name = "";
 
@@ -29,12 +27,12 @@ export class FeatureActionBuilder {
     return this;
   }
 
-  public table(table: FeatureActionTableRowType[]) {
+  public table(table: FeatureActionTableRow[]) {
     this._table = table;
     return this;
   }
 
-  public data(data: TimeseriesDataType[] | MLTimeseriesDataType[]) {
+  public data(data: TimeseriesData[] | MLTimeseriesData[]) {
     this._data = data;
     return this;
   }
@@ -45,40 +43,40 @@ export class FeatureActionBuilder {
   }
 
   public build() {
-    const dateFeaturesMap: DateFeaturesMapType = new Map();
-    const dataActionsArray: DateActionArray = [];
-    const featureActionMap: FeatureActionMapType = new Map();
-
+    const dataActionArray: DateActionArray = [];
+    const actionFactory = new ActionFactory();
     const featureFactory = new FeatureFactory().data(this._data);
 
-    this._table.forEach((row: FeatureActionTableRowType) => {
+    // const featureActionMap: FeatureActionMap = new Map();
+    // const dateFeaturesMap: DateFeaturesMap = new Map();
+
+    this._table.forEach((row: FeatureActionTableRow) => {
       // prettier-ignore
-      // console.log("FeatureActionTableTranslator: feature = ", d.feature, ", properties = ", d.properties);
-      const features: AbstractFeature[] = featureFactory.detect(
+      console.log("FeatureActionBuilder: row = ", row);
+      const features: Feature[] = featureFactory.detect(
         row.feature,
-        row.properties,
+        row.properties
       );
       // prettier-ignore
-      console.log("FeatureActionTableTranslator: features = ", features);
+      console.log("FeatureActionBuilder: features = ", features);
 
-      const actionFactory = new ActionFactory();
-      let action: AbstractAction;
+      features.forEach((feature: Feature) => {
+        let actions: Action[] = [];
+        row.actions.forEach((rowIn: ActionTableRow) => {
+          // const action = actionFactory.create(rowIn.action, rowIn.properties);
+          // prettier-ignore
+          // console.log("FeatureActionBuilder: action = ", action);
+          actions.push(actionFactory.create(rowIn.action, rowIn.properties));
+        });
 
-      row.actions.forEach((rowIn: ActionTableRowType) => {
-        // const action = actionFactory.create(rowIn.action, rowIn.properties);
-        // prettier-ignore
-        // console.log("FeatureActionTableTranslator: action = ", action);
-        action = actionFactory.compose(rowIn.action, rowIn.properties);
-      });
-      console.log("FeatureActionBuilder: action = ", action);
-
-      features.forEach((feature: AbstractFeature) => {
-        setOrUpdateMap(dateFeaturesMap, feature.date, feature);
-        featureActionMap.set(feature, action);
-        dataActionsArray.push([feature.date, action]);
+        const action: Action = actionFactory.compose(actions);
+        console.log("FeatureActionBuilder: action = ", action);
+        // setOrUpdateMap(dateFeaturesMap, feature.date, feature);
+        // featureActionMap.set(feature, action);
+        dataActionArray.push([feature.date, action]);
       });
     });
 
-    return dataActionsArray;
+    return dataActionArray;
   }
 }

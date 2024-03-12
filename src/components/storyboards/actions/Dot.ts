@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { AbstractAction, Coordinate } from "./AbstractAction";
-import { ActionEnum } from "./ActionEnum";
+import { Action, Coordinate } from "./Action";
+import { Actions } from "./Actions";
 
 export type DotProperties = {
   id?: string;
@@ -16,13 +16,13 @@ export const defaultDotProperties: DotProperties = {
   opacity: 1,
 };
 
-export class Dot extends AbstractAction {
+export class Dot extends Action {
   protected _properties: DotProperties;
   protected _dotNode;
 
   constructor() {
     super();
-    this._type = ActionEnum.DOT;
+    this._type = Actions.DOT;
   }
 
   public properties(properties: DotProperties = {}) {

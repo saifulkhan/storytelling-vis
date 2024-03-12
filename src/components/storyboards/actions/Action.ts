@@ -1,10 +1,13 @@
 import * as d3 from "d3";
-import { ActionEnum, ActionEnumZOrder } from "./ActionEnum";
+import { Actions } from "./Actions";
 
 export type Coordinate = [number, number];
 
-export abstract class AbstractAction {
-  protected _type: ActionEnum;
+const DELAY = 0,
+  DURATION = 1000;
+
+export abstract class Action {
+  protected _type: Actions;
   protected _properties;
   protected _svg: SVGGElement;
   protected _node: SVGGElement;
@@ -14,12 +17,15 @@ export abstract class AbstractAction {
   constructor() {}
 
   public abstract properties(properties: unknown): this;
+  public extraProperties(extra: any) {
+    return this;
+  }
 
   public get id(): string {
     return this._properties?.id;
   }
 
-  public get type(): ActionEnum {
+  public get type(): Actions {
     return this._type;
   }
 
@@ -43,7 +49,7 @@ export abstract class AbstractAction {
   // we need src & dest both for connector, text box
   public abstract coordinate(src: Coordinate, dest: Coordinate): this;
 
-  public show(delay = 2000, duration = 1000) {
+  public show(delay = DELAY, duration = DURATION) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this._node)
         .transition()
@@ -61,7 +67,7 @@ export abstract class AbstractAction {
     });
   }
 
-  public hide(delay = 0, duration = 1000) {
+  public hide(delay = DELAY, duration = DURATION) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this._node)
         .transition()

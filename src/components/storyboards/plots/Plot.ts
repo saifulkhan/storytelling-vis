@@ -1,6 +1,6 @@
-import { Coordinate } from "../actions/AbstractAction";
+import { Coordinate } from "../actions/Action";
 
-export abstract class AbstractPlot {
+export abstract class Plot {
   protected _svg: SVGSVGElement;
   protected _node: HTMLElement;
 

@@ -2,8 +2,8 @@ import { Peak } from "./Peak";
 import { Slope } from "./Slope";
 import { findDateIdx, mean } from "../../common";
 import { CategoricalFeature } from "./CategoricalFeature";
-import { CategoricalFeatureEnum } from "./CategoricalFeatureEnum";
-import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
+import { CategoricalFeatures } from "./CategoricalFeatures";
+import { TimeseriesData } from "../data-processing/TimeseriesData";
 import { Min } from "./Min";
 import { Max } from "./Max";
 
@@ -12,11 +12,7 @@ const MAX_RANK = 5;
 /*
  * Create numerical timeseries
  */
-export function nts(
-  data: TimeseriesDataType[],
-  metric: string,
-  window: number
-) {
+export function nts(data: TimeseriesData[], metric: string, window: number) {
   const nts: Peak[] = searchPeaks(data, metric, window);
 
   // rank peaks by its height, assign rank between 1 to MAX_RANK
@@ -39,21 +35,21 @@ export function cts() {
   const a = new CategoricalFeature(
     new Date("2020-03-24"),
     "Start of First Lockdown.",
-    CategoricalFeatureEnum.LOCKDOWN_START,
+    CategoricalFeatures.LOCKDOWN_START,
     5
   );
 
   const b = new CategoricalFeature(
     new Date("2021-01-05"),
     "Start of Second Lockdown.",
-    CategoricalFeatureEnum.LOCKDOWN_END,
+    CategoricalFeatures.LOCKDOWN_END,
     3
   );
 
   const c = new CategoricalFeature(
     new Date("2020-05-28"),
     "End of First Lockdown.",
-    CategoricalFeatureEnum.LOCKDOWN_END,
+    CategoricalFeatures.LOCKDOWN_END,
     5
   );
 
@@ -68,7 +64,7 @@ export function cts() {
  * (c) eliminate peaks that are part of a larger peak.
  */
 export function searchPeaks(
-  data: TimeseriesDataType[],
+  data: TimeseriesData[],
   metric: string,
   window: number
 ) {
@@ -127,10 +123,7 @@ export function searchPeaks(
  * window.
  */
 
-export function searchSlopes(
-  data: TimeseriesDataType[],
-  window: number
-): Slope[] {
+export function searchSlopes(data: TimeseriesData[], window: number): Slope[] {
   if (data.length <= 1 || window <= 1 || window > data.length) {
     throw new Error(
       "Invalid input: time series length should be greater than 1 and window size should be a positive number less than or equal to the time series length."
@@ -232,7 +225,7 @@ function searchPeakStart(idx: number, norm: number[]): number {
  * midpoint and edges.
  */
 
-function searchMaxes(data: TimeseriesDataType[], window): number[] {
+function searchMaxes(data: TimeseriesData[], window): number[] {
   // centre of window
   const centre = Math.floor((window - 1) / 2);
   const maxes: number[] = [];

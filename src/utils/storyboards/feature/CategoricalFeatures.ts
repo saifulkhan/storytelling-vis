@@ -1,4 +1,4 @@
-export enum CategoricalFeatureEnum {
+export enum CategoricalFeatures {
   DEFAULT,
   LOCKDOWN,
   LOCKDOWN_START,

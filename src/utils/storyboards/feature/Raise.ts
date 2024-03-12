@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
+import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Rise extends NumericalFeature {
   _height;
@@ -15,7 +15,7 @@ export class Rise extends NumericalFeature {
     grad = undefined
   ) {
     super(date, start, end, metric);
-    this._type = NumericalFeatureEnum.RAISE;
+    this._type = NumericalFeatures.RAISE;
     this._height = height;
     this._grad = grad;
     this._normGrad;

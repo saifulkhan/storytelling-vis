@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
+import { NumericalFeatures } from "./NumericalFeatures";
 
 // TODO: Why?
 const CONST = 0.2;
@@ -20,7 +20,7 @@ export class Peak extends NumericalFeature {
     normHeight = undefined
   ) {
     super(date, start, end, metric);
-    this._type = NumericalFeatureEnum.PEAK;
+    this._type = NumericalFeatures.PEAK;
     this._height = height;
     this._normWidth = normWidth;
     this._normHeight = normHeight;

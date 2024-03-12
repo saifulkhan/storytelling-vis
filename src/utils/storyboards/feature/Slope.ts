@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
+import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Slope extends NumericalFeature {
   protected _slope: string;
@@ -13,7 +13,7 @@ export class Slope extends NumericalFeature {
   ) {
     super(date, start, end, metric);
     this._slope = slope;
-    this._type = NumericalFeatureEnum.SLOPE;
+    this._type = NumericalFeatures.SLOPE;
   }
 
   set metric(metric) {

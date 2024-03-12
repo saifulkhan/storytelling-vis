@@ -1,6 +1,7 @@
 import * as d3 from "d3";
-import { AbstractAction, Coordinate } from "./AbstractAction";
-import { ActionEnum } from "./ActionEnum";
+import { Action, Coordinate } from "./Action";
+import { Actions } from "./Actions";
+import { Align } from "../../../types/Align";
 
 export type TextBoxProperties = {
   id?: string;
@@ -9,6 +10,7 @@ export type TextBoxProperties = {
   backgroundColor?: string;
   width?: number;
   showConnector?: boolean;
+  align?: Align;
 };
 
 export const defaultTextBoxProperties: TextBoxProperties = {
@@ -18,13 +20,14 @@ export const defaultTextBoxProperties: TextBoxProperties = {
   backgroundColor: "#E0E0E0",
   width: 300,
   showConnector: false,
+  align: "right",
 };
 
 const PADDING = 3;
 const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
-export class TextBox extends AbstractAction {
+export class TextBox extends Action {
   protected _properties: TextBoxProperties;
   protected _rectNode: SVGRectElement;
   protected _titleNode: SVGTextElement;
@@ -35,11 +38,25 @@ export class TextBox extends AbstractAction {
 
   constructor() {
     super();
-    this._type = ActionEnum.TEXT_BOX;
+    this._type = Actions.TEXT_BOX;
   }
 
   public properties(properties: TextBoxProperties = {}) {
     this._properties = { ...defaultTextBoxProperties, ...properties };
+    return this;
+  }
+
+  public extraProperties(extra: any) {
+    this._properties.message = this.updateStringTemplate(
+      this._properties.message,
+      extra
+    );
+    this._properties.title = this.updateStringTemplate(
+      this._properties.title,
+      extra
+    );
+
+    this._properties.align = extra.align;
     return this;
   }
 
@@ -190,13 +207,18 @@ export class TextBox extends AbstractAction {
     const [x2, y2] = this._dest;
 
     const { width, height } = this._rectNode.getBoundingClientRect();
+    let x;
 
-    // left align
-    // const x = this._dest[0] - width;
-    // center aligned
-    // const x = this._dest[0] - width / 2;
-    // right align
-    const x = this._dest[0];
+    if (this._properties.align === "left") {
+      x = this._dest[0] - width;
+    } else if (this._properties.align === "middle") {
+      x = this._dest[0] - width / 2;
+    } else if (this._properties.align === "right") {
+      x = this._dest[0];
+    }
+
+    console.log(this._properties, x);
+
     const y = this._dest[1] - height;
 
     d3.select(this._rectNode).attr("transform", `translate(${x},${y})`);
@@ -272,5 +294,26 @@ export class TextBox extends AbstractAction {
     Array.from(textElem.children).forEach((tspan: any) =>
       tspan.setAttribute("x", alignToX())
     );
+  }
+
+  /**
+   ** Define a function to replace variables in a string template
+   **
+   ** Example:
+   ** const templateString = "Hello, ${name}! You are ${age} years old.";
+   ** const variables = { name: "John Doe", age: 30 };
+   ** const result = updateStringTemplate(templateString, variables);
+   ** console.log(result); // Output: "Hello, John Doe! You are 30 years old."
+   **/
+  private updateStringTemplate(
+    template: string,
+    variables: { [key: string]: any }
+  ): string {
+    const variableRegex = /\${(\w+)}/g; // Regex to match variable placeholders
+
+    return template.replace(variableRegex, (match, variableName) => {
+      const value = variables[variableName];
+      return value !== undefined ? value.toString() : match;
+    });
   }
 }

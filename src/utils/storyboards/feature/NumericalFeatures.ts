@@ -1,4 +1,4 @@
-export enum NumericalFeatureEnum {
+export enum NumericalFeatures {
   DEFAULT = "DEFAULT",
   CURRENT = "CURRENT",
   LAST = "LAST",
@@ -9,6 +9,8 @@ export enum NumericalFeatureEnum {
   FALL = "FALL",
   RAISE = "RAISE",
   SLOPE = "SLOPE",
+  ML_CURRENT = "ML_CURRENT",
+  ML_LAST = "ML_LAST",
   ML_MAX = "ML_MAX",
   ML_MIN = "ML_MIN",
 }

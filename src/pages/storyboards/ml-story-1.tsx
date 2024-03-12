@@ -25,10 +25,10 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
 
-import { MLStory1Builder } from "../../utils/storyboards/story-builder/MLStory1Builder";
+import { MLStory1 } from "../../utils/storyboards/story-builder/MLStory1";
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const storyBuilder = new MLStory1Builder();
+const storyBuilder = new MLStory1();
 
 const MLMultivariateStory = () => {
   const [loading, setLoading] = useState(true);

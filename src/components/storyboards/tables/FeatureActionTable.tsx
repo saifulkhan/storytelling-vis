@@ -15,28 +15,25 @@ import { makeStyles } from "@mui/styles";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import PropertiesTable from "./PropertiesTable";
-import {
-  ActionTableRowType,
-  FeatureActionTableRowType,
-} from "./FeatureActionTableRowType";
-import { ActionEnum } from "../actions/ActionEnum";
+import { ActionTableRow, FeatureActionTableRow } from "./TableRows";
+import { Actions } from "../actions/Actions";
 
 import { defaultDotProperties } from "../actions/Dot";
 import { defaultCircleProperties } from "../actions/Circle";
 import { defaultTextBoxProperties } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
-import { NumericalFeatureEnum } from "../../../utils/storyboards/feature/NumericalFeatureEnum";
+import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
 import ActionTable from "./ActionTable";
 
-const getInitialProperties = (action: ActionEnum) => {
+const getInitialProperties = (action: Actions) => {
   switch (action) {
-    case ActionEnum.DOT:
+    case Actions.DOT:
       return defaultDotProperties;
-    case ActionEnum.CIRCLE:
+    case Actions.CIRCLE:
       return defaultCircleProperties;
-    case ActionEnum.TEXT_BOX:
+    case Actions.TEXT_BOX:
       return defaultTextBoxProperties;
-    case ActionEnum.CONNECTOR:
+    case Actions.CONNECTOR:
       return defaultConnectorProperties;
     default:
       return {};
@@ -94,8 +91,8 @@ const useStyles = makeStyles({
 });
 
 interface FeatureActionTableProps {
-  data: FeatureActionTableRowType[];
-  setData: React.Dispatch<React.SetStateAction<FeatureActionTableRowType[]>>;
+  data: FeatureActionTableRow[];
+  setData: React.Dispatch<React.SetStateAction<FeatureActionTableRow[]>>;
 }
 
 const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
@@ -105,7 +102,7 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   console.log("FeatureActionTable: re-rendered");
 
   const classes = useStyles();
-  const [rows, setRows] = useState<FeatureActionTableRowType[]>(data);
+  const [rows, setRows] = useState<FeatureActionTableRow[]>(data);
 
   // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
@@ -115,7 +112,7 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   const handleAddRow = () => {
     setRows([
       ...rows,
-      { action: ActionEnum.DOT, properties: defaultDotProperties },
+      { action: Actions.DOT, properties: defaultDotProperties },
     ]);
   };
 
@@ -125,7 +122,7 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, feature: NumericalFeatureEnum) => {
+  const handleActionChange = (index: number, feature: NumericalFeatures) => {
     console.log("FeatureActionTable: index = ", index, ", action = ", feature);
 
     /*
@@ -175,11 +172,11 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   onChange={(e) =>
                     handleActionChange(
                       index,
-                      e.target.value as NumericalFeatureEnum
+                      e.target.value as NumericalFeatures
                     )
                   }
                 >
-                  {Object.values(NumericalFeatureEnum).map((feature) => (
+                  {Object.values(NumericalFeatures).map((feature) => (
                     <MenuItem key={feature} value={feature}>
                       {feature}
                     </MenuItem>

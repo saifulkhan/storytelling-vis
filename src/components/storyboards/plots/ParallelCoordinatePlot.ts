@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import { Color } from "../Colors";
-import { AbstractPlot } from "./AbstractPlot";
+import { Plot } from "./Plot";
 import { getObjectKeysArray } from "../../../utils/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionMapsType";
+import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -51,7 +51,7 @@ const yScale = (keys, height, margin) => {
   return d3.scalePoint(keys, [margin.top, height - margin.bottom]);
 };
 
-export class ParallelCoordinatePlot extends AbstractPlot {
+export class ParallelCoordinatePlot extends Plot {
   _selector: string;
   _svg: SVGSVGElement;
 
@@ -475,7 +475,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
       .style("opacity", 0);
   }
 
-  private midXCoord() {
+  private midXCoordinate() {
     const dateScale = this._xScaleMap.get("date");
     const mid =
       (dateScale(this._data[this._data.length - 1].date) +
@@ -485,7 +485,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     return mid;
   }
 
-  private coord(data: any, axisName: string) {
+  private coordinateOnAxis(data: any, axisName: string) {
     if (!data.hasOwnProperty(axisName)) {
       // prettier-ignore
       console.error("ParallelCoordinatePlot:coord: data has no attribute: ", axisName);
@@ -497,15 +497,15 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     return [x, y];
   }
 
-  private topLeftCoord() {
+  private topLeftCoordinate() {
     return [this._margin.right + ANNO_X_POS, ANNO_Y_POS];
   }
 
-  private topMidCoord() {
-    return [this.midXCoord(), ANNO_Y_POS];
+  private topMidCoordinate() {
+    return [this.midXCoordinate(), ANNO_Y_POS];
   }
 
-  private topRightCoord() {
+  private topRightCoordinate() {
     return [this._width - this._margin.left - ANNO_X_POS, ANNO_Y_POS];
   }
 }

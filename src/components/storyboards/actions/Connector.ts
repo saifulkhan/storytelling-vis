@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { AbstractAction, Coordinate } from "./AbstractAction";
-import { ActionEnum } from "./ActionEnum";
+import { Action, Coordinate } from "./Action";
+import { Actions } from "./Actions";
 
 export type ConnectorProperties = {
   id?: string;
@@ -14,7 +14,7 @@ export const defaultConnectorProperties: ConnectorProperties = {
   opacity: 1,
 };
 
-export class Connector extends AbstractAction {
+export class Connector extends Action {
   protected _properties: ConnectorProperties;
   protected _connectorNode;
   protected _x0: number;
@@ -22,7 +22,7 @@ export class Connector extends AbstractAction {
 
   constructor() {
     super();
-    this._type = ActionEnum.CONNECTOR;
+    this._type = Actions.CONNECTOR;
   }
 
   public properties(properties: ConnectorProperties = {}) {

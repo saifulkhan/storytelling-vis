@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { AbstractAction, Coordinate } from "./AbstractAction";
-import { ActionEnum } from "./ActionEnum";
+import { Action, Coordinate } from "./Action";
+import { Actions } from "./Actions";
 
 export type CircleProperties = {
   id?: string;
@@ -18,13 +18,13 @@ export const defaultCircleProperties: CircleProperties = {
   opacity: 1,
 };
 
-export class Circle extends AbstractAction {
+export class Circle extends Action {
   protected _properties: CircleProperties;
   protected _circleNode;
 
   constructor() {
     super();
-    this._type = ActionEnum.CIRCLE;
+    this._type = Actions.CIRCLE;
   }
 
   public properties(properties: CircleProperties = {}) {

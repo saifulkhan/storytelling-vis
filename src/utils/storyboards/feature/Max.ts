@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
+import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Max extends NumericalFeature {
   protected _height: number;
@@ -8,7 +8,7 @@ export class Max extends NumericalFeature {
     super(date);
     this._metric = metric;
     this._height = height;
-    this._type = NumericalFeatureEnum.MAX;
+    this._type = NumericalFeatures.MAX;
   }
 
   set height(height) {

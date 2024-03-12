@@ -1,14 +1,16 @@
 import { Peak } from "./Peak";
 import { Slope } from "./Slope";
 import { searchMinMax, searchPeaks, searchSlopes } from "./feature-search";
-import { NumericalFeatureEnum } from "./NumericalFeatureEnum";
-import { TimeseriesDataType } from "../data-processing/TimeseriesDataType";
-import { AbstractFeature } from "./AbstractFeature";
-import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
+import { NumericalFeatures } from "./NumericalFeatures";
+import {
+  MLTimeseriesData,
+  TimeseriesData,
+} from "../data-processing/TimeseriesData";
+import { Feature } from "./Feature";
 import { createPredicate } from "../../common";
 import { Min } from "./Min";
 import { Max } from "./Max";
-import { ConditionType } from "./ConditionType";
+import { Condition } from "./Condition";
 import { Current } from "./Current";
 import { Last } from "./Last";
 
@@ -16,7 +18,7 @@ const METRIC = "Cases/day",
   WINDOW = 20;
 
 export class FeatureFactory {
-  private _data: TimeseriesDataType[] | MLTimeseriesDataType[] = [];
+  private _data: TimeseriesData[] | MLTimeseriesData[] = [];
   private _properties: any;
   private _name = "";
 
@@ -27,7 +29,7 @@ export class FeatureFactory {
     return this;
   }
 
-  public data(data: TimeseriesDataType[] | MLTimeseriesDataType[]) {
+  public data(data: TimeseriesData[] | MLTimeseriesData[]) {
     this._data = data;
     return this;
   }
@@ -38,33 +40,35 @@ export class FeatureFactory {
   }
 
   public detect(
-    feature: NumericalFeatureEnum,
-    condition: ConditionType | string
-  ): AbstractFeature[] | undefined {
+    feature: NumericalFeatures,
+    condition: Condition | string
+  ): Feature[] | undefined {
     // prettier-ignore
     console.log("FeatureFactory:detect: _properties =", this._properties);
     // prettier-ignore
     console.log("FeatureFactory:detect: data =", this._data);
 
     switch (feature) {
-      case NumericalFeatureEnum.SLOPE:
+      case NumericalFeatures.SLOPE:
         return this.detectSlopes(condition);
-      case NumericalFeatureEnum.PEAK:
+      case NumericalFeatures.PEAK:
         return this.detectPeaks(condition);
-      case NumericalFeatureEnum.ML_MAX:
-        return this.detectMax(condition);
-      case NumericalFeatureEnum.ML_MIN:
-        return this.detectMin(condition);
-      case NumericalFeatureEnum.CURRENT:
-        return this.detectCurrent();
-      case NumericalFeatureEnum.LAST:
-        return this.detectLast(this._name);
+      case NumericalFeatures.MAX:
+        return this.detectMax();
+      case NumericalFeatures.ML_MAX:
+        return this.detectMLMax(condition);
+      case NumericalFeatures.ML_MIN:
+        return this.detectMLMin(condition);
+      case NumericalFeatures.ML_CURRENT:
+        return this.detectMLCurrent();
+      case NumericalFeatures.ML_LAST:
+        return this.detectMLLast(this._name);
       default:
         console.error(`Feature ${feature} is not implemented!`);
     }
   }
 
-  detectLast(): Last[] {
+  detectMLLast(): Last[] {
     if (this._name) {
       // prettier-ignore
       console.error(`FeatureFactory:detectLast: the value of name = ${this._name}`);
@@ -73,7 +77,7 @@ export class FeatureFactory {
     return [new Last(last.date, "", last[this._name])];
   }
 
-  detectCurrent(): Current[] {
+  detectMLCurrent(): Current[] {
     if (this._name) {
       // prettier-ignore
       console.error(`FeatureFactory:detectCurrent: the value of name = ${this._name}`);
@@ -81,7 +85,7 @@ export class FeatureFactory {
     return this._data.map((d) => new Current(d.date, "", d[this._name]));
   }
 
-  private detectPeaks(condition: ConditionType): Peak[] {
+  private detectPeaks(condition: Condition): Peak[] {
     // prettier-ignore
     console.log("FeatureFactory:detectPeaks: timeseriesProcessingProperties =", this._properties);
     // prettier-ignore
@@ -90,7 +94,13 @@ export class FeatureFactory {
     return peaks;
   }
 
-  private detectSlopes(condition: ConditionType): Slope[] {
+  private detectMax(): Max[] {
+    const [globalMin, globalMax] = searchMinMax(this._data, "y");
+    console.log("FeatureFactory:detectMax: globalMax =", globalMax);
+    return [globalMax];
+  }
+
+  private detectSlopes(condition: Condition): Slope[] {
     let slopes = searchSlopes(this._data, WINDOW);
     // console.log("detectSlopes: slopes = ", slopes);
     // console.log("detectSlopes: properties = ", properties);
@@ -103,12 +113,12 @@ export class FeatureFactory {
     return slopes;
   }
 
-  private detectMin(key: string): Min[] {
+  private detectMLMin(key: string): Min[] {
     const [globalMin, globalMax] = searchMinMax(this._data, key);
     return [globalMin];
   }
 
-  private detectMax(key: string): Max[] {
+  private detectMLMax(key: string): Max[] {
     const [globalMin, globalMax] = searchMinMax(this._data, key);
     return [globalMax];
   }

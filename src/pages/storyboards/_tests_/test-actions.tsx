@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Coordinate } from "../../../components/storyboards/actions/AbstractAction";
+import { Coordinate } from "../../../components/storyboards/actions/Action";
 import { Dot } from "../../../components/storyboards/actions/Dot";
 import { TextBox } from "../../../components/storyboards/actions/TextBox";
 import { Connector } from "../../../components/storyboards/actions/Connector";
 import { Circle } from "../../../components/storyboards/actions/Circle";
-import { CompositeAction } from "../../../components/storyboards/actions/CompositeAction";
+import { ActionGroup } from "../../../components/storyboards/actions/ActionGroup";
 
 const TestActions = () => {
   const chartRef = useRef(null);
@@ -91,7 +91,7 @@ const TestActions = () => {
       };
 
       const animateComposite = async () => {
-        const actions = new CompositeAction([textBox, dot, circle, connector])
+        const actions = new ActionGroup([textBox, dot, circle, connector])
           .svg(svg)
           .draw()
           .coordinate(src, dest)

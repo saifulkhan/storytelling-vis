@@ -16,22 +16,22 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
 import PropertiesTable from "./PropertiesTable";
-import { ActionTableRowType } from "./FeatureActionTableRowType";
-import { ActionEnum } from "../actions/ActionEnum";
+import { ActionTableRow } from "./TableRows";
+import { Actions } from "../actions/Actions";
 import { defaultDotProperties } from "../actions/Dot";
 import { defaultCircleProperties } from "../actions/Circle";
 import { defaultTextBoxProperties } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
 
-const getInitialProperties = (action: ActionEnum) => {
+const getInitialProperties = (action: Actions) => {
   switch (action) {
-    case ActionEnum.DOT:
+    case Actions.DOT:
       return defaultDotProperties;
-    case ActionEnum.CIRCLE:
+    case Actions.CIRCLE:
       return defaultCircleProperties;
-    case ActionEnum.TEXT_BOX:
+    case Actions.TEXT_BOX:
       return defaultTextBoxProperties;
-    case ActionEnum.CONNECTOR:
+    case Actions.CONNECTOR:
       return defaultConnectorProperties;
     default:
       return {};
@@ -76,15 +76,15 @@ const useStyles = makeStyles({
 });
 
 interface ActionTableProps {
-  data: ActionTableRowType[];
-  setData: React.Dispatch<React.SetStateAction<ActionTableRowType[]>>;
+  data: ActionTableRow[];
+  setData: React.Dispatch<React.SetStateAction<ActionTableRow[]>>;
 }
 
 const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   console.log("ActionTable: re-rendered");
 
   const classes = useStyles();
-  const [rows, setRows] = useState<ActionTableRowType[]>(data);
+  const [rows, setRows] = useState<ActionTableRow[]>(data);
 
   // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
@@ -94,7 +94,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   const handleAddRow = () => {
     setRows([
       ...rows,
-      { action: ActionEnum.DOT, properties: defaultDotProperties },
+      { action: Actions.DOT, properties: defaultDotProperties },
     ]);
   };
 
@@ -104,7 +104,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, action: ActionEnum) => {
+  const handleActionChange = (index: number, action: Actions) => {
     console.log("ActionTable: index = ", index, ", action = ", action);
 
     const newRows = [...rows];
@@ -148,10 +148,10 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                   className={classes.selectField}
                   value={row.action}
                   onChange={(e) =>
-                    handleActionChange(index, e.target.value as ActionEnum)
+                    handleActionChange(index, e.target.value as Actions)
                   }
                 >
-                  {Object.values(ActionEnum).map((action) => (
+                  {Object.values(Actions).map((action) => (
                     <MenuItem key={action} value={action}>
                       {action}
                     </MenuItem>
