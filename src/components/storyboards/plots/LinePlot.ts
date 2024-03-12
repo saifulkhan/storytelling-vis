@@ -50,6 +50,8 @@ export class LinePlot extends AbstractPlot {
   _lineGenerator1;
   _lineGeneratorN;
 
+  _actions: any;
+
   constructor() {
     super();
   }
@@ -114,7 +116,7 @@ export class LinePlot extends AbstractPlot {
   /**
    ** Draw all lines (no animation)
    **/
-  public draw() {
+  public _draw() {
     const lineGenerator = (xAxis, yAxis) => {
       return d3
         .line()
@@ -156,7 +158,15 @@ export class LinePlot extends AbstractPlot {
   /**
    ** Animate & draw a line
    **/
-  public animate(lineNo: number, start: number, stop: number) {
+
+  public actions(actions: DateActionArray) {
+    this._actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
+
+    // update actions coord, text etc.
+    return this;
+  }
+
+  public draw(lineNo: number, start: number, stop: number) {
     // prettier-ignore
     // console.log(`LinePlot: lineNo = ${lineNo}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineNo]);

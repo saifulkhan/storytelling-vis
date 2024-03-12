@@ -126,7 +126,7 @@ export class Covid19Story1Builder extends AbstractStoryBuilder {
           console.log("Covid19Story1Builder: action = ", action);
 
           const end = findIndexOfDate(this._data, date);
-          await plot.animate(0, start, end);
+          await plot.draw(0, start, end);
 
           action
             .svg(this._svg)
@@ -143,7 +143,7 @@ export class Covid19Story1Builder extends AbstractStoryBuilder {
 
         // plot remaining indices
         if (start < this._data.length) {
-          const res = await plot.animate(0, start, this._data.length);
+          const res = await plot.draw(0, start, this._data.length);
           console.log("res = ", res);
         }
       } catch (error) {

@@ -8,12 +8,13 @@ import {
 } from "../../../components/storyboards/tables/FeatureActionTableRowType";
 
 import {
-  DateActionMapType,
+  DateActionArray,
   DateFeaturesMapType,
   FeatureActionMapType,
 } from "./FeatureActionMapsType";
 import { setOrUpdateMap } from "../../common";
 import { FeatureFactory } from "../feature/FeatureFactory";
+import { AbstractAction } from "../../../components/storyboards/actions/AbstractAction";
 
 export class FeatureActionBuilder {
   private _data: TimeseriesDataType[] | MLTimeseriesDataType[];
@@ -45,7 +46,7 @@ export class FeatureActionBuilder {
 
   public build() {
     const dateFeaturesMap: DateFeaturesMapType = new Map();
-    const dataActionsMap: DateActionMapType = new Map();
+    const dataActionsArray: DateActionArray = [];
     const featureActionMap: FeatureActionMapType = new Map();
 
     const featureFactory = new FeatureFactory().data(this._data);
@@ -61,25 +62,23 @@ export class FeatureActionBuilder {
       console.log("FeatureActionTableTranslator: features = ", features);
 
       const actionFactory = new ActionFactory();
-      let action;
+      let action: AbstractAction;
 
       row.actions.forEach((rowIn: ActionTableRowType) => {
-        // prettier-ignore
-        // console.log("FeatureActionTableTranslator: action = ", d1.action,  ", properties = ", d1.properties);
         // const action = actionFactory.create(rowIn.action, rowIn.properties);
         // prettier-ignore
         // console.log("FeatureActionTableTranslator: action = ", action);
-        action = actionFactory.createComposite(rowIn.action, rowIn.properties);
+        action = actionFactory.compose(rowIn.action, rowIn.properties);
       });
       console.log("FeatureActionBuilder: action = ", action);
 
       features.forEach((feature: AbstractFeature) => {
         setOrUpdateMap(dateFeaturesMap, feature.date, feature);
         featureActionMap.set(feature, action);
-        dataActionsMap.set(feature.date, action);
+        dataActionsArray.push([feature.date, action]);
       });
     });
 
-    return dataActionsMap;
+    return dataActionsArray;
   }
 }

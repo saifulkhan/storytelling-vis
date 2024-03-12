@@ -2,10 +2,10 @@ import * as d3 from "d3";
 import { AbstractStoryBuilder } from "./AbstractStoryBuilder";
 import { readCSVFile } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { DateActionMapType } from "../feature-action-builder/FeatureActionMapsType";
 import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { MLTimeseriesDataType } from "../data-processing/MLTimeseriesDataType";
+import { DateActionArray } from "../feature-action-builder/FeatureActionMapsType";
 
 const FILE = "/static/storyboards/ml/data.csv";
 const NAMES = ["channels", "kernel_size", "layers", "samples_per_class"];
@@ -21,7 +21,7 @@ export class MLStory1Builder extends AbstractStoryBuilder {
   protected async data() {
     const csv: any[] = await readCSVFile(FILE);
     // prettier-ignore
-    // console.log("MLMultivariateStoryWorkflow:load: FILE = ", FILE, ", csv = ", csv);
+    // console.log("MLStory1Builder:load: FILE = ", FILE, ", csv = ", csv);
 
     // convert string to number and date
     csv.forEach((row) => {
@@ -37,7 +37,7 @@ export class MLStory1Builder extends AbstractStoryBuilder {
     });
 
     // prettier-ignore
-    console.log("MLMultiVariateStoryWorkflow: loadData: _data = ", this._data);
+    console.log("MLStory1Builder: loadData: _data = ", this._data);
   }
 
   names(): string[] {
@@ -57,7 +57,7 @@ export class MLStory1Builder extends AbstractStoryBuilder {
       .attr("height", 600)
       .node();
 
-    console.log("MLMultiVariateStoryWorkflow:selector: _svg = ", this._svg);
+    console.log("MLStory1Builder:selector: _svg = ", this._svg);
     return this;
   }
 
@@ -72,19 +72,20 @@ export class MLStory1Builder extends AbstractStoryBuilder {
     // prettier-ignore
     // console.log("globalMin = ", globalMin, ", globalMax = ", globalMax);
 
-    const dataActionsMap: DateActionMapType = new FeatureActionBuilder()
+    const actions: DateActionArray = new FeatureActionBuilder()
       .properties({ metric: "accuracy" })
       .table(multiVariateStory)
       .data(this._data)
       .name(this._name)
       .build();
 
-    console.log("dataActionsMap = ", dataActionsMap);
+    console.log("MLStory1Builder: actions = ", actions);
 
     let plot = new ParallelCoordinatePlot()
       .name(this._name)
       .data(data)
       .svg(this._svg)
+      .actions(actions)
       .draw();
 
     return this;

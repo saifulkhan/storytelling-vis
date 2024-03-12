@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { Color } from "../Colors";
 import { AbstractPlot } from "./AbstractPlot";
 import { getObjectKeysArray } from "../../../utils/common";
+import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionMapsType";
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -69,6 +70,8 @@ export class ParallelCoordinatePlot extends AbstractPlot {
   _annotations: PCPAnnotation[] = [];
   _animationCounter = 0;
 
+  _actions: any;
+
   _name = "";
 
   constructor() {
@@ -118,7 +121,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
    ** Draw parallel coordinate lines & axis (static)
    **/
 
-  public draw() {
+  public _draw() {
     this.drawAxis();
 
     const line = d3
@@ -245,49 +248,74 @@ export class ParallelCoordinatePlot extends AbstractPlot {
    ** Animation
    **/
 
-  /**
-   * Set annotations.
-   */
-  // public annotations(pcAnnotations: PCPAnnotation[]) {
-  //   this._annotations = pcAnnotations;
-  //   // prettier-ignore
-  //   console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
+  public actions(actions: DateActionArray) {
+    this._actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
 
-  //   // We need to draw the axis and labels before we can compute the coordinates of the annotations
-  //   this.drawAxis();
-  //   this.createLinesAndDots();
-  //   this.createAnnotations();
+    // update actions coord, text etc.
+    for (const [key, value] of this._actions) {
+      // set
+      // origin
+      // destination
+      // variables
+    }
 
-  //   // prettier-ignore
-  //   console.log("ParallelCoordinate: annotations: _pcAnnotations = ", this._annotations);
-  //   return this;
-  // }
+    //
+    //
+    //
 
-  /**
-   *
-   */
-  public animate() {
-    // public animate(animationType: AnimationType) {
-    // console.log("TimeSeries: animate: animationType = ", animationType);
+    // Position annotations & hide them
+    this._annotations.forEach((d, idx) => {
+      // Try to get the graphAnnotation object if undefined set array elem to false
+      const graphAnnotation: GraphAnnotation = d?.graphAnnotation;
+      if (!graphAnnotation) {
+        return;
+      }
 
-    // if (animationType === "back" && this._animationCounter >= 0) {
-    //   this._animateBack();
-    // } else if (animationType === "beginning") {
-    //   this._animateBeginning();
-    // } else if (
-    //   animationType === "play" &&
-    //   this._animationCounter <= this._annotations.length - 1
-    // ) {
-    //   this._animateForward();
-    // }
+      if (d && graphAnnotation) {
+        const xScale = this._xScaleMap.get(d.originAxis);
+        const x = xScale(d.data[d.originAxis]);
+        const y = this._yScale(d.originAxis);
 
-    // prettier-ignore
-    // console.log("TimeSeries: animate: _animationCounter: ", this._animationCounter)
+        graphAnnotation.x(x);
+        graphAnnotation.y(y);
 
-    // We need to draw the axis and labels before we can compute the coordinates of the annotations
+        // If add to svg and set opacity to 0 (to hide it)
+        graphAnnotation.id(`id-annotation-${idx}`).addTo(this._svg);
+        graphAnnotation.hideAnnotation();
+
+        // Save the coordinates in PCAnnotation object
+        d.origin = [x, y];
+        if (d.featureType === NumericalFeatureType.MIN) {
+          d.destination = [this._margin.right + ANNO_X_POS, ANNO_Y_POS];
+        } else if (
+          d.featureType === NumericalFeatureType.CURRENT ||
+          d.featureType === NumericalFeatureType.LAST
+        ) {
+          d.destination = [xAxisMid, ANNO_Y_POS];
+        } else if (d.featureType === NumericalFeatureType.MAX) {
+          d.destination = [
+            this._width - this._margin.left - ANNO_X_POS,
+            ANNO_Y_POS,
+          ];
+        }
+      }
+    });
+
+    return this;
+  }
+
+  public draw() {
+    if (!this._actions || !this._actions.length) {
+      // draw static
+      this._draw();
+      return;
+    }
+
+    // we need to draw the axis and labels before we can compute the coordinates
+    // of the annotations
     this.drawAxis();
     this.createLinesAndDots();
-    this.createAnnotations();
+    this.animate();
   }
 
   private createLinesAndDots() {
@@ -360,55 +388,12 @@ export class ParallelCoordinatePlot extends AbstractPlot {
       .style("opacity", 0);
   }
 
-  private createAnnotations() {
-    // Middle of the any x-axis
-    const dateScale = this._xScaleMap.get("date");
-    const xMid =
-      (dateScale(this._data[this._data.length - 1].date) +
-        dateScale(this._data[0].date)) *
-      0.5;
-    console.log("ParallelCoordinate: graphAnnotations: xMid = ", xMid);
+  private animate() {
+    // TODO
 
-    // Position annotations & hide them
-    this._annotations.forEach((d, idx) => {
-      // Try to get the graphAnnotation object if undefined set array elem to false
-      const graphAnnotation: GraphAnnotation = d?.graphAnnotation;
-      if (!graphAnnotation) {
-        return;
-      }
-
-      if (d && graphAnnotation) {
-        const xScale = this._xScaleMap.get(d.originAxis);
-        const x = xScale(d.data[d.originAxis]);
-        const y = this._yScale(d.originAxis);
-
-        graphAnnotation.x(x);
-        graphAnnotation.y(y);
-
-        // If add to svg and set opacity to 0 (to hide it)
-        graphAnnotation.id(`id-annotation-${idx}`).addTo(this._svg);
-        graphAnnotation.hideAnnotation();
-
-        // Save the coordinates in PCAnnotation object
-        d.origin = [x, y];
-        if (d.featureType === NumericalFeatureType.MIN) {
-          d.destination = [this._margin.right + ANNO_X_POS, ANNO_Y_POS];
-        } else if (
-          d.featureType === NumericalFeatureType.CURRENT ||
-          d.featureType === NumericalFeatureType.LAST
-        ) {
-          d.destination = [xMid, ANNO_Y_POS];
-        } else if (d.featureType === NumericalFeatureType.MAX) {
-          d.destination = [
-            this._width - this._margin.left - ANNO_X_POS,
-            ANNO_Y_POS,
-          ];
-        }
-      }
-    });
-  }
-
-  private _animateForward() {
+    //
+    //
+    //
     const currIdx = this._animationCounter;
     const prevIdx = this._animationCounter - 1;
     const currAnn: PCPAnnotation = this._annotations[currIdx];
@@ -418,8 +403,8 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     // console.log("ParallelCoordinate: _animateForward: currAnnotation = ", currAnn);
 
     // Show current line & its dots
-    this.shotLineWithId(currIdx);
-    this.shotDotsWithId(currIdx);
+    this.showLine(currIdx);
+    this.shotDots(currIdx);
 
     // Show the annotation and move it to its destination
     currAnn?.graphAnnotation?.showAnnotation(0);
@@ -430,16 +415,16 @@ export class ParallelCoordinatePlot extends AbstractPlot {
 
     // Hide previous line & its dots
     if (prevAnn?.featureType === NumericalFeatureType.CURRENT) {
-      this.hideLineWithId(prevIdx);
-      this.hideDotsWithId(prevIdx);
+      this.hideLine(prevIdx);
+      this.hideDots(prevIdx);
     }
 
     // Check if there is any past MAX line exists
     if (currAnn?.featureType === NumericalFeatureType.MAX) {
       this._annotations.slice(0, currIdx).forEach((d, idx) => {
         if (d.featureType === NumericalFeatureType.MAX) {
-          this.hideLineWithId(idx);
-          this.hideDotsWithId(idx);
+          this.hideLine(idx);
+          this.hideDots(idx);
         }
       });
     }
@@ -448,8 +433,8 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     if (currAnn?.featureType === NumericalFeatureType.MIN) {
       this._annotations.slice(0, currIdx).forEach((d, idx) => {
         if (d.featureType === NumericalFeatureType.MIN) {
-          this.hideLineWithId(idx);
-          this.hideDotsWithId(idx);
+          this.hideLine(idx);
+          this.hideDots(idx);
         }
       });
     }
@@ -457,25 +442,18 @@ export class ParallelCoordinatePlot extends AbstractPlot {
     this._animationCounter += 1;
   }
 
-  private _animateBeginning() {
-    throw new Error("Method not implemented.");
-  }
-  private _animateBack() {
-    throw new Error("Method not implemented.");
-  }
-
-  private shotLineWithId(id: number) {
+  private showLine(id: number) {
     d3.select(this._svg).select(`#id-line-${id}`).style("stroke-opacity", 1);
   }
 
-  private shotDotsWithId(id: number) {
+  private shotDots(id: number) {
     d3.select(this._svg)
       .select(`#id-circles-${id}`) // return group
       .selectAll("circle")
       .style("opacity", 1); // reveal the circles
   }
 
-  private hideLineWithId(id: number) {
+  private hideLine(id: number) {
     d3.select(this._svg)
       .select(`#id-line-${id}`)
       .transition()
@@ -486,7 +464,7 @@ export class ParallelCoordinatePlot extends AbstractPlot {
       .style("stroke", "#d3d3d3");
   }
 
-  private hideDotsWithId(id: number) {
+  private hideDots(id: number) {
     d3.select(this._svg)
       .select(`#id-circles-${id}`) // returns group
       .selectAll("circle")
@@ -495,5 +473,39 @@ export class ParallelCoordinatePlot extends AbstractPlot {
       .delay(DELAY)
       .duration(DURATION1)
       .style("opacity", 0);
+  }
+
+  private midXCoord() {
+    const dateScale = this._xScaleMap.get("date");
+    const mid =
+      (dateScale(this._data[this._data.length - 1].date) +
+        dateScale(this._data[0].date)) *
+      0.5;
+
+    return mid;
+  }
+
+  private coord(data: any, axisName: string) {
+    if (!data.hasOwnProperty(axisName)) {
+      // prettier-ignore
+      console.error("ParallelCoordinatePlot:coord: data has no attribute: ", axisName);
+    }
+
+    const xScale = this._xScaleMap.get(axisName);
+    const x = xScale(data[axisName]);
+    const y = this._yScale(axisName);
+    return [x, y];
+  }
+
+  private topLeftCoord() {
+    return [this._margin.right + ANNO_X_POS, ANNO_Y_POS];
+  }
+
+  private topMidCoord() {
+    return [this.midXCoord(), ANNO_Y_POS];
+  }
+
+  private topRightCoord() {
+    return [this._width - this._margin.left - ANNO_X_POS, ANNO_Y_POS];
   }
 }

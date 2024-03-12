@@ -39,14 +39,15 @@ export class ActionFactory {
     }
   }
 
-  public createComposite(
+  // TODO: improve this
+  public compose(
     action: ActionEnum,
     properties:
       | CircleProperties
       | ConnectorProperties
       | DotProperties
       | TextBoxProperties
-  ): CompositeAction {
+  ): AbstractAction {
     return this._action.push(this.create(action, properties));
   }
 }

@@ -10,7 +10,6 @@ export abstract class AbstractPlot {
   public abstract data(...args: unknown[]): this;
   public abstract properties(properties: unknown): this;
   public abstract svg(svg: SVGSVGElement): this;
-  public abstract draw(): this;
-  public abstract animate();
+  public abstract draw();
   // public abstract coordinates(...args: unknown[]): [Coordinate, Coordinate];
 }

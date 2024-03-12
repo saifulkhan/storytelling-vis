@@ -2,5 +2,5 @@ import { AbstractAction } from "../../../components/storyboards/actions/Abstract
 import { AbstractFeature } from "../feature/AbstractFeature";
 
 export type DateFeaturesMapType = Map<Date, AbstractFeature>;
-export type DateActionMapType = Map<Date, AbstractAction>;
+export type DateActionArray = [Date, AbstractAction][];
 export type FeatureActionMapType = Map<AbstractFeature, AbstractAction>;
