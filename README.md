@@ -114,7 +114,6 @@ await feature.hide(delay, duration);
 Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 
 ## References
-
-- For the Observable prototypes developed during the initial phases of RAMPVIS project, [see](https://observablehq.com/d/0a6e9c35a809660e>).
-- Bootstrapped with [Next.js](https://github.com/vercel/next.js)
-- Using [React MUI dashboard style](https://mui.com)
+- Previous prototypes ported Observable to React.js [storytelling-vis-v.0.1](https://github.com/saifulkhan/storytelling-vis-v.0.1)
+- Observable prototypes during initial RAMPVIS phases, [see](https://observablehq.com/d/0a6e9c35a809660e)
+- Used [Next.js](https://github.com/vercel/next.js), [MUI](https://mui.com)
