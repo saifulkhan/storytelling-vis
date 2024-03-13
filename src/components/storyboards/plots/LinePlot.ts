@@ -192,7 +192,7 @@ export class LinePlot extends Plot {
         // update actions coord, text etc.
         action
           .svg(this._svg)
-          .updateProperties({
+          .extraProperties({
             align: this.alignLeftOrRight(date),
             date: date.toLocaleDateString(),
             name: this._name,

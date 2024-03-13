@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import FeatureActionTable from "../../../components/storyboards/tables/FeatureActionTable";
-import { featureActionTableStory1 } from "../../../mocks/feature-action-table-covid19";
-import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
+import { COVID19_STORY_1 } from "../../../mocks/feature-action-table-covid19";
 
 const TestFeatureActionTable = () => {
-  const [data, setData] = useState(featureActionTableStory1);
+  const [data, setData] = useState(COVID19_STORY_1);
 
   return (
     <div>

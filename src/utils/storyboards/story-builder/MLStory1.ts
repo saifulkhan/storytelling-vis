@@ -2,9 +2,9 @@ import * as d3 from "d3";
 import { StoryBuilder } from "./StoryBuilder";
 import { readCSVFile } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { multiVariateStory } from "../../../mocks/feature-action-table-ml";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
+import { ML_STORY_1 } from "../../../mocks/feature-action-table-ml";
 
 const FILE = "/static/storyboards/ml/data.csv";
 const NAMES = ["channels", "kernel_size", "layers", "samples_per_class"];
@@ -73,7 +73,7 @@ export class MLStory1 extends StoryBuilder {
 
     const actions: DateActionArray = new FeatureActionBuilder()
       .properties({ metric: "accuracy" })
-      .table(multiVariateStory)
+      .table(ML_STORY_1)
       .data(this._data)
       .name(this._name)
       .build();

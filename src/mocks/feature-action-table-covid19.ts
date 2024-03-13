@@ -26,7 +26,8 @@ export const COVID19_STORY_1: FeatureActionTableRow[] = [
         action: Actions.TEXT_BOX,
         properties: {
           title: "${date}",
-          message: "PEAK- ${date} - ${value}- ${name}",
+          message:
+            "By ${date}, the number of cases reached peak, ${value} in region ${name}.",
           backgroundColor: "#d3d3d3",
           width: 300,
         } as TextBoxProperties,
@@ -68,7 +69,8 @@ export const COVID19_STORY_1: FeatureActionTableRow[] = [
         action: Actions.TEXT_BOX,
         properties: {
           title: "${date}",
-          message: "MAX- ${date} - ${value} - ${name}",
+          message:
+            "On ${date}, the number of cases reached maximum, ${value} in region ${name}.",
           backgroundColor: "#d3d3d3",
           width: 300,
         } as TextBoxProperties,
