@@ -1,23 +1,20 @@
 import * as d3 from "d3";
-import { readCSVFile } from "../../../services/data";
+import { readCSVFile, readJSONFile } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
-import { findIndexOfDate, findIndicesOfDates } from "../../common";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
-import { Action } from "../../../components/storyboards/actions/Action";
 import { StoryBuilder } from "./StoryBuilder";
-
-import { COVID19_STORY_1 } from "../../../mocks/feature-action-table-covid19";
 import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
-const DATA_FILE = "/static/storyboards/newCasesByPublishDateRollingSum.csv";
+import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
+
+const DATA = "/static/storyboards/newCasesByPublishDateRollingSum.csv";
+const TABLE = "/static/storyboards/feature-action-tables/covid-19-story-1.json";
 const WINDOW = 3;
 
 export class Covid19Story1 extends StoryBuilder {
   protected _allRegionData: Record<string, TimeseriesData[]> = {};
-  protected _data: TimeseriesData[];
-  protected _name: string;
 
   private _nts: NumericalFeature[];
   private _cts: CategoricalFeature[];
@@ -27,9 +24,7 @@ export class Covid19Story1 extends StoryBuilder {
   }
 
   protected async data() {
-    const file = DATA_FILE;
-    const csv: any[] = await readCSVFile(file);
-    // console.log("Covid19Story1:load: file = ", file, ", csv = ", csv);
+    const csv: any[] = await readCSVFile(DATA);
 
     csv.forEach((row) => {
       const region = row.areaName;
@@ -50,7 +45,13 @@ export class Covid19Story1 extends StoryBuilder {
       );
     }
 
-    console.log("Covid19Story1:load: data = ", this._allRegionData);
+    console.log("Covid19Story1:data: data: ", this._allRegionData);
+    return this;
+  }
+
+  protected async table() {
+    this._table = (await readJSONFile(TABLE)) as FeatureActionTableRow[];
+    console.log("Covid19Story1:table: table: ", this._table);
     return this;
   }
 
@@ -91,7 +92,7 @@ export class Covid19Story1 extends StoryBuilder {
         metric: "Cases/day",
         window: WINDOW,
       })
-      .table(COVID19_STORY_1)
+      .table(this._table)
       .data(this._data)
       .build();
 

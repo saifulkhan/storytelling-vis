@@ -17,7 +17,7 @@ export abstract class Action {
   constructor() {}
 
   public abstract properties(properties: unknown): this;
-  public extraProperties(extra: any) {
+  public templateProperties(extra: any) {
     return this;
   }
 

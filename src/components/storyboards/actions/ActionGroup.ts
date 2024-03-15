@@ -18,8 +18,8 @@ export class ActionGroup extends Action {
     return this;
   }
 
-  public extraProperties(extraObj: any) {
-    this._actions.map((d: Action) => d.extraProperties(extraObj));
+  public templateProperties(extraObj: any) {
+    this._actions.map((d: Action) => d.templateProperties(extraObj));
     return this;
   }
 

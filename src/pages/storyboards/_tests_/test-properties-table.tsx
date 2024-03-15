@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PropertiesTable from "../../../components/storyboards/tables/PropertiesTable";
+import ActionPropertiesTable from "../../../components/storyboards/tables/ActionPropertiesTable";
 
 const TestPropertiesTable = () => {
   const [data, setData] = useState({
@@ -12,7 +12,7 @@ const TestPropertiesTable = () => {
 
   return (
     <div>
-      <PropertiesTable data={data} setData={setData} />
+      <ActionPropertiesTable data={data} setData={setData} />
     </div>
   );
 };

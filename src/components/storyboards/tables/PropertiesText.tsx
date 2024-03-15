@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableRow } from "@mui/material";
+import {
+  Input,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TextField,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -25,9 +32,21 @@ const useStyles = makeStyles({
     width: "100%",
     height: "100%",
     fontSize: "12px",
-    border: "none", // remove border
+    // border: "none", // remove border
     padding: "2px", // adjust padding for input
-    boxSizing: "border-box", // include padding and border in width and height
+    // boxSizing: "border-box", // include padding and border in width and height
+    "&:before": {
+      // Underline CSS for before interaction
+      borderBottom: "none",
+    },
+    "&:hover:not(.Mui-disabled):before": {
+      // Underline CSS on hover
+      borderBottom: "none",
+    },
+    "&:after": {
+      // Underline CSS for after interaction (e.g., on blur)
+      borderBottom: "none",
+    },
   },
   drawingCell: {
     width: "10%",
@@ -37,13 +56,13 @@ const useStyles = makeStyles({
   },
 });
 
-interface PropertiesTableProps {
+interface PropertiesTextProps {
   data: Record<string, any>;
   setData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
 }
 
-const PropertiesTable: React.FC<PropertiesTableProps> = ({ data, setData }) => {
-  // console.log("PropertiesTable: re-rendered: data = ", data);
+const PropertiesText: React.FC<PropertiesTextProps> = ({ data, setData }) => {
+  // console.log("PropertiesText: re-rendered: data = ", data);
 
   const classes = useStyles();
   const [rows, setRows] = useState({ ...data });
@@ -56,8 +75,8 @@ const PropertiesTable: React.FC<PropertiesTableProps> = ({ data, setData }) => {
   const handleInputChange = (key: string, value: any) => {
     const updatedData = { ...rows, [key]: value };
     setRows(updatedData);
-    // console.log("PropertiesTable: rows = ", rows);
-    // console.log("PropertiesTable: updatedData = ", updatedData);
+    // console.log("PropertiesText: rows = ", rows);
+    // console.log("PropertiesText: updatedData = ", updatedData);
     setData(updatedData); // update the parent component's data
   };
 
@@ -71,7 +90,8 @@ const PropertiesTable: React.FC<PropertiesTableProps> = ({ data, setData }) => {
               <TableRow key={key}>
                 <TableCell className={classes.keyCell}>{key}</TableCell>
                 <TableCell className={classes.valueCell}>
-                  <input
+                  <TextField
+                    // variant="standard"
                     className={classes.valueInput}
                     type="text"
                     value={value}
@@ -87,4 +107,4 @@ const PropertiesTable: React.FC<PropertiesTableProps> = ({ data, setData }) => {
   );
 };
 
-export default PropertiesTable;
+export default PropertiesText;

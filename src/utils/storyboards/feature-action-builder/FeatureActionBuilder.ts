@@ -7,7 +7,7 @@ import { ActionFactory } from "../../../components/storyboards/actions/ActionFac
 import {
   ActionTableRow,
   FeatureActionTableRow as FeatureActionTableRow,
-} from "../../../components/storyboards/tables/TableRows";
+} from "../../../components/storyboards/tables/FeatureActionTableRow";
 
 import { setOrUpdateMap } from "../../common";
 import { FeatureFactory } from "../feature/FeatureFactory";

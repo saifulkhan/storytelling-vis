@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActionTableRow } from "../../../components/storyboards/tables/TableRows";
+import { ActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { Actions } from "../../../components/storyboards/actions/Actions";
 import ActionTable from "../../../components/storyboards/tables/ActionTable";
 

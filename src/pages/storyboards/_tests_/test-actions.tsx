@@ -37,9 +37,9 @@ const TestActions = () => {
 
       const textBox = new TextBox()
         .properties({
-          title: "17-02-2024",
-          message:
-            "By {DATE}, the number of cases continued to climb higher in {REGION}. The best of the BBC, with the latest news and sport headlines, weather, TV & radio highlights and much more from across the whole of BBC Online.",
+          // title: "17-02-2024",
+          // message:
+          //   "By {DATE}, the number of cases continued to climb higher in {REGION}. The best of the BBC, with the latest news and sport headlines, weather, TV & radio highlights and much more from across the whole of BBC Online.",
         })
         .svg(svg)
         .draw()

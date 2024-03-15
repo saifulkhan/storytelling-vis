@@ -15,8 +15,8 @@ import { makeStyles } from "@mui/styles";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-import PropertiesTable from "./PropertiesTable";
-import { ActionTableRow } from "./TableRows";
+import ActionPropertiesTable from "./ActionPropertiesTable";
+import { ActionTableRow } from "./FeatureActionTableRow";
 import { Actions } from "../actions/Actions";
 import { defaultDotProperties } from "../actions/Dot";
 import { defaultCircleProperties } from "../actions/Circle";
@@ -134,7 +134,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
         </TableHead> 
         */}
         <TableBody>
-          {rows.map((row, index) => (
+          {rows?.map((row, index) => (
             <TableRow key={index}>
               {/* Action */}
               <TableCell className={classes.actionCell}>
@@ -161,9 +161,9 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
 
               {/* Properties */}
               <TableCell className={classes.propertyCell}>
-                <PropertiesTable
+                <ActionPropertiesTable
                   key={index} // ensure each instance has a unique key
-                  data={row.properties}
+                  data={{ action: row.action, ...row.properties }}
                   setData={(updatedProperties) =>
                     handlePropertyChange(index, updatedProperties)
                   }

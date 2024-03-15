@@ -5,7 +5,7 @@ import { Action, Coordinate } from "../actions/Action";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import { findDateIdx, findIndexOfDate } from "../../../utils/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
-import { Align } from "../../../types/Align";
+import { HorizontalAlign } from "../../../types/Align";
 
 const MARGIN = { top: 50, right: 50, bottom: 50, left: 50 };
 const ID_AXIS_SELECTION = "#id-axes-selection",
@@ -405,7 +405,7 @@ export class LinePlot extends Plot {
     return properties.onRightAxis ? this._rightAxis : this._leftAxis;
   }
 
-  private alignLeftOrRight(date: Date): Align {
+  private alignLeftOrRight(date: Date): HorizontalAlign {
     const x = this._xAxis(date);
     const xMid = (this._xAxis.range()[0] + this._xAxis.range()[1]) / 2;
     return x >= xMid ? "left" : "right";

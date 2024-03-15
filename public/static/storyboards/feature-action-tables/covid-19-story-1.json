@@ -1,0 +1,137 @@
+[
+    {
+    "feature": "PEAK",
+    "properties": {},
+    "rank": 5,
+    "actions": [
+        {
+        "action": "CIRCLE",
+        "properties": {
+            "size": 10,
+            "strokeWidth": 2,
+            "opacity": 0.6,
+            "color": "green"
+        }
+        },
+        {
+        "action": "TEXT_BOX",
+        "properties": {
+            "title": "${date}",
+            "message": "By ${date}, the number of cases reached peak, ${value} in region ${name}.",
+            "backgroundColor": "#d3d3d3",
+            "width": 300
+        }
+        },
+        {
+        "action": "CONNECTOR",
+        "properties": {
+            "stroke": "black",
+            "opacity": 0.6
+        }
+        },
+        {
+        "action": "DOT",
+        "properties": {
+            "color": "green",
+            "size": 5,
+            "strokeWidth": 2,
+            "opacity": 0.6
+        }
+        }
+    ]
+    },
+    {
+    "feature": "MAX",
+    "properties": {},
+    "rank": 5,
+    "actions": [
+        {
+        "action": "CIRCLE",
+        "properties": {
+            "size": 10,
+            "strokeWidth": 2,
+            "opacity": 0.6,
+            "color": "red"
+        }
+        },
+        {
+        "action": "TEXT_BOX",
+        "properties": {
+            "title": "${date}",
+            "message": "On ${date}, the number of cases reached maximum, ${value} in region ${name}.",
+            "backgroundColor": "#d3d3d3",
+            "width": 300
+        }
+        },
+        {
+        "action": "CONNECTOR",
+        "properties": {
+            "stroke": "black",
+            "opacity": 0.6
+        }
+        },
+        {
+        "action": "DOT",
+        "properties": {
+            "color": "red",
+            "size": 5,
+            "strokeWidth": 2,
+            "opacity": 0.6
+        }
+        }
+    ]
+    },
+    {
+    "feature": "SLOPE",
+    "properties": {
+        "gt": 100
+    },
+    "rank": 7,
+    "actions": [
+        {
+        "action": "TEXT_BOX",
+        "properties": {
+            "message": "By ${date}, the number of cases continued to climb higher in ${name}.",
+            "title": "${date}",
+            "backgroundColor": "#d3d3d3",
+            "width": 300
+        }
+        },
+        {
+        "action": "CONNECTOR",
+        "properties": {
+            "stroke": "black",
+            "opacity": 0.6
+        }
+        }
+    ]
+    },
+    {
+    "feature": "SLOPE",
+    "properties": {
+        "gt": -1,
+        "lt": 1,
+        "ne": 0
+    },
+    "rank": 7,
+    "actions": [
+        {
+        "action": "TEXT_BOX",
+        "properties": {
+            "message": "By ${date}, the number of cases remained low. We should continue to be vigilant",
+            "title": "${date}",
+            "backgroundColor": "#d3d3d3",
+            "width": 300
+        }
+        },
+        {
+        "action": "CONNECTOR",
+        "properties": {
+            "stroke": "black",
+            "opacity": 0.6
+        }
+        }
+    ]
+    }
+]
+

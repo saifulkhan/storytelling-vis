@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
 import { Actions } from "./Actions";
-import { Align } from "../../../types/Align";
+import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type TextBoxProperties = {
   id?: string;
@@ -10,17 +10,19 @@ export type TextBoxProperties = {
   backgroundColor?: string;
   width?: number;
   showConnector?: boolean;
-  align?: Align;
+  horizontalAlign?: HorizontalAlign;
+  verticalAlign?: VerticalAlign;
 };
 
 export const defaultTextBoxProperties: TextBoxProperties = {
   id: "TextBox",
-  title: "Title ...",
-  message: "Message text goes here ...",
-  backgroundColor: "#E0E0E0",
+  title: "...T...",
+  message: "...M...",
+  backgroundColor: "#F8F8F8",
   width: 300,
   showConnector: false,
-  align: "right",
+  horizontalAlign: "middle",
+  verticalAlign: "middle",
 };
 
 const PADDING = 3;
@@ -46,7 +48,7 @@ export class TextBox extends Action {
     return this;
   }
 
-  public extraProperties(extra: any) {
+  public templateProperties(extra: any) {
     this._properties.message = this.updateStringTemplate(
       this._properties.message,
       extra
@@ -207,19 +209,24 @@ export class TextBox extends Action {
     const [x2, y2] = this._dest;
 
     const { width, height } = this._rectNode.getBoundingClientRect();
-    let x;
+    let x = 0,
+      y = 0;
 
-    if (this._properties.align === "left") {
+    if (this._properties.horizontalAlign === "left") {
       x = this._dest[0] - width;
-    } else if (this._properties.align === "middle") {
+    } else if (this._properties.horizontalAlign === "middle") {
       x = this._dest[0] - width / 2;
-    } else if (this._properties.align === "right") {
+    } else if (this._properties.horizontalAlign === "right") {
       x = this._dest[0];
     }
 
-    console.log(this._properties, x);
-
-    const y = this._dest[1] - height;
+    if (this._properties.verticalAlign === "top") {
+      y = this._dest[1] - height;
+    } else if (this._properties.verticalAlign === "middle") {
+      y = this._dest[1] - height / 2;
+    } else if (this._properties.verticalAlign === "bottom") {
+      y = this._dest[1] + height;
+    }
 
     d3.select(this._rectNode).attr("transform", `translate(${x},${y})`);
     d3.select(this._textNode).attr(

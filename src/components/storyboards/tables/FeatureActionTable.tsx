@@ -14,8 +14,8 @@ import {
 import { makeStyles } from "@mui/styles";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import PropertiesTable from "./PropertiesTable";
-import { ActionTableRow, FeatureActionTableRow } from "./TableRows";
+import ActionPropertiesTable from "./ActionPropertiesTable";
+import { ActionTableRow, FeatureActionTableRow } from "./FeatureActionTableRow";
 import { Actions } from "../actions/Actions";
 
 import { defaultDotProperties } from "../actions/Dot";
@@ -24,6 +24,7 @@ import { defaultTextBoxProperties } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
 import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
 import ActionTable from "./ActionTable";
+import FeaturePropertiesTable from "./FeaturePropertiesTable";
 
 const getInitialProperties = (action: Actions) => {
   switch (action) {
@@ -44,6 +45,26 @@ const useStyles = makeStyles({
   table: {
     width: "100%",
     borderCollapse: "collapse", // remove border collapse
+    borderSpacing: 0, // removes default spacing to control borders effectively
+  },
+  featureHeadCell: {
+    fontWeight: "bold", // header to be bold
+  },
+  propertiesHeadCell: {
+    fontWeight: "bold", // header to be bold
+  },
+  rankHeadCell: {
+    fontWeight: "bold", // header to be bold
+  },
+  actionHeadCell: {
+    fontWeight: "bold", // header to be bold
+    textAlign: "center", // center align text
+  },
+  tableRow: {
+    "&:not(:last-child)": {
+      // Adds horizontal border to all but the last row for a cleaner look
+      borderBottom: "1.5px solid #808080", // Adjust color as needed
+    },
   },
   // button: {
   //   margin: "10px",
@@ -58,16 +79,9 @@ const useStyles = makeStyles({
   },
 
   propertyCell: {
-    width: "10%",
+    width: "15%",
     fontSize: "12px",
     padding: "2px", // reduce padding
-    // border: "none", // remove border
-  },
-
-  actionCell: {
-    width: "60%",
-    // fontSize: "12px",
-    // padding: "2px", // reduce padding
     // border: "none", // remove border
   },
   rankCell: {
@@ -75,6 +89,24 @@ const useStyles = makeStyles({
     // fontSize: "12px",
     // padding: "2px", // reduce padding
     // border: "none", // remove border
+  },
+  actionCell: {
+    width: "65%",
+    // fontSize: "12px",
+    // padding: "2px", // reduce padding
+    // border: "none", // remove border
+  },
+  rankTextField: {
+    "& .MuiInputBase-root": {
+      // Target the input field container
+      height: "30px", // Set the height of the input
+      width: "100px", // Set the width of the input
+    },
+    "& .MuiInputBase-input": {
+      // Target the input element itself
+      height: "30px",
+      padding: "0 14px", // Adjust padding as needed
+    },
   },
   // inputField: {
   //   height: "28px",
@@ -144,20 +176,33 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     */
   };
 
+  const handleRankChange = (index: number, rank: number) => {
+    console.log("index: ", index, ", rank: ", rank);
+    /*
+    setEditCellId(id);
+    setEditedValue(value.toString()); // Convert value to string for the TextField
+    setColumnNameBeingEdited(columnName);
+    */
+  };
+
   return (
     <div>
       <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Feature</TableCell>
-            <TableCell>Properties</TableCell>
-            <TableCell>Rank</TableCell>
-            <TableCell>Action & Properties</TableCell>
+        <TableHead className={classes.tableRow}>
+          <TableRow className={classes.tableRow}>
+            <TableCell className={classes.featureHeadCell}>Feature</TableCell>
+            <TableCell className={classes.propertiesHeadCell}>
+              Properties
+            </TableCell>
+            <TableCell className={classes.rankHeadCell}>Rank</TableCell>
+            <TableCell className={classes.actionHeadCell}>
+              Action & Properties
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, index) => (
-            <TableRow key={index}>
+          {rows?.map((row, index) => (
+            <TableRow key={index} className={classes.tableRow}>
               {/* Feature */}
               <TableCell className={classes.featureCell}>
                 <IconButton
@@ -186,23 +231,24 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
 
               {/* Properties */}
               <TableCell className={classes.propertyCell}>
-                <PropertiesTable
+                <FeaturePropertiesTable
                   key={index} // ensure each instance has a unique key
                   data={row.properties}
-                  setData={(updatedProperties) =>
-                    handlePropertyChange(index, updatedProperties)
+                  setData={(newProperties) =>
+                    handlePropertyChange(index, newProperties)
                   }
                 />
               </TableCell>
 
               {/* Rank */}
               <TableCell className={classes.rankCell}>
-                {/* <ActionTable
+                <TextField
+                  className={classes.rankTextField}
+                  type="number"
                   key={index} // ensure each instance has a unique key
-                  data={row.actions}
-                  setData={() => {}}
-                /> */}
-                {row.rank}
+                  value={row.rank}
+                  onChange={(e) => handleRankChange(index, e.target.value)}
+                />
               </TableCell>
 
               {/* Actions */}
