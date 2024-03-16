@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { StoryBuilder } from "./StoryBuilder";
-import { readCSVFile } from "../../../services/data";
+import { readCSV } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
@@ -18,7 +18,7 @@ export class MLStory1 extends StoryBuilder {
   }
 
   protected async data() {
-    const csv: any[] = await readCSVFile(FILE);
+    const csv: any[] = await readCSV(FILE);
     // prettier-ignore
     // console.log("MLStory1:load: FILE = ", FILE, ", csv = ", csv);
 

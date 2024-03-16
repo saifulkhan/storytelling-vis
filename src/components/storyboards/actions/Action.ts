@@ -11,8 +11,6 @@ export abstract class Action {
   protected _properties;
   protected _svg: SVGGElement;
   protected _node: SVGGElement;
-  protected _src;
-  protected _dest;
 
   constructor() {}
 
@@ -47,7 +45,7 @@ export abstract class Action {
 
   public abstract draw(): this;
   // we need src & dest both for connector, text box
-  public abstract coordinate(src: Coordinate, dest: Coordinate): this;
+  public abstract coordinate(coordinate: [Coordinate, Coordinate]): this;
 
   public show(delay = DELAY, duration = DURATION) {
     return new Promise<number>((resolve, reject) => {

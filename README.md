@@ -43,23 +43,21 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 yarn test
 ```
 
-### Test & Debug
+## Documentation
+
+### Examples, Test and Debug
 
 Test and debug visualizations & components
 
-- <http://localhost:3000/storyboards/_tests_/test-features>
-- <http://localhost:3000/storyboards/_tests_/test-actions>
-- <http://localhost:3000/storyboards/_tests_/test-line-chart>
-- <http://localhost:3000/storyboards/_tests_/test-properties-table>
-- <http://localhost:3000/storyboards/_tests_/test-action-table>
-- <http://localhost:3000/storyboards/_tests_/test-feature-action-table>
-- <http://localhost:3000/storyboards/_tests_/test-feature-action-table-1>
-
-Pages
-
-- <http://localhost:3000/storyboards/_tests_/test-feature-action-table>
-
-## Documentation
+- <http://localhost:3000/storyboards/examples/test-features>
+- <http://localhost:3000/storyboards/examples/test-actions>
+- <http://localhost:3000/storyboards/examples/test-line-plot>
+- <http://localhost:3000/storyboards/examples/test-properties-table>
+- <http://localhost:3000/storyboards/examples/test-action-table>
+- <http://localhost:3000/storyboards/examples/test-feature-action-table>
+- <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
+- <http://localhost:3000/storyboards/examples/gaussian-process-demo>
+- <http://localhost:3000/storyboards/examples/test-feature-action-table>
 
 ### Workflow
 
@@ -114,6 +112,7 @@ await feature.hide(delay, duration);
 Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 
 ## References
+
 - Previous prototypes ported Observable to React.js [storytelling-vis-v.0.1](https://github.com/saifulkhan/storytelling-vis-v.0.1)
 - Observable prototypes during initial RAMPVIS phases, [see](https://observablehq.com/d/0a6e9c35a809660e)
 - Used [Next.js](https://github.com/vercel/next.js), [MUI](https://mui.com)

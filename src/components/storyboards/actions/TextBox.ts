@@ -202,30 +202,28 @@ export class TextBox extends Action {
     }
   }
 
-  public coordinate(src: Coordinate, dest: Coordinate) {
-    this._src = src;
-    this._dest = dest;
-    const [x1, y1] = this._src;
-    const [x2, y2] = this._dest;
+  public coordinate(coordinate: [Coordinate, Coordinate]): this {
+    const [x1, y1] = coordinate[0];
+    const [x2, y2] = coordinate[1];
 
     const { width, height } = this._rectNode.getBoundingClientRect();
     let x = 0,
       y = 0;
 
     if (this._properties.horizontalAlign === "left") {
-      x = this._dest[0] - width;
+      x = x2 - width;
     } else if (this._properties.horizontalAlign === "middle") {
-      x = this._dest[0] - width / 2;
+      x = x2 - width / 2;
     } else if (this._properties.horizontalAlign === "right") {
-      x = this._dest[0];
+      x = x2;
     }
 
     if (this._properties.verticalAlign === "top") {
-      y = this._dest[1] - height;
+      y = y2 - height;
     } else if (this._properties.verticalAlign === "middle") {
-      y = this._dest[1] - height / 2;
+      y = y2 - height / 2;
     } else if (this._properties.verticalAlign === "bottom") {
-      y = this._dest[1] + height;
+      y = y2 + height;
     }
 
     d3.select(this._rectNode).attr("transform", `translate(${x},${y})`);
@@ -250,7 +248,7 @@ export class TextBox extends Action {
     return this;
   }
 
-  public move(dest: Coordinate, delay = 0, duration = 1500) {
+  public move(coordinate: Coordinate, delay = 0, duration = 1500) {
     const { width, height } = this._rectNode.getBoundingClientRect();
 
     // left align
@@ -258,8 +256,8 @@ export class TextBox extends Action {
     // center aligned
     // const x = dest[0] - width / 2;
     // right align
-    const x = dest[0];
-    const y = dest[1] - height;
+    const x = coordinate[0];
+    const y = coordinate[1] - height;
 
     const promise1 = new Promise<number>((resolve, reject) => {
       d3.select(this._rectNode)

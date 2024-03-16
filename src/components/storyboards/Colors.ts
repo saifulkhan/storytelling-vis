@@ -1,4 +1,5 @@
-import { NumericalFeatureEnum } from "src/utils/storyboards/feature/NumericalFeatureEnum";
+import * as d3 from "d3";
+import { NumericalFeatures } from "../../utils/storyboards/feature/NumericalFeatures";
 
 export enum Color {
   ForestGreen = "#228B22",
@@ -29,28 +30,33 @@ export enum Color {
 }
 
 export const LineColor = {};
-LineColor[NumericalFeatureEnum.DEFAULT] = Color.LightGrey1;
-LineColor[NumericalFeatureEnum.CURRENT] = Color.Orange;
-LineColor[NumericalFeatureEnum.LAST] = Color.PaleCyan;
-LineColor[NumericalFeatureEnum.MAX] = Color.Green;
-LineColor[NumericalFeatureEnum.MIN] = Color.Purple;
-LineColor[NumericalFeatureEnum.PEAK] = Color.LightGreen;
-LineColor[NumericalFeatureEnum.VALLEY] = Color.PalePurple;
+LineColor[NumericalFeatures.DEFAULT] = Color.LightGrey1;
+LineColor[NumericalFeatures.CURRENT] = Color.Orange;
+LineColor[NumericalFeatures.LAST] = Color.PaleCyan;
+LineColor[NumericalFeatures.MAX] = Color.Green;
+LineColor[NumericalFeatures.MIN] = Color.Purple;
+LineColor[NumericalFeatures.PEAK] = Color.LightGreen;
+LineColor[NumericalFeatures.VALLEY] = Color.PalePurple;
 
 export const DotColor = {};
-DotColor[NumericalFeatureEnum.DEFAULT] = Color.DarkGrey;
-DotColor[NumericalFeatureEnum.CURRENT] = Color.Orange;
-DotColor[NumericalFeatureEnum.LAST] = Color.PaleCyan;
-DotColor[NumericalFeatureEnum.MAX] = Color.Green;
-DotColor[NumericalFeatureEnum.MIN] = Color.Purple;
-DotColor[NumericalFeatureEnum.PEAK] = Color.LightGreen;
-DotColor[NumericalFeatureEnum.VALLEY] = Color.PalePurple;
+DotColor[NumericalFeatures.DEFAULT] = Color.DarkGrey;
+DotColor[NumericalFeatures.CURRENT] = Color.Orange;
+DotColor[NumericalFeatures.LAST] = Color.PaleCyan;
+DotColor[NumericalFeatures.MAX] = Color.Green;
+DotColor[NumericalFeatures.MIN] = Color.Purple;
+DotColor[NumericalFeatures.PEAK] = Color.LightGreen;
+DotColor[NumericalFeatures.VALLEY] = Color.PalePurple;
 
 export const TextColor = {};
-TextColor[NumericalFeatureEnum.DEFAULT] = Color.DarkGrey;
-TextColor[NumericalFeatureEnum.CURRENT] = Color.DarkOrange;
-TextColor[NumericalFeatureEnum.LAST] = Color.DarkCyan;
-TextColor[NumericalFeatureEnum.MAX] = Color.DarkGreen;
-TextColor[NumericalFeatureEnum.MIN] = Color.DarkPurple;
-TextColor[NumericalFeatureEnum.PEAK] = Color.LightGreen;
-TextColor[NumericalFeatureEnum.VALLEY] = Color.PalePurple;
+TextColor[NumericalFeatures.DEFAULT] = Color.DarkGrey;
+TextColor[NumericalFeatures.CURRENT] = Color.DarkOrange;
+TextColor[NumericalFeatures.LAST] = Color.DarkCyan;
+TextColor[NumericalFeatures.MAX] = Color.DarkGreen;
+TextColor[NumericalFeatures.MIN] = Color.DarkPurple;
+TextColor[NumericalFeatures.PEAK] = Color.LightGreen;
+TextColor[NumericalFeatures.VALLEY] = Color.PalePurple;
+
+export function getSchemeTableau10(n) {
+  const colorScheme = d3.schemeTableau10;
+  return colorScheme[n % colorScheme.length];
+}

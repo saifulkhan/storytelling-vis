@@ -1,5 +1,4 @@
 export enum NumericalFeatures {
-  DEFAULT = "DEFAULT",
   CURRENT = "CURRENT",
   LAST = "LAST",
   MAX = "MAX",

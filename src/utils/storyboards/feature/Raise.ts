@@ -2,60 +2,37 @@ import { NumericalFeature } from "./NumericalFeature";
 import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Rise extends NumericalFeature {
-  _height;
-  _grad;
-  _normGrad;
+  grad: number;
+  normGrad: number;
 
   constructor(
-    date = undefined,
-    start = undefined,
-    end = undefined,
-    metric = undefined,
-    height = undefined,
-    grad = undefined
+    date: Date,
+    height: number,
+    rank?: number,
+    metric?: string,
+    start?: Date,
+    end?: Date
   ) {
-    super(date, start, end, metric);
-    this._type = NumericalFeatures.RAISE;
-    this._height = height;
-    this._grad = grad;
-    this._normGrad;
+    super(date, height, rank, metric, start, end);
+    this.type = NumericalFeatures.RAISE;
   }
 
-  get rank() {
-    if (this._rank) return this._rank;
-
-    if (!this._normGrad) {
-      throw "You must set normalised gradient. Use the set functions: .setNormGrad().";
-    }
-    return 1 + Math.min(9, Math.round(this._normGrad - 1));
-  }
-
-  setHeight(height) {
-    this._height = height;
+  setGrad(grad: number) {
+    this.grad = grad;
     return this;
   }
 
-  setGrad(grad) {
-    this._grad = grad;
+  setNormGrad(normGrad: number) {
+    this.normGrad = normGrad;
     return this;
   }
 
-  setNormGrad(normGrad) {
-    this._normGrad = normGrad;
-    return this;
+  getGrad() {
+    // TODO: check
+    return this.grad > 5 ? "steep" : this.grad > 2 ? "steady" : "slow";
   }
 
-  get height() {
-    if (!this._height) {
-      throw "You must set Rise height. Use constructor or chain the set function: .setHeight().";
-    }
-    return this._height;
-  }
-
-  get grad() {
-    if (!this._grad) {
-      throw "You must set Rise grad. Use constructor or chain the set function: .setGrad().";
-    }
-    return this._grad > 5 ? "steep" : this._grad > 2 ? "steady" : "slow";
+  getNormGrad(normGrad: number) {
+    return this.normGrad;
   }
 }

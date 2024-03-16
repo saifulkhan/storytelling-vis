@@ -7,7 +7,7 @@ import {
   TimeseriesData,
 } from "../data-processing/TimeseriesData";
 import { Feature } from "./Feature";
-import { createPredicate } from "../../common";
+import { createPredicate } from "../data-processing/common";
 import { Min } from "./Min";
 import { Max } from "./Max";
 import { Condition } from "./Condition";

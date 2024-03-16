@@ -1,55 +1,50 @@
 import { NumericalFeature } from "./NumericalFeature";
 import { NumericalFeatures } from "./NumericalFeatures";
 
-// TODO: Why?
-const CONST = 0.2;
-
 export class Peak extends NumericalFeature {
-  protected _height: number;
-  protected _normHeight: number;
-  protected _normWidth: number;
-  protected _normDuration: number;
+  protected normHeight: number;
+  protected normWidth: number;
+  protected normDuration: number;
 
   constructor(
-    date,
-    start = undefined,
-    end = undefined,
-    metric = undefined,
-    height = undefined,
-    normWidth = undefined,
-    normHeight = undefined
+    date: Date,
+    height: number,
+    normWidth: number,
+    normHeight: number,
+    rank?: number,
+    metric?: string,
+    start?: Date,
+    end?: Date
   ) {
-    super(date, start, end, metric);
-    this._type = NumericalFeatures.PEAK;
-    this._height = height;
-    this._normWidth = normWidth;
-    this._normHeight = normHeight;
+    super(date, height, rank, metric, start, end);
+    this.normWidth = normWidth;
+    this.normHeight = normHeight;
+    this.type = NumericalFeatures.PEAK;
   }
 
-  set height(height) {
-    this._height = height;
+  setNormWidth(normWidth: number) {
+    this.normWidth = normWidth;
+    return this;
   }
 
-  get height() {
-    return this._height;
+  getNormWidth() {
+    return this.normWidth;
   }
 
-  set normHeight(normHeight) {
-    this._normHeight = normHeight;
+  setNormHeight(normHeight: number) {
+    this.normHeight = normHeight;
+    return this;
   }
 
-  set normWidth(normWidth) {
-    this._normWidth = normWidth;
+  getNormHeight() {
+    return this.normHeight;
   }
 
-  set rank(rank: number) {
-    this._rank = rank;
+  setNormDuration(normDuration: number) {
+    this.normDuration = normDuration;
+    return this;
   }
-
-  get rank() {
-    if (this._rank) return this._rank;
-
-    if (!this._normHeight) throw "Set normHeight";
-    return 1 + Math.floor(this._normHeight / CONST);
+  getNormDuration() {
+    return this.normDuration;
   }
 }

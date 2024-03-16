@@ -3,20 +3,23 @@ import * as d3 from "d3";
 import { Plot } from "./Plot";
 import { Action, Coordinate } from "../actions/Action";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
-import { findDateIdx, findIndexOfDate } from "../../../utils/common";
+import {
+  findDateIdx,
+  findIndexOfDate,
+} from "../../../utils/storyboards/data-processing/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
 import { HorizontalAlign } from "../../../types/Align";
 
-const MARGIN = { top: 50, right: 50, bottom: 50, left: 50 };
+const MARGIN = { top: 50, right: 40, bottom: 50, left: 60 };
 const ID_AXIS_SELECTION = "#id-axes-selection",
-  YAXIS_LABEL_OFFSET = 10,
+  YAXIS_LABEL_OFFSET = 12,
   MAGIC_NO = 10,
   TITLE_FONT_SIZE = "14px",
-  LINE_STROKE_WIDTH = 2,
-  LINE_STROKE = "#2a363b";
-
-// TODO: Should we merge these properties?
-// TODO: What would be a good name that applies to all plots?
+  LINE_STROKE_WIDTH = 1,
+  LINE_STROKE = "#2a363b",
+  DOT_SIZE = 2;
+const FONT_FAMILY = "Arial Narrow";
+const FONT_SIZE = "12px";
 
 export type PlotProperties = {
   title?: string;
@@ -59,7 +62,7 @@ export class LinePlot extends Plot {
     super();
   }
 
-  public properties(p: PlotProperties) {
+  public plotProperties(p: PlotProperties) {
     this._plotProperties = {
       ...p,
       title: p.title || "title...",
@@ -106,10 +109,12 @@ export class LinePlot extends Plot {
 
   public svg(svg: SVGSVGElement) {
     this._svg = svg;
+    // clean
+    d3.select(this._svg).selectAll("*").remove();
     const bounds = svg.getBoundingClientRect();
     this._height = bounds.height;
     this._width = bounds.width;
-    console.log("LinePlot: bounds = ", bounds);
+    console.log("LinePlot:svg: bounds: ", bounds);
 
     this._selector = d3
       .select(this._svg)
@@ -125,11 +130,20 @@ export class LinePlot extends Plot {
    ** Draw all lines (no animation)
    **/
   public _draw() {
+    console.log("LinePlot:_draw: _data: ", this._data);
     const line = (xAxis, yAxis) => {
       return d3
         .line()
-        .x((d: TimeseriesData) => xAxis(d.date))
-        .y((d: TimeseriesData) => yAxis(d.y));
+        .x((d: TimeseriesData) => {
+          return xAxis(d.date);
+        })
+        .y((d: TimeseriesData) => {
+          if (typeof d.y !== "number" || Number.isNaN(d.y)) {
+            console.log(d);
+            d.y = 0;
+          }
+          return yAxis(d.y);
+        });
     };
 
     // draw line and dots
@@ -137,6 +151,7 @@ export class LinePlot extends Plot {
       const p = this._lineProperties[i];
       const yAxis = this.leftOrRightAxis(i);
 
+      console.log("LinePlot:_draw: data:", data);
       // draw line
       this._selector
         .append("path")
@@ -152,11 +167,11 @@ export class LinePlot extends Plot {
           .selectAll("circle")
           .data(data.map(Object.values))
           .join("circle")
-          .attr("r", 4)
+          .attr("r", DOT_SIZE)
           .attr("cx", (d) => this._xAxis(d[0]))
           .attr("cy", (d) => yAxis(d[1]))
           .style("fill", p.stroke)
-          .attr("opacity", 0.2);
+          .attr("opacity", 0.5);
       }
     });
 
@@ -176,18 +191,19 @@ export class LinePlot extends Plot {
     if (!this._actions || !this._actions.length) {
       // draw static
       this._draw();
-      return;
+      return this;
     }
 
     this.animate(0);
+    return this;
   }
 
-  private animate(lineNum: number) {
+  private animate(lineIndex: number = 0) {
     let start = 0;
 
     (async () => {
       for (let [date, action] of this._actions) {
-        const idx = findIndexOfDate(this._data[lineNum], date);
+        const idx = findIndexOfDate(this._data[lineIndex], date);
         console.log("action = ", action);
         // update actions coord, text etc.
         action
@@ -196,13 +212,13 @@ export class LinePlot extends Plot {
             align: this.alignLeftOrRight(date),
             date: date.toLocaleDateString(),
             name: this._name,
-            value: this._data[lineNum][idx].y,
+            value: this._data[lineIndex][idx].y,
           })
           .draw()
-          .coordinate(...this.coordinates(lineNum, date));
+          .coordinate(...this.coordinates(date.lineIndex));
 
         const end = idx;
-        await this._animate(lineNum, start, end);
+        await this._animate(start, end, lineIndex);
         await action.show();
         await action.hide();
         start = end;
@@ -210,14 +226,14 @@ export class LinePlot extends Plot {
     })();
   }
 
-  private _animate(lineNum: number, start: number, stop: number) {
+  private _animate(start: number, stop: number, lineIndex: number = 0) {
     // prettier-ignore
-    // console.log(`LinePlot: lineNum = ${lineNum}, start = ${start}, stop = ${stop}`)
-    // console.log(this._data, this._data[lineNum]);
+    // console.log(`LinePlot: lineIndex = ${lineIndex}, start = ${start}, stop = ${stop}`)
+    // console.log(this._data, this._data[lineIndex]);
 
-    const data = this._data[lineNum].slice(start, stop + 1);
-    const p = this._lineProperties[lineNum];
-    const yAxis = this.leftOrRightAxis(lineNum);
+    const data = this._data[lineIndex].slice(start, stop + 1);
+    const p = this._lineProperties[lineIndex];
+    const yAxis = this.leftOrRightAxis(lineIndex);
 
     const line = (xAxis, yAxis) => {
       return d3
@@ -389,10 +405,13 @@ export class LinePlot extends Plot {
    * Given a date of the LinePlot, return the corresponding [x1, y1], [x2, y2]
    * coordinates
    */
-  public coordinates(lineNum: number, date: Date): [Coordinate, Coordinate] {
-    const data = this._data[lineNum];
+  public coordinates(
+    date: Date,
+    lineIndex: number = 0
+  ): [Coordinate, Coordinate] {
+    const data = this._data[lineIndex];
     const index = findDateIdx(date, data);
-    const yAxis = this.leftOrRightAxis(lineNum);
+    const yAxis = this.leftOrRightAxis(lineIndex);
 
     return [
       [this._xAxis(data[index].date), yAxis(0)],
@@ -400,8 +419,8 @@ export class LinePlot extends Plot {
     ];
   }
 
-  private leftOrRightAxis(lineNum: number) {
-    const properties = this._lineProperties[lineNum];
+  private leftOrRightAxis(lineIndex: number) {
+    const properties = this._lineProperties[lineIndex];
     return properties.onRightAxis ? this._rightAxis : this._leftAxis;
   }
 

@@ -1,4 +1,4 @@
-import { TimeseriesData } from "./storyboards/data-processing/TimeseriesData";
+import { TimeseriesData } from "./TimeseriesData";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
@@ -149,7 +149,7 @@ export function maxIndex(values, valueof?) {
   return maxIndex;
 }
 
-export default function minIndex(values, valueof?) {
+export function minIndex(values, valueof?) {
   let min;
   let minIndex = -1;
   let index = -1;
@@ -174,4 +174,57 @@ export default function minIndex(values, valueof?) {
     }
   }
   return minIndex;
+}
+
+/*
+ * Min-Max normalization of data of the form [x0, x1, ...xn]
+ */
+export function normalise(data: number[]) {
+  // get min and max values from data (for normalization)
+  const [min, max] = data
+    .slice(1)
+    .reduce(
+      (res, d) => [Math.min(d, res[0]), Math.max(d, res[1])],
+      [data[0], data[0]]
+    );
+
+  // normalise y values to be between 0 and 1
+  return data.map((d) => (d - min) / (max - min));
+}
+
+/*
+ * Linear regression function inspired by the answer found at: https://stackoverflow.com/a/31566791.
+ * We remove the need for array x as we assume y data is equally spaced and we only want the gradient.
+ */
+
+export function linRegGrad(y) {
+  let slope = {};
+  const n = y.length;
+  let sum_x = 0;
+  let sum_y = 0;
+  let sum_xy = 0;
+  let sum_xx = 0;
+
+  for (let i = 0; i < y.length; i++) {
+    sum_x += i;
+    sum_y += y[i];
+    sum_xy += i * y[i];
+    sum_xx += i * i;
+  }
+
+  slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
+  return slope;
+}
+
+export function scaleValue(
+  value: number,
+  minInput: number,
+  maxInput: number,
+  minOutput: number,
+  maxOutput: number
+): number {
+  return (
+    ((value - minInput) / (maxInput - minInput)) * (maxOutput - minOutput) +
+    minOutput
+  );
 }

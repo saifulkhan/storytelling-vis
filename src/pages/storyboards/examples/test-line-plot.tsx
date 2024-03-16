@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { covid19data1 } from "src/services/covid19-data";
-import { LineChart } from "src/components/storyboards/plots/LineChart";
+import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 
-const TestLineChart = () => {
+const TestLinePlotPage = () => {
   const chartRef = useRef(null);
 
   const margin = { top: 20, right: 30, bottom: 40, left: 50 };
@@ -26,9 +26,9 @@ const TestLineChart = () => {
       console.log(d);
       const data = [d["Aberdeenshire"], d["Angus"], d["Barnet"]];
 
-      const lineChart = new LineChart()
+      const lineChart = new LinePlot()
         .data(data)
-        .chartProperties({})
+        .plotProperties({})
         .lineProperties([
           {
             stroke: "#355c7d",
@@ -70,4 +70,4 @@ const TestLineChart = () => {
   );
 };
 
-export default TestLineChart;
+export default TestLinePlotPage;

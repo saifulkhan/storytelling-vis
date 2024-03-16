@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Color } from "../Colors";
 import { Plot } from "./Plot";
-import { getObjectKeysArray } from "../../../utils/common";
+import { getObjectKeysArray } from "../../../utils/storyboards/data-processing/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
 
 export type ParallelCoordinatePlotProperties = {};
@@ -78,7 +78,7 @@ export class ParallelCoordinatePlot extends Plot {
     super();
   }
 
-  public properties(properties: unknown) {
+  public plotProperties(properties: unknown) {
     throw new Error("Method not implemented.");
     return this;
   }

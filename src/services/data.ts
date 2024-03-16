@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-export const readCSVFile = async (file: string) => {
+export const readCSV = async (file: string) => {
   try {
     return await d3.csv(file);
   } catch (e) {
@@ -8,7 +8,7 @@ export const readCSVFile = async (file: string) => {
   }
 };
 
-export const readJSONFile = async (file: string) => {
+export const readJSON = async (file: string) => {
   try {
     return await d3.json(file);
   } catch (e) {

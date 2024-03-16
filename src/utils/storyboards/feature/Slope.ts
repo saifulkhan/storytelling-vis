@@ -2,33 +2,38 @@ import { NumericalFeature } from "./NumericalFeature";
 import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Slope extends NumericalFeature {
-  protected _slope: string;
+  height: number;
+  grad: number;
+  normGrad: number;
 
   constructor(
-    date,
-    start = undefined,
-    end = undefined,
-    metric = undefined,
-    slope = undefined
+    date: Date,
+    height: number,
+    rank?: number,
+    metric?: string,
+    start?: Date,
+    end?: Date
   ) {
-    super(date, start, end, metric);
-    this._slope = slope;
-    this._type = NumericalFeatures.SLOPE;
+    super(date, height, rank, metric, start, end);
+    this.type = NumericalFeatures.SLOPE;
   }
 
-  set metric(metric) {
-    this._metric = metric;
+  setGrad(grad: number) {
+    this.grad = grad;
+    return this;
   }
 
-  get metric() {
-    return this._metric;
+  setNormGrad(normGrad: number) {
+    this.normGrad = normGrad;
+    return this;
   }
 
-  set slope(metric) {
-    this._slope = metric;
+  getGrad() {
+    // TODO: check
+    return this.grad > 5 ? "steep" : this.grad > 2 ? "steady" : "slow";
   }
 
-  get slope() {
-    return this._slope;
+  getNormGrad(normGrad: number) {
+    return this.normGrad;
   }
 }

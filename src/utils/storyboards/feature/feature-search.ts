@@ -1,61 +1,17 @@
 import { Peak } from "./Peak";
 import { Slope } from "./Slope";
-import { findDateIdx, mean } from "../../common";
-import { CategoricalFeature } from "./CategoricalFeature";
-import { CategoricalFeatures } from "./CategoricalFeatures";
-import { TimeseriesData } from "../data-processing/TimeseriesData";
 import { Min } from "./Min";
 import { Max } from "./Max";
-
-const MAX_RANK = 5;
-
-/*
- * Create numerical timeseries
- */
-export function nts(data: TimeseriesData[], metric: string, window: number) {
-  const nts: Peak[] = searchPeaks(data, metric, window);
-
-  // rank peaks by its height, assign rank between 1 to MAX_RANK
-  const rankByHeight = (peaks: Peak[]) => {
-    peaks.sort((p1, p2) => p1.height - p2.height);
-    const nPeaks = peaks.length;
-    // size of each ranking group
-    const groupSize = nPeaks / MAX_RANK;
-    peaks.forEach((p, i) => (p.rank = 1 + Math.floor(i / groupSize)));
-  };
-
-  rankByHeight(nts);
-  return nts;
-}
-
-/*
- * Create categorical timeseries
- */
-export function cts() {
-  const a = new CategoricalFeature(
-    new Date("2020-03-24"),
-    "Start of First Lockdown.",
-    CategoricalFeatures.LOCKDOWN_START,
-    5
-  );
-
-  const b = new CategoricalFeature(
-    new Date("2021-01-05"),
-    "Start of Second Lockdown.",
-    CategoricalFeatures.LOCKDOWN_END,
-    3
-  );
-
-  const c = new CategoricalFeature(
-    new Date("2020-05-28"),
-    "End of First Lockdown.",
-    CategoricalFeatures.LOCKDOWN_END,
-    5
-  );
-
-  const cts = [a, b, c];
-  return cts;
-}
+import { Fall } from "./Fall";
+import { Rise } from "./Raise";
+import { TimeseriesData } from "../data-processing/TimeseriesData";
+import {
+  findDateIdx,
+  maxIndex,
+  mean,
+  minIndex,
+  normalise,
+} from "../data-processing/common";
 
 /*
  * The steps for peak search function:
@@ -65,6 +21,7 @@ export function cts() {
  */
 export function searchPeaks(
   data: TimeseriesData[],
+  rank: number,
   metric: string,
   window: number
 ) {
@@ -80,29 +37,30 @@ export function searchPeaks(
     peaks.push(
       new Peak(
         data[idx].date,
-        data[start].date,
-        data[end].date,
-        metric,
         data[idx].y,
         (end - start) / norm.length,
-        norm[idx]
+        norm[idx],
+        rank,
+        metric,
+        data[start].date,
+        data[end].date
       )
     );
   }
 
   // sort from lowest to highest
-  peaks.sort((p1, p2) => p1.height - p2.height);
+  peaks.sort((p1, p2) => p1.getHeight() - p2.getHeight());
 
   // peak intersection detection function
-  const peaksIntersect = (p1, p2) => {
-    const p1PeakIdx = findDateIdx(p1._date, data);
-    const p2PeakIdx = findDateIdx(p2._date, data);
+  const peaksIntersect = (p1: Peak, p2: Peak) => {
+    const p1PeakIdx = findDateIdx(p1.getDate(), data);
+    const p2PeakIdx = findDateIdx(p2.getDate(), data);
 
     return (
-      (p1PeakIdx <= findDateIdx(p2._end, data) &&
-        p1PeakIdx >= findDateIdx(p2._start, data)) ||
-      (p2PeakIdx <= findDateIdx(p1._end, data) &&
-        p2PeakIdx >= findDateIdx(p1._start, data))
+      (p1PeakIdx <= findDateIdx(p2.getEnd(), data) &&
+        p1PeakIdx >= findDateIdx(p2.getStart(), data)) ||
+      (p2PeakIdx <= findDateIdx(p1.getEnd(), data) &&
+        p2PeakIdx >= findDateIdx(p1.getStart(), data))
     );
   };
 
@@ -246,77 +204,174 @@ function searchMaxes(data: TimeseriesData[], window): number[] {
 }
 
 /*
- * Min-Max normalization of data of the form [x0, x1, ...xn]
- */
-function normalise(data: number[]) {
-  // get min and max values from data (for normalization)
-  const [min, max] = data
-    .slice(1)
-    .reduce(
-      (res, d) => [Math.min(d, res[0]), Math.max(d, res[1])],
-      [data[0], data[0]]
-    );
+  Fall detection function.
+  Using a window size of 20 we count the number of negative gradients.
+  If this number is above a threshold we keep sliding the window.
+  Once our bool fails we save segment in falls array and continue searching.
+*/
 
-  // normalise y values to be between 0 and 1
-  return data.map((d) => (d - min) / (max - min));
-}
+export function searchFalls(data, metric = undefined) {
+  // Normalise y values between 0 and 1
+  const norm = normalise(data.map((o) => o.y));
+  const falls = [];
+  const deltas = [];
+  let start, mid, end, segment, normW, normGrad, grad, height, maxIdx, minIdx;
 
-function minIndex(values: number[], valueof?) {
-  let min;
-  let minIndex = -1;
-  let index = -1;
-  if (valueof === undefined) {
-    for (const value of values) {
-      ++index;
-      if (
-        value != null &&
-        (min > value || (min === undefined && value >= value))
-      ) {
-        (min = value), (minIndex = index);
-      }
+  let i = (start = end = 0);
+  // Continue looping till we have looked at every point
+  while (i + 20 < norm.length) {
+    for (; i < end + 20 && i < norm.length - 1; i++) {
+      deltas[i % 20] = norm[i + 1] - norm[i] < -0.001;
     }
-  } else {
-    for (let value of values) {
-      if (
-        (value = valueof(value, ++index, values)) != null &&
-        (min > value || (min === undefined && value >= value))
-      ) {
-        (min = value), (minIndex = index);
-      }
+
+    if (i >= norm.length - 1) continue;
+
+    // While line does not have a majority negative deltas keep incrementing i
+    while (
+      i < norm.length - 1 &&
+      !(deltas.reduce((sum, bool) => sum + bool) > 5)
+    ) {
+      deltas[i % 20] = norm[i + 1] - norm[i] < -0.001;
+      i++;
     }
+
+    if (i >= norm.length - 1) continue;
+    start = i == 20 ? 0 : i - 15;
+
+    // Until line has a great majority of negative deltas keep incrementing i
+    while (
+      i < norm.length - 1 &&
+      deltas.reduce((sum, bool) => sum + bool) > 5
+    ) {
+      deltas[i % 20] = norm[i + 1] - norm[i] < 0;
+      i++;
+    }
+    end = i >= norm.length - 1 ? norm.length - 1 : i - 15;
+
+    // Extract line segment
+    segment = norm.slice(start, end + 1);
+    maxIdx = start + maxIndex(segment);
+    minIdx = start + minIndex(segment);
+
+    // Trim line so no overflowing segements
+    start = Math.max(maxIdx, start); // Should start at the highest point
+    end = Math.min(minIdx, end); // Should end at the lowest point
+    mid = Math.floor((start + end) / 2);
+
+    height = Math.abs(data[end].y - data[start].y);
+    grad = height / (end - start);
+
+    normW = (end - start) / norm.length; // Ratio of length of segment and total data size.
+    normGrad = Math.abs((norm[end] - norm[start]) / normW);
+
+    // If the increase in y is passed a certain threshold add to rises array.
+    if (norm[end] - norm[start] < -normW * 0.6) {
+      falls.push(
+        new Fall()
+          .setDate(data[mid].date)
+          .setStart(data[start].date)
+          .setEnd(data[end].date)
+          .setHeight(height)
+          .setMetric(metric)
+          .setGrad(grad)
+          .setNormGrad(normGrad)
+      );
+      i = end;
+    }
+
+    i++;
   }
-  return minIndex;
+  return falls;
 }
 
 /*
- * Linear regression function inspired by the answer found at: https://stackoverflow.com/a/31566791.
- * We remove the need for array x as we assume y data is equally spaced and we only want the gradient.
- */
+  Rise detection function.
+  Using a window size of 20 we count the number of positive gradients.
+  If this number is above a threshold we keep sliding the window.
+  Once our bool fails we save segment in rises array and continue searching.
+*/
 
-function linRegGrad(y) {
-  let slope = {};
-  const n = y.length;
-  let sum_x = 0;
-  let sum_y = 0;
-  let sum_xy = 0;
-  let sum_xx = 0;
+export function searchRises(data, metric = undefined) {
+  // Normalise y values between 0 and 1
+  const norm = normalise(data.map((o) => o.y));
 
-  for (let i = 0; i < y.length; i++) {
-    sum_x += i;
-    sum_y += y[i];
-    sum_xy += i * y[i];
-    sum_xx += i * i;
+  const rises = [];
+  const deltas = [];
+  const rDeltas = [];
+  let start, mid, end, segment, normW, normGrad, grad, height, maxIdx, minIdx;
+
+  let i = (start = end = 0);
+  // Continue looping till we have looked at every point
+  while (i + 20 < norm.length) {
+    for (; i < end + 20 && i < norm.length - 1; i++) {
+      deltas[i % 20] = norm[i + 1] - norm[i] > 0.001;
+    }
+
+    if (i >= norm.length - 1) continue;
+
+    // While line does not have a majority positive deltas keep incrementing i
+    while (
+      i < norm.length - 1 &&
+      !(deltas.reduce((sum, bool) => sum + bool) > 5)
+    ) {
+      deltas[i % 20] = norm[i + 1] - norm[i] > 0.001;
+      i++;
+    }
+    if (i >= norm.length - 1) continue;
+    start = i == 20 ? 0 : i - 10;
+
+    // Until line has a great majority of negative deltas keep incrementing i
+    while (
+      i < norm.length - 1 &&
+      deltas.reduce((sum, bool) => sum + bool) > 5
+    ) {
+      deltas[i % 20] = norm[i + 1] - norm[i] > 0;
+      i++;
+    }
+    end = i >= norm.length - 1 ? norm.length - 1 : i - 15;
+
+    // Extract line segment
+    segment = norm.slice(start, end + 1);
+    maxIdx = start + maxIndex(segment);
+    minIdx = start + minIndex(segment);
+
+    // Trim line so no overflowing segements
+    start = Math.max(minIdx, start); // Should start at the minimum point
+    end = Math.min(maxIdx, end); // Should end at the maximum point
+    mid = Math.floor((start + end) / 2);
+
+    height = Math.abs(data[end].y - data[start].y);
+    grad = height / (end - start);
+
+    normW = (end - start) / norm.length; // Ratio of length of segment and total data size.
+    normGrad = Math.abs((norm[end] - norm[start]) / normW);
+
+    // If the decrease in y is passed a certain threshold add to rises array.
+    if (norm[end] - norm[start] > normW * 0.6) {
+      rises.push(
+        new Rise()
+          .setDate(data[mid].date)
+          .setStart(data[start].date)
+          .setEnd(data[end].date)
+          .setHeight(height)
+          .setGrad(grad)
+          .setMetric(metric)
+          .setNormGrad(normGrad)
+      );
+      i = end;
+    }
+
+    i++;
   }
 
-  slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
-  return slope;
+  return rises;
 }
 
 /**
  ** Given a list of numbers, find the local minimum and maximum data points.
  ** Example usage:
- **   const [localMin, localMax] = this.findLocalMinMax(data,
- **                                                     "mean_test_accuracy");
+ ** const [localMin, localMax] =
+ ** findLocalMinMax(data, "mean_test_accuracy");
  **/
 
 export function findLocalMinMax(input: any[], key: string, window = 2): any {
@@ -389,10 +444,9 @@ export function findLocalMinMax(input: any[], key: string, window = 2): any {
 }
 
 /**
- **
  ** Example usage:
- ** const [globalMin, globalMax] = this.findGlobalMinMax(data,
- **                                                      "mean_test_accuracy);
+ ** const [globalMin, globalMax] =
+ ** searchMinMax(data, "mean_test_accuracy);
  **/
 export function searchMinMax(input: any[], key: string, window = 2): any {
   const outputMin = input.reduce((min, curr) =>

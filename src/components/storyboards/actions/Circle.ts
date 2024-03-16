@@ -47,9 +47,9 @@ export class Circle extends Action {
     return this;
   }
 
-  public coordinate(src: Coordinate, dest: Coordinate) {
-    const [x1, y1] = (this._src = src);
-    const [x2, y2] = (this._dest = dest);
+  public coordinate(coordinate: [Coordinate, Coordinate]): this {
+    const [x1, y1] = coordinate[0];
+    const [x2, y2] = coordinate[1];
 
     d3.select(this._circleNode).attr("cx", x2).attr("cy", y2);
     return this;

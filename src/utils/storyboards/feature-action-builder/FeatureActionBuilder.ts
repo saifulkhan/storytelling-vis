@@ -9,7 +9,7 @@ import {
   FeatureActionTableRow as FeatureActionTableRow,
 } from "../../../components/storyboards/tables/FeatureActionTableRow";
 
-import { setOrUpdateMap } from "../../common";
+import { setOrUpdateMap } from "../data-processing/common";
 import { FeatureFactory } from "../feature/FeatureFactory";
 import { Action } from "../../../components/storyboards/actions/Action";
 import { DateActionArray } from "./FeatureActionTypes";

@@ -1,25 +1,26 @@
 import { Feature } from "./Feature";
-import { NumericalFeatures } from "./NumericalFeatures";
 
 export class NumericalFeature extends Feature {
-  protected _metric: string;
+  protected height: number;
 
   constructor(
     date: Date,
-    start = undefined,
-    end = undefined,
-    metric = undefined
+    height: number,
+    rank?: number,
+    metric?: string,
+    start?: Date,
+    end?: Date
   ) {
-    super(date, start, end);
-    this._metric = metric;
-    this._type = NumericalFeatures.DEFAULT;
+    super(date, rank, metric, start, end);
+    this.height = height;
   }
 
-  set metric(metric) {
-    this._metric = metric;
+  setHeight(height: number): this {
+    this.height = height;
+    return this;
   }
 
-  get metric() {
-    return this._metric;
+  getHeight(): number {
+    return this.height;
   }
 }

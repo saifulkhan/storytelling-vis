@@ -2,62 +2,86 @@ import { CategoricalFeatures } from "./CategoricalFeatures";
 import { NumericalFeatures } from "./NumericalFeatures";
 
 export abstract class Feature {
-  protected _date: Date;
-  protected _start: Date;
-  protected _end: Date;
-  protected _rank: number;
-  protected _type: CategoricalFeatures | NumericalFeatures;
+  protected date: Date;
+  protected start: Date;
+  protected end: Date;
+  protected rank: number;
+  protected type: CategoricalFeatures | NumericalFeatures;
+  protected metric: string;
 
-  constructor(date: Date, start = undefined, end = undefined) {
-    this._date = date;
-    this._start = start;
-    this._end = end;
+  constructor(
+    date: Date,
+    rank?: number,
+    metric?: string,
+    start?: Date,
+    end?: Date
+  ) {
+    this.date = date;
+    this.rank = rank;
+    this.metric = metric;
+    this.start = start;
+    this.end = end;
   }
 
-  set date(date: Date) {
-    this._date = date;
+  setDate(date: Date) {
+    this.date = date;
+    return this;
   }
 
-  get date() {
-    return this._date;
+  getDate() {
+    return this.date;
   }
 
-  set start(start: Date) {
-    this._start = start;
+  setType(type: NumericalFeatures | CategoricalFeatures) {
+    this.type = type;
+    return this;
   }
 
-  get start() {
-    return this._start;
+  getType() {
+    return this.type;
   }
 
-  set end(end: Date) {
-    this._end = end;
+  setRank(rank: number) {
+    this.rank = rank;
+    return this;
   }
 
-  get end() {
-    return this._end;
+  getRank() {
+    return this.rank;
   }
 
-  set rank(rank) {
-    this._rank = rank;
+  setMetric(metric: string) {
+    this.metric = metric;
+    return this;
   }
 
-  get rank() {
-    return this._rank;
+  getMetric() {
+    return this.metric;
   }
 
-  set type(type) {
-    this._type = type;
+  setStart(start: Date) {
+    this.start = start;
+    return this;
   }
 
-  get type() {
-    return this._type;
+  getStart() {
+    return this.start;
   }
 
-  get duration() {
-    if (!this._start || !this._end)
+  setEnd(end: Date) {
+    this.end = end;
+    return this;
+  }
+
+  getEnd() {
+    return this.end;
+  }
+
+  // TODO:
+  getDuration() {
+    if (!this.start || !this.end)
       throw "This object doesn't have an end or start.";
-    const difference = this._end.getTime() - this._start.getTime();
+    const difference = this.end.getTime() - this.start.getTime();
     const dayInMs = 1000 * 3600 * 24;
     return Math.floor(difference / dayInMs);
   }

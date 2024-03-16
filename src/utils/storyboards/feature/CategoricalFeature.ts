@@ -1,23 +1,27 @@
-import { Feature } from "./Feature";
 import { CategoricalFeatures } from "./CategoricalFeatures";
+import { Feature } from "./Feature";
 
 export class CategoricalFeature extends Feature {
-  protected _description: string;
+  protected description: string;
 
   constructor(
     date: Date,
-    description = undefined,
-    type = CategoricalFeatures.DEFAULT,
-    rank = undefined
+    description: string,
+    type: CategoricalFeatures,
+    rank: number
   ) {
     super(date);
-    this._type = type;
-    this._description = description;
-    this._rank = rank;
+    this.description = description;
+    this.type = type;
+    this.rank = rank;
   }
 
-  get description() {
-    if (!this._description) throw "Description not set for categorical event.";
-    return this._description;
+  setDescription(description: string) {
+    this.description = description;
+    return this;
+  }
+
+  getDescription() {
+    return this.description;
   }
 }

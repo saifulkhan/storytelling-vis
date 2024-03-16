@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { readCSVFile, readJSONFile } from "../../../services/data";
+import { readCSV, readJSON } from "../../../services/data";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { TimeseriesData } from "../data-processing/TimeseriesData";
@@ -8,23 +8,22 @@ import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import { StoryBuilder } from "./StoryBuilder";
 import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
+import { cts, gmm, nts } from "../data-processing/gaussian";
 
 const DATA = "/static/storyboards/newCasesByPublishDateRollingSum.csv";
 const TABLE = "/static/storyboards/feature-action-tables/covid-19-story-1.json";
 const WINDOW = 3;
+const METRIC = "Cases/day";
 
 export class Covid19Story1 extends StoryBuilder {
   protected _allRegionData: Record<string, TimeseriesData[]> = {};
-
-  private _nts: NumericalFeature[];
-  private _cts: CategoricalFeature[];
 
   constructor() {
     super();
   }
 
   protected async data() {
-    const csv: any[] = await readCSVFile(DATA);
+    const csv: any[] = await readCSV(DATA);
 
     csv.forEach((row) => {
       const region = row.areaName;
@@ -50,7 +49,7 @@ export class Covid19Story1 extends StoryBuilder {
   }
 
   protected async table() {
-    this._table = (await readJSONFile(TABLE)) as FeatureActionTableRow[];
+    this._table = (await readJSON(TABLE)) as FeatureActionTableRow[];
     console.log("Covid19Story1:table: table: ", this._table);
     return this;
   }
@@ -82,10 +81,12 @@ export class Covid19Story1 extends StoryBuilder {
 
     if (!this._name) return;
 
-    // this.nts = nts(this.data, "Cases/day", WINDOW);
+    this.nts = gmm(this._data, "Cases/day", WINDOW);
     // this.cts = cts();
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
+
+    return;
 
     const actions: DateActionArray = new FeatureActionBuilder()
       .properties({
@@ -101,7 +102,7 @@ export class Covid19Story1 extends StoryBuilder {
     const plot = new LinePlot()
       .data([this._data])
       .name(this._name)
-      .properties({})
+      .plotProperties({})
       .lineProperties()
       .svg(this._svg)
       .actions(actions)

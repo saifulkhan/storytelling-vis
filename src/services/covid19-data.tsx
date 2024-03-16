@@ -1,9 +1,9 @@
-import { TimeseriesType } from "src/utils/storyboards/TimeseriesType";
-import { readCSVFile } from "./data";
+import { TimeseriesData } from "../utils/storyboards/data-processing/TimeseriesData";
+import { readCSV } from "./data";
 
-export async function covid19data1() {
+export async function covid19data() {
   const DATA = "/static/storyboards/newCasesByPublishDateRollingSum.csv";
-  const csv: any[] = await readCSVFile(DATA);
+  const csv: any[] = await readCSV(DATA);
   const data = {};
 
   csv.forEach((row) => {
@@ -20,10 +20,12 @@ export async function covid19data1() {
 
   for (const region in data) {
     data[region].sort(
-      (e1: TimeseriesType, e2: TimeseriesType) =>
-        e1.date.getTime() - e2.date.getTime(),
+      (e1: TimeseriesData, e2: TimeseriesData) =>
+        e1.date.getTime() - e2.date.getTime()
     );
   }
+
+  // console.log("data: ", data);
 
   return data;
 }

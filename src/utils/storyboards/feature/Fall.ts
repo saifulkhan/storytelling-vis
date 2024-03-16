@@ -1,55 +1,42 @@
+import { number } from "yup";
 import { NumericalFeature } from "./NumericalFeature";
 import { NumericalFeatures } from "./NumericalFeatures";
 
 export class Fall extends NumericalFeature {
-  _height;
-  _grad;
-  _normGrad;
+  grad: number;
+  normGrad: number;
 
   constructor(
-    date = undefined,
-    start = undefined,
-    end = undefined,
-    metric = undefined,
-    height = undefined,
-    grad = undefined
+    date: Date,
+    height: number,
+    rank?: number,
+    metric?: string,
+    start?: Date,
+    end?: Date
   ) {
-    super(date, start, end, metric);
-    this._type = NumericalFeatures.FALL;
-    this._height = height;
-    this._grad = grad;
+    super(date, height, rank, metric, start, end);
+    this.type = NumericalFeatures.FALL;
   }
 
-  get rank() {
-    return this._rank;
-  }
-
-  setHeight(height) {
-    this._height = height;
+  setGrad(grad: number) {
+    this.grad = grad;
     return this;
   }
 
-  setGrad(grad) {
-    this._grad = grad;
-    return this;
-  }
-
-  setNormGrad(normGrad) {
-    this._normGrad = normGrad;
-    return this;
-  }
-
-  get height() {
-    if (!this._height) {
-      throw "You must set Fall height. Use constructor or chain the set function: .setHeight().";
+  getGrad() {
+    if (!this.grad) {
+      throw "You must set Fall grad using setGrad().";
     }
-    return this._height;
+    // TODO: check
+    return this.grad > 5 ? "steep" : this.grad > 2 ? "steady" : "slow";
   }
 
-  get grad() {
-    if (!this._grad) {
-      throw "You must set Fall grad. Use constructor or chain the set function: .setGrad().";
-    }
-    return this._grad > 5 ? "steep" : this._grad > 2 ? "steady" : "slow";
+  setNormGrad(normGrad: number) {
+    this.normGrad = normGrad;
+    return this;
+  }
+
+  getNormGrad() {
+    return this.normGrad;
   }
 }
