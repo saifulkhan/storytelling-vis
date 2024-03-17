@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IconButton,
   Input,
@@ -6,7 +6,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  TextField,
+  TextField, // Import TextField for editing keys
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -64,61 +64,88 @@ const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
   data,
   setData,
 }) => {
-  // console.log("FeaturePropertiesTable: re-rendered: data = ", data);
   const classes = useStyles();
   const [rows, setRows] = useState({ ...data });
+  const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [newKey, setNewKey] = useState("");
 
-  // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
-    setRows({ ...data }); // updating state directly
-  }, [data]); // trigger effect when data changes
+    setRows({ ...data });
+    console.log(data);
+  }, [data]);
 
-  const handleInputChange = (key: string, value: any) => {
-    const updatedData = { ...rows, [key]: value };
+  const handleValueChange = (key: string, newValue: any) => {
+    const updatedData = { ...rows, [key]: newValue };
     setRows(updatedData);
-    // console.log("FeaturePropertiesTable: rows = ", rows);
-    // console.log("FeaturePropertiesTable: updatedData = ", updatedData);
-    setData(updatedData); // update the parent component's data
+    setData(updatedData);
+  };
+
+  const handleKeyChange = (oldKey: string) => {
+    if (!newKey.trim() || rows.hasOwnProperty(newKey) || newKey === oldKey) {
+      // Reset without change if newKey is invalid or already exists
+      setEditingKey(null);
+      setNewKey("");
+      return;
+    }
+
+    const updatedData = { ...rows, [newKey]: rows[oldKey] };
+    delete updatedData[oldKey]; // Remove old key
+    setRows(updatedData);
+    setData(updatedData);
+    setEditingKey(null);
+    setNewKey("");
+  };
+
+  const handleEditKey = (key: string) => {
+    setEditingKey(key);
+    setNewKey(key);
   };
 
   const handleAddRow = () => {
-    // setRows([
-    //   ...rows,
-    //   { action: Actions.DOT, properties: defaultDotProperties },
-    // ]);
+    // generate a unique key
+    let newKey = `newKey${Object.keys(rows).length + 1}`;
+    while (rows.hasOwnProperty(newKey)) {
+      // simple way to ensure uniqueness
+      newKey += "1";
+    }
+    const newRows = { ...rows, [newKey]: "newValue" };
+    setRows(newRows);
+    setData(newRows);
   };
 
-  const handleRemoveRow = (index: number) => {
-    // const newRows = [...rows];
-    // newRows.splice(index, 1);
-    // setRows(newRows);
+  const handleRemoveRow = (keyToRemove) => {
+    // destructure to omit the key to remove
+    const { [keyToRemove]: _, ...newRows } = rows;
+    setRows(newRows);
+    setData(newRows);
   };
 
-  const entries = Object.entries(rows).filter(
-    ([key]) => key !== "id" && key !== "action"
-  );
-  const totalRows = entries.length;
+  // The rest of your component remains largely unchanged...
 
   return (
     <>
       <Table className={classes.table}>
         <TableBody>
-          {entries.map(([key, value], index) => (
+          {Object.entries(rows).map(([key, value]) => (
             <TableRow key={key}>
               <TableCell className={classes.keyCell}>
                 <IconButton
-                  onClick={() => handleRemoveRow(index)}
+                  onClick={() => handleRemoveRow(key)}
                   aria-label="delete"
                 >
                   <RemoveIcon className={classes.removeIcon} />
                 </IconButton>
-                <Input
-                  disableUnderline
-                  className={classes.valueInput}
-                  type="text"
-                  value={key}
-                  onChange={(e) => handleInputChange(key, e.target.value)}
-                />
+                {editingKey === key ? (
+                  <TextField
+                    size="small"
+                    value={newKey}
+                    onChange={(e) => setNewKey(e.target.value)}
+                    onBlur={() => handleKeyChange(key)}
+                    autoFocus
+                  />
+                ) : (
+                  <span onDoubleClick={() => handleEditKey(key)}>{key}</span>
+                )}
               </TableCell>
               <TableCell className={classes.valueCell}>
                 <Input
@@ -126,7 +153,7 @@ const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
                   className={classes.valueInput}
                   type="text"
                   value={value}
-                  onChange={(e) => handleInputChange(key, e.target.value)}
+                  onChange={(e) => handleValueChange(key, e.target.value)}
                 />
               </TableCell>
             </TableRow>

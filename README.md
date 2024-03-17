@@ -126,11 +126,11 @@ plot.setActions()
 
 ### Numerical Feature Action
 
-- <http://localhost:3000/storyboards/examples/test-properties-table>
+Nested tables, each tables components are implemented separate React component.
+
+- <http://localhost:3000/storyboards/examples/test-action-properties-table>
+- <http://localhost:3000/storyboards/examples/test-feature-properties-table>
 - <http://localhost:3000/storyboards/examples/test-action-table>
-- <http://localhost:3000/storyboards/examples/test-feature-action-table>
-- <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
-- <http://localhost:3000/storyboards/examples/test-feature-action-table>
 
 ### Categorical Feature Action
 

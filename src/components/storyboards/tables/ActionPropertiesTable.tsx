@@ -85,7 +85,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
 
   function drawSvgObject(data) {
     const margin = { top: 0, right: 0, bottom: 0, left: 0 };
-    const height = 100 - margin.top - margin.bottom;
+    const height = 75 - margin.top - margin.bottom;
     const width = 100 - margin.left - margin.right;
     d3.select(chartRef.current).select("svg").remove();
     const svg = d3.select(chartRef.current).append("svg").node();
@@ -96,12 +96,13 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
       data.message = "...";
     }
     console.log({ ...data });
-    actionFactory
-      .create(data.action, data)
-      ?.setCanvas(svg)
-      .draw()
-      .setCoordinate([50, 100], [50, 50])
-      // .coordinate([0, 0], [0, 0])
+    const action = actionFactory.create(data.action, data);
+    action
+      ?.setCanvas(chartRef.current)
+      .setCoordinate([
+        [50, 75],
+        [50, 50],
+      ])
       .show();
 
     return (
@@ -135,6 +136,8 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
                 onChange={(e) => handleInputChange(key, e.target.value)}
               />
             </TableCell>
+
+            {/* merged rows */}
             {index === 0 && (
               <TableCell
                 className={classes.drawingCell}

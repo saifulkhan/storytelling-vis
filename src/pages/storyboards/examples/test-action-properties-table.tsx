@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import ActionPropertiesTable from "../../../components/storyboards/tables/ActionPropertiesTable";
 
-const TestPropertiesTable = () => {
+const TestActionPropertiesTablePage = () => {
   const [data, setData] = useState({
-    id: "textbox1",
     title: "Example Text",
     message: "Lorem ipsum dolor sit amet",
     backgroundColor: "#0000FF",
@@ -17,4 +16,4 @@ const TestPropertiesTable = () => {
   );
 };
 
-export default TestPropertiesTable;
+export default TestActionPropertiesTablePage;

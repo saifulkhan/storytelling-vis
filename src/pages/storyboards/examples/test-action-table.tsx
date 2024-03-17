@@ -7,7 +7,6 @@ const mockData: ActionTableRow[] = [
   {
     action: Actions.DOT,
     properties: {
-      id: "Dot",
       size: 5,
       color: "#FF0000",
       opacity: 0.7,
@@ -16,7 +15,6 @@ const mockData: ActionTableRow[] = [
   {
     action: Actions.CIRCLE,
     properties: {
-      id: "Circle",
       size: 10,
       strokeWidth: 2,
       color: "#00FF00",
@@ -26,7 +24,6 @@ const mockData: ActionTableRow[] = [
   {
     action: Actions.TEXT_BOX,
     properties: {
-      id: "TextBox",
       title: "Example Text",
       message: "Lorem ipsum dolor sit amet",
       backgroundColor: "#0000FF",
@@ -36,7 +33,6 @@ const mockData: ActionTableRow[] = [
   {
     action: Actions.CONNECTOR,
     properties: {
-      id: "Connector",
       stroke: "#FFFF00",
       opacity: 0.8,
     },

@@ -59,8 +59,18 @@ export async function mlData() {
 }
 
 export async function covid19CategoricalTable1() {
-  const TABLE = "/static/storyboards/covid19/categorical-table-1.json";
-  return await readJSON(TABLE);
+  const FILE = "/static/storyboards/covid19/categorical-table-1.json";
+  return await readJSON(FILE);
+}
+
+export async function covid19NumericalTable1() {
+  const FILE = "/static/storyboards/covid19/numerical-table-1.json";
+  return await readJSON(FILE);
+}
+
+export async function mlNumericalTable1() {
+  const FILE = "/static/storyboards/ml/numerical-table-1.json";
+  return await readJSON(FILE);
 }
 
 //

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
+
 import FeatureActionTable from "../../components/storyboards/tables/FeatureActionTable";
-import { readJSON } from "../../services/data";
 import { FeatureActionTableRow } from "../../components/storyboards/tables/FeatureActionTableRow";
+import { covid19NumericalTable1 } from "../../services/data";
 
-const TABLE = "/static/storyboards/feature-action-tables/covid-19-story-1.json";
-
-const TestFeatureActionTable = () => {
+const FeatureActionTablesPage = () => {
   const [data, setData] = useState<FeatureActionTableRow[]>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const table = (await readJSON(TABLE)) as FeatureActionTableRow[];
+        const table =
+          (await covid19NumericalTable1()) as FeatureActionTableRow[];
         console.log("table: ", table);
         setData(table);
       } catch (e) {
@@ -29,4 +29,4 @@ const TestFeatureActionTable = () => {
   );
 };
 
-export default TestFeatureActionTable;
+export default FeatureActionTablesPage;

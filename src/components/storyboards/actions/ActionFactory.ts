@@ -27,7 +27,6 @@ export class ActionFactory {
         return new Connector().setProps({...properties});
       default:
         console.error(`Action ${action} is not implemented!`);
-        alert(`Action ${action} is not implemented!`)
     }
   }
 
