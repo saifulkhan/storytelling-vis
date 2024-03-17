@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { schemeTableau10 } from "d3-scale-chromatic";
 import {
+  Box,
   FormControl,
   InputLabel,
   MenuItem,
@@ -9,6 +10,8 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import Head from "next/head";
+
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
 import { Peak } from "../../../utils/storyboards/feature/Peak";
@@ -55,12 +58,12 @@ const FeaturesPage = () => {
     console.log("TestFeatures: data = ", data);
     console.log("FeaturesPage: peaks = ", peaks);
 
-    const peaksData = peaks.map((peak) =>
+    const peaksStartEnd = peaks.map((peak) =>
       sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
     );
-    peaksData.unshift(data);
+    peaksStartEnd.unshift(data);
 
-    console.log("TestFeatures: peaksData = ", peaksData);
+    console.log("TestFeatures: peaksData = ", peaksStartEnd);
 
     d3.select(chartRef.current)
       .append("svg")
@@ -70,14 +73,14 @@ const FeaturesPage = () => {
       .node();
 
     const plot = new LinePlot()
-      .data(peaksData)
+      .data(peaksStartEnd)
       .plotProperties({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
       })
       .lineProperties(
-        peaksData.map((d, i) => {
+        peaksStartEnd.map((d, i) => {
           return {
             stroke: schemeTableau10[i],
             strokeWidth: 1.5,
@@ -108,34 +111,46 @@ const FeaturesPage = () => {
 
   return (
     <>
-      <FormControl component="fieldset" variant="standard">
-        <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
-          Select region
-        </InputLabel>
-        <Select
-          sx={{ m: 1, width: 300, mt: 0 }}
-          id="select-region-label"
-          displayEmpty
-          onChange={handleSelectRegion}
-          value={region}
-          input={<OutlinedInput label="Select region" />}
-        >
-          {regions.map((d) => (
-            <MenuItem key={d} value={d}>
-              {d}
-            </MenuItem>
-          ))}
-        </Select>
+      <Head>
+        <title>Test Features</title>
+      </Head>
 
-        <svg
-          ref={chartRef}
-          style={{
-            width: `${WIDTH}px`,
-            height: `${HEIGHT}px`,
-            border: "1px solid",
-          }}
-        ></svg>
-      </FormControl>
+      <Box
+        sx={{
+          backgroundColor: "background.default",
+          minHeight: "100%",
+          py: 8,
+        }}
+      >
+        <FormControl component="fieldset" variant="standard">
+          <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
+            Select region
+          </InputLabel>
+          <Select
+            sx={{ m: 1, width: 300, mt: 0 }}
+            id="select-region-label"
+            displayEmpty
+            onChange={handleSelectRegion}
+            value={region}
+            input={<OutlinedInput label="Select region" />}
+          >
+            {regions.map((d) => (
+              <MenuItem key={d} value={d}>
+                {d}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <svg
+            ref={chartRef}
+            style={{
+              width: `${WIDTH}px`,
+              height: `${HEIGHT}px`,
+              border: "1px solid",
+            }}
+          ></svg>
+        </FormControl>
+      </Box>
     </>
   );
 };

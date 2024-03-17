@@ -189,10 +189,10 @@ export function smoothing(data: TimeseriesData[], smoothingVal = 11) {
   //   .setRank(r.rank)
   //);
 
-  const dataEvents = nts(smoothData, "", 10);
-  console.log("smoothing: dataEvents: ", dataEvents);
+  const peaks = searchPeaks(data, undefined, undefined, 10);
+  console.log("smoothing: peaks: ", peaks);
 
-  const gaussians = dataEvents.map((e) => {
+  const gaussians = peaks.map((e) => {
     let midIdx = findDateIdx(e.getDate(), data);
     let gauss = gaussian(midIdx, e.getRank(), data.length);
     gauss = gauss.map((d, i) => {
@@ -298,23 +298,26 @@ export function combinedBounds(data, dataBounds, semanticBounds) {
 //
 //
 
-export function peakSegment(peaks, dataLen, ignoreHeight = false) {
-  const peaksCpy = peaks.map((o) => {
-    return { idx: o.peakIdx, h: o.normHeight };
+export function peakSegment(peaks: Peak[], dataLength, ignoreHeight = false) {
+  const peaksCpy = peaks.map((d, _) => {
+    return { idx: d.getDataIndex(), h: d.getNormHeight() };
   });
+
+  console.log("peaksCpy: ", peaksCpy);
+  // return
   const ordering = [];
   while (peaksCpy.length) {
     let bestPeak;
-    peaksCpy.forEach((v1, idx) => {
+    peaksCpy.forEach((v1, i) => {
       let closestDist = ordering.reduce(
         (closest, v2) => Math.min(closest, Math.abs(v1.idx - v2.idx)),
-        Math.min(v1.idx, dataLen - v1.idx)
+        Math.min(v1.idx, dataLength - v1.idx)
       );
-      let score = (closestDist / dataLen) * (ignoreHeight || v1.h / 2);
+      let score = (closestDist / dataLength) * (ignoreHeight || v1.h / 2);
       bestPeak =
         bestPeak && bestPeak.score > score
           ? bestPeak
-          : { valley: v1, idx: idx, score: score };
+          : { valley: v1, idx: i, score: score };
     });
     peaksCpy.splice(bestPeak.idx, 1);
     ordering.push(bestPeak.valley);

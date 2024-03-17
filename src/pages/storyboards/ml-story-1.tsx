@@ -30,7 +30,7 @@ import { MLStory1 } from "../../utils/storyboards/story-builder/MLStory1";
 
 const storyBuilder = new MLStory1();
 
-const MLMultivariateStory = () => {
+const MLStory1Page = () => {
   const [loading, setLoading] = useState(true);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
@@ -228,4 +228,4 @@ const MLMultivariateStory = () => {
   );
 };
 
-export default MLMultivariateStory;
+export default MLStory1Page;

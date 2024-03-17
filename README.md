@@ -1,6 +1,4 @@
-# Mira Pro - React Admin & Dashboard Template
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data
 
 ## Getting Started
 
@@ -14,62 +12,27 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+<!-- You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file. -->
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Tests
-
-### Run Unit Tests
+### Tests
 
 ```sh
 yarn test
 ```
 
+> Note: Unit tests have not been extensively implemented yet. We still need to add the unit tests.
+
 ## Documentation
 
-### Examples, Test and Debug
+### Project Structure
 
-Test and debug visualizations & components
-
-- <http://localhost:3000/storyboards/examples/test-features>
-- <http://localhost:3000/storyboards/examples/test-actions>
-- <http://localhost:3000/storyboards/examples/test-line-plot>
-- <http://localhost:3000/storyboards/examples/test-properties-table>
-- <http://localhost:3000/storyboards/examples/test-action-table>
-- <http://localhost:3000/storyboards/examples/test-feature-action-table>
-- <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
-- <http://localhost:3000/storyboards/examples/gaussian-process-demo>
-- <http://localhost:3000/storyboards/examples/test-feature-action-table>
-
-### Workflow
-
-Create workflow of a story:
-
-```ts
-const workflow = new ...Workflow()
-                    .selector(id)
-                    .create(key);
+```
+TODO
 ```
 
-### Feature detection
+## Feature
+
+Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 
 Detection & feature creation:
 
@@ -77,19 +40,20 @@ Detection & feature creation:
 
 ```
 
-### Plotting
+<!-- - <http://localhost:3000/storyboards/examples/test-features>
+- <http://localhost:3000/storyboards/examples/test-actions>
+- <http://localhost:3000/storyboards/examples/test-line-plot>
+- <http://localhost:3000/storyboards/examples/test-properties-table>
+- <http://localhost:3000/storyboards/examples/test-action-table>
+- <http://localhost:3000/storyboards/examples/test-feature-action-table>
+- <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
+- <http://localhost:3000/storyboards/examples/gaussian-process-demo>
+- <http://localhost:3000/storyboards/examples/test-feature-action-table> -->
 
-```ts
-const plot = new ...Plot()
-                    .data(data)
-                    .properties({})
-                    .svg(svg)
-                    .draw(); // static plot
+- <http://localhost:3000/storyboards/examples/test-features>
+- <http://localhost:3000/storyboards/examples/test-gaussian-combined>
 
-plot.animate(<feature, action>) // animation 
-```
-
-### Action draw
+## Action
 
 Action objects:
 
@@ -107,12 +71,41 @@ await feature.show(delay, duration);
 await feature.hide(delay, duration);
 ```
 
-### Feature Search or Detection
+## Plots
 
-Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
+```ts
+const plot = new ...Plot()
+                    .data(data)
+                    .properties({})
+                    .svg(svg)
+                    .draw(); // static plot
+
+plot.animate(<feature, action>) // animation 
+```
+
+## Story Builder
+
+Create workflow of a story:
+
+```ts
+const workflow = new ...Workflow()
+                    .selector(id)
+                    .create(key);
+```
 
 ## References
 
-- Previous prototypes ported Observable to React.js [storytelling-vis-v.0.1](https://github.com/saifulkhan/storytelling-vis-v.0.1)
-- Observable prototypes during initial RAMPVIS phases, [see](https://observablehq.com/d/0a6e9c35a809660e)
-- Used [Next.js](https://github.com/vercel/next.js), [MUI](https://mui.com)
+Please cite our paper as follows:
+
+```
+@article{khan2024fadpsvts
+    title={Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data}, 
+    author={S. Khan and S. Jones and B. Bach and J. Cha and M. Chen and J. Meikle and J. C Roberts and J. Thiyagalingam and J. Wood and P. D. Ritsos},
+    journal={arXiv preprint arXiv:2402.03116},
+    year={2024},
+}
+```
+
+- The initial Observable prototypes can be found in [observablehq](https://observablehq.com/d/0a6e9c35a809660e).
+- Second version of prototype ported from Observable to React.js can be found in [GitHub](https://github.com/saifulkhan/storytelling-vis-v.0.1).
+- Used [React.js](https://react.dev), [Next.js](https://github.com/vercel/next.js), [MUI](https://mui.com) libraries for the UI development.

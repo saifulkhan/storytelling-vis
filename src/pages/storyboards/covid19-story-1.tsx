@@ -89,29 +89,11 @@ const Covid19StoryPage1 = () => {
     }
   };
 
-  const handleBeginningButton = () => {
-    const count = 0;
+  const handleBeginningButton = () => {};
 
-    setAnimationCounter(count);
-    console.log("StorySingle: animationCounter = ", count);
-    onClickAnimate(count, "#chart1");
-  };
+  const handleBackButton = () => {};
 
-  const handleBackButton = () => {
-    const count = animationCounter - 1;
-    if (count < 0) return;
-
-    setAnimationCounter(count);
-    console.log("StorySingle: animationCounter = ", count);
-    onClickAnimate(count, "#chart1");
-  };
-
-  const handlePlayButton = () => {
-    const count = animationCounter + 1;
-    setAnimationCounter(count);
-    console.log("StorySingle: animationCounter = ", count);
-    onClickAnimate(count, "#chart1");
-  };
+  const handlePlayButton = () => {};
 
   return (
     <>

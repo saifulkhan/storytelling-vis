@@ -13,39 +13,44 @@ import {
   normalise,
 } from "../data-processing/common";
 
-/*
- * The steps for peak search function:
- * (a) search peaks in segments for defined window sizes,
- * (b) remove duplicates, and
- * (c) eliminate peaks that are part of a larger peak.
- */
+/**
+ ** The steps for peak search function:
+ ** (a) search peaks in segments for defined window sizes,
+ ** (b) remove duplicates, and
+ ** (c) eliminate peaks that are part of a larger peak.
+ **/
 export function searchPeaks(
   data: TimeseriesData[],
   rank: number,
   metric: string,
   window: number
-) {
+): Peak[] {
   const peaks: Peak[] = [];
   const maxes = searchMaxes(data, window);
   const norm = normalise(data.map((o) => o.y));
+
+  console.log("maxes:", maxes);
 
   let start, end;
   for (const idx of maxes) {
     start = searchPeakStart(idx, norm);
     end = searchPeakEnd(idx, norm);
 
-    peaks.push(
-      new Peak(
-        data[idx].date,
-        data[idx].y,
-        (end - start) / norm.length,
-        norm[idx],
-        rank,
-        metric,
-        data[start].date,
-        data[end].date
-      )
+    console.log("idx:", idx);
+
+    const peak = new Peak(
+      data[idx].date,
+      data[idx].y,
+      (end - start) / norm.length,
+      norm[idx],
+      rank,
+      metric,
+      data[start].date,
+      data[end].date
     );
+    peak.setDataIndex(idx);
+    peaks.push(peak);
+    console.log("peaks:", peaks);
   }
 
   // sort from lowest to highest
@@ -183,7 +188,7 @@ function searchPeakStart(idx: number, norm: number[]): number {
  * midpoint and edges.
  */
 
-function searchMaxes(data: TimeseriesData[], window): number[] {
+function searchMaxes(data: TimeseriesData[], window: number): number[] {
   // centre of window
   const centre = Math.floor((window - 1) / 2);
   const maxes: number[] = [];

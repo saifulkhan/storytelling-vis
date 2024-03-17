@@ -8,6 +8,7 @@ export abstract class Feature {
   protected rank: number;
   protected type: CategoricalFeatures | NumericalFeatures;
   protected metric: string;
+  protected dataIndex: number;
 
   constructor(
     date: Date,
@@ -84,5 +85,14 @@ export abstract class Feature {
     const difference = this.end.getTime() - this.start.getTime();
     const dayInMs = 1000 * 3600 * 24;
     return Math.floor(difference / dayInMs);
+  }
+
+  setDataIndex(index: number) {
+    this.dataIndex = index;
+    return this;
+  }
+
+  getDataIndex() {
+    return this.dataIndex;
   }
 }
