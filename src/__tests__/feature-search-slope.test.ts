@@ -1,9 +1,9 @@
-import { searchSlopes } from "src/utils/storyboards/feature/feature-search";
-import { TimeseriesDataType } from "src/utils/storyboards/processing/TimeseriesDataType";
+import { TimeseriesData } from "../utils/storyboards/data-processing/TimeseriesData";
+import { searchSlopes } from "../utils/storyboards/feature/feature-search";
 
 describe("searchSlopes", () => {
   it("should calculate slopes for time series with date and number pairs", () => {
-    const data: TimeseriesDataType[] = [
+    const data: TimeseriesData[] = [
       { date: new Date("2023-01-01"), y: 10 },
       { date: new Date("2023-01-02"), y: 15 },
       { date: new Date("2023-01-03"), y: 20 },
@@ -18,7 +18,7 @@ describe("searchSlopes", () => {
   });
 
   it("should calculate slopes for time series with negative slopes", () => {
-    const data: TimeseriesDataType[] = [
+    const data: TimeseriesData[] = [
       { date: new Date("2023-01-01"), y: 100 },
       { date: new Date("2023-01-02"), y: 80 },
       { date: new Date("2023-01-03"), y: 60 },
@@ -33,7 +33,7 @@ describe("searchSlopes", () => {
   });
 
   it("should calculate slopes for irregular time series with varying window sizes", () => {
-    const data: TimeseriesDataType[] = [
+    const data: TimeseriesData[] = [
       { date: new Date("2023-02-01"), y: 10 },
       { date: new Date("2023-02-03"), y: 20 },
       { date: new Date("2023-02-07"), y: 15 },
@@ -48,7 +48,7 @@ describe("searchSlopes", () => {
   });
 
   it("should calculate slopes for larger time series with varying window sizes", () => {
-    const data: TimeseriesDataType[] = [
+    const data: TimeseriesData[] = [
       { date: new Date("2023-03-01"), y: 50 },
       { date: new Date("2023-03-03"), y: 40 },
       { date: new Date("2023-03-05"), y: 30 },
