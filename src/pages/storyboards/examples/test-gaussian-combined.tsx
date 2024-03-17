@@ -113,7 +113,7 @@ const TestGaussianCombinedPage = () => {
     ctsBoundGauss.push(combined);
 
     const plot = new LinePlot()
-      .data(ctsBoundGauss)
+      .setData(ctsBoundGauss)
       .plotProperties({
         xLabel: "Date",
         title: `${region}`,
@@ -138,7 +138,7 @@ const TestGaussianCombinedPage = () => {
           }
         })
       )
-      .svg(chartRef.current)
+      .setSvg(chartRef.current)
       .draw();
 
     //
@@ -154,10 +154,10 @@ const TestGaussianCombinedPage = () => {
 
     peaks.forEach((d, i) => {
       new Dot()
-        .properties({ color: i < segment - 1 ? "LightCoral" : "grey" })
-        .svg(chartRef.current)
+        .setProps({ color: i < segment - 1 ? "LightCoral" : "grey" })
+        .setCanvas(chartRef.current)
         .draw()
-        .coordinate(plot.coordinates(d.getDate(), 3))
+        .setCoordinate(plot.getCoordinates(d.getDate(), 3))
         .show();
     });
 

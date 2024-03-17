@@ -2,16 +2,14 @@ import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
 import { Actions } from "./Actions";
 
-export type CircleProperties = {
-  id?: string;
+export type CircleProps = {
   size?: number;
   strokeWidth?: number;
   color?: string;
   opacity?: number;
 };
 
-export const defaultCircleProperties: CircleProperties = {
-  id: "Circle",
+export const defaultCircleProps: CircleProps = {
   size: 10,
   strokeWidth: 2,
   color: "#000000",
@@ -19,39 +17,58 @@ export const defaultCircleProperties: CircleProperties = {
 };
 
 export class Circle extends Action {
-  protected _properties: CircleProperties;
-  protected _circleNode;
+  protected props: CircleProps;
+  protected circleNode: any;
 
   constructor() {
     super();
-    this._type = Actions.CIRCLE;
+    this.type = Actions.CIRCLE;
   }
 
-  public properties(properties: CircleProperties = {}) {
-    this._properties = { ...defaultCircleProperties, ...properties };
+  public setProps(properties: CircleProps = {}) {
+    this.props = { ...defaultCircleProps, ...properties };
     return this;
   }
 
-  public draw() {
-    this._circleNode = d3
+  public setCanvas(svg: SVGGElement) {
+    this.svg = svg;
+    this.canvas();
+    this.draw();
+    return this;
+  }
+
+  protected draw() {
+    this.circleNode = d3
       .create("svg")
       .append("circle")
       .attr("fill", "none")
-      .attr("r", this._properties.size)
-      .attr("stroke-width", this._properties.strokeWidth)
-      .attr("stroke", this._properties.color)
-      .attr("opacity", this._properties.opacity)
+      .attr("r", this.props.size)
+      .attr("stroke-width", this.props.strokeWidth)
+      .attr("stroke", this.props.color)
+      .attr("opacity", this.props.opacity)
       .node();
-    this._node.appendChild(this._circleNode);
+    this.node.appendChild(this.circleNode);
+  }
+
+  public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
+    this.coordinate0 = coordinate[0];
+    this.coordinate1 = coordinate[1];
+
+    d3.select(this.circleNode)
+      .attr("cx", this.coordinate1[0])
+      .attr("cy", this.coordinate1[1]);
 
     return this;
   }
 
-  public coordinate(coordinate: [Coordinate, Coordinate]): this {
-    const [x1, y1] = coordinate[0];
-    const [x2, y2] = coordinate[1];
-
-    d3.select(this._circleNode).attr("cx", x2).attr("cy", y2);
-    return this;
+  public updateProps(properties: any): this {
+    throw new Error("Circle: updateProps () is not implemented!");
+  }
+  public move(
+    coordinate: Coordinate,
+    delay?: number | undefined,
+    duration?: number | undefined
+  ): Promise<any> {
+    throw new Error("Circle: move() not implemented!");
   }
 }

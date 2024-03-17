@@ -87,7 +87,7 @@ const ExampleGaussianPage = () => {
       .node();
 
     const plot = new LinePlot()
-      .data(gaussTS)
+      .setData(gaussTS)
       .plotProperties({
         xLabel: "Date",
         title: `${region}`,
@@ -109,7 +109,7 @@ const ExampleGaussianPage = () => {
           }
         })
       )
-      .svg(ntsChartRef.current)
+      .setSvg(ntsChartRef.current)
       .draw();
   }, [data]);
 

@@ -14,17 +14,17 @@ export class ActionGroup extends Action {
     return this;
   }
 
-  public properties(properties: unknown): this {
+  public setProps(properties: unknown): this {
     return this;
   }
 
-  public templateProperties(extraObj: any) {
-    this._actions.map((d: Action) => d.templateProperties(extraObj));
+  public updateProps(extraObj: any) {
+    this._actions.map((d: Action) => d.updateProps(extraObj));
     return this;
   }
 
-  public svg(svg: SVGGElement) {
-    this._actions.map((d: Action) => d.svg(svg));
+  public setCanvas(svg: SVGGElement) {
+    this._actions.map((d: Action) => d.setCanvas(svg));
     return this;
   }
 
@@ -36,8 +36,8 @@ export class ActionGroup extends Action {
     return this;
   }
 
-  public coordinate(src: Coordinate, dest: Coordinate) {
-    this._actions.map((d: Action) => d.coordinate(src, dest));
+  public setCoordinate(coordinate: [Coordinate, Coordinate]) {
+    this._actions.map((d: Action) => d.setCoordinate(coordinate));
     return this;
   }
 
@@ -51,8 +51,11 @@ export class ActionGroup extends Action {
     return Promise.all(promises);
   }
 
-  // TODO
-  public move(dest: Coordinate, delay: number, duration: number): Promise<any> {
-    throw new Error("Method not implemented.");
+  public move(
+    coordinate: Coordinate,
+    delay?: number | undefined,
+    duration?: number | undefined
+  ): Promise<any> {
+    throw new Error("ActionGroup: move() is not implemented!");
   }
 }

@@ -98,9 +98,9 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     console.log({ ...data });
     actionFactory
       .create(data.action, data)
-      ?.svg(svg)
+      ?.setCanvas(svg)
       .draw()
-      .coordinate([50, 100], [50, 50])
+      .setCoordinate([50, 100], [50, 50])
       // .coordinate([0, 0], [0, 0])
       .show();
 

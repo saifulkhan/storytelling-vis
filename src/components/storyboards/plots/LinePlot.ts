@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { Plot } from "./Plot";
+import { Plot, PlotProperties } from "./Plot";
 import { Action, Coordinate } from "../actions/Action";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import {
@@ -21,14 +21,6 @@ const ID_AXIS_SELECTION = "#id-axes-selection",
 const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
-export type PlotProperties = {
-  title?: string;
-  ticks?: boolean;
-  xLabel?: string;
-  rightAxisLabel?: string;
-  leftAxisLabel?: string;
-};
-
 export type LineProperties = {
   stroke: string;
   strokeWidth?: number;
@@ -41,7 +33,7 @@ export class LinePlot extends Plot {
   _lineProperties: LineProperties[] = [];
   _plotProperties: PlotProperties;
 
-  _svg: SVGSVGElement;
+  svg: SVGSVGElement;
   _selector;
   _width: number;
   _height: number;
@@ -96,28 +88,28 @@ export class LinePlot extends Plot {
     return this;
   }
 
-  public data(data: TimeseriesData[][]) {
+  public setData(data: TimeseriesData[][]) {
     this._data = data;
     console.log("LinePlot: data = ", this._data);
     return this;
   }
 
-  public name(name: string) {
+  public setName(name: string) {
     this._name = name;
     return this;
   }
 
-  public svg(svg: SVGSVGElement) {
-    this._svg = svg;
+  public setSvg(svg: SVGSVGElement) {
+    this.svg = svg;
     // clean
-    d3.select(this._svg).selectAll("*").remove();
+    d3.select(this.svg).selectAll("*").remove();
     const bounds = svg.getBoundingClientRect();
     this._height = bounds.height;
     this._width = bounds.width;
     console.log("LinePlot:svg: bounds: ", bounds);
 
     this._selector = d3
-      .select(this._svg)
+      .select(this.svg)
       .append("g")
       .attr("id", ID_AXIS_SELECTION);
 
@@ -182,7 +174,7 @@ export class LinePlot extends Plot {
    ** Animate & draw a line
    **/
 
-  public actions(actions: DateActionArray = []) {
+  public setActions(actions: DateActionArray = []) {
     this._actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     return this;
   }
@@ -207,7 +199,7 @@ export class LinePlot extends Plot {
         console.log("action = ", action);
         // update actions coord, text etc.
         action
-          .svg(this._svg)
+          .svg(this.svg)
           .extraProperties({
             align: this.alignLeftOrRight(date),
             date: date.toLocaleDateString(),
@@ -215,7 +207,7 @@ export class LinePlot extends Plot {
             value: this._data[lineIndex][idx].y,
           })
           .draw()
-          .coordinate(...this.coordinates(date.lineIndex));
+          .coordinate(...this.getCoordinates(date.lineIndex));
 
         const end = idx;
         await this._animate(start, end, lineIndex);
@@ -279,7 +271,7 @@ export class LinePlot extends Plot {
    **/
   private drawAxis() {
     // clear existing axes and labels
-    d3.select(this._svg).selectAll(ID_AXIS_SELECTION).remove();
+    d3.select(this.svg).selectAll(ID_AXIS_SELECTION).remove();
 
     // combine the data to create a plot with left and right axes
     let dataOnLeft: TimeseriesData[] = [];
@@ -405,7 +397,7 @@ export class LinePlot extends Plot {
    * Given a date of the LinePlot, return the corresponding [x1, y1], [x2, y2]
    * coordinates
    */
-  public coordinates(
+  public getCoordinates(
     date: Date,
     lineIndex: number = 0
   ): [Coordinate, Coordinate] {

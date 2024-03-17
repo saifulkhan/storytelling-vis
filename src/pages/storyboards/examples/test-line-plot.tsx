@@ -27,7 +27,7 @@ const TestLinePlotPage = () => {
       const data = [d["Aberdeenshire"], d["Angus"], d["Barnet"]];
 
       const lineChart = new LinePlot()
-        .data(data)
+        .setData(data)
         .plotProperties({})
         .lineProperties([
           {
@@ -49,7 +49,7 @@ const TestLinePlotPage = () => {
             onRightAxis: true,
           },
         ])
-        .svg(svg)
+        .setSvg(svg)
         .draw();
 
       lineChart.animate(2, 20, 400);

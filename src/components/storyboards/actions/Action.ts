@@ -1,5 +1,7 @@
 import * as d3 from "d3";
 import { Actions } from "./Actions";
+import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
+import { CategoricalFeatures } from "../../../utils/storyboards/feature/CategoricalFeatures";
 
 export type Coordinate = [number, number];
 
@@ -7,49 +9,33 @@ const DELAY = 0,
   DURATION = 1000;
 
 export abstract class Action {
-  protected _type: Actions;
-  protected _properties;
-  protected _svg: SVGGElement;
-  protected _node: SVGGElement;
+  protected type: Actions;
+  protected props: any;
+  protected svg: SVGGElement;
+  protected node: any;
+  protected coordinate0: Coordinate;
+  protected coordinate1: Coordinate;
+  protected featureType?: NumericalFeatures | CategoricalFeatures;
 
   constructor() {}
 
-  public abstract properties(properties: unknown): this;
-  public templateProperties(extra: any) {
-    return this;
+  public abstract setProps(properties: unknown): this;
+  public abstract updateProps(properties: any): this;
+
+  public getType(): Actions {
+    return this.type;
   }
 
-  public get id(): string {
-    return this._properties?.id;
-  }
+  public abstract setCanvas(svg: SVGGElement): this;
 
-  public get type(): Actions {
-    return this._type;
-  }
-
-  public svg(svg: SVGGElement) {
-    this._svg = svg;
-    this._node = d3
-      .create("svg")
-      .append("g")
-      .attr("id", this._properties?.id)
-      // hide option 1
-      // .attr("display", "none")
-      // hide option 2
-      .style("opacity", 0)
-      .node();
-
-    d3.select(this._svg).append(() => this._node);
-    return this;
-  }
-
-  public abstract draw(): this;
-  // we need src & dest both for connector, text box
-  public abstract coordinate(coordinate: [Coordinate, Coordinate]): this;
+  /**
+   ** Set two coordinates source, [x0, y1] and destination, [x1, y1].
+   **/
+  public abstract setCoordinate(coordinate: [Coordinate, Coordinate]): this;
 
   public show(delay = DELAY, duration = DURATION) {
     return new Promise<number>((resolve, reject) => {
-      d3.select(this._node)
+      d3.select(this.node)
         .transition()
         // delay before transition
         .delay(0)
@@ -67,7 +53,7 @@ export abstract class Action {
 
   public hide(delay = DELAY, duration = DURATION) {
     return new Promise<number>((resolve, reject) => {
-      d3.select(this._node)
+      d3.select(this.node)
         .transition()
         .delay(0)
         .duration(duration)
@@ -78,15 +64,35 @@ export abstract class Action {
     });
   }
 
+  /**
+   ** Move object from [x1, y1] coordinate to [x2, y2] coordinate.
+   **/
   public abstract move(
-    dest: Coordinate,
+    coordinate: Coordinate,
     delay: number,
     duration: number
   ): Promise<any>;
 
   public remove() {
-    // TODO: not implemented; use id?
-    //d3.select(svg).select("svg").remove();
+    d3.select(this.node).select("svg").remove();
     return this;
+  }
+
+  public setFeatureType(featureType: NumericalFeatures | CategoricalFeatures) {
+    this.featureType = featureType;
+    return this;
+  }
+
+  protected abstract draw(): void;
+  protected canvas(): void {
+    this.node = d3
+      .create("svg")
+      .append("g")
+      .style("opacity", 0)
+      // another way to hide this object
+      // .attr("display", "none")
+      .node();
+
+    d3.select(this.svg).append(() => this.node);
   }
 }

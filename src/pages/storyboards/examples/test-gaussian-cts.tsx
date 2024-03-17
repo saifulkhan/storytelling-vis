@@ -72,7 +72,7 @@ const ExampleGaussianPage = () => {
     categoricalGauss.unshift(data);
 
     new LinePlot()
-      .data(categoricalGauss)
+      .setData(categoricalGauss)
       .plotProperties({
         xLabel: "Date",
         title: `${region}`,
@@ -95,7 +95,7 @@ const ExampleGaussianPage = () => {
           }
         })
       )
-      .svg(ctsChartRef.current)
+      .setSvg(ctsChartRef.current)
       .draw();
 
     //

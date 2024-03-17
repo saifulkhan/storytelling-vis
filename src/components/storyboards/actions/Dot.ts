@@ -2,52 +2,71 @@ import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
 import { Actions } from "./Actions";
 
-export type DotProperties = {
-  id?: string;
+export type DotProps = {
   size?: number;
   color?: string;
   opacity?: number;
 };
 
-export const defaultDotProperties: DotProperties = {
-  id: "Dot",
+export const defaultDotProps: DotProps = {
   size: 5,
   color: "#000000",
   opacity: 1,
 };
 
 export class Dot extends Action {
-  protected _properties: DotProperties;
-  protected _dotNode;
+  protected props: DotProps = defaultDotProps;
+  protected dotNode: any;
 
   constructor() {
     super();
-    this._type = Actions.DOT;
+    this.type = Actions.DOT;
   }
 
-  public properties(properties: DotProperties = {}) {
-    this._properties = { ...defaultDotProperties, ...properties };
+  public setProps(props: DotProps = {}) {
+    this.props = { ...defaultDotProps, ...props };
+    return this;
+  }
+  public setCanvas(svg: SVGGElement) {
+    this.svg = svg;
+    this.canvas();
+    this.draw();
     return this;
   }
 
-  public draw() {
-    this._dotNode = d3
+  protected draw() {
+    this.dotNode = d3
       .create("svg")
       .append("circle")
-      .attr("r", this._properties.size)
-      .attr("fill", this._properties.color)
-      .attr("opacity", this._properties.opacity)
+      .attr("r", this.props.size)
+      .attr("fill", this.props.color)
+      .attr("opacity", this.props.opacity)
       .node();
-    this._node.appendChild(this._dotNode);
+
+    this.node.appendChild(this.dotNode);
 
     return this;
   }
 
-  public coordinate(coordinate: [Coordinate, Coordinate]): this {
-    const [x1, y1] = coordinate[0];
-    const [x2, y2] = coordinate[1];
+  public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
+    this.coordinate0 = coordinate[0];
+    this.coordinate1 = coordinate[1];
 
-    d3.select(this._dotNode).attr("cx", x2).attr("cy", y2);
+    d3.select(this.dotNode)
+      .attr("cx", this.coordinate1[0])
+      .attr("cy", this.coordinate1[1]);
+
     return this;
+  }
+
+  public updateProps(properties: any): this {
+    throw new Error("Dot: updateProps () is not implemented!");
+  }
+  public move(
+    coordinate: Coordinate,
+    delay?: number | undefined,
+    duration?: number | undefined
+  ): Promise<any> {
+    throw new Error("Dot: move() not implemented!");
   }
 }

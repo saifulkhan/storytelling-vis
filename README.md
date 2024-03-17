@@ -30,7 +30,7 @@ yarn test
 TODO
 ```
 
-## Feature Detection
+### Feature Detection
 
 Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 
@@ -43,27 +43,44 @@ Detection & feature creation:
 - <http://localhost:3000/storyboards/examples/test-features>
 - <http://localhost:3000/storyboards/examples/test-gaussian-combined>
 
-## Action
+### Action
+
+`Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
 Action objects:
 
 ```ts
-feature = new Action()
-                .properties({...})
-                .draw(svg)
-                .coordinate(x, y, x0, y0)
+const circle = new Circle()
+            .setProps(CircleProps)
+            .setCanvas(SVGGElement)
+            .setCoordinate([Coordinate, Coordinate])
+            .show();
 ```
 
-Animate feature
+Animate action show and hide:
 
 ```ts
-await feature.show(delay, duration);
-await feature.hide(delay, duration);
+await circle.show(delay, duration);
+await circle.hide(delay, duration);
 ```
 
-- <http://localhost:3000/storyboards/examples/test-actions>
+We implemented movement for `TextBox` to a specified coordinate:
 
-## Plots
+```ts
+const textBox = new TextBox()
+            .setProps(...)
+            .setCanvas(...)
+            .setCoordinate(...)
+            .show();
+
+await textBox.move(Coordinate, delay, duration);
+```
+
+We implemented and tested various actions in `src/pages/storyboards/examples/test-actions.tsx` page and can be seen in the link: <http://localhost:3000/storyboards/examples/test-actions>
+
+Please see the contents of `src/components/storyboards/actions` for details or implementing various different actions.
+
+### Plots
 
 ```ts
 const plot = new PlotName()
@@ -80,7 +97,7 @@ plot.animate(<feature action data>)
 
 - <http://localhost:3000/storyboards/examples/test-line-plot>
 
-## Feature Action Table
+### Feature Action Table
 
 - <http://localhost:3000/storyboards/examples/test-properties-table>
 - <http://localhost:3000/storyboards/examples/test-action-table>
@@ -88,7 +105,7 @@ plot.animate(<feature action data>)
 - <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
 - <http://localhost:3000/storyboards/examples/test-feature-action-table>
 
-## Story Builder
+### Story Builder
 
 Create workflow of a story:
 

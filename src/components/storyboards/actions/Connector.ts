@@ -2,57 +2,71 @@ import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
 import { Actions } from "./Actions";
 
-export type ConnectorProperties = {
-  id?: string;
+export type ConnectorProps = {
   stroke?: string;
   opacity?: number;
 };
 
-export const defaultConnectorProperties: ConnectorProperties = {
-  id: "Connector",
+export const defaultConnectorProperties: ConnectorProps = {
   stroke: "#000000",
   opacity: 1,
 };
 
 export class Connector extends Action {
-  protected _properties: ConnectorProperties;
-  protected _connectorNode;
-  protected _x0: number;
-  protected _y0: number;
+  protected props: ConnectorProps;
+  protected connectorNode: nay;
 
   constructor() {
     super();
-    this._type = Actions.CONNECTOR;
+    this.type = Actions.CONNECTOR;
   }
 
-  public properties(properties: ConnectorProperties = {}) {
-    this._properties = { ...defaultConnectorProperties, ...properties };
+  public setProps(properties: ConnectorProps = {}) {
+    this.props = { ...defaultConnectorProperties, ...properties };
     return this;
   }
 
-  public draw() {
-    this._connectorNode = d3
+  public setCanvas(svg: SVGGElement) {
+    this.svg = svg;
+    this.canvas();
+    this.draw();
+    return this;
+  }
+
+  protected draw() {
+    this.connectorNode = d3
       .create("svg")
       .append("line")
-      .attr("stroke", this._properties.stroke)
-      .attr("opacity", this._properties.opacity)
+      .attr("stroke", this.props.stroke)
+      .attr("opacity", this.props.opacity)
       .style("stroke-dasharray", "5,5")
       .node();
-    this._node.appendChild(this._connectorNode);
+    this.node.appendChild(this.connectorNode);
 
     return this;
   }
 
-  public coordinate(coordinate: [Coordinate, Coordinate]): this {
-    const [x1, y1] = coordinate[0];
-    const [x2, y2] = coordinate[1];
+  public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
+    this.coordinate0 = coordinate[0];
+    this.coordinate1 = coordinate[1];
 
-    d3.select(this._connectorNode)
-      .attr("x1", x1)
-      .attr("y1", y1)
-      .attr("x2", x2)
-      .attr("y2", y2);
+    d3.select(this.connectorNode)
+      .attr("x1", this.coordinate0[0])
+      .attr("y1", this.coordinate0[1])
+      .attr("x2", this.coordinate1[0])
+      .attr("y2", this.coordinate1[1]);
 
     return this;
+  }
+
+  public updateProps(properties: any): this {
+    throw new Error("Connector: updateProps () is not implemented!");
+  }
+  public move(
+    coordinate: Coordinate,
+    delay?: number | undefined,
+    duration?: number | undefined
+  ): Promise<any> {
+    throw new Error("Connector: move() not implemented!");
   }
 }

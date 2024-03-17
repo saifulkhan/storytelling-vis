@@ -18,19 +18,19 @@ import AddIcon from "@mui/icons-material/Add";
 import ActionPropertiesTable from "./ActionPropertiesTable";
 import { ActionTableRow } from "./FeatureActionTableRow";
 import { Actions } from "../actions/Actions";
-import { defaultDotProperties } from "../actions/Dot";
-import { defaultCircleProperties } from "../actions/Circle";
-import { defaultTextBoxProperties } from "../actions/TextBox";
+import { defaultDotProps } from "../actions/Dot";
+import { defaultCircleProps } from "../actions/Circle";
+import { defaultTextBoxProps } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
 
 const getInitialProperties = (action: Actions) => {
   switch (action) {
     case Actions.DOT:
-      return defaultDotProperties;
+      return defaultDotProps;
     case Actions.CIRCLE:
-      return defaultCircleProperties;
+      return defaultCircleProps;
     case Actions.TEXT_BOX:
-      return defaultTextBoxProperties;
+      return defaultTextBoxProps;
     case Actions.CONNECTOR:
       return defaultConnectorProperties;
     default:
@@ -92,10 +92,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   }, [data]); // trigger effect when data changes
 
   const handleAddRow = () => {
-    setRows([
-      ...rows,
-      { action: Actions.DOT, properties: defaultDotProperties },
-    ]);
+    setRows([...rows, { action: Actions.DOT, properties: defaultDotProps }]);
   };
 
   const handleRemoveRow = (index: number) => {

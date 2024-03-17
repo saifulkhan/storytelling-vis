@@ -1,18 +1,14 @@
 import { Condition } from "../../../utils/storyboards/feature/Condition";
 import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
 import { Actions } from "../actions/Actions";
-import { CircleProperties } from "../actions/Circle";
-import { ConnectorProperties } from "../actions/Connector";
-import { DotProperties } from "../actions/Dot";
-import { TextBoxProperties } from "../actions/TextBox";
+import { CircleProps } from "../actions/Circle";
+import { ConnectorProps } from "../actions/Connector";
+import { DotProps } from "../actions/Dot";
+import { TextBoxProps } from "../actions/TextBox";
 
 export type ActionTableRow = {
   action: Actions;
-  properties:
-    | CircleProperties
-    | ConnectorProperties
-    | DotProperties
-    | TextBoxProperties;
+  properties: CircleProps | ConnectorProps | DotProps | TextBoxProps;
 };
 
 export type FeatureActionTableRow = {

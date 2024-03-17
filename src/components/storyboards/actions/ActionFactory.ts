@@ -1,34 +1,30 @@
 import { Action } from "./Action";
 import { Actions } from "./Actions";
-import { Circle, CircleProperties } from "./Circle";
+import { Circle, CircleProps } from "./Circle";
 import { ActionGroup } from "./ActionGroup";
-import { Connector, ConnectorProperties } from "./Connector";
-import { Dot, DotProperties } from "./Dot";
-import { TextBox, TextBoxProperties } from "./TextBox";
+import { Connector, ConnectorProps } from "./Connector";
+import { Dot, DotProps } from "./Dot";
+import { TextBox, TextBoxProps } from "./TextBox";
 
 export class ActionFactory {
   constructor() {}
 
   public create(
     action: Actions,
-    properties:
-      | CircleProperties
-      | ConnectorProperties
-      | DotProperties
-      | TextBoxProperties
+    properties: CircleProps | ConnectorProps | DotProps | TextBoxProps
   ): Action | undefined {
     // prettier-ignore
     // console.log("ActionBuilder:create: action = ", action, ", properties = ", properties);
 
     switch (action) {
       case Actions.DOT:
-        return new Dot().properties({...properties});
+        return new Dot().setProps({...properties});
       case Actions.TEXT_BOX:
-        return new TextBox().properties({...properties});
+        return new TextBox().setProps({...properties});
       case Actions.CIRCLE:
-        return new Circle().properties({...properties});
+        return new Circle().setProps({...properties});
       case Actions.CONNECTOR:
-        return new Connector().properties({...properties});
+        return new Connector().setProps({...properties});
       default:
         console.error(`Action ${action} is not implemented!`);
         alert(`Action ${action} is not implemented!`)

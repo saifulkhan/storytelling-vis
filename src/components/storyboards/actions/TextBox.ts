@@ -3,8 +3,7 @@ import { Action, Coordinate } from "./Action";
 import { Actions } from "./Actions";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
-export type TextBoxProperties = {
-  id?: string;
+export type TextBoxProps = {
   title?: string;
   message?: string;
   backgroundColor?: string;
@@ -14,8 +13,7 @@ export type TextBoxProperties = {
   verticalAlign?: VerticalAlign;
 };
 
-export const defaultTextBoxProperties: TextBoxProperties = {
-  id: "TextBox",
+export const defaultTextBoxProps: TextBoxProps = {
   title: "...T...",
   message: "...M...",
   backgroundColor: "#F8F8F8",
@@ -30,49 +28,51 @@ const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
 export class TextBox extends Action {
-  protected _properties: TextBoxProperties;
-  protected _rectNode: SVGRectElement;
-  protected _titleNode: SVGTextElement;
-  protected _messageNode: SVGTextElement;
-  protected _textNode: SVGGElement;
-  protected _connectorNode: SVGAElement;
-  protected _spaceWidth;
+  protected props: TextBoxProps;
+  protected rectNode: any;
+  protected titleNode: any;
+  protected messageNode: any;
+  protected textNode: any;
+  protected connectorNode: any;
+  protected spaceWidth: number;
 
   constructor() {
     super();
-    this._type = Actions.TEXT_BOX;
+    this.type = Actions.TEXT_BOX;
   }
 
-  public properties(properties: TextBoxProperties = {}) {
-    this._properties = { ...defaultTextBoxProperties, ...properties };
+  public setProps(props: TextBoxProps = {}) {
+    this.props = { ...defaultTextBoxProps, ...props };
     return this;
   }
 
-  public templateProperties(extra: any) {
-    this._properties.message = this.updateStringTemplate(
-      this._properties.message,
-      extra
-    );
-    this._properties.title = this.updateStringTemplate(
-      this._properties.title,
-      extra
-    );
+  public updateProps(extra: any) {
+    this.props.message = this.updateStringTemplate(this.props.message, extra);
+    this.props.title = this.updateStringTemplate(this.props.title, extra);
 
-    this._properties.align = extra.align;
+    this.props.align = extra.align;
     return this;
   }
 
-  public draw() {
-    this._rectNode = d3
+  public setCanvas(svg: SVGGElement) {
+    this.svg = svg;
+    this.svg = svg;
+    this.canvas();
+    this.draw();
+    return this;
+  }
+
+  protected draw() {
+    this.rectNode = d3
       .create("svg")
       .append("rect")
-      .attr("fill", this._properties.backgroundColor)
-      .attr("width", this._properties.width)
+      .attr("fill", this.props.backgroundColor)
+      .attr("width", this.props.width)
       .attr("rx", 3)
       .node();
-    this._node.appendChild(this._rectNode);
+    this.node.appendChild(this.rectNode);
 
-    this._titleNode = d3
+    this.titleNode = d3
       .create("svg")
       .append("text")
       .attr("font-size", FONT_SIZE)
@@ -81,7 +81,7 @@ export class TextBox extends Action {
       .attr("font-weight", "bold")
       .node();
 
-    this._messageNode = d3
+    this.messageNode = d3
       .create("svg")
       .append("text")
       .attr("font-size", FONT_SIZE)
@@ -89,13 +89,13 @@ export class TextBox extends Action {
       .attr("fill", "black")
       .node();
 
-    this._textNode = d3
+    this.textNode = d3
       .create("svg")
       .append("g")
-      .attr("fill", this._properties.backgroundColor)
+      .attr("fill", this.props.backgroundColor)
       .node();
 
-    this._connectorNode = d3
+    this.connectorNode = d3
       .create("svg")
       .append("line")
       .attr("stroke", "#808080")
@@ -103,22 +103,22 @@ export class TextBox extends Action {
       .style("stroke-dasharray", "3,3")
       .node();
 
-    this._textNode.append(this._titleNode);
-    this._textNode.append(this._messageNode);
-    this._node.appendChild(this._textNode);
-    this._node.appendChild(this._connectorNode);
+    this.textNode.append(this.titleNode);
+    this.textNode.append(this.messageNode);
+    this.node.appendChild(this.textNode);
+    this.node.appendChild(this.connectorNode);
 
     // wrap title and message
-    this.wrap(this._titleNode, this._properties.title);
-    this.wrap(this._messageNode, this._properties.message);
+    this.wrap(this.titleNode, this.props.title);
+    this.wrap(this.messageNode, this.props.message);
 
     // y position of message, give some space after title
-    let height = this._titleNode.getBoundingClientRect().height;
-    this._messageNode.setAttribute("y", `${height + PADDING}px`);
+    let height = this.titleNode.getBoundingClientRect().height;
+    this.messageNode.setAttribute("y", `${height + PADDING}px`);
 
     // y position of rect
-    height = this._textNode.getBoundingClientRect().height;
-    this._rectNode.setAttribute("height", `${height + PADDING}px`);
+    height = this.textNode.getBoundingClientRect().height;
+    this.rectNode.setAttribute("height", `${height + PADDING}px`);
 
     return this;
   }
@@ -168,17 +168,17 @@ export class TextBox extends Action {
     // console.log("TextBox:_wrap wordWidthArr =", wordWidthArr);
 
     // calculate the width of the backspace text
-    this._spaceWidth = calculateTextWidth(element, "-");
+    this.spaceWidth = calculateTextWidth(element, "-");
     // console.log("TextBox:_wrap _spaceWidth = ", this._spaceWidth);
 
     // keep adding words to row until width exceeds span then create new row
     let accumulatedWidth = 0;
     let wordsInLine = [];
-    const messageWidth = this._properties.width - PADDING;
+    const messageWidth = this.props.width - PADDING;
 
     for (let i = 0; i < wordWidthArr.length; i++) {
       const word = wordWidthArr[i].word,
-        width = wordWidthArr[i].width + this._spaceWidth;
+        width = wordWidthArr[i].width + this.spaceWidth;
 
       if (accumulatedWidth + width < messageWidth) {
         // prettier-ignore
@@ -202,43 +202,46 @@ export class TextBox extends Action {
     }
   }
 
-  public coordinate(coordinate: [Coordinate, Coordinate]): this {
+  public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
+    this.coordinate0 = coordinate[0];
+    this.coordinate1 = coordinate[1];
+
     const [x1, y1] = coordinate[0];
     const [x2, y2] = coordinate[1];
 
-    const { width, height } = this._rectNode.getBoundingClientRect();
+    const { width, height } = this.rectNode.getBoundingClientRect();
     let x = 0,
       y = 0;
 
-    if (this._properties.horizontalAlign === "left") {
+    if (this.props.horizontalAlign === "left") {
       x = x2 - width;
-    } else if (this._properties.horizontalAlign === "middle") {
+    } else if (this.props.horizontalAlign === "middle") {
       x = x2 - width / 2;
-    } else if (this._properties.horizontalAlign === "right") {
+    } else if (this.props.horizontalAlign === "right") {
       x = x2;
     }
 
-    if (this._properties.verticalAlign === "top") {
+    if (this.props.verticalAlign === "top") {
       y = y2 - height;
-    } else if (this._properties.verticalAlign === "middle") {
+    } else if (this.props.verticalAlign === "middle") {
       y = y2 - height / 2;
-    } else if (this._properties.verticalAlign === "bottom") {
+    } else if (this.props.verticalAlign === "bottom") {
       y = y2 + height;
     }
 
-    d3.select(this._rectNode).attr("transform", `translate(${x},${y})`);
-    d3.select(this._textNode).attr(
+    d3.select(this.rectNode).attr("transform", `translate(${x},${y})`);
+    d3.select(this.textNode).attr(
       "transform",
       `translate(${x + PADDING},${y})`
     );
 
     // align texts
-    this.correctTextAlignment(this._titleNode, width, "middle");
-    this.correctTextAlignment(this._messageNode, width);
+    this.correctTextAlignment(this.titleNode, width, "middle");
+    this.correctTextAlignment(this.messageNode, width);
 
     // connector
-    if (this._properties.showConnector) {
-      d3.select(this._connectorNode)
+    if (this.props.showConnector) {
+      d3.select(this.connectorNode)
         .attr("x1", x1)
         .attr("y1", y1)
         .attr("x2", x2)
@@ -248,19 +251,25 @@ export class TextBox extends Action {
     return this;
   }
 
-  public move(coordinate: Coordinate, delay = 0, duration = 1500) {
-    const { width, height } = this._rectNode.getBoundingClientRect();
+  public move(
+    coordinate: Coordinate,
+    delay = 500,
+    duration = 1500
+  ): Promise<any> {
+    this.coordinate1 = coordinate;
+
+    const { width, height } = this.rectNode.getBoundingClientRect();
 
     // left align
     // const x = dest[0] - width;
     // center aligned
     // const x = dest[0] - width / 2;
     // right align
-    const x = coordinate[0];
-    const y = coordinate[1] - height;
+    const x = this.coordinate1[0];
+    const y = this.coordinate1[1] - height;
 
     const promise1 = new Promise<number>((resolve, reject) => {
-      d3.select(this._rectNode)
+      d3.select(this.rectNode)
         .transition()
         .ease(d3.easeQuadIn)
         .duration(duration)
@@ -271,7 +280,7 @@ export class TextBox extends Action {
     });
 
     const promise2 = new Promise<number>((resolve, reject) => {
-      d3.select(this._textNode)
+      d3.select(this.textNode)
         .transition()
         .ease(d3.easeQuadIn)
         .duration(duration)
@@ -282,8 +291,8 @@ export class TextBox extends Action {
     });
 
     // align texts
-    this.correctTextAlignment(this._titleNode, width, "middle");
-    this.correctTextAlignment(this._messageNode, width);
+    this.correctTextAlignment(this.titleNode, width, "middle");
+    this.correctTextAlignment(this.messageNode, width);
 
     return Promise.all([promise1, promise2]);
   }

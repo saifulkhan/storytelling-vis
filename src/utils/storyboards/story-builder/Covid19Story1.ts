@@ -100,11 +100,11 @@ export class Covid19Story1 extends StoryBuilder {
     console.log("Covid19Story1: actions = ", actions);
 
     const plot = new LinePlot()
-      .data([this._data])
+      .setData([this._data])
       .name(this._name)
       .plotProperties({})
       .lineProperties()
-      .svg(this._svg)
+      .setSvg(this._svg)
       .actions(actions)
       .draw();
 

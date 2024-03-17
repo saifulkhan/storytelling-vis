@@ -73,7 +73,7 @@ const FeaturesPage = () => {
       .node();
 
     const plot = new LinePlot()
-      .data(peaksStartEnd)
+      .setData(peaksStartEnd)
       .plotProperties({
         xLabel: "Date",
         title: `${region}`,
@@ -87,16 +87,16 @@ const FeaturesPage = () => {
           } as LineProperties;
         })
       )
-      .svg(chartRef.current)
+      .setSvg(chartRef.current)
       .draw();
 
     peaks.forEach((peak) => {
-      console.log(plot.coordinates(peak.getDate()));
+      console.log(plot.getCoordinates(peak.getDate()));
       new Dot()
-        .properties({ color: "#FF5349" })
-        .svg(chartRef.current)
+        .setProps({ color: "#FF5349" })
+        .setCanvas(chartRef.current)
         .draw()
-        .coordinate(plot.coordinates(peak.getDate()))
+        .setCoordinate(plot.getCoordinates(peak.getDate()))
         .show();
     });
   }, [data]);

@@ -1,15 +1,33 @@
 import { Coordinate } from "../actions/Action";
 
-export abstract class Plot {
-  protected _svg: SVGSVGElement;
-  protected _node: HTMLElement;
+export type PlotProperties = {
+  title?: string;
+  ticks?: boolean;
+  xLabel?: string;
+  rightAxisLabel?: string;
+  leftAxisLabel?: string;
+};
 
-  constructor() {
-    //
-  }
-  public abstract data(...args: unknown[]): this;
-  public abstract plotProperties(properties: unknown): this;
-  public abstract svg(svg: SVGSVGElement): this;
+export const defaultPlotProperties: PlotProperties = {
+  title: "title...",
+  ticks: true,
+  xLabel: "x axis label...",
+  rightAxisLabel: "right axis label...",
+  leftAxisLabel: "left axis label...",
+};
+
+export abstract class Plot {
+  protected svg: SVGSVGElement;
+  protected node: HTMLElement;
+
+  constructor() {}
+  public abstract setData(...args: unknown[]): this;
+  public abstract setPlotProperties(properties: unknown): this;
+  public abstract setName(properties: unknown): this;
+  // public abstract plotProperties(properties: unknown): this;
+  public abstract setSvg(svg: SVGSVGElement): this;
   public abstract draw();
-  // public abstract coordinates(...args: unknown[]): [Coordinate, Coordinate];
+  public abstract setActions(any): this;
+  public abstract animate();
+  public abstract getCoordinates(...args: unknown[]): [Coordinate, Coordinate];
 }

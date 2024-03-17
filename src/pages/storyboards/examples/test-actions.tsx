@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import Head from "next/head";
+import { Box } from "@mui/material";
 import * as d3 from "d3";
+
 import { Coordinate } from "../../../components/storyboards/actions/Action";
 import { Dot } from "../../../components/storyboards/actions/Dot";
 import { TextBox } from "../../../components/storyboards/actions/TextBox";
@@ -16,99 +19,88 @@ const TestActions = () => {
 
   useEffect(() => {
     if (!chartRef.current) return;
-
     let ignore = false;
 
     if (!ignore) {
-      console.log("useEffect triggered");
-
-      const svg = d3
-        .select(chartRef.current)
+      d3.select(chartRef.current)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        // .attr("transform", `translate(${margin.left},${margin.top})`)
         .node();
 
       const src: Coordinate = [400, 300];
-      const dest: Coordinate = [400, 200];
-      const dest1: Coordinate = [400, 100];
+      const dst: Coordinate = [400, 200];
+      const dst1: Coordinate = [400, 150];
+      const dst2: Coordinate = [100, 100];
+      const dst3: Coordinate = [100, 300];
 
-      const textBox = new TextBox()
-        .properties({
-          // title: "17-02-2024",
-          // message:
-          //   "By {DATE}, the number of cases continued to climb higher in {REGION}. The best of the BBC, with the latest news and sport headlines, weather, TV & radio highlights and much more from across the whole of BBC Online.",
-        })
-        .svg(svg)
-        .draw()
-        .coordinate(dest, dest1);
-
+      //
+      // Test example action objects
+      //
       const dot = new Dot()
-        .properties({
+        .setProps({
           size: 5,
           color: "#FF0000",
           opacity: 0.5,
         })
-        .svg(svg)
-        .draw()
-        .coordinate(src, dest);
-
-      const connector = new Connector()
-        .properties({})
-        .svg(svg)
-        .draw()
-        .coordinate(src, dest);
+        .setCanvas(chartRef.current)
+        .setCoordinate([src, dst])
+        .show();
 
       const circle = new Circle()
-        .properties({
+        .setProps({
           size: 10,
-          color: "#000000",
+          color: "green",
           opacity: 1,
         })
-        .svg(svg)
-        .draw()
-        .coordinate(src, dest);
+        .setCanvas(chartRef.current)
+        .setCoordinate([src, dst])
+        .show();
 
+      const textBox1 = new TextBox()
+        .setProps({
+          title: "17-02-2024",
+          message:
+            "By 17-02-2024, the number of cases continued to climb higher in Oxford.",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          backgroundColor: "lightgrey",
+        })
+        .setCanvas(chartRef.current)
+        .setCoordinate([src, dst1])
+        .show();
+
+      const connector = new Connector()
+        .setProps({})
+        .setCanvas(chartRef.current)
+        .setCoordinate([src, dst])
+        .show();
+
+      //
+      // Test example action group
+      //
+
+      const textbox2 = new TextBox().setProps({
+        horizontalAlign: "right",
+        verticalAlign: "top",
+        backgroundColor: "lightgrey",
+        width: 100,
+      });
+      const list = [new Dot().setProps(), new Circle().setProps(), textbox2];
+
+      const group = new ActionGroup(list)
+        .setCanvas(chartRef.current)
+        .setCoordinate([src, dst2])
+        .show();
+
+      //
+      // Test move textbox
+      //
       const animate = async () => {
-        await textBox.show();
-        await textBox.move([400, 300]);
-        await dot.show();
-        // await dot.move([400, 300]);
-        await circle.show();
-        // await circle.move([400, 300]);
-        await connector.show();
-
-        /*
-        await Promise.all([
-          textBox.show(),
-          dot.show(),
-          circle.show(),
-          connector.show(),
-        ]);
-        */
+        textbox2.move(dst3, 1000, 2000);
       };
-
-      const animateComposite = async () => {
-        const actions = new ActionGroup([textBox, dot, circle, connector])
-          .svg(svg)
-          .draw()
-          .coordinate(src, dest)
-          .show();
-
-        // await actions.move([400, 300]);
-      };
-
-      //
-      // Test individually
-      //
-      // animate();
-
-      //
-      // Test composite
-      //
-      animateComposite();
+      animate();
     }
 
     return () => {
@@ -118,10 +110,22 @@ const TestActions = () => {
 
   return (
     <>
-      <svg
-        ref={chartRef}
-        style={{ width: width, height: height, border: "1px solid" }}
-      ></svg>
+      <Head>
+        <title>Test Features</title>
+      </Head>
+
+      <Box
+        sx={{
+          backgroundColor: "background.default",
+          minHeight: "100%",
+          py: 8,
+        }}
+      >
+        <svg
+          ref={chartRef}
+          style={{ width: width, height: height, border: "1px solid" }}
+        ></svg>
+      </Box>
     </>
   );
 };

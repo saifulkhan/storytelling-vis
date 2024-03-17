@@ -53,7 +53,7 @@ const yScale = (keys, height, margin) => {
 
 export class ParallelCoordinatePlot extends Plot {
   _selector: string;
-  _svg: SVGSVGElement;
+  svg: SVGSVGElement;
 
   _width: number;
   _height: number;
@@ -83,7 +83,7 @@ export class ParallelCoordinatePlot extends Plot {
     return this;
   }
 
-  public data(data: any[]) {
+  public setData(data: any[]) {
     // sort data by selected key, e.g, "kernel_size"
     this._data = data
       .slice()
@@ -106,8 +106,8 @@ export class ParallelCoordinatePlot extends Plot {
     return this;
   }
 
-  public svg(svg: SVGSVGElement) {
-    this._svg = svg;
+  public setSvg(svg: SVGSVGElement) {
+    this.svg = svg;
     const bounds = svg.getBoundingClientRect();
     this._height = bounds.height;
     this._width = bounds.width;
@@ -139,7 +139,7 @@ export class ParallelCoordinatePlot extends Plot {
     //
     // Draw lines
     //
-    d3.select(this._svg)
+    d3.select(this.svg)
       .append("g")
       .attr("fill", "none")
       .attr("stroke-width", LINE_WIDTH)
@@ -160,7 +160,7 @@ export class ParallelCoordinatePlot extends Plot {
     //
     // Append circles to the line
     //
-    d3.select(this._svg)
+    d3.select(this.svg)
       .append("g")
       .selectAll("g")
       .data(this._data)
@@ -189,7 +189,7 @@ export class ParallelCoordinatePlot extends Plot {
 
   private drawAxis() {
     // Clear existing axis and labels
-    d3.select(this._svg).selectAll("svg > *").remove();
+    d3.select(this.svg).selectAll("svg > *").remove();
 
     this._xScaleMap = xScaleMap(
       this._data,
@@ -209,7 +209,7 @@ export class ParallelCoordinatePlot extends Plot {
     // Draw axis and labels
     //
     const that = this;
-    d3.select(this._svg)
+    d3.select(this.svg)
       .append("g")
       .selectAll("g")
       .data(this._AxisNames)
@@ -280,7 +280,7 @@ export class ParallelCoordinatePlot extends Plot {
         graphAnnotation.y(y);
 
         // If add to svg and set opacity to 0 (to hide it)
-        graphAnnotation.id(`id-annotation-${idx}`).addTo(this._svg);
+        graphAnnotation.id(`id-annotation-${idx}`).addTo(this.svg);
         graphAnnotation.hideAnnotation();
 
         // Save the coordinates in PCAnnotation object
@@ -337,7 +337,7 @@ export class ParallelCoordinatePlot extends Plot {
     //
     // Draw lines
     //
-    d3.select(this._svg)
+    d3.select(this.svg)
       .append("g")
       .attr("fill", "none")
       .attr("stroke-width", LINE_WIDTH)
@@ -359,7 +359,7 @@ export class ParallelCoordinatePlot extends Plot {
     // Append circles to the line
     //
     const that = this;
-    d3.select(this._svg)
+    d3.select(this.svg)
       .append("g")
       .selectAll("g")
       .data(this._annotations)
@@ -443,18 +443,18 @@ export class ParallelCoordinatePlot extends Plot {
   }
 
   private showLine(id: number) {
-    d3.select(this._svg).select(`#id-line-${id}`).style("stroke-opacity", 1);
+    d3.select(this.svg).select(`#id-line-${id}`).style("stroke-opacity", 1);
   }
 
   private shotDots(id: number) {
-    d3.select(this._svg)
+    d3.select(this.svg)
       .select(`#id-circles-${id}`) // return group
       .selectAll("circle")
       .style("opacity", 1); // reveal the circles
   }
 
   private hideLine(id: number) {
-    d3.select(this._svg)
+    d3.select(this.svg)
       .select(`#id-line-${id}`)
       .transition()
       .ease(d3.easeLinear)
@@ -465,7 +465,7 @@ export class ParallelCoordinatePlot extends Plot {
   }
 
   private hideDots(id: number) {
-    d3.select(this._svg)
+    d3.select(this.svg)
       .select(`#id-circles-${id}`) // returns group
       .selectAll("circle")
       .transition()
