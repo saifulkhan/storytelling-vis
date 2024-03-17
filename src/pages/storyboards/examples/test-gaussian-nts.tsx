@@ -2,26 +2,25 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { schemeTableau10, schemeCategory10 } from "d3-scale-chromatic";
 import {
-  Divider,
+  Box,
   FormControl,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
+import Head from "next/head";
+
 import { covid19data } from "../../../services/covid19-data";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
-import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
-import { Peak } from "../../../utils/storyboards/feature/Peak";
-import { sliceTimeseriesByDate } from "../../../utils/storyboards/data-processing/common";
 import {
   LinePlot,
-  LineProperties,
+  LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import {
   gmm,
-  semanticGaussians,
   smoothing,
 } from "../../../utils/storyboards/data-processing/gaussian";
 import { CategoricalFeature } from "../../../utils/storyboards/feature/CategoricalFeature";
@@ -88,28 +87,29 @@ const ExampleGaussianPage = () => {
 
     const plot = new LinePlot()
       .setData(gaussTS)
-      .plotProperties({
+      .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
+        rightAxisLabel: "Ranks",
       })
-      .lineProperties(
+      .setLineProps(
         gaussTS.map((d, i) => {
           if (i === 0) {
             return {
               stroke: "#D3D3D3",
               strokeWidth: 1,
-            } as LineProperties;
+            } as LineProps;
           } else {
             return {
               stroke: schemeCategory10[i - 1],
               strokeWidth: 2,
               onRightAxis: true,
-            } as LineProperties;
+            } as LineProps;
           }
         })
       )
-      .setSvg(ntsChartRef.current)
+      .setCanvas(ntsChartRef.current)
       .draw();
   }, [data]);
 
@@ -123,34 +123,50 @@ const ExampleGaussianPage = () => {
 
   return (
     <>
-      <FormControl component="fieldset" variant="standard">
-        <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
-          Select region
-        </InputLabel>
-        <Select
-          sx={{ m: 1, width: 300, mt: 0 }}
-          id="select-region-label"
-          displayEmpty
-          onChange={handleSelectRegion}
-          value={region}
-          input={<OutlinedInput label="Select region" />}
-        >
-          {regions?.map((d) => (
-            <MenuItem key={d} value={d}>
-              {d}
-            </MenuItem>
-          ))}
-        </Select>
+      <Head>
+        <title>Test Gaussian of Numerical Timeseries</title>
+      </Head>
 
-        <svg
-          ref={ntsChartRef}
-          style={{
-            width: `${WIDTH}px`,
-            height: `${HEIGHT}px`,
-            border: "1px solid",
-          }}
-        ></svg>
-      </FormControl>
+      <Box
+        sx={{
+          backgroundColor: "background.default",
+          minHeight: "100%",
+          py: 8,
+        }}
+      >
+        <Typography variant="h6">
+          Show Gaussian of Numerical Timeseries
+        </Typography>
+
+        <FormControl component="fieldset" variant="standard">
+          <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
+            Select region
+          </InputLabel>
+          <Select
+            sx={{ m: 1, width: 300, mt: 0 }}
+            id="select-region-label"
+            displayEmpty
+            onChange={handleSelectRegion}
+            value={region}
+            input={<OutlinedInput label="Select region" />}
+          >
+            {regions?.map((d) => (
+              <MenuItem key={d} value={d}>
+                {d}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <svg
+            ref={ntsChartRef}
+            style={{
+              width: `${WIDTH}px`,
+              height: `${HEIGHT}px`,
+              border: "1px solid",
+            }}
+          ></svg>
+        </FormControl>
+      </Box>
     </>
   );
 };

@@ -37,13 +37,15 @@ Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 Detection & feature creation:
 
 ```ts
-
+TODO
 ```
 
 - <http://localhost:3000/storyboards/examples/test-features>
+- <http://localhost:3000/storyboards/examples/test-gaussian-nts>
+- <http://localhost:3000/storyboards/examples/test-gaussian-cts>
 - <http://localhost:3000/storyboards/examples/test-gaussian-combined>
 
-### Action
+### Drawing Actions
 
 `Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
@@ -76,26 +78,34 @@ const textBox = new TextBox()
 await textBox.move(Coordinate, delay, duration);
 ```
 
-We implemented and tested various actions in `src/pages/storyboards/examples/test-actions.tsx` page and can be seen in the link: <http://localhost:3000/storyboards/examples/test-actions>
+We implemented and tested various actions in `src/pages/storyboards/examples/test-actions.tsx` page and can be seen in action <http://localhost:3000/storyboards/examples/test-actions>
 
 Please see the contents of `src/components/storyboards/actions` for details or implementing various different actions.
 
 ### Plots
 
+Various plots implemented ...
+
+For example, to create line plot:
+
 ```ts
-const plot = new PlotName()
-                .data(data)
-                .properties({})
-                .svg(svg)
+const plot = new LinePlot()
+                .setData(TimeseriesData)
+                .setName(name or key)
+                .setPlotProps(PlotProps)
+                .setCanvas(SVGGElement)
+                .draw()
 
-// static
-plot.draw();
-
-// animation 
-plot.animate(<feature action data>)
 ```
 
-- <http://localhost:3000/storyboards/examples/test-line-plot>
+See the example line plot `src/pages/storyboards/examples/test-line-plot.tsx` in action <http://localhost:3000/storyboards/examples/test-line-plot>.
+
+In order to animate line plot, set the list of actions and call animate.
+
+```ts
+plot.setActions()
+    .animate(<feature action data>)
+```
 
 ### Feature Action Table
 
@@ -105,7 +115,9 @@ plot.animate(<feature action data>)
 - <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
 - <http://localhost:3000/storyboards/examples/test-feature-action-table>
 
-### Story Builder
+### Build Story
+
+Page -> builder ->
 
 Create workflow of a story:
 

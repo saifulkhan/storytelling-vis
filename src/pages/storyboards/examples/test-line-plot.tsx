@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { covid19data1 } from "src/services/covid19-data";
+import Head from "next/head";
+import { Box } from "@mui/material";
+
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
+import { covid19data } from "../../../services/covid19-data";
 
 const TestLinePlotPage = () => {
   const chartRef = useRef(null);
@@ -14,26 +17,29 @@ const TestLinePlotPage = () => {
     if (!chartRef.current) return;
     console.log("useEffect triggered");
 
-    const svg = d3
-      .select(chartRef.current)
+    d3.select(chartRef.current)
       .append("svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
       .node();
 
-    covid19data1().then((d) => {
+    covid19data().then((d) => {
       console.log(d);
       const data = [d["Aberdeenshire"], d["Angus"], d["Barnet"]];
 
       const lineChart = new LinePlot()
         .setData(data)
-        .plotProperties({})
-        .lineProperties([
+        .setName("Regions")
+        .setPlotProps({
+          title: "Example line plot",
+          margin: { top: 50, right: 60, bottom: 50, left: 60 },
+        })
+        .setLineProps([
           {
             stroke: "#355c7d",
             strokeWidth: 1,
-            showPoints: true,
+            showPoints: false,
             onRightAxis: false,
           },
           {
@@ -44,28 +50,40 @@ const TestLinePlotPage = () => {
           },
           {
             stroke: "#E1999C",
-            strokeWidth: 3,
-            showPoints: false,
+            strokeWidth: 1,
+            showPoints: true,
             onRightAxis: true,
           },
         ])
-        .setSvg(svg)
+        .setCanvas(chartRef.current)
         .draw();
 
-      lineChart.animate(2, 20, 400);
+      // lineChart.animate(2, 20, 400);
     });
   }, []);
 
   return (
     <>
-      <svg
-        ref={chartRef}
-        style={{
-          width: `${width}px`,
-          height: `${height}px`,
-          border: "1px solid",
+      <Head>
+        <title>Test Line Plot</title>
+      </Head>
+
+      <Box
+        sx={{
+          backgroundColor: "background.default",
+          minHeight: "100%",
+          py: 8,
         }}
-      ></svg>
+      >
+        <svg
+          ref={chartRef}
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+            border: "1px solid",
+          }}
+        ></svg>
+      </Box>
     </>
   );
 };

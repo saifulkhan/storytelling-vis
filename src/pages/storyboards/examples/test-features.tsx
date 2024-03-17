@@ -9,6 +9,7 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
 import Head from "next/head";
 
@@ -18,7 +19,7 @@ import { Peak } from "../../../utils/storyboards/feature/Peak";
 import { sliceTimeseriesByDate } from "../../../utils/storyboards/data-processing/common";
 import {
   LinePlot,
-  LineProperties,
+  LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { Dot } from "../../../components/storyboards/actions/Dot";
 import { covid19data } from "../../../services/covid19-data";
@@ -74,20 +75,20 @@ const FeaturesPage = () => {
 
     const plot = new LinePlot()
       .setData(peaksStartEnd)
-      .plotProperties({
+      .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
       })
-      .lineProperties(
+      .setLineProps(
         peaksStartEnd.map((d, i) => {
           return {
             stroke: schemeTableau10[i],
             strokeWidth: 1.5,
-          } as LineProperties;
+          } as LineProps;
         })
       )
-      .setSvg(chartRef.current)
+      .setCanvas(chartRef.current)
       .draw();
 
     peaks.forEach((peak) => {
@@ -95,7 +96,6 @@ const FeaturesPage = () => {
       new Dot()
         .setProps({ color: "#FF5349" })
         .setCanvas(chartRef.current)
-        .draw()
         .setCoordinate(plot.getCoordinates(peak.getDate()))
         .show();
     });
@@ -122,6 +122,8 @@ const FeaturesPage = () => {
           py: 8,
         }}
       >
+        <Typography variant="h6">Show peaks</Typography>
+
         <FormControl component="fieldset" variant="standard">
           <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
             Select region

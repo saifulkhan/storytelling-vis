@@ -106,7 +106,7 @@ export class ParallelCoordinatePlot extends Plot {
     return this;
   }
 
-  public setSvg(svg: SVGSVGElement) {
+  public setCanvas(svg: SVGSVGElement) {
     this.svg = svg;
     const bounds = svg.getBoundingClientRect();
     this._height = bounds.height;

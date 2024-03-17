@@ -6,6 +6,7 @@ import {
   interpolateBuGn,
 } from "d3-scale-chromatic";
 import {
+  Box,
   Divider,
   FormControl,
   InputLabel,
@@ -13,12 +14,15 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
+import Head from "next/head";
+
 import { covid19data } from "../../../services/covid19-data";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import {
   LinePlot,
-  LineProperties,
+  LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { semanticGaussians } from "../../../utils/storyboards/data-processing/gaussian";
 import { categoricalTable, cts } from "./cts";
@@ -73,29 +77,29 @@ const ExampleGaussianPage = () => {
 
     new LinePlot()
       .setData(categoricalGauss)
-      .plotProperties({
+      .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
         rightAxisLabel: "Rank",
       })
-      .lineProperties(
+      .setLineProps(
         categoricalGauss.map((d, i) => {
           if (i === 0) {
             return {
               stroke: "#D3D3D3",
               strokeWidth: 1,
-            } as LineProperties;
+            } as LineProps;
           } else {
             return {
               stroke: getSchemeTableau10(i - 1),
               strokeWidth: 2,
               onRightAxis: true,
-            } as LineProperties;
+            } as LineProps;
           }
         })
       )
-      .setSvg(ctsChartRef.current)
+      .setCanvas(ctsChartRef.current)
       .draw();
 
     //
@@ -111,34 +115,49 @@ const ExampleGaussianPage = () => {
 
   return (
     <>
-      <FormControl component="fieldset" variant="standard">
-        <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
-          Select region
-        </InputLabel>
-        <Select
-          sx={{ m: 1, width: 300, mt: 0 }}
-          id="select-region-label"
-          displayEmpty
-          onChange={handleSelectRegion}
-          value={region}
-          input={<OutlinedInput label="Select region" />}
-        >
-          {regions?.map((d) => (
-            <MenuItem key={d} value={d}>
-              {d}
-            </MenuItem>
-          ))}
-        </Select>
+      <Head>
+        <title>Test Gaussian of Categorical Timeseries</title>
+      </Head>
 
-        <svg
-          ref={ctsChartRef}
-          style={{
-            width: `${WIDTH}px`,
-            height: `${HEIGHT}px`,
-            border: "1px solid",
-          }}
-        ></svg>
-      </FormControl>
+      <Box
+        sx={{
+          backgroundColor: "background.default",
+          minHeight: "100%",
+          py: 8,
+        }}
+      >
+        <Typography variant="h6">
+          Show Gaussian of Categorical Timeseries
+        </Typography>
+        <FormControl component="fieldset" variant="standard">
+          <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
+            Select region
+          </InputLabel>
+          <Select
+            sx={{ m: 1, width: 300, mt: 0 }}
+            id="select-region-label"
+            displayEmpty
+            onChange={handleSelectRegion}
+            value={region}
+            input={<OutlinedInput label="Select region" />}
+          >
+            {regions?.map((d) => (
+              <MenuItem key={d} value={d}>
+                {d}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <svg
+            ref={ctsChartRef}
+            style={{
+              width: `${WIDTH}px`,
+              height: `${HEIGHT}px`,
+              border: "1px solid",
+            }}
+          ></svg>
+        </FormControl>
+      </Box>
     </>
   );
 };

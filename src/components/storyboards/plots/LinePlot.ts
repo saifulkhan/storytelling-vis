@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { Plot, PlotProperties } from "./Plot";
+import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { Action, Coordinate } from "../actions/Action";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import {
@@ -10,7 +10,6 @@ import {
 import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
 import { HorizontalAlign } from "../../../types/Align";
 
-const MARGIN = { top: 50, right: 40, bottom: 50, left: 60 };
 const ID_AXIS_SELECTION = "#id-axes-selection",
   YAXIS_LABEL_OFFSET = 12,
   MAGIC_NO = 10,
@@ -21,7 +20,7 @@ const ID_AXIS_SELECTION = "#id-axes-selection",
 const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
-export type LineProperties = {
+export type LineProps = {
   stroke: string;
   strokeWidth?: number;
   showPoints?: boolean;
@@ -29,51 +28,39 @@ export type LineProperties = {
 };
 
 export class LinePlot extends Plot {
-  _data: TimeseriesData[][];
-  _lineProperties: LineProperties[] = [];
-  _plotProperties: PlotProperties;
+  data: TimeseriesData[][];
+  lineProps: LineProps[] = [];
+  plotProps: PlotProps;
 
   svg: SVGSVGElement;
-  _selector;
-  _width: number;
-  _height: number;
-  _margin: { top: number; right: number; bottom: number; left: number } =
-    MARGIN;
+  selector;
+  width: number;
+  height: number;
+  margin: any;
 
-  _xAxis: unknown;
-  _leftAxis: unknown;
-  _rightAxis: unknown;
+  xAxis: unknown;
+  leftAxis: unknown;
+  rightAxis: unknown;
 
-  _lineGenerator1;
-  _lineGeneratorN;
-
-  _actions: any;
-  _name = "";
+  actions: any;
+  name = "";
 
   constructor() {
     super();
   }
 
-  public plotProperties(p: PlotProperties) {
-    this._plotProperties = {
-      ...p,
-      title: p.title || "title...",
-      ticks: p.ticks || true,
-      xLabel: p.xLabel || "x axis label...",
-      rightAxisLabel: p.rightAxisLabel || "right axis label...",
-      leftAxisLabel: p.leftAxisLabel || "left axis label...",
-    };
-
+  public setPlotProps(props: PlotProps) {
+    this.plotProps = { ...defaultPlotProps, ...props };
     return this;
   }
 
-  public lineProperties(p: LineProperties[] = []) {
-    if (!this._data) {
+  public setLineProps(p: LineProps[] = []) {
+    if (!this.data) {
       throw new Error("LinePlot: Can not set line properties before data!");
     }
 
-    this._data.forEach((_, i: number) => {
-      this._lineProperties.push({
+    this.data.forEach((_, i: number) => {
+      this.lineProps.push({
         stroke: p[i]?.stroke || LINE_STROKE,
         strokeWidth: p[i]?.strokeWidth || LINE_STROKE_WIDTH,
         onRightAxis:
@@ -83,32 +70,34 @@ export class LinePlot extends Plot {
       });
     });
 
-    console.log("LinePlot: _lineProperties = ", this._lineProperties);
+    console.log("LinePlot: lineProps = ", this.lineProps);
 
     return this;
   }
 
   public setData(data: TimeseriesData[][]) {
-    this._data = data;
-    console.log("LinePlot: data = ", this._data);
+    this.data = data;
+    console.log("LinePlot: data = ", this.data);
     return this;
   }
 
   public setName(name: string) {
-    this._name = name;
+    this.name = name;
     return this;
   }
 
-  public setSvg(svg: SVGSVGElement) {
+  public setCanvas(svg: SVGSVGElement) {
     this.svg = svg;
     // clean
     d3.select(this.svg).selectAll("*").remove();
     const bounds = svg.getBoundingClientRect();
-    this._height = bounds.height;
-    this._width = bounds.width;
-    console.log("LinePlot:svg: bounds: ", bounds);
+    this.height = bounds.height;
+    this.width = bounds.width;
+    this.margin = this.plotProps.margin;
 
-    this._selector = d3
+    console.log("LinePlot:setCanvas: bounds: ", bounds);
+
+    this.selector = d3
       .select(this.svg)
       .append("g")
       .attr("id", ID_AXIS_SELECTION);
@@ -121,8 +110,8 @@ export class LinePlot extends Plot {
   /**
    ** Draw all lines (no animation)
    **/
-  public _draw() {
-    console.log("LinePlot:_draw: _data: ", this._data);
+  public draw() {
+    console.log("LinePlot:_draw: _data: ", this.data);
     const line = (xAxis, yAxis) => {
       return d3
         .line()
@@ -139,28 +128,28 @@ export class LinePlot extends Plot {
     };
 
     // draw line and dots
-    this._data?.forEach((data: TimeseriesData[], i: number) => {
-      const p = this._lineProperties[i];
+    this.data?.forEach((dataX: TimeseriesData[], i: number) => {
+      const p = this.lineProps[i];
       const yAxis = this.leftOrRightAxis(i);
 
-      console.log("LinePlot:_draw: data:", data);
+      console.log("LinePlot:_draw: data:", dataX);
       // draw line
-      this._selector
+      this.selector
         .append("path")
         .attr("stroke", p.stroke)
         .attr("stroke-width", p.strokeWidth)
         .attr("fill", "none")
-        .attr("d", line(this._xAxis, yAxis)(data));
+        .attr("d", line(this.xAxis, yAxis)(dataX));
 
       if (p.showPoints) {
         // draw dots
-        this._selector
+        this.selector
           .append("g")
           .selectAll("circle")
-          .data(data.map(Object.values))
+          .data(dataX.map(Object.values))
           .join("circle")
           .attr("r", DOT_SIZE)
-          .attr("cx", (d) => this._xAxis(d[0]))
+          .attr("cx", (d) => this.xAxis(d[0]))
           .attr("cy", (d) => yAxis(d[1]))
           .style("fill", p.stroke)
           .attr("opacity", 0.5);
@@ -171,31 +160,25 @@ export class LinePlot extends Plot {
   }
 
   /**
-   ** Animate & draw a line
+   ** Set the list of actions to be animated
    **/
-
   public setActions(actions: DateActionArray = []) {
-    this._actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
+    this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     return this;
   }
 
-  public draw() {
-    if (!this._actions || !this._actions.length) {
-      // draw static
-      this._draw();
-      return this;
-    }
-
-    this.animate(0);
-    return this;
-  }
+  // if (!this._actions || !this._actions.length) {
+  //   // draw static
+  //   this._draw();
+  //   return this;
+  // }
 
   private animate(lineIndex: number = 0) {
     let start = 0;
 
     (async () => {
-      for (let [date, action] of this._actions) {
-        const idx = findIndexOfDate(this._data[lineIndex], date);
+      for (let [date, action] of this.actions) {
+        const idx = findIndexOfDate(this.data[lineIndex], date);
         console.log("action = ", action);
         // update actions coord, text etc.
         action
@@ -203,8 +186,8 @@ export class LinePlot extends Plot {
           .extraProperties({
             align: this.alignLeftOrRight(date),
             date: date.toLocaleDateString(),
-            name: this._name,
-            value: this._data[lineIndex][idx].y,
+            name: this.name,
+            value: this.data[lineIndex][idx].y,
           })
           .draw()
           .coordinate(...this.getCoordinates(date.lineIndex));
@@ -223,8 +206,8 @@ export class LinePlot extends Plot {
     // console.log(`LinePlot: lineIndex = ${lineIndex}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineIndex]);
 
-    const data = this._data[lineIndex].slice(start, stop + 1);
-    const p = this._lineProperties[lineIndex];
+    const dataX = this.data[lineIndex].slice(start, stop + 1);
+    const p = this.lineProps[lineIndex];
     const yAxis = this.leftOrRightAxis(lineIndex);
 
     const line = (xAxis, yAxis) => {
@@ -235,12 +218,12 @@ export class LinePlot extends Plot {
     };
 
     // create a path with the data
-    const path = this._selector
+    const path = this.selector
       .append("path")
       .attr("stroke", p.stroke)
       .attr("stroke-width", p.strokeWidth)
       .attr("fill", "none")
-      .attr("d", line(this._xAxis, yAxis)(data));
+      .attr("d", line(this.xAxis, yAxis)(dataX));
 
     const length = path.node().getTotalLength();
     const duration = 1000 || length * 4;
@@ -277,8 +260,8 @@ export class LinePlot extends Plot {
     let dataOnLeft: TimeseriesData[] = [];
     let dataOnRight: TimeseriesData[] = [];
 
-    this._data.forEach((d: TimeseriesData[], i: number) => {
-      if (this._lineProperties[i].onRightAxis) {
+    this.data.forEach((d: TimeseriesData[], i: number) => {
+      if (this.lineProps[i].onRightAxis) {
         dataOnRight = dataOnRight.concat(d);
       } else {
         dataOnLeft = dataOnLeft.concat(d);
@@ -288,86 +271,86 @@ export class LinePlot extends Plot {
     console.log("LinePlot: dataOnLeft = ", dataOnLeft);
     console.log("LinePlot: dataOnRight = ", dataOnRight);
 
-    this._xAxis = this.xScale(
+    this.xAxis = this.xScale(
       dataOnLeft.concat(dataOnRight),
-      this._width,
-      this._margin
+      this.width,
+      this.margin
     );
-    this._leftAxis = this.yScale(dataOnLeft, this._height, this._margin);
-    this._rightAxis = this.yScale(dataOnRight, this._height, this._margin);
+    this.leftAxis = this.yScale(dataOnLeft, this.height, this.margin);
+    this.rightAxis = this.yScale(dataOnRight, this.height, this.margin);
 
     // draw x axis on bottom
-    this._selector
+    this.selector
       .append("g")
-      .attr("transform", `translate(0, ${this._height - this._margin.bottom})`)
-      .call(d3.axisBottom(this._xAxis).ticks());
+      .attr("transform", `translate(0, ${this.height - this.margin.bottom})`)
+      .call(d3.axisBottom(this.xAxis).ticks());
 
     // draw x axis label on bottom
-    this._selector
+    this.selector
       .append("text")
       .attr("fill", "currentColor")
       .attr("text-anchor", "start")
-      .attr("x", this._width / 2)
-      .attr("y", this._height - 5)
-      .text(`${this._plotProperties.xLabel}→`);
+      .attr("x", this.width / 2)
+      .attr("y", this.height - 5)
+      .text(`${this.plotProps.xLabel}→`);
 
     // draw left axis and label
     if (dataOnLeft.length) {
-      this._selector
+      this.selector
         .append("g")
-        .attr("transform", `translate(${this._margin.left}, 0)`)
+        .attr("transform", `translate(${this.margin.left}, 0)`)
         .call(
-          d3.axisLeft(this._leftAxis)
+          d3.axisLeft(this.leftAxis)
           // .tickFormat((d) => {
           //   let prefix = d3.formatPrefix(".00", d);
           //   return prefix(d);
           // })
         );
 
-      this._selector
+      this.selector
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
-        .attr("x", -this._height / 2)
+        .attr("x", -this.height / 2)
         .attr("y", YAXIS_LABEL_OFFSET)
-        .text(`${this._plotProperties.leftAxisLabel}→`);
+        .text(`${this.plotProps.leftAxisLabel}→`);
     }
 
     // draw right axis and label
     if (dataOnRight.length) {
-      this._selector
+      this.selector
         .append("g")
-        .attr("transform", `translate(${this._width - this._margin.right},0)`)
+        .attr("transform", `translate(${this.width - this.margin.right},0)`)
         .call(
-          d3.axisRight(this._rightAxis)
+          d3.axisRight(this.rightAxis)
           // .tickFormat((d) => {
           //   let prefix = d3.formatPrefix(".0", d);
           //   return prefix(d);
           // })
         );
 
-      this._selector
+      this.selector
         .append("text")
         .attr("transform", "rotate(90)")
-        .attr("x", this._height / 2)
-        .attr("y", -this._width + YAXIS_LABEL_OFFSET)
+        .attr("x", this.height / 2)
+        .attr("y", -this.width + YAXIS_LABEL_OFFSET)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
-        .text(`←${this._plotProperties.rightAxisLabel}`);
+        .text(`←${this.plotProps.rightAxisLabel}`);
     }
 
     // draw plot title
-    this._selector
+    this.selector
       .append("text")
       .attr("fill", "currentColor")
       .style("fill", "#696969")
       .attr("text-anchor", "start")
       .attr("font-weight", "bold")
       .style("font-size", TITLE_FONT_SIZE)
-      .attr("x", this._width / 2)
-      .attr("y", this._margin.top + MAGIC_NO)
-      .text(this._plotProperties.title);
+      .attr("x", this.width / 2)
+      .attr("y", this.margin.top + MAGIC_NO)
+      .text(this.plotProps.title);
 
     return this;
   }
@@ -401,24 +384,24 @@ export class LinePlot extends Plot {
     date: Date,
     lineIndex: number = 0
   ): [Coordinate, Coordinate] {
-    const data = this._data[lineIndex];
-    const index = findDateIdx(date, data);
+    const dataX = this.data[lineIndex];
+    const index = findDateIdx(date, dataX);
     const yAxis = this.leftOrRightAxis(lineIndex);
 
     return [
-      [this._xAxis(data[index].date), yAxis(0)],
-      [this._xAxis(data[index].date), yAxis(data[index].y)],
+      [this.xAxis(dataX[index].date), yAxis(0)],
+      [this.xAxis(dataX[index].date), yAxis(dataX[index].y)],
     ];
   }
 
   private leftOrRightAxis(lineIndex: number) {
-    const properties = this._lineProperties[lineIndex];
-    return properties.onRightAxis ? this._rightAxis : this._leftAxis;
+    const properties = this.lineProps[lineIndex];
+    return properties.onRightAxis ? this.rightAxis : this.leftAxis;
   }
 
   private alignLeftOrRight(date: Date): HorizontalAlign {
-    const x = this._xAxis(date);
-    const xMid = (this._xAxis.range()[0] + this._xAxis.range()[1]) / 2;
+    const x = this.xAxis(date);
+    const xMid = (this.xAxis.range()[0] + this.xAxis.range()[1]) / 2;
     return x >= xMid ? "left" : "right";
   }
 }

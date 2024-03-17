@@ -10,7 +10,7 @@ import { Connector } from "../../../components/storyboards/actions/Connector";
 import { Circle } from "../../../components/storyboards/actions/Circle";
 import { ActionGroup } from "../../../components/storyboards/actions/ActionGroup";
 
-const TestActions = () => {
+const TestActionsPage = () => {
   const chartRef = useRef(null);
 
   const margin = { top: 20, right: 30, bottom: 40, left: 50 };
@@ -130,4 +130,4 @@ const TestActions = () => {
   );
 };
 
-export default TestActions;
+export default TestActionsPage;

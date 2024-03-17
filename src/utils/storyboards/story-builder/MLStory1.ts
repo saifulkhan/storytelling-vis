@@ -83,7 +83,7 @@ export class MLStory1 extends StoryBuilder {
     let plot = new ParallelCoordinatePlot()
       .name(this._name)
       .setData(data)
-      .setSvg(this._svg)
+      .setCanvas(this._svg)
       .actions(actions)
       .draw();
 

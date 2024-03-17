@@ -26,7 +26,7 @@ import { Peak } from "../../../utils/storyboards/feature/Peak";
 import { sliceTimeseriesByDate } from "../../../utils/storyboards/data-processing/common";
 import {
   LinePlot,
-  LineProperties,
+  LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import {
   combinedBounds,
@@ -114,31 +114,31 @@ const TestGaussianCombinedPage = () => {
 
     const plot = new LinePlot()
       .setData(ctsBoundGauss)
-      .plotProperties({
+      .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
         rightAxisLabel: "Rank",
       })
-      .lineProperties(
+      .setLineProps(
         ctsBoundGauss.map((d, i) => {
           if (i === 0) {
             return {
               stroke: "#D3D3D3",
               strokeWidth: 2,
               showPoints: false,
-            } as LineProperties;
+            } as LineProps;
           } else {
             return {
               stroke: schemeCategory10[i - 1],
               strokeWidth: 2,
               onRightAxis: true,
               showPoints: false,
-            } as LineProperties;
+            } as LineProps;
           }
         })
       )
-      .setSvg(chartRef.current)
+      .setCanvas(chartRef.current)
       .draw();
 
     //
@@ -156,7 +156,6 @@ const TestGaussianCombinedPage = () => {
       new Dot()
         .setProps({ color: i < segment - 1 ? "LightCoral" : "grey" })
         .setCanvas(chartRef.current)
-        .draw()
         .setCoordinate(plot.getCoordinates(d.getDate(), 3))
         .show();
     });
