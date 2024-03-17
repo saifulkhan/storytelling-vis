@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as d3 from "d3";
-import {
-  schemeTableau10,
-  schemeCategory10,
-  interpolateBuGn,
-} from "d3-scale-chromatic";
 import {
   Box,
-  Divider,
   FormControl,
   FormGroup,
   InputLabel,
@@ -19,11 +12,8 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { covid19data } from "../../../services/covid19-data";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
-import { Peak } from "../../../utils/storyboards/feature/Peak";
-import { sliceTimeseriesByDate } from "../../../utils/storyboards/data-processing/common";
 import {
   LinePlot,
   LineProps,
@@ -34,11 +24,11 @@ import {
   peakSegment,
   semanticBounds,
   semanticGaussians,
-  smoothing,
 } from "../../../utils/storyboards/data-processing/gaussian";
-import { categoricalTable } from "./cts";
 import { Dot } from "../../../components/storyboards/actions/Dot";
+import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
 import { Circle } from "../../../components/storyboards/actions/Circle";
+import { covid19CategoricalTable1, covid19Data } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -59,11 +49,11 @@ const TestGaussianCombinedPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19data();
+        const data = await covid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
 
-        const fetures = await categoricalTable();
+        const fetures = await covid19CategoricalTable1();
         setCategoricalFeatures(fetures);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -130,7 +120,7 @@ const TestGaussianCombinedPage = () => {
             } as LineProps;
           } else {
             return {
-              stroke: schemeCategory10[i - 1],
+              stroke: getSchemeTableau10(i - 1),
               strokeWidth: 2,
               onRightAxis: true,
               showPoints: false,
@@ -153,8 +143,12 @@ const TestGaussianCombinedPage = () => {
     // console.log("peaks1:", peaks1);
 
     peaks.forEach((d, i) => {
-      new Dot()
-        .setProps({ color: i < segment - 1 ? "LightCoral" : "grey" })
+      new Circle()
+        .setProps({
+          strokeWidth: 3,
+          size: 8,
+          color: i < segment - 1 ? "#00FF00" : "grey",
+        })
         .setCanvas(chartRef.current)
         .setCoordinate(plot.getCoordinates(d.getDate(), 3))
         .show();
@@ -187,7 +181,7 @@ const TestGaussianCombinedPage = () => {
 
       <Box
         sx={{
-          backgroundColor: "background.default",
+          // backgroundColor: "background.default",
           minHeight: "100%",
           py: 8,
         }}

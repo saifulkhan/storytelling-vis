@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as d3 from "d3";
-import {
-  schemeTableau10,
-  schemeCategory10,
-  interpolateBuGn,
-} from "d3-scale-chromatic";
 import {
   Box,
-  Divider,
   FormControl,
   InputLabel,
   MenuItem,
@@ -18,15 +11,14 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { covid19data } from "../../../services/covid19-data";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import {
   LinePlot,
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { semanticGaussians } from "../../../utils/storyboards/data-processing/gaussian";
-import { categoricalTable, cts } from "./cts";
 import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
+import { covid19CategoricalTable1, covid19Data } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -47,11 +39,11 @@ const ExampleGaussianPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19data();
+        const data = await covid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
 
-        const fetures = await categoricalTable();
+        const fetures = await covid19CategoricalTable1();
         setCategoricalFeatures(fetures);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -121,7 +113,7 @@ const ExampleGaussianPage = () => {
 
       <Box
         sx={{
-          backgroundColor: "background.default",
+          // backgroundColor: "background.default",
           minHeight: "100%",
           py: 8,
         }}

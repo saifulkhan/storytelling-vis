@@ -40,7 +40,14 @@ Detection & feature creation:
 TODO
 ```
 
+Examples visualization of feature detection:
+
 - <http://localhost:3000/storyboards/examples/test-features>
+
+#### Gaussian
+
+Examples visualization of numerical and categorical time series and gaussian mixture:
+
 - <http://localhost:3000/storyboards/examples/test-gaussian-nts>
 - <http://localhost:3000/storyboards/examples/test-gaussian-cts>
 - <http://localhost:3000/storyboards/examples/test-gaussian-combined>
@@ -80,6 +87,13 @@ await textBox.move(Coordinate, delay, duration);
 
 We implemented and tested various actions in `src/pages/storyboards/examples/test-actions.tsx` page and can be seen in action <http://localhost:3000/storyboards/examples/test-actions>
 
+Action Group
+
+```ts
+TODO
+
+```
+
 Please see the contents of `src/components/storyboards/actions` for details or implementing various different actions.
 
 ### Plots
@@ -90,9 +104,10 @@ For example, to create line plot:
 
 ```ts
 const plot = new LinePlot()
-                .setData(TimeseriesData)
+                .setData([TimeseriesData])
                 .setName(name or key)
                 .setPlotProps(PlotProps)
+                .setLineProps([])
                 .setCanvas(SVGGElement)
                 .draw()
 
@@ -109,11 +124,15 @@ plot.setActions()
 
 ### Feature Action Table
 
+### Numerical Feature Action
+
 - <http://localhost:3000/storyboards/examples/test-properties-table>
 - <http://localhost:3000/storyboards/examples/test-action-table>
 - <http://localhost:3000/storyboards/examples/test-feature-action-table>
 - <http://localhost:3000/storyboards/examples/test-feature-action-table-1>
 - <http://localhost:3000/storyboards/examples/test-feature-action-table>
+
+### Categorical Feature Action
 
 ### Build Story
 
@@ -140,6 +159,6 @@ Please cite our paper as follows:
 }
 ```
 
-- The initial Observable prototypes can be found in [observablehq](https://observablehq.com/d/0a6e9c35a809660e).
-- Second version of prototype ported from Observable to React.js can be found in [GitHub](https://github.com/saifulkhan/storytelling-vis-v.0.1). This prototype contains six stories, and only two stories are ported to this new software.
+- The first version of the prototype was done in  Observable notebook and can be found in [observablehq](https://observablehq.com/d/0a6e9c35a809660e).
+- Second version of prototype ported from Observable notebook to React.js can be found in [GitHub](https://github.com/saifulkhan/storytelling-vis-v.0.1). These prototypes contain six stories, however only two stories are ported to this new software.
 - Used [React.js](https://react.dev), [Next.js](https://github.com/vercel/next.js), [MUI](https://mui.com) libraries for the UI development.

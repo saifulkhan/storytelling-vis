@@ -22,7 +22,7 @@ import {
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { Dot } from "../../../components/storyboards/actions/Dot";
-import { covid19data } from "../../../services/covid19-data";
+import { covid19Data } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -40,7 +40,7 @@ const FeaturesPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19data();
+        const data = await covid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
       } catch (error) {
@@ -117,7 +117,6 @@ const FeaturesPage = () => {
 
       <Box
         sx={{
-          backgroundColor: "background.default",
           minHeight: "100%",
           py: 8,
         }}

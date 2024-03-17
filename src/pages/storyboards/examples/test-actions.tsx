@@ -22,13 +22,6 @@ const TestActionsPage = () => {
     let ignore = false;
 
     if (!ignore) {
-      d3.select(chartRef.current)
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .node();
-
       const src: Coordinate = [400, 300];
       const dst: Coordinate = [400, 200];
       const dst1: Coordinate = [400, 150];
