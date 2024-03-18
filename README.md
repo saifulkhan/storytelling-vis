@@ -150,16 +150,27 @@ Nested tables, each tables components are implemented separate React component.
 
 ### Categorical Feature Action
 
-## Build Story
+## Workflow Setup
 
 Page -> builder ->
 
 Create workflow of a story:
 
 ```ts
-const workflow = new ...Workflow()
-                    .selector(id)
-                    .create(key);
+new Covid19SLWorkflow()
+    .setName(region)
+    .setData(regionData)
+    .setNFATable(tableNFA)
+    .setCanvas(chartRef.current)
+    .setup();
+```
+
+```ts
+const actions = new FeatureActionBuilder()
+    .setProps({ metric: METRIC, window: WINDOW })
+    .setData(this.data)
+    .setTable(this.table)
+    .build();
 ```
 
 Covid19 story with single time series: <http://localhost:3000/storyboards/covid19-story-1>

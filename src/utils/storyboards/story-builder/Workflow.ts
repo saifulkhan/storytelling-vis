@@ -12,9 +12,9 @@ export abstract class Workflow {
 
   constructor() {}
   public abstract setData(data: TimeseriesData[] | MLTimeseriesData[]): void;
-  public abstract setTableNFA(table: FeatureActionTableRow[]): this;
-  // TODO: CFA
+  public abstract setNFATable(table: FeatureActionTableRow[]): this;
+  public abstract setCFATable(table: any[]): this;
   public abstract setName(name: string): this;
   public abstract setCanvas(svg: SVGGElement): this;
-  public abstract build(): this;
+  public abstract setup(): this;
 }

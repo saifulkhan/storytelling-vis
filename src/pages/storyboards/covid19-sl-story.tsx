@@ -28,8 +28,9 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { Covid19SLWorkflow } from "../../utils/storyboards/story-builder/Covid19SLStoryBuilder";
-import { covid19Data1, covid19NumericalTable1 } from "../../services/data";
+import { Covid19SLWorkflow } from "../../utils/storyboards/story-builder/Covid19SLWorkflow";
+import { covid19Data, covid19SLNFATable } from "../../services/data";
+import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
@@ -42,14 +43,15 @@ const Covid19SLStoryPage = () => {
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>(null);
-  const [allRegionData, setAllRegionData] = useState<Record<string, any>>({});
-  const [data, setData] = useState<any>(null); // Explicitly use null for uninitialized state
+  const [regionsData, setRegionsData] = useState<
+    Record<string, TimeseriesData[]>
+  >({});
   const [tableNFA, setTableNFA] = useState<any>(null);
 
   // slider formatted value
   const valuetext = (value) => `${value}`;
 
-  const storyBuilder = new Covid19SLWorkflow();
+  const workflow = new Covid19SLWorkflow();
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -58,11 +60,11 @@ const Covid19SLStoryPage = () => {
 
     const fetchData = async () => {
       try {
-        const allData = await covid19Data1();
-        setAllRegionData(allData);
+        const allData = await covid19Data();
+        setRegionsData(allData);
         setRegions(Object.keys(allData).sort());
         setRegion("Aberdeenshire");
-        const table = await covid19NumericalTable1();
+        const table = await covid19SLNFATable();
         setTableNFA(table);
 
         console.log("useEffect 1: allRegionData: ", allData);
@@ -77,24 +79,23 @@ const Covid19SLStoryPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!region || !allRegionData[region] || !chartRef.current) return;
+    if (!region || !regionsData[region] || !chartRef.current) return;
 
-    const regionData = allRegionData[region];
-    setData(regionData);
+    const regionData = regionsData[region];
 
     console.log("useEffect 2: region: ", region);
     console.log("useEffect 2: regionData: ", regionData);
     console.log("useEffect 2: tableNFA: ", regionData);
 
-    storyBuilder
+    workflow
       .setName(region)
       .setData(regionData)
-      .setTableNFA(tableNFA)
+      .setNFATable(tableNFA)
       .setCanvas(chartRef.current)
-      .build();
+      .setup();
 
     return () => {};
-  }, [region, allRegionData, tableNFA]);
+  }, [region, regionsData, tableNFA]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;

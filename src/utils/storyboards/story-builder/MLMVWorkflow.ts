@@ -1,16 +1,17 @@
 /**
- ** Implements machine learning multivariate story workflow
+ ** Implements machine learning multivariate story (MLMV) workflow
  **/
 
 import * as d3 from "d3";
 import { Workflow } from "./Workflow";
-import { readCSV } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
+import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
+import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
 
-const FILE = "/static/storyboards/ml/data.csv";
-const NAMES = ["channels", "kernel_size", "layers", "samples_per_class"];
+const WINDOW = 3;
+const METRIC = "accuracy";
 
 export class MLMVWorkflow extends Workflow {
   protected data: MLTimeseriesData[] = [];
@@ -20,74 +21,47 @@ export class MLMVWorkflow extends Workflow {
     super();
   }
 
-  protected async setData() {
-    const csv: any[] = await readCSV(FILE);
-    // prettier-ignore
-    // console.log("MLMVWorkflow:load: FILE = ", FILE, ", csv = ", csv);
-
-    // convert string to number and date
-    csv.forEach((row) => {
-      this.data.push({
-        "date" :new Date(row.date),
-        "mean_test_accuracy" : +row.mean_test_accuracy,
-        "mean_training_accuracy" : +row.mean_training_accuracy,
-        "channels" : +row.channels,
-        "kernel_size" : +row.kernel_size,
-        "layers" : +row.layers,
-        "samples_per_class" : +row.samples_per_class,  
-      });
-    });
-
-    // prettier-ignore
-    console.log("MLMVWorkflow: loadData: _data = ", this.data);
+  private setData(data: MLTimeseriesData[]) {
+    this.data = data;
+    return this;
   }
 
-  getNames(): string[] {
-    return NAMES;
+  public setNFATable(table: FeatureActionTableRow[]) {
+    this.table = table;
+    return this;
   }
 
-  setName(name: string): this {
+  public setName(name: string): this {
     this.name = name;
     return this;
   }
 
-  public setCanvas(id: string) {
-    this.svg = d3
-      .select(id)
-      .append("svg")
-      .attr("width", 1200)
-      .attr("height", 600)
-      .node();
-
-    console.log("MLMVWorkflow:selector: _svg = ", this.svg);
+  public setCanvas(svg: SVGGElement) {
+    this.svg = svg;
+    console.log("MLMVWorkflow:setCanvas: svg = ", this.svg);
     return this;
   }
 
-  public build() {
+  public setup() {
     // sort data by selected key, e.g, "kernel_size"
     let data = this.data
       .slice()
       .sort((a, b) => d3.ascending(a[this.name], b[this.name]))
       .sort((a, b) => d3.ascending(a["date"], b["date"]));
 
-    // console.log("After sorting, data = ", data);
-    // prettier-ignore
-    // console.log("globalMin = ", globalMin, ", globalMax = ", globalMax);
+    // const actions: DateActionArray = new FeatureActionBuilder()
+    //   .setProps({ metric: METRIC, window: WINDOW })
+    //   .setData(this.data)
+    //   .setTable(this.table)
+    //   .build();
 
-    const actions: DateActionArray = new FeatureActionBuilder()
-      .setProps({ metric: "accuracy" })
-      .setTable(ML_STORY_1)
-      .setData(this.data)
-      .setName(this.name)
-      .build();
+    // console.log("MLMVWorkflow:setup: actions: ", actions);
 
-    console.log("MLMVWorkflow: actions = ", actions);
-
-    let plot = new ParallelCoordinatePlot()
+    new ParallelCoordinatePlot()
       .name(this.name)
       .setData(data)
       .setCanvas(this.svg)
-      .actions(actions)
+      // .actions(actions)
       .draw();
 
     return this;

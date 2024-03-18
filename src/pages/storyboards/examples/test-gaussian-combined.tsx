@@ -28,7 +28,7 @@ import {
 import { Dot } from "../../../components/storyboards/actions/Dot";
 import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
 import { Circle } from "../../../components/storyboards/actions/Circle";
-import { covid19CategoricalTable1, covid19Data1 } from "../../../services/data";
+import { covid19SLCFATable, covid19Data } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -48,11 +48,11 @@ const TestGaussianCombinedPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data1();
+        const data = await covid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
 
-        const fetures = await covid19CategoricalTable1();
+        const fetures = await covid19SLCFATable();
         setCategoricalFeatures(fetures);
       } catch (error) {
         console.error("Failed to fetch data:", error);

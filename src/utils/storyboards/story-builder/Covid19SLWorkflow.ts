@@ -23,7 +23,7 @@ export class Covid19SLWorkflow extends Workflow {
     return this;
   }
 
-  public setTableNFA(table: FeatureActionTableRow[]) {
+  public setNFATable(table: FeatureActionTableRow[]) {
     this.table = table;
     return this;
   }
@@ -35,17 +35,13 @@ export class Covid19SLWorkflow extends Workflow {
 
   public setCanvas(svg: SVGGElement) {
     this.svg = svg;
-    console.log("Covid19SLWorkflow:selector: _svg = ", this.svg);
+    console.log("Covid19SLWorkflow:setCanvas: svg = ", this.svg);
     return this;
   }
 
-  public build() {
-    if (!this.name) {
-      console.error("Covid19SLWorkflow:build: name is undefined!");
-      return this;
-    }
-    console.log("Covid19SLWorkflow:build: data:", this.data);
-    console.log("Covid19SLWorkflow:build: table:", this.table);
+  public setup() {
+    console.log("Covid19SLWorkflow:setup: data:", this.data);
+    console.log("Covid19SLWorkflow:setup: table:", this.table);
 
     // this.nts = gmm(this.data, "Cases/day", WINDOW);
     // this.cts = cts();
@@ -61,9 +57,9 @@ export class Covid19SLWorkflow extends Workflow {
       .setData(this.data)
       .build();
 
-    console.log("Covid19SLWorkflow:build: actions = ", actions);
+    console.log("Covid19SLWorkflow:setup: actions: ", actions);
 
-    const plot = new LinePlot()
+    new LinePlot()
       .setData([this.data])
       .setName(this.name)
       .setPlotProps({})

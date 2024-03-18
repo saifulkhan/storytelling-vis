@@ -1,5 +1,5 @@
 /**
- ** Implements machine learning multivariate story
+ ** Implements machine learning multivariate (MLMV) story
  **/
 
 import { useEffect, useState, useRef } from "react";
@@ -28,21 +28,23 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
+import { MLMVWorkflow } from "../../utils/storyboards/story-builder/MLMVWorkflow";
+import { mLData, mLMVNFATable } from "../../services/data";
+import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,
-    HEIGHT = 500;
+    HEIGHT = 800;
+  const KEYS = ["channels", "kernel_size", "layers", "samples_per_class"];
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(null);
-  const [segment, setSegment] = useState<number>(3);
-  const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>(null);
-  const [allRegionData, setAllRegionData] = useState<Record<string, any>>({});
-  const [data, setData] = useState<any>(null); // Explicitly use null for uninitialized state
-  const [tableNFA, setTableNFA] = useState<any>(null);
+  const [keys, setKeys] = useState<string[]>([]);
+  const [key, setKey] = useState<string>(null);
+  const [data, setData] = useState<MLTimeseriesData[]>(null);
+  const [nFATable, setNFATable] = useState<any>(null);
 
-  const storyBuilder = new MLStory1Builder();
+  const workflow = new MLMVWorkflow();
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -50,14 +52,13 @@ const MLMVStoryPage = () => {
 
     const fetchData = async () => {
       try {
-        const allData = await covid19Data1();
-        setAllRegionData(allData);
-        setRegions(Object.keys(allData).sort());
-        setRegion("Aberdeenshire");
-        const table = await covid19NumericalTable1();
-        setTableNFA(table);
+        const data = await mLData();
+        setData(data);
+        setKeys(KEYS);
+        const table = await mLMVNFATable();
+        setNFATable(table);
 
-        console.log("useEffect 1: allRegionData: ", allData);
+        console.log("MLMVStoryPage: useEffect 1: data: ", data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -67,58 +68,37 @@ const MLMVStoryPage = () => {
 
     fetchData();
 
-    return () => {
-      ignore = true;
-    };
+    return () => {};
   }, []);
 
-  const handleChangeSlider = (event) => {
-    const selectedSegment = event.target.value;
-    console.log("MLMultivariateStory: selectedSegment = ", selectedSegment);
-    if (selectedSegment && selectedSegment !== segment) {
-      // setSegment(selectedSegment);
-      // segmentData(selectedSegment);
-      setSegment(1);
-      // segmentData(1);
-    }
-  };
+  useEffect(() => {
+    if (!key || !data || !chartRef.current) return;
+
+    console.log("useEffect 2: key: ", key);
+    console.log("useEffect 2: data: ", data);
+
+    workflow
+      .setName(key)
+      .setData(data)
+      .setNFATable(nFATable)
+      .setCanvas(chartRef.current)
+      .setup();
+
+    return () => {};
+  }, [key]);
 
   const handleSelection = (event: SelectChangeEvent) => {
-    const selectedName = event.target.value;
-    // prettier-ignore
-    console.log("MLMultivariateStory:handleSelection: selectedRegion = ", selectedName);
-    if (selectedName) {
-      storyBuilder.setName(selectedName).setCanvas("#chartId").build();
-
-      //createTimeSeriesSVG("#chart1");
-      //setRegion(selectedRegion);
-      //setAnimationCounter(0);
+    const newKey = event.target.value;
+    if (newKey) {
+      setKey(newKey);
     }
   };
 
-  const handleBeginningButton = () => {
-    const count = 0;
+  const handleBeginningButton = () => {};
 
-    setAnimationCounter(count);
-    console.log("MLMultivariateStory: animationCounter = ", count);
-    onClickAnimate(count, "#chart1");
-  };
+  const handleBackButton = () => {};
 
-  const handleBackButton = () => {
-    const count = animationCounter - 1;
-    if (count < 0) return;
-
-    setAnimationCounter(count);
-    console.log("MLMultivariateStory: animationCounter = ", count);
-    onClickAnimate(count, "#chart1");
-  };
-
-  const handlePlayButton = () => {
-    const count = animationCounter + 1;
-    setAnimationCounter(count);
-    console.log("MLMultivariateStory: animationCounter = ", count);
-    onClickAnimate(count, "#chart1");
-  };
+  const handlePlayButton = () => {};
 
   return (
     <>
@@ -177,10 +157,10 @@ const MLMVStoryPage = () => {
                         id="select-region-label"
                         displayEmpty
                         onChange={handleSelection}
-                        value={region}
+                        value={key}
                         input={<OutlinedInput label="Select hyperparameter" />}
                       >
-                        {regions.map((d) => (
+                        {keys.map((d) => (
                           <MenuItem key={d} value={d}>
                             {d}
                           </MenuItem>
@@ -191,7 +171,7 @@ const MLMVStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!region}
+                        disabled={!key}
                         onClick={handleBeginningButton}
                         component="span"
                       >
@@ -202,7 +182,7 @@ const MLMVStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!region}
+                        disabled={!key}
                         onClick={handleBackButton}
                         startIcon={<ArrowBackIosIcon />}
                         component="span"
@@ -214,7 +194,7 @@ const MLMVStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!region}
+                        disabled={!key}
                         onClick={handlePlayButton}
                         endIcon={<ArrowForwardIosIcon />}
                         component="span"
@@ -223,7 +203,14 @@ const MLMVStoryPage = () => {
                       </Button>
                     </FormControl>
                   </FormGroup>
-                  <div id="chartId" />
+                  <svg
+                    ref={chartRef}
+                    style={{
+                      width: WIDTH,
+                      height: HEIGHT,
+                      border: "0px solid",
+                    }}
+                  ></svg>
                 </>
               )}
             </CardContent>

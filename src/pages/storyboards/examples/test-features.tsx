@@ -22,7 +22,7 @@ import {
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { Dot } from "../../../components/storyboards/actions/Dot";
-import { covid19Data1 } from "../../../services/data";
+import { covid19Data } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -40,7 +40,7 @@ const FeaturesPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data1();
+        const data = await covid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
         // setRegion("Aberdeenshire");

@@ -5,7 +5,7 @@ import {
   TimeseriesData,
 } from "../utils/storyboards/data-processing/TimeseriesData";
 
-export async function covid19Data1() {
+export async function covid19Data() {
   const FILE =
     "/static/storyboards/covid19/newCasesByPublishDateRollingSum.csv";
 
@@ -36,7 +36,7 @@ export async function covid19Data1() {
   return data;
 }
 
-export async function mlData() {
+export async function mLData() {
   const FILE = "/static/storyboards/ml/data.csv";
 
   const csv: any[] = await readCSV(FILE);
@@ -58,17 +58,17 @@ export async function mlData() {
   return data;
 }
 
-export async function covid19CategoricalTable1() {
+export async function covid19SLCFATable() {
   const FILE = "/static/storyboards/covid19/categorical-table-1.json";
   return await readJSON(FILE);
 }
 
-export async function covid19NumericalTable1() {
+export async function covid19SLNFATable() {
   const FILE = "/static/storyboards/covid19/numerical-table-1.json";
   return await readJSON(FILE);
 }
 
-export async function mlNumericalTable1() {
+export async function mLMVNFATable() {
   const FILE = "/static/storyboards/ml/numerical-table-1.json";
   return await readJSON(FILE);
 }

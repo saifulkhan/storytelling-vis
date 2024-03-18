@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import FeatureActionTable from "../../components/storyboards/tables/FeatureActionTable";
 import { FeatureActionTableRow } from "../../components/storyboards/tables/FeatureActionTableRow";
-import { covid19NumericalTable1 } from "../../services/data";
+import { covid19SLNFATable } from "../../services/data";
 
 const FeatureActionTablesPage = () => {
   const [data, setData] = useState<FeatureActionTableRow[]>();
@@ -10,8 +10,7 @@ const FeatureActionTablesPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const table =
-          (await covid19NumericalTable1()) as FeatureActionTableRow[];
+        const table = (await covid19SLNFATable()) as FeatureActionTableRow[];
         console.log("table: ", table);
         setData(table);
       } catch (e) {
