@@ -39,8 +39,19 @@ Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 Detection & feature creation:
 
 ```ts
-TODO
+new Peak()
+    .setDate(data[idx].date)
+    .setHeight(data[idx].y)
+    .setNormWidth((end - start) / norm.length)
+    .setNormHeight(norm[idx])
+    .setRank(rank)
+    .setMetric(metric)
+    .setStart(data[start].date)
+    .setEnd(data[end].date)
+    .setDataIndex(idx);
 ```
+
+`src/utils/storyboards/feature`
 
 Examples visualization of feature detection:
 
