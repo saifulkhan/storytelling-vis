@@ -60,7 +60,7 @@ export class Dot extends Action {
   }
 
   public updateProps(properties: any): this {
-    throw new Error("Dot: updateProps () is not implemented!");
+    return this;
   }
   public move(
     coordinate: Coordinate,

@@ -8,17 +8,18 @@ import {
   findIndexOfDate,
 } from "../../../utils/storyboards/data-processing/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
-import { HorizontalAlign } from "../../../types/Align";
+import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
-  YAXIS_LABEL_OFFSET = 12,
   MAGIC_NO = 10,
-  TITLE_FONT_SIZE = "14px",
   LINE_STROKE_WIDTH = 1,
   LINE_STROKE = "#2a363b",
-  DOT_SIZE = 2;
-const FONT_FAMILY = "Arial Narrow";
-const FONT_SIZE = "12px";
+  DOT_SIZE = 2,
+  TITLE_FONT_FAMILY = "Arial Narrow",
+  TITLE_FONT_SIZE = "14px",
+  AXIS_FONT_FAMILY = "Arial Narrow",
+  AXIS_FONT_SIZE = "12px",
+  YAXIS_LABEL_OFFSET = 12;
 
 export type LineProps = {
   stroke: string;
@@ -167,30 +168,32 @@ export class LinePlot extends Plot {
     return this;
   }
 
-  // if (!this._actions || !this._actions.length) {
-  //   // draw static
-  //   this._draw();
-  //   return this;
-  // }
+  public animate(lineIndex: number = 0) {
+    // TODO: if no actions
+    // if (!this._actions || !this._actions.length) {
+    //   // draw static
+    //   this._draw();
+    //   return this;
+    // }
 
-  private animate(lineIndex: number = 0) {
     let start = 0;
+    const dataX = this.data[lineIndex];
 
     (async () => {
       for (let [date, action] of this.actions) {
-        const idx = findIndexOfDate(this.data[lineIndex], date);
-        console.log("action = ", action);
+        const idx = findIndexOfDate(dataX, date);
+        console.log("LinePlot:animate: action = ", action);
         // update actions coord, text etc.
         action
-          .svg(this.svg)
-          .extraProperties({
-            align: this.alignLeftOrRight(date),
+          .updateProps({
             date: date.toLocaleDateString(),
             name: this.name,
-            value: this.data[lineIndex][idx].y,
+            value: dataX[idx].y,
+            horizontalAlign: this.getHorizontalAlign(date),
+            verticalAlign: "top" as VerticalAlign,
           })
-          .draw()
-          .coordinate(...this.getCoordinates(date.lineIndex));
+          .setCanvas(this.svg)
+          .setCoordinate(this.getCoordinates(date, lineIndex));
 
         const end = idx;
         await this._animate(start, end, lineIndex);
@@ -292,6 +295,9 @@ export class LinePlot extends Plot {
       .attr("text-anchor", "start")
       .attr("x", this.width / 2)
       .attr("y", this.height - 5)
+      .style("font-size", AXIS_FONT_SIZE)
+      .style("font-family", AXIS_FONT_FAMILY)
+
       .text(`${this.plotProps.xLabel}→`);
 
     // draw left axis and label
@@ -314,6 +320,8 @@ export class LinePlot extends Plot {
         .attr("text-anchor", "start")
         .attr("x", -this.height / 2)
         .attr("y", YAXIS_LABEL_OFFSET)
+        .style("font-size", AXIS_FONT_SIZE)
+        .style("font-family", AXIS_FONT_FAMILY)
         .text(`${this.plotProps.leftAxisLabel}→`);
     }
 
@@ -337,6 +345,8 @@ export class LinePlot extends Plot {
         .attr("y", -this.width + YAXIS_LABEL_OFFSET)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
+        .style("font-size", AXIS_FONT_SIZE)
+        .style("font-family", AXIS_FONT_FAMILY)
         .text(`←${this.plotProps.rightAxisLabel}`);
     }
 
@@ -348,6 +358,7 @@ export class LinePlot extends Plot {
       .attr("text-anchor", "start")
       .attr("font-weight", "bold")
       .style("font-size", TITLE_FONT_SIZE)
+      .style("font-family", TITLE_FONT_FAMILY)
       .attr("x", this.width / 2)
       .attr("y", this.margin.top + MAGIC_NO)
       .text(this.plotProps.title);
@@ -399,7 +410,7 @@ export class LinePlot extends Plot {
     return properties.onRightAxis ? this.rightAxis : this.leftAxis;
   }
 
-  private alignLeftOrRight(date: Date): HorizontalAlign {
+  private getHorizontalAlign(date: Date): HorizontalAlign {
     const x = this.xAxis(date);
     const xMid = (this.xAxis.range()[0] + this.xAxis.range()[1]) / 2;
     return x >= xMid ? "left" : "right";

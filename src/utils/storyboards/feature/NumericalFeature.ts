@@ -3,16 +3,8 @@ import { Feature } from "./Feature";
 export class NumericalFeature extends Feature {
   protected height: number;
 
-  constructor(
-    date: Date,
-    height: number,
-    rank?: number,
-    metric?: string,
-    start?: Date,
-    end?: Date
-  ) {
-    super(date, rank, metric, start, end);
-    this.height = height;
+  constructor() {
+    super();
   }
 
   setHeight(height: number): this {

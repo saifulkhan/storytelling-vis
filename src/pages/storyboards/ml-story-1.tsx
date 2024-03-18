@@ -51,7 +51,7 @@ const MLStory1Page = () => {
     storyBuilder
       .waitForInit()
       .then(() => {
-        const _regions = storyBuilder.names();
+        const _regions = storyBuilder.getNames();
         if (!ignore) setRegions([..._regions]);
         setLoading(false);
       })
@@ -81,7 +81,7 @@ const MLStory1Page = () => {
     // prettier-ignore
     console.log("MLMultivariateStory:handleSelection: selectedRegion = ", selectedName);
     if (selectedName) {
-      storyBuilder.name(selectedName).selector("#chartId").build();
+      storyBuilder.setName(selectedName).setCanvas("#chartId").build();
 
       //createTimeSeriesSVG("#chart1");
       //setRegion(selectedRegion);

@@ -5,7 +5,7 @@ import {
   TimeseriesData,
 } from "../utils/storyboards/data-processing/TimeseriesData";
 
-export async function covid19Data() {
+export async function covid19Data1() {
   const FILE =
     "/static/storyboards/covid19/newCasesByPublishDateRollingSum.csv";
 

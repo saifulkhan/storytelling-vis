@@ -62,7 +62,7 @@ export class Circle extends Action {
   }
 
   public updateProps(properties: any): this {
-    throw new Error("Circle: updateProps () is not implemented!");
+    return this;
   }
   public move(
     coordinate: Coordinate,

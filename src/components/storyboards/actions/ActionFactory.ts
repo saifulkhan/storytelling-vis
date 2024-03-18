@@ -11,27 +11,27 @@ export class ActionFactory {
 
   public create(
     action: Actions,
-    properties: CircleProps | ConnectorProps | DotProps | TextBoxProps
+    props: CircleProps | ConnectorProps | DotProps | TextBoxProps
   ): Action | undefined {
     // prettier-ignore
     // console.log("ActionBuilder:create: action = ", action, ", properties = ", properties);
 
     switch (action) {
       case Actions.DOT:
-        return new Dot().setProps({...properties});
+        return new Dot().setProps({...props});
       case Actions.TEXT_BOX:
-        return new TextBox().setProps({...properties});
+        return new TextBox().setProps({...props});
       case Actions.CIRCLE:
-        return new Circle().setProps({...properties});
+        return new Circle().setProps({...props});
       case Actions.CONNECTOR:
-        return new Connector().setProps({...properties});
+        return new Connector().setProps({...props});
       default:
         console.error(`Action ${action} is not implemented!`);
     }
   }
 
-  public compose(actions: Action[]): Action {
+  public group(actions: Action[]): Action {
     const action = new ActionGroup();
-    return action.push(actions);
+    return action.group(actions);
   }
 }

@@ -24,68 +24,91 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { Covid19Story1 } from "../../utils/storyboards/story-builder/Covid19Story1";
+import { Covid19Story1Builder } from "../../utils/storyboards/story-builder/Covid19Story1Builder";
+import { covid19Data1, covid19NumericalTable1 } from "../../services/data";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const storyBuilder = new Covid19Story1();
+const Covid19Story1Page = () => {
+  const WIDTH = 1200,
+    HEIGHT = 500;
 
-const Covid19StoryPage1 = () => {
-  const [loading, setLoading] = useState(true);
+  const chartRef = useRef(null);
+  const [loading, setLoading] = useState<boolean>(null);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
-  const [animationCounter, setAnimationCounter] = useState<number>(0);
+  const [region, setRegion] = useState<string>(null);
+  const [allRegionData, setAllRegionData] = useState<Record<string, any>>({});
+  const [data, setData] = useState<any>(null); // Explicitly use null for uninitialized state
+  const [tableNFA, setTableNFA] = useState<any>(null);
+
   // slider formatted value
   const valuetext = (value) => `${value}`;
 
+  const storyBuilder = new Covid19Story1Builder();
+
   useEffect(() => {
-    let ignore = false;
-
-    // if (!chartRef.current) return;
-    console.log("Covid19Story: useEffect triggered");
-
+    if (!chartRef.current) return;
+    console.log("useEffect 1: fetchData");
     setLoading(true);
 
-    // Wait for initialization to complete before further actions
-    storyBuilder
-      .waitForInit()
-      .then(() => {
-        const _regions = storyBuilder.names();
-        if (!ignore) setRegions([..._regions]);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
+    const fetchData = async () => {
+      try {
+        const allData = await covid19Data1();
+        setAllRegionData(allData);
+        setRegions(Object.keys(allData).sort());
+        setRegion("Aberdeenshire");
+        const table = await covid19NumericalTable1();
+        setTableNFA(table);
 
-    return () => {
-      ignore = true;
+        console.log("useEffect 1: allRegionData: ", allData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (!region || !allRegionData[region] || !chartRef.current) return;
+
+    const regionData = allRegionData[region];
+    setData(regionData);
+
+    console.log("useEffect 2: region: ", region);
+    console.log("useEffect 2: regionData: ", regionData);
+    console.log("useEffect 2: tableNFA: ", regionData);
+
+    storyBuilder
+      .setName(region)
+      .setData(regionData)
+      .setTableNFA(tableNFA)
+      .setCanvas(chartRef.current)
+      .build();
+
+    return () => {};
+  }, [region, allRegionData, tableNFA]);
+
+  const handleSelection = (event: SelectChangeEvent) => {
+    const newRegion = event.target.value;
+    // prettier-ignore
+    // console.log("Covid19Story1Page:handleSelection: newRegion = ", newRegion);
+    if (newRegion) {
+      setRegion(newRegion);
+    }
+  };
 
   const handleChangeSlider = (event) => {
     const selectedSegment = event.target.value;
-    console.log("StorySingle: selectedSegment = ", selectedSegment);
+    console.log("Covid19Story1Page: selectedSegment = ", selectedSegment);
     if (selectedSegment && selectedSegment !== segment) {
       // setSegment(selectedSegment);
       // segmentData(selectedSegment);
       setSegment(1);
       // segmentData(1);
-    }
-  };
-
-  const handleSelection = (event: SelectChangeEvent) => {
-    const selectedName = event.target.value;
-    // prettier-ignore
-    console.log("StorySingle:handleSelection: selectedRegion = ", selectedName);
-    if (selectedName) {
-      storyBuilder.name(selectedName).selector("#chartId").build();
-
-      //createTimeSeriesSVG("#chart1");
-      //setRegion(selectedRegion);
-      //setAnimationCounter(0);
     }
   };
 
@@ -217,7 +240,14 @@ const Covid19StoryPage1 = () => {
                       </Button>
                     </FormControl>
                   </FormGroup>
-                  <div id="chartId" />
+                  <svg
+                    ref={chartRef}
+                    style={{
+                      width: WIDTH,
+                      height: HEIGHT,
+                      border: "0px solid",
+                    }}
+                  ></svg>
                 </>
               )}
             </CardContent>
@@ -229,4 +259,4 @@ const Covid19StoryPage1 = () => {
   );
 };
 
-export default Covid19StoryPage1;
+export default Covid19Story1Page;

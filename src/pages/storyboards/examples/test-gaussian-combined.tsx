@@ -28,7 +28,7 @@ import {
 import { Dot } from "../../../components/storyboards/actions/Dot";
 import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
 import { Circle } from "../../../components/storyboards/actions/Circle";
-import { covid19CategoricalTable1, covid19Data } from "../../../services/data";
+import { covid19CategoricalTable1, covid19Data1 } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -36,7 +36,6 @@ const WIDTH = 1500,
 const TestGaussianCombinedPage = () => {
   const chartRef = useRef(null);
   const [locData, setLocData] = useState<Record<string, TimeseriesData[]>>({});
-  const [data, setData] = useState<TimeseriesData[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
   const [categoricalFeatures, setCategoricalFeatures] = useState<string>([]);
@@ -49,7 +48,7 @@ const TestGaussianCombinedPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data();
+        const data = await covid19Data1();
         setLocData(data);
         setRegions(Object.keys(data).sort());
 
@@ -66,7 +65,9 @@ const TestGaussianCombinedPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!region || !data) return;
+    if (!region || !locData[region] || !chartRef.current) return;
+
+    const data = locData[region];
 
     //
     // Combined Features
@@ -161,7 +162,6 @@ const TestGaussianCombinedPage = () => {
     const region = event.target.value;
     if (region) {
       setRegion(region);
-      setData(locData[region]);
     }
   };
 

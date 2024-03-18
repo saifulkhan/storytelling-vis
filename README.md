@@ -1,4 +1,6 @@
-# Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data
+# About
+
+This is source code of Feature-Action Design Patterns for Storytelling Visualizations with Timeseries Data.
 
 ## Getting Started
 
@@ -12,7 +14,7 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-<!-- You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file. -->
+- <http://localhost:3000/storyboards/covid19-story-1>
 
 ### Tests
 
@@ -22,15 +24,15 @@ yarn test
 
 > Note: Unit tests have not been extensively implemented yet. We still need to add the unit tests.
 
-## Code and API Documentation
+# Code and API Documentation
 
-### Project Structure
+## Project Structure
 
 ```
 TODO
 ```
 
-### Feature Detection
+## Feature Detection
 
 Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 
@@ -44,7 +46,7 @@ Examples visualization of feature detection:
 
 - <http://localhost:3000/storyboards/examples/test-features>
 
-#### Gaussian
+### Gaussian
 
 Examples visualization of numerical and categorical time series and gaussian mixture:
 
@@ -52,7 +54,7 @@ Examples visualization of numerical and categorical time series and gaussian mix
 - <http://localhost:3000/storyboards/examples/test-gaussian-cts>
 - <http://localhost:3000/storyboards/examples/test-gaussian-combined>
 
-### Drawing Actions
+## Drawing Actions
 
 `Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
@@ -87,16 +89,19 @@ await textBox.move(Coordinate, delay, duration);
 
 We implemented and tested various actions in `src/pages/storyboards/examples/test-actions.tsx` page and can be seen in action <http://localhost:3000/storyboards/examples/test-actions>
 
-Action Group
+Group multiple actions to a single object.
 
 ```ts
-TODO
-
+new ActionGroup()
+    .group([new Dot().setProps(), new TextBox().setProps({}), ...])
+    .setCanvas(...)
+    .setCoordinate(...)
+    .show();
 ```
 
 Please see the contents of `src/components/storyboards/actions` for details or implementing various different actions.
 
-### Plots
+## Plots
 
 Various plots implemented ...
 
@@ -122,7 +127,7 @@ plot.setActions()
     .animate(<feature action data>)
 ```
 
-### Feature Action Table
+## Feature Action Table
 
 ### Numerical Feature Action
 
@@ -134,7 +139,7 @@ Nested tables, each tables components are implemented separate React component.
 
 ### Categorical Feature Action
 
-### Build Story
+## Build Story
 
 Page -> builder ->
 
@@ -145,6 +150,8 @@ const workflow = new ...Workflow()
                     .selector(id)
                     .create(key);
 ```
+
+Covid19 story with single time series: <http://localhost:3000/storyboards/covid19-story-1>
 
 ## References
 

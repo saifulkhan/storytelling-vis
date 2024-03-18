@@ -18,16 +18,14 @@ import {
 } from "../../../components/storyboards/plots/LinePlot";
 import { semanticGaussians } from "../../../utils/storyboards/data-processing/gaussian";
 import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
-import { covid19CategoricalTable1, covid19Data } from "../../../services/data";
+import { covid19CategoricalTable1, covid19Data1 } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
 
 const ExampleGaussianPage = () => {
   const ctsChartRef = useRef(null);
-
   const [locData, setLocData] = useState<Record<string, TimeseriesData[]>>({});
-  const [data, setData] = useState<TimeseriesData[]>(undefined);
   const [regions, setRegions] = useState<string[]>(undefined);
   const [region, setRegion] = useState<string>(undefined);
 
@@ -39,12 +37,13 @@ const ExampleGaussianPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data();
+        const data = await covid19Data1();
         setLocData(data);
         setRegions(Object.keys(data).sort());
 
         const fetures = await covid19CategoricalTable1();
         setCategoricalFeatures(fetures);
+        setRegion("Aberdeenshire");
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -56,7 +55,9 @@ const ExampleGaussianPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!region || !data) return;
+    if (!region || !locData[region] || !ctsChartRef.current) return;
+
+    const data = locData[region];
 
     //
     // Categorical Features
@@ -95,13 +96,12 @@ const ExampleGaussianPage = () => {
       .draw();
 
     //
-  }, [data]);
+  }, [region]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {
     const region = event.target.value;
     if (region) {
       setRegion(region);
-      setData(locData[region]);
     }
   };
 

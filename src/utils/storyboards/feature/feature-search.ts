@@ -14,10 +14,9 @@ import {
 } from "../data-processing/common";
 
 /**
- ** The steps for peak search function:
- ** (a) search peaks in segments for defined window sizes,
- ** (b) remove duplicates, and
- ** (c) eliminate peaks that are part of a larger peak.
+ ** The function search peaks in a given timeseries.
+ ** The steps involve searching for peaks in segments for defined window sizes,
+ ** remove duplicates, and eliminate peaks that are part of a larger peak.
  **/
 export function searchPeaks(
   data: TimeseriesData[],
@@ -27,7 +26,7 @@ export function searchPeaks(
 ): Peak[] {
   const peaks: Peak[] = [];
   const maxes = searchMaxes(data, window);
-  const norm = normalise(data.map((o) => o.y));
+  const norm = normalise(data.map((d) => d.y));
 
   console.log("maxes:", maxes);
 
@@ -38,17 +37,17 @@ export function searchPeaks(
 
     console.log("idx:", idx);
 
-    const peak = new Peak(
-      data[idx].date,
-      data[idx].y,
-      (end - start) / norm.length,
-      norm[idx],
-      rank,
-      metric,
-      data[start].date,
-      data[end].date
-    );
-    peak.setDataIndex(idx);
+    const peak = new Peak()
+      .setDate(data[idx].date)
+      .setHeight(data[idx].y)
+      .setNormWidth((end - start) / norm.length)
+      .setNormHeight(norm[idx])
+      .setRank(rank)
+      .setMetric(metric)
+      .setStart(data[start].date)
+      .setEnd(data[end].date)
+      .setDataIndex(idx);
+
     peaks.push(peak);
     console.log("peaks:", peaks);
   }
@@ -79,57 +78,6 @@ export function searchPeaks(
 
   return uniquePeaks;
 }
-
-/*
- * This function iterates through the time series data using a sliding window
- * approach with the specified window size and calculates the slopes for each
- * window.
- */
-
-export function searchSlopes(data: TimeseriesData[], window: number): Slope[] {
-  if (data.length <= 1 || window <= 1 || window > data.length) {
-    throw new Error(
-      "Invalid input: time series length should be greater than 1 and window size should be a positive number less than or equal to the time series length."
-    );
-  }
-
-  const slopes: Slope[] = [];
-
-  for (let i = 0; i <= data.length - window; i++) {
-    const windowData = data.slice(i, i + window);
-    const xIndices = windowData.map((_, i) => i);
-    const yValues = windowData.map((d) => d.y);
-
-    const meanX = mean(xIndices);
-    const meanY = mean(yValues);
-
-    let numerator = 0;
-    let denominator = 0;
-
-    // regression
-    for (let j = 0; j < xIndices.length; j++) {
-      numerator += (xIndices[j] - meanX) * (yValues[j] - meanY);
-      denominator += Math.pow(xIndices[j] - meanX, 2);
-    }
-
-    const slope = numerator / denominator;
-    slopes.push(
-      new Slope(
-        windowData[Math.round(meanX)].date,
-        windowData[0].date,
-        windowData[windowData.length - 1].date,
-        "",
-        slope
-      )
-    );
-  }
-
-  return slopes;
-}
-
-/*******************************************************************************
- *
- ******************************************************************************/
 
 /*
  * Function to find the end of a peak. Move forwards from the peak until the
@@ -187,7 +135,6 @@ function searchPeakStart(idx: number, norm: number[]): number {
  * Function to find maximum points based on height difference between window
  * midpoint and edges.
  */
-
 function searchMaxes(data: TimeseriesData[], window: number): number[] {
   // centre of window
   const centre = Math.floor((window - 1) / 2);
@@ -208,13 +155,74 @@ function searchMaxes(data: TimeseriesData[], window: number): number[] {
   return maxes;
 }
 
+/******************************************************************************/
+
+/**
+ ** The function search slopes in a given timeseries.
+ ** The steps involve iterating through the time series data using a sliding
+ ** window approach with the specified window size and calculates the slopes for
+ ** each window.
+ */
+
+export function searchSlopes(
+  data: TimeseriesData[],
+  rank: number,
+  metric: string,
+  window: number
+): Slope[] {
+  if (data.length <= 1 || window <= 1 || window > data.length) {
+    throw new Error(
+      "Invalid input: time series length should be greater than 1 and window size should be a positive number less than or equal to the time series length."
+    );
+  }
+
+  const slopes: Slope[] = [];
+
+  for (let i = 0; i <= data.length - window; i++) {
+    const windowData = data.slice(i, i + window);
+    const xIndices = windowData.map((_, i) => i);
+    const yValues = windowData.map((d) => d.y);
+
+    const meanX = mean(xIndices);
+    const meanY = mean(yValues);
+
+    let numerator = 0;
+    let denominator = 0;
+
+    // regression
+    for (let j = 0; j < xIndices.length; j++) {
+      numerator += (xIndices[j] - meanX) * (yValues[j] - meanY);
+      denominator += Math.pow(xIndices[j] - meanX, 2);
+    }
+
+    const slope = numerator / denominator;
+    const idx = Math.round(meanX);
+
+    slopes.push(
+      new Slope()
+        .setDate(windowData[idx].date)
+        .setHeight(windowData[idx].y)
+        .setRank(rank)
+        .setMetric(metric)
+        .setStart(windowData[0].date)
+        .setEnd(windowData[windowData.length - 1].date)
+        .setDataIndex(idx)
+        .setSlope(slope)
+    );
+  }
+
+  return slopes;
+}
+
+/******************************************************************************/
+
 /*
   Fall detection function.
   Using a window size of 20 we count the number of negative gradients.
   If this number is above a threshold we keep sliding the window.
   Once our bool fails we save segment in falls array and continue searching.
 */
-
+// TODO: test
 export function searchFalls(data, metric = undefined) {
   // Normalise y values between 0 and 1
   const norm = normalise(data.map((o) => o.y));
@@ -296,6 +304,8 @@ export function searchFalls(data, metric = undefined) {
   Once our bool fails we save segment in rises array and continue searching.
 */
 
+/******************************************************************************/
+// TODO: test
 export function searchRises(data, metric = undefined) {
   // Normalise y values between 0 and 1
   const norm = normalise(data.map((o) => o.y));
@@ -372,13 +382,15 @@ export function searchRises(data, metric = undefined) {
   return rises;
 }
 
+/******************************************************************************/
+
 /**
  ** Given a list of numbers, find the local minimum and maximum data points.
  ** Example usage:
  ** const [localMin, localMax] =
  ** findLocalMinMax(data, "mean_test_accuracy");
  **/
-
+// TODO: test
 export function findLocalMinMax(input: any[], key: string, window = 2): any {
   // prettier-ignore
   // console.log("findLocalMinMax: input = ", input, ", keyz = ", key);
@@ -448,21 +460,39 @@ export function findLocalMinMax(input: any[], key: string, window = 2): any {
   return [outputMin, outputMax];
 }
 
-/**
- ** Example usage:
- ** const [globalMin, globalMax] =
- ** searchMinMax(data, "mean_test_accuracy);
- **/
-export function searchMinMax(input: any[], key: string, window = 2): any {
-  const outputMin = input.reduce((min, curr) =>
-    min[key] < curr[key] ? min : curr
-  );
-  const outputMax = input.reduce((max, curr) =>
-    max[key] > curr[key] ? max : curr
-  );
+/******************************************************************************/
 
-  return [
-    new Min(outputMin.date, "", outputMin[key]),
-    new Max(outputMax.date, "", outputMax[key]),
-  ];
+/**
+ ** The function search global max in a given timeseries.
+ **/
+export function searchGlobalMax(
+  data: TimeseriesData[],
+  rank: number,
+  metric: string
+): Max[] {
+  const maxPoint = data.reduce((max, curr) => (max.y > curr.y ? max : curr));
+  const max = new Max()
+    .setDate(maxPoint.date)
+    .setHeight(maxPoint.y)
+    .setRank(rank)
+    .setMetric(metric)
+    .setDataIndex(findDateIdx(maxPoint.date, data));
+
+  return [max];
+}
+
+export function searchGlobalMin(
+  data: TimeseriesData[],
+  rank: number,
+  metric: string
+): Min[] {
+  const minPoint = data.reduce((max, curr) => (max.y < curr.y ? max : curr));
+  const min = new Min()
+    .setDate(minPoint.date)
+    .setHeight(minPoint.y)
+    .setRank(rank)
+    .setMetric(metric)
+    .setDataIndex(findDateIdx(minPoint.date, data));
+
+  return [min];
 }

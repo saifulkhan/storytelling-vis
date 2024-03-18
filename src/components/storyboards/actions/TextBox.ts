@@ -47,15 +47,17 @@ export class TextBox extends Action {
   }
 
   public updateProps(extra: any) {
+    console.log("TextBox:updateProps: extra: ", extra);
     this.props.message = this.updateStringTemplate(this.props.message, extra);
     this.props.title = this.updateStringTemplate(this.props.title, extra);
+    console.log("TextBox:updateProps: ", this.props.message, this.props.title);
 
-    this.props.align = extra.align;
+    this.props.horizontalAlign = extra.horizontalAlign;
+    this.props.verticalAlign = extra.verticalAlign;
     return this;
   }
 
   public setCanvas(svg: SVGGElement) {
-    this.svg = svg;
     this.svg = svg;
     this.canvas();
     this.draw();

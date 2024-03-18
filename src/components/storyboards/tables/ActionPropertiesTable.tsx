@@ -92,8 +92,8 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
 
     if (data.action == Actions.TEXT_BOX) {
       data.width = 80;
-      data.title = "...";
-      data.message = "...";
+      data.title = "Title";
+      data.message = "Message";
     }
     console.log({ ...data });
     const action = actionFactory.create(data.action, data);

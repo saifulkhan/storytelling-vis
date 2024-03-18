@@ -5,29 +5,16 @@ import {
 } from "../data-processing/TimeseriesData";
 
 export abstract class StoryBuilder {
-  protected _initPromise: Promise<void>;
-  protected _svg: SVGSVGElement;
-  protected _data: TimeseriesData[] | MLTimeseriesData[];
-  protected _table: FeatureActionTableRow[] = [];
-  protected _name: string;
+  protected svg: SVGSVGElement;
+  protected data: TimeseriesData[] | MLTimeseriesData[];
+  protected table: FeatureActionTableRow[] = [];
+  protected name: string;
 
-  constructor() {
-    this._initPromise = this.initialize();
-  }
-
-  protected async initialize(): Promise<void> {
-    await this.data();
-    await this.table();
-  }
-
-  waitForInit(): Promise<void> {
-    return this._initPromise;
-  }
-
-  protected abstract data(): void;
-  protected abstract table(): void;
-  public abstract names(): string[];
-  public abstract name(name: string): this;
-  public abstract selector(id: string): this;
-  public abstract build(name: string): this;
+  constructor() {}
+  public abstract setData(data: TimeseriesData[] | MLTimeseriesData[]): void;
+  public abstract setTableNFA(table: FeatureActionTableRow[]): this;
+  // TODO: CFA
+  public abstract setName(name: string): this;
+  public abstract setCanvas(svg: SVGGElement): this;
+  public abstract build(): this;
 }

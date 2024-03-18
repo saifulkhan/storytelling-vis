@@ -6,19 +6,8 @@ export class Peak extends NumericalFeature {
   protected normWidth: number;
   protected normDuration: number;
 
-  constructor(
-    date: Date,
-    height: number,
-    normWidth: number,
-    normHeight: number,
-    rank?: number,
-    metric?: string,
-    start?: Date,
-    end?: Date
-  ) {
-    super(date, height, rank, metric, start, end);
-    this.normWidth = normWidth;
-    this.normHeight = normHeight;
+  constructor() {
+    super();
     this.type = NumericalFeatures.PEAK;
   }
 

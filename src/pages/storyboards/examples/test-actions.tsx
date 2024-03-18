@@ -82,7 +82,8 @@ const TestActionsPage = () => {
       });
       const list = [new Dot().setProps(), new Circle().setProps(), textbox2];
 
-      const group = new ActionGroup(list)
+      const group = new ActionGroup()
+        .group(list)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst2])
         .show();

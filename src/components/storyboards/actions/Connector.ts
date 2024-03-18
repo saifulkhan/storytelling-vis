@@ -60,7 +60,7 @@ export class Connector extends Action {
   }
 
   public updateProps(properties: any): this {
-    throw new Error("Connector: updateProps () is not implemented!");
+    return this;
   }
   public move(
     coordinate: Coordinate,

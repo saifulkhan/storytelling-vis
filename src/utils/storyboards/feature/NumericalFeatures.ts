@@ -8,8 +8,4 @@ export enum NumericalFeatures {
   FALL = "FALL",
   RAISE = "RAISE",
   SLOPE = "SLOPE",
-  ML_CURRENT = "ML_CURRENT",
-  ML_LAST = "ML_LAST",
-  ML_MAX = "ML_MAX",
-  ML_MIN = "ML_MIN",
 }

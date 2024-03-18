@@ -10,19 +10,7 @@ export abstract class Feature {
   protected metric: string;
   protected dataIndex: number;
 
-  constructor(
-    date: Date,
-    rank?: number,
-    metric?: string,
-    start?: Date,
-    end?: Date
-  ) {
-    this.date = date;
-    this.rank = rank;
-    this.metric = metric;
-    this.start = start;
-    this.end = end;
-  }
+  constructor() {}
 
   setDate(date: Date) {
     this.date = date;
@@ -78,15 +66,6 @@ export abstract class Feature {
     return this.end;
   }
 
-  // TODO:
-  getDuration() {
-    if (!this.start || !this.end)
-      throw "This object doesn't have an end or start.";
-    const difference = this.end.getTime() - this.start.getTime();
-    const dayInMs = 1000 * 3600 * 24;
-    return Math.floor(difference / dayInMs);
-  }
-
   setDataIndex(index: number) {
     this.dataIndex = index;
     return this;
@@ -94,5 +73,14 @@ export abstract class Feature {
 
   getDataIndex() {
     return this.dataIndex;
+  }
+
+  // TODO:
+  getDuration() {
+    if (!this.start || !this.end)
+      throw "This object doesn't have an end or start.";
+    const difference = this.end.getTime() - this.start.getTime();
+    const dayInMs = 1000 * 3600 * 24;
+    return Math.floor(difference / dayInMs);
   }
 }

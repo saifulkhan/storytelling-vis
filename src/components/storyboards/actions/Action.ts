@@ -83,7 +83,7 @@ export abstract class Action {
     return this;
   }
 
-  protected abstract draw(): void;
+  public abstract draw(): void;
   protected canvas(): void {
     this.node = d3
       .create("svg")

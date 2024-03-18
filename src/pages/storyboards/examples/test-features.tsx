@@ -22,7 +22,7 @@ import {
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { Dot } from "../../../components/storyboards/actions/Dot";
-import { covid19Data } from "../../../services/data";
+import { covid19Data1 } from "../../../services/data";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -40,9 +40,10 @@ const FeaturesPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data();
+        const data = await covid19Data1();
         setLocData(data);
         setRegions(Object.keys(data).sort());
+        // setRegion("Aberdeenshire");
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -54,6 +55,8 @@ const FeaturesPage = () => {
   }, []);
 
   useEffect(() => {
+    if (!region || !locData[region] | !chartRef.current) return;
+
     const peaks: Peak[] = searchPeaks(data, undefined, undefined, 10);
 
     console.log("TestFeatures: data = ", data);
@@ -99,7 +102,7 @@ const FeaturesPage = () => {
         .setCoordinate(plot.getCoordinates(peak.getDate()))
         .show();
     });
-  }, [data]);
+  }, [data, region]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {
     const region = event.target.value;
