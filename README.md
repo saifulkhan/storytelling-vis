@@ -14,8 +14,6 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- <http://localhost:3000/storyboards/covid19-story-1>
-
 ### Tests
 
 ```sh
