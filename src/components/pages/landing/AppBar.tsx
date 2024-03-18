@@ -51,17 +51,17 @@ const AppBarComponent = () => (
             <Grid item xs />
             <Grid item>
               <Box sx={{ display: { xs: "none", md: "inline-block" } }}>
-                <Link href="/dashboard/analytics" passHref>
+                <Link href="/dashboard/analytics" passHref legacyBehavior>
                   <Button ml={2} color="inherit" target="_blank">
                     Live Preview
                   </Button>
                 </Link>
-                <Link href="/documentation/welcome" passHref>
+                <Link href="/documentation/welcome" passHref legacyBehavior>
                   <Button ml={2} color="inherit" target="_blank">
                     Documentation
                   </Button>
                 </Link>
-                <Link href="/documentation/support" passHref>
+                <Link href="/documentation/support" passHref legacyBehavior>
                   <Button ml={2} color="inherit" target="_blank">
                     Support
                   </Button>

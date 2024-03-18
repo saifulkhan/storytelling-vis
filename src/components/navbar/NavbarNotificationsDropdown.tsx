@@ -51,7 +51,7 @@ interface NotificationProps {
 
 function Notification({ title, description, Icon }: NotificationProps) {
   return (
-    <Link href="/">
+    <Link href="/" legacyBehavior>
       <ListItem divider>
         <ListItemAvatar>
           <Avatar>
@@ -132,7 +132,7 @@ function NavbarNotificationsDropdown() {
             />
           </List>
           <Box p={1} display="flex" justifyContent="center">
-            <Link href="/">
+            <Link href="/" legacyBehavior>
               <Button size="small">Show all notifications</Button>
             </Link>
           </Box>

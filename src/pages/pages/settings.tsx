@@ -220,10 +220,10 @@ function Settings() {
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Dashboard</Link>
         </NextLink>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Pages</Link>
         </NextLink>
         <Typography>Settings</Typography>

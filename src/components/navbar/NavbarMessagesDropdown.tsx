@@ -50,7 +50,7 @@ interface MessageProps {
 
 function Message({ title, description, image }: MessageProps) {
   return (
-    <Link href="/">
+    <Link href="/" legacyBehavior>
       <ListItem divider>
         <ListItemAvatar>
           <Avatar src={image} alt="Avatar" />
@@ -122,7 +122,7 @@ function NavbarMessagesDropdown() {
             />
           </List>
           <Box p={1} display="flex" justifyContent="center">
-            <Link href="/">
+            <Link href="/" legacyBehavior>
               <Button size="small">Show all messages</Button>
             </Link>
           </Box>

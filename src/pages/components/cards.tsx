@@ -97,10 +97,10 @@ function Cards() {
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Dashboard</Link>
         </NextLink>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Components</Link>
         </NextLink>
         <Typography>Cards</Typography>

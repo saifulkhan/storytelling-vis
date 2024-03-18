@@ -187,13 +187,13 @@ function Introduction() {
         <Grid container alignItems="center" justifyContent="center" spacing={4}>
           <Grid item xs={12} sm={10} md={9} lg={9}>
             <ImageWrapper>
-              <Link href="/dashboard/analytics" passHref>
-                <a target="_blank">
-                  <Image
-                    alt="Mira - React Material Admin Dashboard"
-                    src={`/static/img/screenshots/dashboard-analytics-large.jpg`}
-                  />
-                </a>
+              <Link href="/dashboard/analytics" passHref target="_blank">
+
+                <Image
+                  alt="Mira - React Material Admin Dashboard"
+                  src={`/static/img/screenshots/dashboard-analytics-large.jpg`}
+                />
+
               </Link>
             </ImageWrapper>
           </Grid>

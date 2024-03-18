@@ -36,7 +36,7 @@ function Page500() {
         complete the request.
       </Typography>
 
-      <Link href="/" passHref>
+      <Link href="/" passHref legacyBehavior>
         <Button variant="contained" color="secondary" mt={2}>
           Return to website
         </Button>

@@ -51,13 +51,13 @@ function InvoiceDetails() {
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Dashboard</Link>
         </NextLink>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Pages</Link>
         </NextLink>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Invoices</Link>
         </NextLink>
         <Typography>Details</Typography>

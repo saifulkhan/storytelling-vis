@@ -129,7 +129,7 @@ function Integrations() {
           </Tooltip>
         </Box>
         <Box>
-          <Link href="/documentation/welcome" passHref>
+          <Link href="/documentation/welcome" passHref legacyBehavior>
             <Button
               component="a"
               target="_blank"

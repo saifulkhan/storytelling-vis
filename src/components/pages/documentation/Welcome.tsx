@@ -52,82 +52,82 @@ function TableOfContents() {
       <Typography variant="subtitle1" gutterBottom my={4}>
         <ul>
           <li>
-            <NextLink href="/documentation/getting-started" passHref>
+            <NextLink href="/documentation/getting-started" passHref legacyBehavior>
               <Link>Getting Started</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/routing" passHref>
+            <NextLink href="/documentation/routing" passHref legacyBehavior>
               <Link>Routing</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/auth/auth0" passHref>
+            <NextLink href="/documentation/auth/auth0" passHref legacyBehavior>
               <Link>Auth0 Authentication</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/auth/cognito" passHref>
+            <NextLink href="/documentation/auth/cognito" passHref legacyBehavior>
               <Link>Cognito Authentication</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/auth/firebase" passHref>
+            <NextLink href="/documentation/auth/firebase" passHref legacyBehavior>
               <Link>Firebase Authentication</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/auth/jwt" passHref>
+            <NextLink href="/documentation/auth/jwt" passHref legacyBehavior>
               <Link>JWT Authentication</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/guards" passHref>
+            <NextLink href="/documentation/guards" passHref legacyBehavior>
               <Link>Guards</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/theming" passHref>
+            <NextLink href="/documentation/theming" passHref legacyBehavior>
               <Link>Theming</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/api-calls" passHref>
+            <NextLink href="/documentation/api-calls" passHref legacyBehavior>
               <Link>API Calls</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/redux" passHref>
+            <NextLink href="/documentation/redux" passHref legacyBehavior>
               <Link>Redux</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/internationalization" passHref>
+            <NextLink href="/documentation/internationalization" passHref legacyBehavior>
               <Link>Internationalization</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/environment-variables" passHref>
+            <NextLink href="/documentation/environment-variables" passHref legacyBehavior>
               <Link>Environment Variables</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/eslint-and-prettier" passHref>
+            <NextLink href="/documentation/eslint-and-prettier" passHref legacyBehavior>
               <Link>ESLint & Prettier</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/deployment" passHref>
+            <NextLink href="/documentation/deployment" passHref legacyBehavior>
               <Link>Deployment</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/documentation/support" passHref>
+            <NextLink href="/documentation/support" passHref legacyBehavior>
               <Link>Support</Link>
             </NextLink>
           </li>
           <li>
-            <NextLink href="/changelog" passHref>
+            <NextLink href="/changelog" passHref legacyBehavior>
               <Link>Changelog</Link>
             </NextLink>
           </li>
@@ -165,7 +165,7 @@ function Welcome() {
           </Typography>
 
           <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-            <NextLink href="/" passHref>
+            <NextLink href="/" passHref legacyBehavior>
               <Link>Dashboard</Link>
             </NextLink>
             <Typography>Documentation</Typography>

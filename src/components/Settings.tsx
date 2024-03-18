@@ -158,7 +158,7 @@ function Demos() {
       </Box>
 
       <Box my={3} mx={4}>
-        <Link href="/documentation/welcome">
+        <Link href="/documentation/welcome" legacyBehavior>
           <Button variant="outlined" size="large" fullWidth={true}>
             Documentation
           </Button>

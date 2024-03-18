@@ -108,10 +108,10 @@ function ESLintAndPrettier() {
           </Typography>
 
           <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-            <NextLink href="/" passHref>
+            <NextLink href="/" passHref legacyBehavior>
               <Link>Dashboard</Link>
             </NextLink>
-            <NextLink href="/documentation/welcome" passHref>
+            <NextLink href="/documentation/welcome" passHref legacyBehavior>
               <Link>Documentation</Link>
             </NextLink>
             <Typography>ESLint & Prettier</Typography>

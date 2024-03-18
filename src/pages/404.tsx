@@ -35,7 +35,7 @@ function Page404() {
         The page you are looking for might have been removed.
       </Typography>
 
-      <Link href="/" passHref>
+      <Link href="/" passHref legacyBehavior>
         <Button variant="contained" color="secondary" mt={2}>
           Return to website
         </Button>

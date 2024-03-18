@@ -192,10 +192,10 @@ function TextFields() {
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Dashboard</Link>
         </NextLink>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Forms</Link>
         </NextLink>
         <Typography>Text Fields</Typography>

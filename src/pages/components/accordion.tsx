@@ -167,10 +167,10 @@ function Accordions() {
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Dashboard</Link>
         </NextLink>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link>Components</Link>
         </NextLink>
         <Typography>Expansion Panels</Typography>

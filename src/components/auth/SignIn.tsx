@@ -108,7 +108,7 @@ function SignIn() {
           >
             Sign in
           </Button>
-          <Link href="/auth/reset-password">
+          <Link href="/auth/reset-password" legacyBehavior>
             <Button fullWidth color="primary">
               Forgot password
             </Button>

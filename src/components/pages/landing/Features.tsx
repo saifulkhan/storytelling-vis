@@ -122,7 +122,7 @@ function Features() {
         </Grid>
 
         <Box mt={4}>
-          <Link href="/documentation/welcome" passHref>
+          <Link href="/documentation/welcome" passHref legacyBehavior>
             <Button
               component="a"
               variant="contained"

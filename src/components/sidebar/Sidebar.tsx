@@ -86,7 +86,7 @@ export interface SidebarProps {
 const Sidebar = ({ items, showFooter = true, ...rest }: SidebarProps) => {
   return (
     <Drawer variant="permanent" {...rest}>
-      <Link href="/">
+      <Link href="/" legacyBehavior>
         <Brand>
           <BrandIcon />{" "}
           <Box ml={1}>

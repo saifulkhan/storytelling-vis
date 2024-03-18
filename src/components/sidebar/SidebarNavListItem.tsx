@@ -140,7 +140,7 @@ const SidebarNavListItem = (props: SidebarNavListItemProps) => {
   }
 
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref legacyBehavior>
       <Item
         depth={depth}
         className={pathname == href ? "active" : ""}
