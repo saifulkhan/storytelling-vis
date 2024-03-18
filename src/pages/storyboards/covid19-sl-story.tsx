@@ -1,3 +1,7 @@
+/**
+ ** Implements Covid19 single location story
+ **/
+
 import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
@@ -24,12 +28,12 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { Covid19Story1Builder } from "../../utils/storyboards/story-builder/Covid19Story1Builder";
+import { Covid19SLWorkflow } from "../../utils/storyboards/story-builder/Covid19SLStoryBuilder";
 import { covid19Data1, covid19NumericalTable1 } from "../../services/data";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
-const Covid19Story1Page = () => {
+const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
     HEIGHT = 500;
 
@@ -45,7 +49,7 @@ const Covid19Story1Page = () => {
   // slider formatted value
   const valuetext = (value) => `${value}`;
 
-  const storyBuilder = new Covid19Story1Builder();
+  const storyBuilder = new Covid19SLWorkflow();
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -121,7 +125,7 @@ const Covid19Story1Page = () => {
   return (
     <>
       <Head>
-        <title>Covid19 Story 1</title>
+        <title>Covid19 Single Location Story</title>
       </Head>
       {/* <DashboardLayout> */}
       <Box
@@ -259,4 +263,4 @@ const Covid19Story1Page = () => {
   );
 };
 
-export default Covid19Story1Page;
+export default Covid19SLStoryPage;

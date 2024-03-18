@@ -24,6 +24,8 @@ yarn test
 
 # Code and API Documentation
 
+## Sequence Diagram
+
 ## Project Structure
 
 ```

@@ -1,3 +1,7 @@
+/**
+ ** Implements machine learning multivariate story
+ **/
+
 import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
@@ -25,40 +29,43 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
 
-import { MLStory1 } from "../../utils/storyboards/story-builder/MLStory1";
-// import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
+const MLMVStoryPage = () => {
+  const WIDTH = 1200,
+    HEIGHT = 500;
 
-const storyBuilder = new MLStory1();
-
-const MLStory1Page = () => {
-  const [loading, setLoading] = useState(true);
+  const chartRef = useRef(null);
+  const [loading, setLoading] = useState<boolean>(null);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
-  const [animationCounter, setAnimationCounter] = useState<number>(0);
-  // slider formatted value
-  const valuetext = (value) => `${value}`;
+  const [region, setRegion] = useState<string>(null);
+  const [allRegionData, setAllRegionData] = useState<Record<string, any>>({});
+  const [data, setData] = useState<any>(null); // Explicitly use null for uninitialized state
+  const [tableNFA, setTableNFA] = useState<any>(null);
+
+  const storyBuilder = new MLStory1Builder();
 
   useEffect(() => {
-    let ignore = false;
-
-    // if (!chartRef.current) return;
-    console.log("MLMultivariateStory: useEffect triggered");
-
+    if (!chartRef.current) return;
     setLoading(true);
 
-    // Wait for initialization to complete before further actions
-    storyBuilder
-      .waitForInit()
-      .then(() => {
-        const _regions = storyBuilder.getNames();
-        if (!ignore) setRegions([..._regions]);
+    const fetchData = async () => {
+      try {
+        const allData = await covid19Data1();
+        setAllRegionData(allData);
+        setRegions(Object.keys(allData).sort());
+        setRegion("Aberdeenshire");
+        const table = await covid19NumericalTable1();
+        setTableNFA(table);
+
+        console.log("useEffect 1: allRegionData: ", allData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
 
     return () => {
       ignore = true;
@@ -116,7 +123,7 @@ const MLStory1Page = () => {
   return (
     <>
       <Head>
-        <title>ML Story 1</title>
+        <title>ML Multivariate Story</title>
       </Head>
       {/* <DashboardLayout> */}
       <Box
@@ -228,4 +235,4 @@ const MLStory1Page = () => {
   );
 };
 
-export default MLStory1Page;
+export default MLMVStoryPage;

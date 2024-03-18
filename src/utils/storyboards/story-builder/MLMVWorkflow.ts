@@ -1,15 +1,18 @@
+/**
+ ** Implements machine learning multivariate story workflow
+ **/
+
 import * as d3 from "d3";
-import { StoryBuilder } from "./StoryBuilder";
+import { Workflow } from "./Workflow";
 import { readCSV } from "../../../services/data";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
-import { ML_STORY_1 } from "../../../mocks/feature-action-table-ml";
 
 const FILE = "/static/storyboards/ml/data.csv";
 const NAMES = ["channels", "kernel_size", "layers", "samples_per_class"];
 
-export class MLStory1 extends StoryBuilder {
+export class MLMVWorkflow extends Workflow {
   protected data: MLTimeseriesData[] = [];
   protected name = "";
 
@@ -20,7 +23,7 @@ export class MLStory1 extends StoryBuilder {
   protected async setData() {
     const csv: any[] = await readCSV(FILE);
     // prettier-ignore
-    // console.log("MLStory1:load: FILE = ", FILE, ", csv = ", csv);
+    // console.log("MLMVWorkflow:load: FILE = ", FILE, ", csv = ", csv);
 
     // convert string to number and date
     csv.forEach((row) => {
@@ -36,7 +39,7 @@ export class MLStory1 extends StoryBuilder {
     });
 
     // prettier-ignore
-    console.log("MLStory1: loadData: _data = ", this.data);
+    console.log("MLMVWorkflow: loadData: _data = ", this.data);
   }
 
   getNames(): string[] {
@@ -56,7 +59,7 @@ export class MLStory1 extends StoryBuilder {
       .attr("height", 600)
       .node();
 
-    console.log("MLStory1:selector: _svg = ", this.svg);
+    console.log("MLMVWorkflow:selector: _svg = ", this.svg);
     return this;
   }
 
@@ -78,7 +81,7 @@ export class MLStory1 extends StoryBuilder {
       .setName(this.name)
       .build();
 
-    console.log("MLStory1: actions = ", actions);
+    console.log("MLMVWorkflow: actions = ", actions);
 
     let plot = new ParallelCoordinatePlot()
       .name(this.name)

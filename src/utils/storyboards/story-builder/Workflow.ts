@@ -4,7 +4,7 @@ import {
   TimeseriesData,
 } from "../data-processing/TimeseriesData";
 
-export abstract class StoryBuilder {
+export abstract class Workflow {
   protected svg: SVGSVGElement;
   protected data: TimeseriesData[] | MLTimeseriesData[];
   protected table: FeatureActionTableRow[] = [];

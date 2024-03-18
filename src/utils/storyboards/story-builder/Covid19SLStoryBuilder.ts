@@ -1,13 +1,11 @@
-import * as d3 from "d3";
-import {
-  covid19Data1,
-  covid19NumericalTable1,
-  readJSON,
-} from "../../../services/data";
+/**
+ ** Implements Covid19 single location story workflow
+ **/
+
 import { TimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
-import { StoryBuilder } from "./StoryBuilder";
+import { Workflow } from "./Workflow";
 import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { cts, gmm, nts } from "../data-processing/gaussian";
@@ -15,7 +13,7 @@ import { cts, gmm, nts } from "../data-processing/gaussian";
 const WINDOW = 3;
 const METRIC = "Cases/day";
 
-export class Covid19Story1Builder extends StoryBuilder {
+export class Covid19SLWorkflow extends Workflow {
   constructor() {
     super();
   }
@@ -37,17 +35,17 @@ export class Covid19Story1Builder extends StoryBuilder {
 
   public setCanvas(svg: SVGGElement) {
     this.svg = svg;
-    console.log("Covid19Story1Builder:selector: _svg = ", this.svg);
+    console.log("Covid19SLWorkflow:selector: _svg = ", this.svg);
     return this;
   }
 
   public build() {
     if (!this.name) {
-      console.error("Covid19Story1Builder:build: name is undefined!");
+      console.error("Covid19SLWorkflow:build: name is undefined!");
       return this;
     }
-    console.log("Covid19Story1Builder:build: data:", this.data);
-    console.log("Covid19Story1Builder:build: table:", this.table);
+    console.log("Covid19SLWorkflow:build: data:", this.data);
+    console.log("Covid19SLWorkflow:build: table:", this.table);
 
     // this.nts = gmm(this.data, "Cases/day", WINDOW);
     // this.cts = cts();
@@ -63,7 +61,7 @@ export class Covid19Story1Builder extends StoryBuilder {
       .setData(this.data)
       .build();
 
-    console.log("Covid19Story1Builder:build: actions = ", actions);
+    console.log("Covid19SLWorkflow:build: actions = ", actions);
 
     const plot = new LinePlot()
       .setData([this.data])
