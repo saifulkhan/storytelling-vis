@@ -1,6 +1,6 @@
 [
   {
-    "feature": "ML_MIN",
+    "feature": "MIN",
     "properties": {},
     "rank": 5,
     "actions": [
@@ -16,7 +16,7 @@
     ]
   },
   {
-    "feature": "ML_MAX",
+    "feature": "MAX",
     "properties": {},
     "rank": 7,
     "actions": [
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "feature": "ML_CURRENT",
+    "feature": "CURRENT",
     "properties": {},
     "rank": 7,
     "actions": [
@@ -48,7 +48,7 @@
     ]
   },
   {
-    "feature": "ML_LAST",
+    "feature": "LAST",
     "properties": {},
     "rank": 7,
     "actions": [

@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import { Coordinate } from "../actions/Action";
 
 export type PlotProps = {
@@ -31,4 +32,7 @@ export abstract class Plot {
   public abstract setActions(unknown): this;
   public abstract animate();
   public abstract getCoordinates(...args: unknown[]): [Coordinate, Coordinate];
+  protected clean() {
+    d3.select(this.svg).selectAll("*").remove();
+  }
 }

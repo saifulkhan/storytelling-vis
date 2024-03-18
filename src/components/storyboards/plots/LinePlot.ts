@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { Action, Coordinate } from "../actions/Action";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
@@ -89,8 +88,8 @@ export class LinePlot extends Plot {
 
   public setCanvas(svg: SVGSVGElement) {
     this.svg = svg;
-    // clean
-    d3.select(this.svg).selectAll("*").remove();
+    this.clean();
+
     const bounds = svg.getBoundingClientRect();
     this.height = bounds.height;
     this.width = bounds.width;

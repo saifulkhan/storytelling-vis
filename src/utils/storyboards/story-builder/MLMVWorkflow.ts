@@ -9,26 +9,32 @@ import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBui
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
+import { fromMLToTimeSeriesData } from "../data-processing/common";
 
 const WINDOW = 3;
 const METRIC = "accuracy";
 
 export class MLMVWorkflow extends Workflow {
-  protected data: MLTimeseriesData[] = [];
-  protected name = "";
-
   constructor() {
     super();
   }
 
-  private setData(data: MLTimeseriesData[]) {
-    this.data = data;
+  public setData(data: MLTimeseriesData[]) {
+    // sort data by selected key, e.g, "kernel_size"
+    this.data = data
+      .slice()
+      .sort((a, b) => d3.ascending(a[this.name], b[this.name]))
+      .sort((a, b) => d3.ascending(a["date"], b["date"]));
     return this;
   }
 
   public setNFATable(table: FeatureActionTableRow[]) {
     this.table = table;
     return this;
+  }
+
+  public setCFATable(table: any[]): this {
+    throw new Error("Method not implemented.");
   }
 
   public setName(name: string): this {
@@ -38,31 +44,28 @@ export class MLMVWorkflow extends Workflow {
 
   public setCanvas(svg: SVGGElement) {
     this.svg = svg;
-    console.log("MLMVWorkflow:setCanvas: svg = ", this.svg);
     return this;
   }
 
   public setup() {
-    // sort data by selected key, e.g, "kernel_size"
-    let data = this.data
-      .slice()
-      .sort((a, b) => d3.ascending(a[this.name], b[this.name]))
-      .sort((a, b) => d3.ascending(a["date"], b["date"]));
+    // FeatureActionBuilder takes TimeseriesData, so we need to transform it
+    const data = fromMLToTimeSeriesData(this.data, this.name);
 
-    // const actions: DateActionArray = new FeatureActionBuilder()
-    //   .setProps({ metric: METRIC, window: WINDOW })
-    //   .setData(this.data)
-    //   .setTable(this.table)
-    //   .build();
+    const actions: DateActionArray = new FeatureActionBuilder()
+      .setProps({ metric: METRIC, window: WINDOW })
+      .setData(data)
+      .setTable(this.table)
+      .build();
 
-    // console.log("MLMVWorkflow:setup: actions: ", actions);
+    console.log("MLMVWorkflow:setup: actions: ", actions);
 
     new ParallelCoordinatePlot()
-      .name(this.name)
-      .setData(data)
+      .setName(this.name)
+      .setData(this.data)
       .setCanvas(this.svg)
-      // .actions(actions)
-      .draw();
+      .setActions(actions)
+      // .draw();
+      .animate();
 
     return this;
   }

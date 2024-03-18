@@ -28,6 +28,9 @@ export class Covid19SLWorkflow extends Workflow {
     return this;
   }
 
+  public setCFATable(table: any[]): this {
+    throw new Error("Method not implemented.");
+  }
   public setName(name: string): this {
     this.name = name;
     return this;

@@ -12,6 +12,8 @@ import {
   minIndex,
   normalise,
 } from "../data-processing/common";
+import { Current } from "./Current";
+import { Last } from "./Last";
 
 /**
  ** The function search peaks in a given timeseries.
@@ -481,6 +483,9 @@ export function searchGlobalMax(
   return [max];
 }
 
+/**
+ ** The function search global min in a given timeseries.
+ **/
 export function searchGlobalMin(
   data: TimeseriesData[],
   rank: number,
@@ -495,4 +500,41 @@ export function searchGlobalMin(
     .setDataIndex(findDateIdx(minPoint.date, data));
 
   return [min];
+}
+
+/**
+ ** The function returns current data points.
+ **/
+export function searchCurrent(
+  data: TimeseriesData[],
+  rank: number,
+  metric: string
+): Min[] {
+  return data.map((d) =>
+    new Current()
+      .setDate(d.date)
+      .setHeight(d.y)
+      .setRank(rank)
+      .setMetric(metric)
+      .setDataIndex(findDateIdx(d.date, data))
+  );
+}
+
+/**
+ ** The function last data point
+ **/
+export function searchLast(
+  data: TimeseriesData[],
+  rank: number,
+  metric: string
+): Min[] {
+  let dataX = data[data.length - 1];
+  return [
+    new Last()
+      .setDate(dataX.date)
+      .setHeight(dataX.y)
+      .setRank(rank)
+      .setMetric(metric)
+      .setDataIndex(findDateIdx(dataX.date, data)),
+  ];
 }

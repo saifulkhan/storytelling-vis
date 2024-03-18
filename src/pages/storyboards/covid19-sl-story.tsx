@@ -31,6 +31,7 @@ import { blue } from "@mui/material/colors";
 import { Covid19SLWorkflow } from "../../utils/storyboards/story-builder/Covid19SLWorkflow";
 import { covid19Data, covid19SLNFATable } from "../../services/data";
 import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
+import { clean } from "../../utils/storyboards/data-processing/common";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
@@ -63,7 +64,6 @@ const Covid19SLStoryPage = () => {
         const allData = await covid19Data();
         setRegionsData(allData);
         setRegions(Object.keys(allData).sort());
-        setRegion("Aberdeenshire");
         const table = await covid19SLNFATable();
         setTableNFA(table);
 
@@ -86,6 +86,8 @@ const Covid19SLStoryPage = () => {
     console.log("useEffect 2: region: ", region);
     console.log("useEffect 2: regionData: ", regionData);
     console.log("useEffect 2: tableNFA: ", regionData);
+
+    // clean(chartRef.current);
 
     workflow
       .setName(region)
@@ -144,7 +146,7 @@ const Covid19SLStoryPage = () => {
                   <AutoStoriesIcon />
                 </Avatar>
               }
-              title="Story-1"
+              title="Covid19 Single Location Story"
               subheader="Choose a segment value, a region, and click play to animate the story"
             />
             <CardContent sx={{ pt: "8px" }}>

@@ -44,6 +44,7 @@ export class FeatureActionBuilder {
 
     // const featureActionMap: FeatureActionMap = new Map();
     // const dateFeaturesMap: DateFeaturesMap = new Map();
+    console.log("FeatureActionBuilder:build: data: ", this.data);
 
     this.table.forEach((row: FeatureActionTableRow) => {
       // prettier-ignore

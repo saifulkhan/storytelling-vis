@@ -1,4 +1,5 @@
-import { TimeseriesData } from "./TimeseriesData";
+import * as d3 from "d3";
+import { MLTimeseriesData, TimeseriesData } from "./TimeseriesData";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
@@ -227,4 +228,20 @@ export function scaleValue(
     ((value - minInput) / (maxInput - minInput)) * (maxOutput - minOutput) +
     minOutput
   );
+}
+
+export function fromMLToTimeSeriesData(
+  data: MLTimeseriesData[],
+  key: string
+): TimeseriesData[] {
+  return data.map((d: MLTimeseriesData) => {
+    return {
+      date: d.date,
+      y: d[key],
+    };
+  });
+}
+
+export function clean(svg: SVGGElement) {
+  d3.select(svg).selectAll("*").remove();
 }
