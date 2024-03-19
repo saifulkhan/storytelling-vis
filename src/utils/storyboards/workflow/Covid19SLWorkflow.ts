@@ -3,7 +3,7 @@
  **/
 
 import { TimeseriesData } from "../data-processing/TimeseriesData";
-import { FeatureActionCreate } from "../feature-action-create/FeatureActionCreate";
+import { FeatureActionCreator as FeatureActionCreator } from "../feature-action-create/FeatureActionCreator";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import { Workflow } from "./Workflow";
 import { DateActionArray } from "../feature-action-create/FeatureActionTypes";
@@ -51,7 +51,7 @@ export class Covid19SLWorkflow extends Workflow {
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
 
-    const actions: DateActionArray = new FeatureActionCreate()
+    const actions: DateActionArray = new FeatureActionCreator()
       .setProps({
         metric: METRIC,
         window: WINDOW,

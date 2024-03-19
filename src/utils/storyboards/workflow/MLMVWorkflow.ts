@@ -5,7 +5,7 @@
 import * as d3 from "d3";
 import { Workflow } from "./Workflow";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { FeatureActionCreate } from "../feature-action-create/FeatureActionCreate";
+import { FeatureActionCreator } from "../feature-action-create/FeatureActionCreator";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { DateActionArray } from "../feature-action-create/FeatureActionTypes";
@@ -51,7 +51,7 @@ export class MLMVWorkflow extends Workflow {
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
     const data = fromMLToTimeSeriesData(this.data, this.name);
 
-    const actions: DateActionArray = new FeatureActionCreate()
+    const actions: DateActionArray = new FeatureActionCreator()
       .setProps({ metric: METRIC, window: WINDOW })
       .setData(data)
       .setTable(this.table)

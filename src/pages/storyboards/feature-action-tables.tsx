@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import FeatureActionTable from "../../components/storyboards/tables/FeatureActionTable";
 import { FeatureActionTableRow } from "../../components/storyboards/tables/FeatureActionTableRow";
-import { covid19SLNFATable } from "../../services/data";
+import { covid19SLNFATable } from "../../services/DataService";
 
 const FeatureActionTablesPage = () => {
   const [data, setData] = useState<FeatureActionTableRow[]>();

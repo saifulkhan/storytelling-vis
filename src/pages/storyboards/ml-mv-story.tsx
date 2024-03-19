@@ -29,7 +29,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
 import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
-import { mLData, mLMVNFATable } from "../../services/data";
+import { mLData, mLMVNFATable } from "../../services/DataService";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 
 const MLMVStoryPage = () => {

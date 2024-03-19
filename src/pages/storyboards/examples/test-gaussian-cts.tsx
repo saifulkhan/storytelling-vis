@@ -18,7 +18,7 @@ import {
 } from "../../../components/storyboards/plots/LinePlot";
 import { semanticGaussians } from "../../../utils/storyboards/data-processing/gaussian";
 import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
-import { covid19SLCFATable, covid19Data } from "../../../services/data";
+import { covid19SLCFATable, covid19Data } from "../../../services/DataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;

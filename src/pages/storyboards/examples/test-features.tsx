@@ -22,7 +22,7 @@ import {
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { Dot } from "../../../components/storyboards/actions/Dot";
-import { covid19Data } from "../../../services/data";
+import { covid19Data } from "../../../services/DataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;

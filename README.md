@@ -22,17 +22,17 @@ yarn test
 
 > Note: Unit tests have not been extensively implemented yet. We still need to add the unit tests.
 
-# Code and API Documentation
-
-## Sequence Diagram
-
-## Project Structure
+## Code Structure
 
 ```
 TODO
 ```
 
-## Feature
+## API Documentation
+
+### Sequence Diagram
+
+<img width="780px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
 
 ### Feature
 
@@ -233,7 +233,7 @@ Please cite our paper as follows:
 ```
 @article{khan2024
     title={Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data}, 
-    author={S. Khan and S. Jones and B. Bach and J. Cha and M. Chen and J. Meikle and J. C Roberts and J. Thiyagalingam and J. Wood and P. D. Ritsos},
+    author={S. Khan and S. Jones and B. Bach and J. Cha and M. Chen and J. Meikle and J. C. Roberts and J. Thiyagalingam and J. Wood and P. D. Ritsos},
     journal={arXiv preprint arXiv:2402.03116},
     year={2024},
 }

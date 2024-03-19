@@ -28,7 +28,7 @@ import {
 import { Dot } from "../../../components/storyboards/actions/Dot";
 import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
 import { Circle } from "../../../components/storyboards/actions/Circle";
-import { covid19SLCFATable, covid19Data } from "../../../services/data";
+import { covid19SLCFATable, covid19Data } from "../../../services/DataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;

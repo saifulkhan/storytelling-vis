@@ -13,7 +13,7 @@ import {
   defaultFeatureSearchProps,
 } from "../feature/FeatureSearchProps";
 
-export class FeatureActionCreate {
+export class FeatureActionCreator {
   private data: TimeseriesData[];
   private table: FeatureActionTableRow[];
   private props: FeatureSearchProps;
@@ -42,11 +42,11 @@ export class FeatureActionCreate {
       .setProps(this.props)
       .setData(this.data);
 
-    console.log("FeatureActionCreate:create: data: ", this.data);
+    console.log("FeatureActionCreator:create: data: ", this.data);
 
     this.table.forEach((row: FeatureActionTableRow) => {
       // prettier-ignore
-      console.log("FeatureActionCreate:create: row = ", row);
+      console.log("FeatureActionCreator:create: row = ", row);
 
       //
       // search features
@@ -57,7 +57,7 @@ export class FeatureActionCreate {
         row.rank
       );
       // prettier-ignore
-      console.log("FeatureActionCreate:create: feature:", row.feature, ", features = ", features);
+      console.log("FeatureActionCreator:create: feature:", row.feature, ", features = ", features);
 
       //
       // create actions of each features
@@ -73,7 +73,7 @@ export class FeatureActionCreate {
             ?.setFeatureType(feature?.getType());
           actions.push(action);
           // prettier-ignore
-          // console.log("FeatureActionCreate: action = ", action);
+          // console.log("FeatureActionCreator: action = ", action);
         });
 
         //
@@ -84,7 +84,7 @@ export class FeatureActionCreate {
           ?.setFeatureType(feature?.getType());
         dataActionArray.push([feature.date, action]);
 
-        console.log("FeatureActionCreate:create: action = ", action);
+        console.log("FeatureActionCreator:create: action = ", action);
       });
     });
 
