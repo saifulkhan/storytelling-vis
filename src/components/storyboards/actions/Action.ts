@@ -78,11 +78,6 @@ export abstract class Action {
     return this;
   }
 
-  public setFeatureType(featureType: NumericalFeatures | CategoricalFeatures) {
-    this.featureType = featureType;
-    return this;
-  }
-
   public abstract draw(): void;
   protected canvas(): void {
     this.node = d3
@@ -94,5 +89,14 @@ export abstract class Action {
       .node();
 
     d3.select(this.svg).append(() => this.node);
+  }
+
+  public setFeatureType(featureType: NumericalFeatures | CategoricalFeatures) {
+    this.featureType = featureType;
+    return this;
+  }
+
+  public getFeatureType() {
+    return this.featureType;
   }
 }

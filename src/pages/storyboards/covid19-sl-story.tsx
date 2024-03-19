@@ -28,7 +28,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { Covid19SLWorkflow } from "../../utils/storyboards/story-builder/Covid19SLWorkflow";
+import { Covid19SLWorkflow } from "../../utils/storyboards/workflow/Covid19SLWorkflow";
 import { covid19Data, covid19SLNFATable } from "../../services/data";
 import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 import { clean } from "../../utils/storyboards/data-processing/common";

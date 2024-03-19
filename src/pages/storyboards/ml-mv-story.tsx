@@ -28,7 +28,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
-import { MLMVWorkflow } from "../../utils/storyboards/story-builder/MLMVWorkflow";
+import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
 import { mLData, mLMVNFATable } from "../../services/data";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 
