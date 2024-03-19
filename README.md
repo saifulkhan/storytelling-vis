@@ -92,7 +92,7 @@ Examples visualization of numerical and categorical time series and gaussian mix
 
 <img width="600px" src="./public/doc/action-classes.png" alt="sequence diagram" />
 
-`Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
+`Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class .. composite design pattern. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
 Create a action object:
 
@@ -150,6 +150,8 @@ Please see the contents of `src/components/storyboards/actions` for details or i
 
 ## Plots
 
+<img width="600px" src="./public/doc/plot-classes.png" alt="sequence diagram" />
+
 `Plot` is an abstract class
 
 ```ts
@@ -201,6 +203,8 @@ Nested tables, each tables components are implemented separate React component.
 ### Categorical Feature Action
 
 ## Workflow
+
+<img width="500px" src="./public/doc/workflow-classes.png" alt="sequence diagram" />
 
 Story specific workflow
 
