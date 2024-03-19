@@ -36,6 +36,8 @@ TODO
 
 ### Feature
 
+<img width="500px" src="./public/doc/feature-classes.png" alt="sequence diagram" />
+
 `Feature` is an abstract class ...
 
 Create a feature object:
