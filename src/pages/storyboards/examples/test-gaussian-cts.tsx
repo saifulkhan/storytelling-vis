@@ -17,7 +17,7 @@ import {
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { semanticGaussians } from "../../../utils/storyboards/data-processing/gaussian";
-import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
+import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
 import { covid19SLCFATable, covid19Data } from "../../../services/data";
 
 const WIDTH = 1500,
@@ -93,7 +93,7 @@ const ExampleGaussianPage = () => {
         })
       )
       .setCanvas(ctsChartRef.current)
-      .draw();
+      .plot();
 
     //
   }, [region]);

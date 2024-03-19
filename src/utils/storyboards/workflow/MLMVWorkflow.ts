@@ -5,10 +5,10 @@
 import * as d3 from "d3";
 import { Workflow } from "./Workflow";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
+import { FeatureActionCreate } from "../feature-action-create/FeatureActionCreate";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
-import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
+import { DateActionArray } from "../feature-action-create/FeatureActionTypes";
 import { fromMLToTimeSeriesData } from "../data-processing/common";
 
 const WINDOW = 3;
@@ -51,20 +51,21 @@ export class MLMVWorkflow extends Workflow {
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
     const data = fromMLToTimeSeriesData(this.data, this.name);
 
-    const actions: DateActionArray = new FeatureActionBuilder()
+    const actions: DateActionArray = new FeatureActionCreate()
       .setProps({ metric: METRIC, window: WINDOW })
       .setData(data)
       .setTable(this.table)
-      .build();
+      .create();
 
     console.log("MLMVWorkflow:setup: actions: ", actions);
 
     new ParallelCoordinatePlot()
+      .setPlotProps({})
       .setName(this.name)
       .setData(this.data)
       .setCanvas(this.svg)
       .setActions(actions)
-      // .draw();
+      // .plot();
       .animate();
 
     return this;

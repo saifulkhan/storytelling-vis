@@ -1,15 +1,15 @@
 import * as d3 from "d3";
-import { Color } from "../Colors";
+import { StoryboardColors, LineColor } from "../StoryboardColors";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { getObjectKeysArray } from "../../../utils/storyboards/data-processing/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
+import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
 import { Coordinate } from "../actions/Action";
+import { Actions } from "../actions/Actions";
+import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
 
 export type ParallelCoordinatePlotProperties = {};
 
-const WIDTH = 800,
-  HEIGHT = 600,
-  MARGIN = { top: 70, right: 50, bottom: 30, left: 50 };
+const MARGIN = { top: 70, right: 50, bottom: 30, left: 50 };
 
 const STATIC_LINE_COLOR_MAP = d3.interpolateBrBG,
   STATIC_LINE_OPACITY = 0.4,
@@ -17,11 +17,13 @@ const STATIC_LINE_COLOR_MAP = d3.interpolateBrBG,
 
 const LINE_WIDTH = 1.5,
   DOT_RADIUS = 5,
-  SELECTED_AXIS_COLOR = Color.Red,
-  DELAY = 500,
-  DURATION0 = 1000,
-  DURATION1 = 1000,
+  SELECTED_AXIS_COLOR = StoryboardColors.Red,
   FONT_SIZE = "12px";
+
+const DELAY_SHOW = 0,
+  DELAY_HIDE = 500,
+  DURATION_SHOW = 0,
+  DURATION_HIDE = 1000;
 
 const ANNO_Y_POS = 20,
   ANNO_X_POS = 75;
@@ -65,7 +67,7 @@ export class ParallelCoordinatePlot extends Plot {
 
   width: number;
   height: number;
-  margin = MARGIN;
+  margin;
 
   AxisNames: string[];
   selectedAxis: string;
@@ -80,6 +82,7 @@ export class ParallelCoordinatePlot extends Plot {
   public setPlotProps(props: PlotProps) {
     this.plotProps = { ...defaultPlotProps, ...props };
     this.margin = this.plotProps.margin;
+    console.log("margin:", this.margin);
     return this;
   }
 
@@ -96,8 +99,8 @@ export class ParallelCoordinatePlot extends Plot {
       .sort((a, b) => d3.ascending(a["date"], b["date"]));
 
     this.AxisNames = getObjectKeysArray(data);
-    console.log("ParallelCoordinate:data = ", this.data);
-    console.log("ParallelCoordinate:data: _AxisNames = ", this.AxisNames);
+    console.log("PCP:data = ", this.data);
+    console.log("PCP:data: _AxisNames = ", this.AxisNames);
 
     return this;
   }
@@ -124,7 +127,7 @@ export class ParallelCoordinatePlot extends Plot {
    ** Draw parallel coordinate lines & axis (static)
    **/
 
-  public draw() {
+  public plot() {
     this.drawAxis();
     this.drawLinesAndDots();
 
@@ -150,7 +153,7 @@ export class ParallelCoordinatePlot extends Plot {
     );
 
     // prettier-ignore
-    console.log("ParallelCoordinate: drawAxisAndLabels: xScaleMap = ", this.xScaleMap);
+    console.log("PCP: drawAxisAndLabels: xScaleMap = ", this.xScaleMap);
 
     //
     // Draw axis and labels
@@ -191,6 +194,10 @@ export class ParallelCoordinatePlot extends Plot {
     return this;
   }
 
+  /**
+   ** This will draw lines and dots.
+   ** This is similar to the drawLinesAndDotsHidden() function below.
+   **/
   private drawLinesAndDots() {
     const line = d3
       .line()
@@ -252,41 +259,11 @@ export class ParallelCoordinatePlot extends Plot {
       .style("fill", "Gray")
       .style("opacity", STATIC_DOT_OPACITY);
   }
+
   /**
-   ** Animation
+   ** This will draw lines and dots but initially hidden, and revealed during animation
+   ** This is similar to the drawLinesAndDots() function above.
    **/
-
-  public setActions(actions: DateActionArray) {
-    this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
-
-    return this;
-  }
-
-  public animate() {
-    // draw static
-    // if (!this._actions || !this._actions.length) {
-    //   this._draw();
-    //   return;
-    // }
-
-    this.drawAxis();
-    this.drawLinesAndDotsHidden();
-
-    (async () => {
-      // update actions coord, text etc.
-      for (const [date, action] of this.actions) {
-        // set
-        // origin
-        // destination
-        // variables
-
-        console.log("PCP:animate: action = ", date);
-        await this.showDots(date);
-        await this.showLine(date);
-      }
-    })();
-  }
-
   private drawLinesAndDotsHidden() {
     const line = d3
       .line()
@@ -359,68 +336,141 @@ export class ParallelCoordinatePlot extends Plot {
       .style("opacity", 0); // TODO
   }
 
-  // TODO Promise
-  private showLine(date: Date) {
+  /**
+   ** Actions that will be animated.
+   **/
+  public setActions(actions: DateActionArray) {
+    this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
+
+    return this;
+  }
+
+  public animate() {
+    // draw static
+    // if (!this._actions || !this._actions.length) {
+    //   this._draw();
+    //   return;
+    // }
+
+    this.drawAxis();
+    this.drawLinesAndDotsHidden();
+
+    (async () => {
+      let lastDate, lastFeatureType;
+      for (const [date, action] of this.actions) {
+        console.log("PCP:animate: action:", action.getFeatureType());
+
+        if (lastDate && lastFeatureType) {
+          await Promise.all([
+            this.hideDots(lastDate, lastFeatureType),
+            this.hideLine(lastDate, lastFeatureType),
+          ]);
+        }
+
+        const featureType = action.getFeatureType();
+        await Promise.all([
+          this.showDots(date, featureType),
+          this.showLine(date, featureType),
+        ]);
+        lastDate = date;
+        lastFeatureType = featureType;
+      }
+    })();
+  }
+
+  private showLine(date: Date, type: NumericalFeatures) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
         .transition()
         // delay before transition
-        .delay(0)
+        .delay(DELAY_SHOW)
         // duration of the opacity transition
-        .duration(DURATION0)
-        .attr("stroke-opacity", 1)
+        .duration(DURATION_SHOW)
+        .style("stroke-opacity", 1)
+        .style("stroke", this.colorOnShow(type))
         .on("end", () => {
-          resolve(DURATION0);
+          resolve(DELAY_SHOW + DURATION_SHOW);
         });
     });
   }
 
-  // TODO Promise
-  private hideLine(date: Date) {
+  private hideLine(date: Date, type: NumericalFeatures) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
         .transition()
         .ease(d3.easeLinear)
-        .delay(DELAY)
-        .duration(DURATION1)
-        .style("stroke-opacity", 0.5)
-        .style("stroke", "#d3d3d3")
+        .delay(DELAY_HIDE)
+        .duration(DURATION_HIDE)
+        .style("stroke-opacity", this.opacityOnHideLine(type))
+        .style("stroke", this.colorOnHideLine(type))
         .on("end", () => {
-          resolve(DELAY + DURATION1);
+          resolve(DELAY_HIDE + DURATION_HIDE);
         });
     });
   }
 
-  // TODO Promise
-  private showDots(date: Date) {
+  private showDots(date: Date, type: NumericalFeatures) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // return group
         .selectAll("circle")
         .transition()
         // delay before transition
-        .delay(0)
+        .delay(DELAY_SHOW)
         // duration of the opacity transition
-        .duration(DURATION0)
-        .style("opacity", 1) // reveal the circles
+        .duration(DURATION_SHOW)
+        .style("opacity", 1)
+        .style("fill", this.colorOnShow(type))
         .on("end", () => {
-          resolve(DURATION0);
+          resolve(DELAY_SHOW + DURATION_SHOW);
         });
     });
   }
 
-  // TODO Promise
-  private hideDots(date: Date) {
-    d3.select(this.svg)
-      .select(`#${this.getDotId(date)}`) // returns group
-      .selectAll("circle")
-      .transition()
-      .ease(d3.easeLinear)
-      .delay(DELAY)
-      .duration(DURATION1)
-      .style("opacity", 0);
+  private hideDots(date: Date, type: NumericalFeatures) {
+    return new Promise<number>((resolve, reject) => {
+      d3.select(this.svg)
+        .select(`#${this.getDotId(date)}`) // returns group
+        .selectAll("circle")
+        .transition()
+        .ease(d3.easeLinear)
+        .delay(DELAY_HIDE)
+        .duration(DURATION_HIDE)
+        .style("opacity", 0)
+        .on("end", () => {
+          resolve(DELAY_HIDE + DURATION_HIDE);
+        });
+    });
+  }
+
+  private getLineId(date: Date) {
+    return `id-line-${date.getTime()}`;
+  }
+
+  private getDotId(date: Date) {
+    return `id-dot-${date.getTime()}`;
+  }
+
+  private colorOnShow(type: NumericalFeatures): string {
+    return LineColor[type];
+  }
+
+  private colorOnHideLine(type: NumericalFeatures) {
+    if (type === NumericalFeatures.MAX || type === NumericalFeatures.MIN) {
+      return LineColor[type];
+    } else {
+      return StoryboardColors.LightGrey1;
+    }
+  }
+
+  private opacityOnHideLine(type: NumericalFeatures) {
+    if (type === NumericalFeatures.MAX || type === NumericalFeatures.MIN) {
+      return 1;
+    } else {
+      return 0.3;
+    }
   }
 
   private midXCoordinate() {
@@ -436,7 +486,7 @@ export class ParallelCoordinatePlot extends Plot {
   private coordinateOnAxis(data: any, axisName: string) {
     if (!data.hasOwnProperty(axisName)) {
       // prettier-ignore
-      console.error("ParallelCoordinatePlot:coord: data has no attribute: ", axisName);
+      console.error("PCPPlot:coord: data has no attribute: ", axisName);
     }
 
     const xScale = this.xScaleMap.get(axisName);
@@ -455,14 +505,6 @@ export class ParallelCoordinatePlot extends Plot {
 
   private topRightCoordinate() {
     return [this.width - this.margin.left - ANNO_X_POS, ANNO_Y_POS];
-  }
-
-  private getLineId(date: Date) {
-    return `id-line-${date.getTime()}`;
-  }
-
-  private getDotId(date: Date) {
-    return `id-dot-${date.getTime()}`;
   }
 
   old() {
@@ -517,7 +559,7 @@ export class ParallelCoordinatePlot extends Plot {
     const prevAnn: PCPAnnotation = this._annotations[prevIdx];
 
     // prettier-ignore
-    // console.log("ParallelCoordinate: _animateForward: currAnnotation = ", currAnn);
+    // console.log("PCP: _animateForward: currAnnotation = ", currAnn);
 
     // Show current line & its dots
     this.showLine(currIdx);

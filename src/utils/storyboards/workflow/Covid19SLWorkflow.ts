@@ -3,10 +3,10 @@
  **/
 
 import { TimeseriesData } from "../data-processing/TimeseriesData";
-import { FeatureActionBuilder } from "../feature-action-builder/FeatureActionBuilder";
+import { FeatureActionCreate } from "../feature-action-create/FeatureActionCreate";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import { Workflow } from "./Workflow";
-import { DateActionArray } from "../feature-action-builder/FeatureActionTypes";
+import { DateActionArray } from "../feature-action-create/FeatureActionTypes";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { cts, gmm, nts } from "../data-processing/gaussian";
 
@@ -51,14 +51,14 @@ export class Covid19SLWorkflow extends Workflow {
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
 
-    const actions: DateActionArray = new FeatureActionBuilder()
+    const actions: DateActionArray = new FeatureActionCreate()
       .setProps({
         metric: METRIC,
         window: WINDOW,
       })
       .setTable(this.table)
       .setData(this.data)
-      .build();
+      .create();
 
     console.log("Covid19SLWorkflow:setup: actions: ", actions);
 
@@ -70,7 +70,7 @@ export class Covid19SLWorkflow extends Workflow {
       .setCanvas(this.svg)
       .setActions(actions)
       .animate();
-    // .draw();
+    // .plot();
 
     return this;
   }

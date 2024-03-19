@@ -109,7 +109,7 @@ const ExampleGaussianPage = () => {
         })
       )
       .setCanvas(ntsChartRef.current)
-      .draw();
+      .plot();
   }, [region]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {

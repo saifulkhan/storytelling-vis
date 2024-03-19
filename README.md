@@ -125,18 +125,18 @@ const plot = new LinePlot()
                 .setPlotProps(PlotProps)
                 .setLineProps([])
                 .setCanvas(SVGGElement)
-                .draw()
+                .setActions(<action data>)
+                .animate()
 
+```
+
+In order to draw a static line plot
+
+```ts
+plot.plot()
 ```
 
 See the example line plot `src/pages/storyboards/examples/test-line-plot.tsx` in action <http://localhost:3000/storyboards/examples/test-line-plot>.
-
-In order to animate line plot, set the list of actions and call animate.
-
-```ts
-plot.setActions()
-    .animate(<feature action data>)
-```
 
 ## Feature Action Table
 

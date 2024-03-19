@@ -56,7 +56,7 @@ const TestLinePlotPage = () => {
           },
         ])
         .setCanvas(chartRef.current)
-        .draw();
+        .plot();
 
       // lineChart.animate(2, 20, 400);
     });

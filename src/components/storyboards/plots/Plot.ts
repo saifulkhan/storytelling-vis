@@ -28,7 +28,7 @@ export abstract class Plot {
   public abstract setPlotProps(props: PlotProps): this;
   public abstract setName(properties: unknown): this;
   public abstract setCanvas(svg: SVGSVGElement): this;
-  public abstract draw();
+  public abstract plot();
   public abstract setActions(unknown): this;
   public abstract animate();
   public abstract getCoordinates(...args: unknown[]): [Coordinate, Coordinate];

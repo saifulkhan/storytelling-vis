@@ -26,7 +26,7 @@ import {
   semanticGaussians,
 } from "../../../utils/storyboards/data-processing/gaussian";
 import { Dot } from "../../../components/storyboards/actions/Dot";
-import { getSchemeTableau10 } from "../../../components/storyboards/Colors";
+import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
 import { Circle } from "../../../components/storyboards/actions/Circle";
 import { covid19SLCFATable, covid19Data } from "../../../services/data";
 
@@ -130,7 +130,7 @@ const TestGaussianCombinedPage = () => {
         })
       )
       .setCanvas(chartRef.current)
-      .draw();
+      .plot();
 
     //
     //

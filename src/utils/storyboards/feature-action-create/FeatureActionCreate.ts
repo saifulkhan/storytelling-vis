@@ -13,7 +13,7 @@ import {
   defaultFeatureSearchProps,
 } from "../feature/FeatureSearchProps";
 
-export class FeatureActionBuilder {
+export class FeatureActionCreate {
   private data: TimeseriesData[];
   private table: FeatureActionTableRow[];
   private props: FeatureSearchProps;
@@ -35,42 +35,56 @@ export class FeatureActionBuilder {
     return this;
   }
 
-  public build() {
+  public create() {
     const dataActionArray: DateActionArray = [];
     const actionFactory = new ActionFactory();
     const featureFactory = new FeatureFactory()
       .setProps(this.props)
       .setData(this.data);
 
-    // const featureActionMap: FeatureActionMap = new Map();
-    // const dateFeaturesMap: DateFeaturesMap = new Map();
-    console.log("FeatureActionBuilder:build: data: ", this.data);
+    console.log("FeatureActionCreate:create: data: ", this.data);
 
     this.table.forEach((row: FeatureActionTableRow) => {
       // prettier-ignore
-      console.log("FeatureActionBuilder:build: row = ", row);
+      console.log("FeatureActionCreate:create: row = ", row);
+
+      //
+      // search features
+      //
       const features: Feature[] = featureFactory.search(
         row.feature,
         row.properties,
         row.rank
       );
       // prettier-ignore
-      console.log("FeatureActionBuilder:build: feature:", row.feature, ", features = ", features);
+      console.log("FeatureActionCreate:create: feature:", row.feature, ", features = ", features);
 
+      //
+      // create actions of each features
+      //
       features.forEach((feature: Feature) => {
         let actions: Action[] = [];
         row.actions.forEach((rowIn: ActionTableRow) => {
-          // const action = actionFactory.create(rowIn.action, rowIn.properties);
+          //
+          // create action
+          //
+          const action = actionFactory
+            .create(rowIn.action, rowIn.properties)
+            ?.setFeatureType(feature?.getType());
+          actions.push(action);
           // prettier-ignore
-          // console.log("FeatureActionBuilder: action = ", action);
-          actions.push(actionFactory.create(rowIn.action, rowIn.properties));
+          // console.log("FeatureActionCreate: action = ", action);
         });
 
-        const action: Action = actionFactory.group(actions);
-        console.log("FeatureActionBuilder:build: action = ", action);
-        // setOrUpdateMap(dateFeaturesMap, feature.date, feature);
-        // featureActionMap.set(feature, action);
+        //
+        // group all actions of the feature
+        //
+        const action: Action = actionFactory
+          .group(actions)
+          ?.setFeatureType(feature?.getType());
         dataActionArray.push([feature.date, action]);
+
+        console.log("FeatureActionCreate:create: action = ", action);
       });
     });
 

@@ -26,15 +26,10 @@ export class ActionGroup extends Action {
     this.actions.sort(
       (a: Action, b: Action) => ActionZOrder[b.type] - ActionZOrder[a.type]
     );
-    console.log("ActionGroup:draw: ordered actions: ", this.actions);
+    // console.log("ActionGroup:setCanvas: ordered actions: ", this.actions);
     this.actions.map((d: Action) => d.setCanvas(svg));
     return this;
   }
-
-  // public draw() {
-  //   this.actions.map((d: Action) => d.draw());
-  //   return this;
-  // }
 
   public setCoordinate(coordinate: [Coordinate, Coordinate]) {
     this.actions.map((d: Action) => d.setCoordinate(coordinate));

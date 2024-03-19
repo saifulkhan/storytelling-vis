@@ -6,7 +6,7 @@ import {
   findDateIdx,
   findIndexOfDate,
 } from "../../../utils/storyboards/data-processing/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action-builder/FeatureActionTypes";
+import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
@@ -110,7 +110,7 @@ export class LinePlot extends Plot {
   /**
    ** Draw all lines (no animation)
    **/
-  public draw() {
+  public plot() {
     console.log("LinePlot:_draw: _data: ", this.data);
     const line = (xAxis, yAxis) => {
       return d3

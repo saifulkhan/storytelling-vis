@@ -92,7 +92,7 @@ const FeaturesPage = () => {
         })
       )
       .setCanvas(chartRef.current)
-      .draw();
+      .plot();
 
     peaks.forEach((peak) => {
       console.log(plot.getCoordinates(peak.getDate()));
