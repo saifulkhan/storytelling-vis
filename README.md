@@ -90,6 +90,8 @@ Examples visualization of numerical and categorical time series and gaussian mix
 
 ## Drawing Actions
 
+<img width="600px" src="./public/doc/action-classes.png" alt="sequence diagram" />
+
 `Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
 Create a action object:
