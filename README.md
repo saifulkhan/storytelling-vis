@@ -116,21 +116,33 @@ Please see the contents of `src/components/storyboards/actions` for details or i
 
 Various plots implemented ...
 
-For example, to create line plot:
+Line plot API
 
 ```ts
-const plot = new LinePlot()
-                .setData([TimeseriesData])
-                .setName(name or key)
-                .setPlotProps(PlotProps)
-                .setLineProps([])
-                .setCanvas(SVGGElement)
-                .setActions(<action data>)
-                .animate()
+new LinePlot()
+    .setData(TimeseriesData[]])
+    .setName(name or key)
+    .setPlotProps(PlotProps)
+    .setLineProps([])
+    .setCanvas(SVGGElement)
+    .setActions(<action data>)
+    .animate()
 
 ```
 
-In order to draw a static line plot
+Parallel coordinate plot API
+
+```ts
+new ParallelCoordinatePlot()
+    .setName(string)
+    .setData(<data[]>)
+    .setPlotProps(PlotProps)
+    .setCanvas(SVGGElement)
+    .setActions(actions)
+    .animate();
+```
+
+In order to draw static plot, use the `plot()` method, e.g.,
 
 ```ts
 plot.plot()
