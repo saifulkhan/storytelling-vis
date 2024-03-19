@@ -94,7 +94,7 @@ const Covid19SLStoryPage = () => {
       .setData(regionData)
       .setNFATable(tableNFA)
       .setCanvas(chartRef.current)
-      .setup();
+      .create();
 
     return () => {};
   }, [region, regionsData, tableNFA]);

@@ -47,7 +47,7 @@ export class MLMVWorkflow extends Workflow {
     return this;
   }
 
-  public setup() {
+  public create() {
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
     const data = fromMLToTimeSeriesData(this.data, this.name);
 

@@ -16,5 +16,5 @@ export abstract class Workflow {
   public abstract setCFATable(table: any[]): this;
   public abstract setName(name: string): this;
   public abstract setCanvas(svg: SVGGElement): this;
-  public abstract setup(): this;
+  public abstract create(): this;
 }

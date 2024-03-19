@@ -32,23 +32,40 @@ yarn test
 TODO
 ```
 
-## Feature Detection
+## Feature
 
-Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
+### Feature
 
-Detection & feature creation:
+`Feature` is an abstract class ...
+
+Create a feature object:
+
+```ts
+new <FeatureName>()
+    .setDate(Date)
+    .setHeight(number)
+    .setNormWidth(number)
+    .setNormHeight(number)
+    .setRank(number)
+    .setMetric(string)
+    .setStart(Date)
+    .setEnd(Date)
+    .setDataIndex(number);
+```
+
+For example, to create a PEAK or Peak object,
 
 ```ts
 new Peak()
-    .setDate(data[idx].date)
-    .setHeight(data[idx].y)
-    .setNormWidth((end - start) / norm.length)
-    .setNormHeight(norm[idx])
-    .setRank(rank)
-    .setMetric(metric)
-    .setStart(data[start].date)
-    .setEnd(data[end].date)
-    .setDataIndex(idx);
+    .setDate(...)
+    .setHeight(...)
+    .setNormWidth(...)
+    .setNormHeight(...)
+    .setRank(...)
+    .setMetric(...)
+    .setStart(...)
+    .setEnd(...)
+    .setDataIndex(...);
 ```
 
 `src/utils/storyboards/feature`
@@ -56,6 +73,10 @@ new Peak()
 Examples visualization of feature detection:
 
 - <http://localhost:3000/storyboards/examples/test-features>
+
+### Feature Search
+
+Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
 
 ### Gaussian
 
@@ -69,31 +90,42 @@ Examples visualization of numerical and categorical time series and gaussian mix
 
 `Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
-Action objects:
+Create a action object:
 
 ```ts
-const circle = new Circle()
-            .setProps(CircleProps)
-            .setCanvas(SVGGElement)
-            .setCoordinate([Coordinate, Coordinate])
-            .show();
+new <ActionName>()
+    .setProps(<Props>)
+    .setCanvas(SVGGElement)
+    .setCoordinate([Coordinate, Coordinate])
+    .show();
 ```
 
 Animate action show and hide:
 
 ```ts
-await circle.show(delay, duration);
-await circle.hide(delay, duration);
+await <action>.show(delay, duration);
+await <action>.hide(delay, duration);
+```
+
+For example, create a Circle or CIRCLE action object,
+
+```ts
+new Circle()
+    .setProps(CircleProps)
+    .setCanvas(SVGGElement)
+    .setCoordinate([Coordinate, Coordinate])
+    .show();
 ```
 
 We implemented movement for `TextBox` to a specified coordinate:
 
 ```ts
-const textBox = new TextBox()
-            .setProps(...)
-            .setCanvas(...)
-            .setCoordinate(...)
-            .show();
+const textBox 
+= new TextBox()
+    .setProps(...)
+    .setCanvas(...)
+    .setCoordinate(...)
+    .show();
 
 await textBox.move(Coordinate, delay, duration);
 ```
@@ -104,7 +136,7 @@ Group multiple actions to a single object.
 
 ```ts
 new ActionGroup()
-    .group([new Dot().setProps(), new TextBox().setProps({}), ...])
+    .group([<array of actions>])
     .setCanvas(...)
     .setCoordinate(...)
     .show();
@@ -114,9 +146,21 @@ Please see the contents of `src/components/storyboards/actions` for details or i
 
 ## Plots
 
-Various plots implemented ...
+`Plot` is an abstract class
 
-Line plot API
+```ts
+new <PlotName>()
+    .setData([<array of data>])
+    .setName(string)
+    .setPlotProps(PlotProps)
+    .set<plot specific>Props([])
+    .setCanvas(SVGGElement)
+    .setActions([<date and action>])
+    .animate()
+
+```
+
+For example, line plot API
 
 ```ts
 new LinePlot()
@@ -130,23 +174,13 @@ new LinePlot()
 
 ```
 
-Parallel coordinate plot API
-
-```ts
-new ParallelCoordinatePlot()
-    .setName(string)
-    .setData(<data[]>)
-    .setPlotProps(PlotProps)
-    .setCanvas(SVGGElement)
-    .setActions(actions)
-    .animate();
-```
-
 In order to draw static plot, use the `plot()` method, e.g.,
 
 ```ts
 plot.plot()
 ```
+
+See implementation of each plot class for more details.
 
 See the example line plot `src/pages/storyboards/examples/test-line-plot.tsx` in action <http://localhost:3000/storyboards/examples/test-line-plot>.
 
@@ -162,11 +196,24 @@ Nested tables, each tables components are implemented separate React component.
 
 ### Categorical Feature Action
 
-## Workflow Setup
+## Workflow
+
+Story specific workflow
 
 Page -> builder ->
 
 Create workflow of a story:
+
+```ts
+new  <WorkflowName>()
+    .setName(...)
+    .setData(...)
+    .setNFATable(...)
+    .setCanvas(...)
+    .create();
+```
+
+For example, Covid19 single location workflow is setup as,
 
 ```ts
 new Covid19SLWorkflow()
@@ -174,15 +221,7 @@ new Covid19SLWorkflow()
     .setData(regionData)
     .setNFATable(tableNFA)
     .setCanvas(chartRef.current)
-    .setup();
-```
-
-```ts
-const actions = new FeatureActionBuilder()
-    .setProps({ metric: METRIC, window: WINDOW })
-    .setData(this.data)
-    .setTable(this.table)
-    .build();
+    .create();
 ```
 
 Covid19 story with single time series: <http://localhost:3000/storyboards/covid19-story-1>

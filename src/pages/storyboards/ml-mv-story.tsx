@@ -82,7 +82,7 @@ const MLMVStoryPage = () => {
       .setData(data)
       .setNFATable(nFATable)
       .setCanvas(chartRef.current)
-      .setup();
+      .create();
 
     return () => {};
   }, [key]);

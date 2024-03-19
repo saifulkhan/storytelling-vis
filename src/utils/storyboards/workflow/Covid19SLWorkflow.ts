@@ -42,7 +42,7 @@ export class Covid19SLWorkflow extends Workflow {
     return this;
   }
 
-  public setup() {
+  public create() {
     console.log("Covid19SLWorkflow:setup: data:", this.data);
     console.log("Covid19SLWorkflow:setup: table:", this.table);
 
