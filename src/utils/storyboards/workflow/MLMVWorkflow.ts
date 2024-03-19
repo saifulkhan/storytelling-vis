@@ -60,7 +60,7 @@ export class MLMVWorkflow extends Workflow {
     console.log("MLMVWorkflow:setup: actions: ", actions);
 
     new ParallelCoordinatePlot()
-      .setPlotProps({})
+      .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
       .setName(this.name)
       .setData(this.data)
       .setCanvas(this.svg)

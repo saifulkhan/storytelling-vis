@@ -80,10 +80,10 @@ const TestActionsPage = () => {
         backgroundColor: "lightgrey",
         width: 100,
       });
-      const list = [new Dot().setProps(), new Circle().setProps(), textbox2];
+      const actions = [new Dot().setProps(), new Circle().setProps(), textbox2];
 
       const group = new ActionGroup()
-        .group(list)
+        .group(actions)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst2])
         .show();

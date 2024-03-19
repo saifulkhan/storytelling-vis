@@ -7,8 +7,8 @@
       {
         "action": "TEXT_BOX",
         "properties": {
-          "title": "{DATE}",
-          "message": "The worst accuracy: ${MEAN_TRAIN_ACCURACY}% [${MEAN_TRAIN_ACCURACY}%]",
+          "title": "${date}",
+          "message": "The worst accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
           "backgroundColor": "#d3d3d3",
           "width": 300
         }
@@ -23,8 +23,8 @@
       {
         "action": "TEXT_BOX",
         "properties": {
-          "message": "The best accuracy: ${MEAN_TRAIN_ACCURACY}% [${MEAN_TRAIN_ACCURACY}%]",
-          "title": "{DATE}",
+          "message": "The best accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
           "backgroundColor": "#d3d3d3",
           "width": 300
         }
@@ -39,8 +39,8 @@
       {
         "action": "TEXT_BOX",
         "properties": {
-          "message": "The current testing accuracy: ${MEAN_TRAIN_ACCURACY}% [${MEAN_TRAIN_ACCURACY}%]",
-          "title": "{DATE}",
+          "message": "The current testing accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
           "backgroundColor": "#d3d3d3",
           "width": 300
         }
@@ -55,8 +55,8 @@
       {
         "action": "TEXT_BOX",
         "properties": {
-          "message": "The current/last testing accuracy: ${MEAN_TRAIN_ACCURACY}% [${MEAN_TRAIN_ACCURACY}%]",
-          "title": "{DATE}",
+          "message": "The current/last testing accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
           "backgroundColor": "#d3d3d3",
           "width": 300
         }

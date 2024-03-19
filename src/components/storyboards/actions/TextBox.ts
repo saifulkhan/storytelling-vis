@@ -259,6 +259,7 @@ export class TextBox extends Action {
     duration = 1500
   ): Promise<any> {
     this.coordinate1 = coordinate;
+    console.log("TextBox:move: coordinate1:", coordinate, this.coordinate1);
 
     const { width, height } = this.rectNode.getBoundingClientRect();
 

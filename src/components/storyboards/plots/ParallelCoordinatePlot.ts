@@ -1,11 +1,14 @@
 import * as d3 from "d3";
 import { StoryboardColors, LineColor } from "../StoryboardColors";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { getObjectKeysArray } from "../../../utils/storyboards/data-processing/common";
+import {
+  findIndexOfDate,
+  getObjectKeysArray,
+} from "../../../utils/storyboards/data-processing/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
-import { Coordinate } from "../actions/Action";
-import { Actions } from "../actions/Actions";
+import { Coordinate, Action } from "../actions/Action";
 import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
+import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -358,7 +361,7 @@ export class ParallelCoordinatePlot extends Plot {
     (async () => {
       let lastDate, lastFeatureType;
       for (const [date, action] of this.actions) {
-        console.log("PCP:animate: action:", action.getFeatureType());
+        console.log("PCP:animate: action:", action);
 
         if (lastDate && lastFeatureType) {
           await Promise.all([
@@ -371,7 +374,9 @@ export class ParallelCoordinatePlot extends Plot {
         await Promise.all([
           this.showDots(date, featureType),
           this.showLine(date, featureType),
+          this.showAction(date, featureType, action),
         ]);
+
         lastDate = date;
         lastFeatureType = featureType;
       }
@@ -445,6 +450,49 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
+  private showAction(
+    date: Date,
+    type: NumericalFeatures,
+    action: Action
+  ): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      const data = this.data[findIndexOfDate(this.data, date)];
+
+      action
+        .updateProps({
+          date: date.toLocaleDateString(),
+          mean_test_accuracy: data["mean_test_accuracy"],
+          mean_training_accuracy: data["mean_training_accuracy"],
+          horizontalAlign: "middle" as HorizontalAlign,
+          verticalAlign: "top" as VerticalAlign,
+        })
+        .setCanvas(this.svg)
+        // .setCoordinate([[0, 0], this.topMidCoordinate()]);
+        .setCoordinate([[0, 0], this.coordinateOnAxis(date)]);
+
+      console.log("PCP:showAction: action:", this.topMidCoordinate());
+
+      return Promise.all([
+        action.show(),
+        action.move(this.topMidCoordinate(), 500, 2000),
+      ])
+        .then((results) => {
+          // Assuming the desired number to resolve with is in the results array
+          // You might need to adjust this depending on what exactly you're expecting
+          resolve(results[0]); // or another relevant value based on the promises
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  private hideAction(date: Date, type: NumericalFeatures, action: Action) {
+    return new Promise<number>((resolve, reject) => {
+      return action.hide();
+    });
+  }
+
   private getLineId(date: Date) {
     return `id-line-${date.getTime()}`;
   }
@@ -473,7 +521,7 @@ export class ParallelCoordinatePlot extends Plot {
     }
   }
 
-  private midXCoordinate() {
+  private midXCoordinate(): number {
     const dateScale = this.xScaleMap.get("date");
     const mid =
       (dateScale(this.data[this.data.length - 1].date) +
@@ -483,27 +531,24 @@ export class ParallelCoordinatePlot extends Plot {
     return mid;
   }
 
-  private coordinateOnAxis(data: any, axisName: string) {
-    if (!data.hasOwnProperty(axisName)) {
-      // prettier-ignore
-      console.error("PCPPlot:coord: data has no attribute: ", axisName);
-    }
-
-    const xScale = this.xScaleMap.get(axisName);
-    const x = xScale(data[axisName]);
-    const y = this.yScale(axisName);
+  private coordinateOnAxis(date: Date): Coordinate {
+    const data = this.data[findIndexOfDate(this.data, date)];
+    console.log("data: ", data);
+    const xScale = this.xScaleMap.get(this.selectedAxis);
+    const x = xScale(data[this.selectedAxis]);
+    const y = this.yScale(this.selectedAxis);
     return [x, y];
   }
 
-  private topLeftCoordinate() {
-    return [this.margin.right + ANNO_X_POS, ANNO_Y_POS];
+  private topLeftCoordinate(): Coordinate {
+    return [this.margin.right + ANNO_X_POS, ANNO_Y_POS + this.margin.top / 2];
   }
 
-  private topMidCoordinate() {
-    return [this.midXCoordinate(), ANNO_Y_POS];
+  private topMidCoordinate(): Coordinate {
+    return [this.midXCoordinate(), ANNO_Y_POS + this.margin.top / 2];
   }
 
-  private topRightCoordinate() {
+  private topRightCoordinate(): Coordinate {
     return [this.width - this.margin.left - ANNO_X_POS, ANNO_Y_POS];
   }
 

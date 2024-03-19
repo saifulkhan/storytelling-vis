@@ -48,9 +48,12 @@ export class ActionGroup extends Action {
 
   public move(
     coordinate: Coordinate,
-    delay?: number | undefined,
-    duration?: number | undefined
+    delay?: number,
+    duration?: number
   ): Promise<any> {
-    throw new Error("ActionGroup: move() is not implemented!");
+    const promises = this.actions.map((d: Action) =>
+      d.move(coordinate, delay, duration)
+    );
+    return Promise.all(promises);
   }
 }
