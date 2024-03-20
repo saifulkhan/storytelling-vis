@@ -45,17 +45,17 @@ TODO
 <div align="center">
     <img width="1000px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
-    <p>Figure 1: Sequence diagram demonstrating the classes' most important interaction or function calls. </p>
+    <p>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls. </p>
 </div>
 
 ### Feature
 
 <div align="center">
     <img width="500px" src="./public/doc/feature-classes.png" alt="sequence diagram" />
-    <p>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes. Please browse the source code for more information. </p>
+    <p>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. Please look at the files in `src/utils/storyboards/feature` for detailed information about the implemented features. </p>
 </div>
 
-`Feature` is an abstract class ...
+`Feature` is an abstract class; `NumericalFeature` and `CategoricalFeature` are two classes inherited from it. The `CategoricalFeature` describes semantic features in a time series.   
 
 Create a feature object:
 
