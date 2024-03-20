@@ -1,10 +1,15 @@
 # About
 
-This is source code of Feature-Action Design Patterns for Storytelling Visualizations with Timeseries Data.
+This is the source code of our paper titled Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data.
+
+## Prerequisite
+
+- Node.js v20.11.1
+- yarn or npm
 
 ## Getting Started
 
-First, run the development server:
+To start the UI, run the development server:
 
 ```bash
 npm run dev
@@ -20,7 +25,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 yarn test
 ```
 
-> Note: Unit tests have not been extensively implemented yet. We still need to add the unit tests.
+> Note: Unit tests have yet to be extensively implemented.
 
 ## Code Structure
 
@@ -32,11 +37,15 @@ TODO
 
 ### Sequence Diagram
 
-<img width="780px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
+<div align="center">
+    <img width="1000px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
+</div>
 
 ### Feature
 
-<img width="500px" src="./public/doc/feature-classes.png" alt="sequence diagram" />
+<div align="center">
+    <img width="500px" src="./public/doc/feature-classes.png" alt="sequence diagram" />
+</div>
 
 `Feature` is an abstract class ...
 
@@ -90,7 +99,9 @@ Examples visualization of numerical and categorical time series and gaussian mix
 
 ## Drawing Actions
 
-<img width="600px" src="./public/doc/action-classes.png" alt="sequence diagram" />
+<div align="center">
+    <img width="600px" src="./public/doc/action-classes.png" alt="sequence diagram" />
+</div>
 
 `Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class .. composite design pattern. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
 
@@ -150,7 +161,10 @@ Please see the contents of `src/components/storyboards/actions` for details or i
 
 ## Plots
 
-<img width="600px" src="./public/doc/plot-classes.png" alt="sequence diagram" />
+<div align="center">
+    <img width="600px" src="./public/doc/plot-classes.png" alt="sequence diagram" />
+</div>
+
 
 `Plot` is an abstract class
 
@@ -204,7 +218,10 @@ Nested tables, each tables components are implemented separate React component.
 
 ## Workflow
 
-<img width="500px" src="./public/doc/workflow-classes.png" alt="sequence diagram" />
+<div align="center">
+    <img width="500px" src="./public/doc/workflow-classes.png" alt="sequence diagram" />
+</div>
+
 
 Story specific workflow
 
