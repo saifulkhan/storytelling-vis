@@ -42,22 +42,24 @@ TODO
 
 ### Sequence Diagram
 
-<div align="center">
+<!-- <div align="center">  -->
+<div>
     <img width="1000px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
-    <be>
+    <br>
     <small><i>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls.</i></small>
 </div>
 
 ### Feature
 
-<div align="center">
-    <img width="500px" src="./public/doc/feature-classes.png" alt="sequence diagram" />
-    <p>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. Please look at the files in `src/utils/storyboards/feature` for detailed information about the implemented features. </p>
+<div>
+    <img width="500px" src="./public/doc/feature-classes.png" alt="" />
+    <br>
+    <small><i>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. </i></small>
 </div>
 
-`Feature` is an abstract class,  `NumericalFeature` and `CategoricalFeature` are two classes inherited from it that describe numerical and semantic features of a time series. Classes, e.g., `Peak`, `Min`, `Max`   
+`Feature` is an abstract class,  `NumericalFeature` and `CategoricalFeature` are two classes inherited from it that describe numerical and semantic features of a time series. The concrete classes, e.g., `Peak`, `Min`, `Max`, etc. holds the numerical properties of timeseries. More firtures can be implemented by extending the base class.
 
-Create a feature object:
+To create a feature object:
 
 ```ts
 new <FeatureName>()
@@ -72,7 +74,7 @@ new <FeatureName>()
     .setDataIndex(number);
 ```
 
-For example, to create a PEAK or Peak object,
+For example, to create a Peak object,
 
 ```ts
 new Peak()
@@ -87,33 +89,36 @@ new Peak()
     .setDataIndex(...);
 ```
 
-`src/utils/storyboards/feature`
+Features types are implemented in ``NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. See the contents of folder `src/utils/storyboards/feature` for more details. 
 
-Examples visualization of feature detection:
-
-- <http://localhost:3000/storyboards/examples/test-features>
+See an example of visualization of a feature:
+1. <http://localhost:3000/storyboards/examples/test-features>
 
 ### Feature Search
 
-Pure functions `feature-search.ts` ... `FeatureSearch.ts` is  a wrapper class...
+The feature search or feature detection functions are implemented in `feature-search.ts`. Each feature search method is implemented as a pure function. 
 
 ### Gaussian
 
-Examples visualization of numerical and categorical time series and gaussian mixture:
+The Gaussian functions are implemented in the `gaussian.ts` file. Similar to the feature search method, the Gaussian functions are also implemented as pure functions.  
 
-- <http://localhost:3000/storyboards/examples/test-gaussian-nts>
-- <http://localhost:3000/storyboards/examples/test-gaussian-cts>
-- <http://localhost:3000/storyboards/examples/test-gaussian-combined>
+Examples of numerical, categorical, and Gaussian processing and visualisation can be seen in,
+
+1. <http://localhost:3000/storyboards/examples/test-gaussian-nts>
+2. <http://localhost:3000/storyboards/examples/test-gaussian-cts>
+3. <http://localhost:3000/storyboards/examples/test-gaussian-combined>
 
 ## Drawing Actions
 
-<div align="center">
-    <img width="600px" src="./public/doc/action-classes.png" alt="sequence diagram" />
+<div>
+    <img width="600px" src="./public/doc/action-classes.png" alt="" />
+    <br>
+    <small><i>Figure 3: Action classes.</i></small>
 </div>
 
-`Action` is an abstract class which defines the blue print of an action. All the atomic actions, e.g., circle is implemented in `Circle` class, node is implemented in `Dot` class inherits this abstract class. A group of actions is defined in `ActionGroup` class .. composite design pattern. While we can create action objects just by creating instances ob the classes, we have `ActionFactory` which implements a factory design pattern to streamline and abstract away action creation directly from feature action table.
+`Action` is an abstract class defining an action's blue print. All the atomic actions, e.g., the circle is implemented in the `Circle` class, node is implemented in the `Dot` class, and so on, inherit this abstract class. The `ActionGroup` class defines a group of actions as a composite design pattern. While we can create action objects just by creating instances of the classes, we have `ActionFactory`, which implements a factory design pattern to streamline and abstract away action creation directly from the feature action table. See the contents of folder `src/components/storyboards/actions` for more details. 
 
-Create a action object:
+Create an action object,
 
 ```ts
 new <ActionName>()
@@ -123,14 +128,14 @@ new <ActionName>()
     .show();
 ```
 
-Animate action show and hide:
+Animate action, e.g., show and hide,
 
 ```ts
 await <action>.show(delay, duration);
 await <action>.hide(delay, duration);
 ```
 
-For example, create a Circle or CIRCLE action object,
+For example, create a Circle object,
 
 ```ts
 new Circle()
@@ -153,9 +158,7 @@ const textBox
 await textBox.move(Coordinate, delay, duration);
 ```
 
-We implemented and tested various actions in `src/pages/storyboards/examples/test-actions.tsx` page and can be seen in action <http://localhost:3000/storyboards/examples/test-actions>
-
-Group multiple actions to a single object.
+Group multiple actions to a single object,
 
 ```ts
 new ActionGroup()
@@ -165,14 +168,17 @@ new ActionGroup()
     .show();
 ```
 
-Please see the contents of `src/components/storyboards/actions` for details or implementing various different actions.
+Examples of various actions,
+1. <http://localhost:3000/storyboards/examples/test-actions>
+
 
 ## Plots
 
-<div align="center">
-    <img width="600px" src="./public/doc/plot-classes.png" alt="sequence diagram" />
+<div>
+    <img width="600px" src="./public/doc/plot-classes.png" alt="" />
+    <br>
+    <small><i>Figure 4: Plot classes.</i></small>
 </div>
-
 
 `Plot` is an abstract class
 
@@ -226,10 +232,12 @@ Nested tables, each tables components are implemented separate React component.
 
 ## Workflow
 
-<div align="center">
-    <img width="500px" src="./public/doc/workflow-classes.png" alt="sequence diagram" />
+ 
+<div>
+    <img width="600px" src="./public/doc/workflow-classes.png" alt="" />
+    <br>
+    <small><i>Figure 3: Workflow classes.</i></small>
 </div>
-
 
 Story specific workflow
 
