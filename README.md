@@ -44,8 +44,8 @@ TODO
 
 <div align="center">
     <img width="1000px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
-    <br>
-    <p>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls. </p>
+    <be>
+    <small><i>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls.</i></small>
 </div>
 
 ### Feature
@@ -55,7 +55,7 @@ TODO
     <p>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. Please look at the files in `src/utils/storyboards/feature` for detailed information about the implemented features. </p>
 </div>
 
-`Feature` is an abstract class; `NumericalFeature` and `CategoricalFeature` are two classes inherited from it. The `CategoricalFeature` describes semantic features in a time series.   
+`Feature` is an abstract class,  `NumericalFeature` and `CategoricalFeature` are two classes inherited from it that describe numerical and semantic features of a time series. Classes, e.g., `Peak`, `Min`, `Max`   
 
 Create a feature object:
 
@@ -246,7 +246,7 @@ new  <WorkflowName>()
     .create();
 ```
 
-For example, Covid19 single location workflow is setup as,
+For example, Covid19 single location workflow is created by,
 
 ```ts
 new Covid19SLWorkflow()
@@ -257,7 +257,10 @@ new Covid19SLWorkflow()
     .create();
 ```
 
-Covid19 story with single time series: <http://localhost:3000/storyboards/covid19-story-1>
+Example stories:
+
+1. Covid19 story with single timeseries: <http://localhost:3000/storyboards/covid19-sl-story>
+2. Machine learning multi-variate story: <http://localhost:3000/storyboards/ml-mv-story>
 
 ## References
 
