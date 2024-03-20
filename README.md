@@ -9,15 +9,18 @@ This is the source code of our paper titled Feature-Action Design Patterns for S
 
 ## Getting Started
 
-To start the UI, run the development server:
+Install the packages and dependencies,
 
 ```bash
-npm run dev
-# or
+yarn install
+```
+
+To start the UI, run the development server,
+```bash
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the UI.
 
 ### Tests
 
@@ -29,6 +32,8 @@ yarn test
 
 ## Code Structure
 
+We followed the commonly used React and Next.js project structure to organise the source code, with the important folders and files listed below.
+
 ```
 TODO
 ```
@@ -39,12 +44,15 @@ TODO
 
 <div align="center">
     <img width="1000px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
+    <br>
+    <p>Figure 1: Sequence diagram demonstrating the classes' most important interaction or function calls. </p>
 </div>
 
 ### Feature
 
 <div align="center">
     <img width="500px" src="./public/doc/feature-classes.png" alt="sequence diagram" />
+    <p>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes. Please browse the source code for more information. </p>
 </div>
 
 `Feature` is an abstract class ...
