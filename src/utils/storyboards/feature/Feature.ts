@@ -1,12 +1,12 @@
 import { CategoricalFeatures } from "./CategoricalFeatures";
-import { NumericalFeatures } from "./NumericalFeatures";
+import { FeatureType } from "./FeatureType";
 
 export abstract class Feature {
   protected date: Date;
   protected start: Date;
   protected end: Date;
   protected rank: number;
-  protected type: CategoricalFeatures | NumericalFeatures;
+  protected type: CategoricalFeatures | FeatureType;
   protected metric: string;
   protected dataIndex: number;
 
@@ -21,7 +21,7 @@ export abstract class Feature {
     return this.date;
   }
 
-  setType(type: NumericalFeatures | CategoricalFeatures) {
+  setType(type: FeatureType | CategoricalFeatures) {
     this.type = type;
     return this;
   }

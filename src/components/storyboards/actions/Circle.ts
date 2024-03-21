@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
-import { Actions } from "./Actions";
+import { ActionType } from "./ActionType";
 
 export type CircleProps = {
   size?: number;
@@ -22,7 +22,7 @@ export class Circle extends Action {
 
   constructor() {
     super();
-    this.type = Actions.CIRCLE;
+    this.type = ActionType.CIRCLE;
   }
 
   public setProps(properties: CircleProps = {}) {

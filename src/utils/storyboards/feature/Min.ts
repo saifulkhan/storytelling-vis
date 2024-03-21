@@ -1,9 +1,9 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatures } from "./NumericalFeatures";
+import { FeatureType } from "./FeatureType";
 
 export class Min extends NumericalFeature {
   constructor() {
     super();
-    this.type = NumericalFeatures.MIN;
+    this.type = FeatureType.MIN;
   }
 }

@@ -10,7 +10,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import * as d3 from "d3";
 import { ActionFactory } from "../actions/ActionFactory";
-import { Actions } from "../actions/Actions";
+import { ActionType } from "../actions/ActionType";
 
 const useStyles = makeStyles({
   table: {
@@ -90,7 +90,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     d3.select(chartRef.current).select("svg").remove();
     const svg = d3.select(chartRef.current).append("svg").node();
 
-    if (data.action == Actions.TEXT_BOX) {
+    if (data.action == ActionType.TEXT_BOX) {
       data.width = 80;
       data.title = "Title";
       data.message = "Message";

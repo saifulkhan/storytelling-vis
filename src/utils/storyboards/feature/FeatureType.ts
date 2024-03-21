@@ -1,4 +1,4 @@
-export enum NumericalFeatures {
+export enum FeatureType {
   CURRENT = "CURRENT",
   LAST = "LAST",
   MAX = "MAX",
@@ -8,4 +8,10 @@ export enum NumericalFeatures {
   FALL = "FALL",
   RAISE = "RAISE",
   SLOPE = "SLOPE",
+}
+
+export enum CategoricalFeatureType {
+  LOCKDOWN = "LOCKDOWN",
+  LOCKDOWN_START = "LOCKDOWN_START",
+  LOCKDOWN_END = "LOCKDOWN_END",
 }

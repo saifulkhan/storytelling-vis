@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
-import { Actions } from "./Actions";
+import { ActionType } from "./ActionType";
 
 export type ConnectorProps = {
   stroke?: string;
@@ -18,7 +18,7 @@ export class Connector extends Action {
 
   constructor() {
     super();
-    this.type = Actions.CONNECTOR;
+    this.type = ActionType.CONNECTOR;
   }
 
   public setProps(properties: ConnectorProps = {}) {

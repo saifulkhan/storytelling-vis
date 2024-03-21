@@ -1,5 +1,0 @@
-export enum CategoricalFeatures {
-  LOCKDOWN = "LOCKDOWN",
-  LOCKDOWN_START = "LOCKDOWN_START",
-  LOCKDOWN_END = "LOCKDOWN_END",
-}

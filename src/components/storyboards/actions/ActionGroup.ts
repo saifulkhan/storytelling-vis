@@ -1,5 +1,5 @@
 import { Action, Coordinate } from "./Action";
-import { ActionZOrder } from "./Actions";
+import { ActionZOrder } from "./ActionType";
 
 export class ActionGroup extends Action {
   private actions: Action[];

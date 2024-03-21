@@ -16,6 +16,7 @@ yarn install
 ```
 
 To start the UI, run the development server,
+
 ```bash
 yarn dev
 ```
@@ -44,7 +45,7 @@ TODO
 
 <!-- <div align="center">  -->
 <div>
-    <img width="1000px" src="./public/doc/sequence-diagram.png" alt="sequence diagram" />
+    <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
     <small><i>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls.</i></small>
 </div>
@@ -52,7 +53,7 @@ TODO
 ### Feature
 
 <div>
-    <img width="500px" src="./public/doc/feature-classes.png" alt="" />
+    <img width="350px" src="./public/static/doc/feature-classes.png" alt="" />
     <br>
     <small><i>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. </i></small>
 </div>
@@ -89,27 +90,33 @@ new Peak()
     .setDataIndex(...);
 ```
 
-Features types are implemented in ``NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. See the contents of folder `src/utils/storyboards/feature` for more details. See an example of a visualization of a feature [here](http://localhost:3000/storyboards/examples/test-features).
+Features types are implemented in ``NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. See the contents of folder `src/utils/storyboards/feature` for more details.
+
+📈 An example feature detection and visualization[🔗](http://localhost:3000/storyboards/examples/test-features).
 
 ### Feature Search
 
-The feature search or feature detection functions are implemented in `feature-search.ts`. Each feature search method is implemented as a pure function. 
+The feature search or feature detection functions are implemented in `feature-search.ts`. Each feature search method is implemented as a pure function.
 
 ### Gaussian
 
 The Gaussian functions are implemented in the `gaussian.ts` file. Similar to the feature search method, the Gaussian functions are also implemented as pure functions.  
 
-Examples of numerical, categorical and their Gaussian can be seen in [nts](http://localhost:3000/storyboards/examples/test-gaussian-nts), [cts](http://localhost:3000/storyboards/examples/test-gaussian-cts), and [combined](http://localhost:3000/storyboards/examples/test-gaussian-combined)
+📈 Example Gaussian
+
+- Numerical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-nts)
+- Categorical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-cts)
+- Combined Gaussian [🔗](http://localhost:3000/storyboards/examples/test-gaussian-combined)
 
 ## Drawing Actions
 
 <div>
-    <img width="600px" src="./public/doc/action-classes.png" alt="" />
+    <img width="450px" src="./public/static/doc/action-classes.png" alt="" />
     <br>
     <small><i>Figure 3: Action classes.</i></small>
 </div>
 
-`Action` is an abstract class defining an action's blue print. All the atomic actions, e.g., the circle is implemented in the `Circle` class, node is implemented in the `Dot` class, and so on, inherit this abstract class. The `ActionGroup` class defines a group of actions as a composite design pattern. While we can create action objects just by creating instances of the classes, we have `ActionFactory`, which implements a factory design pattern to streamline and abstract away action creation directly from the feature action table. See the contents of folder `src/components/storyboards/actions` for more details. 
+`Action` is an abstract class defining an action's blue print. All the atomic actions, e.g., the circle is implemented in the `Circle` class, node is implemented in the `Dot` class, and so on, inherit this abstract class. The `ActionGroup` class defines a group of actions as a composite design pattern. While we can create action objects just by creating instances of the classes, we have `ActionFactory`, which implements a factory design pattern to streamline and abstract away action creation directly from the feature action table. See the contents of folder `src/components/storyboards/actions` for more details.
 
 Create an action object,
 
@@ -161,13 +168,12 @@ new ActionGroup()
     .show();
 ```
 
-Examples of various actions can be seen [here](http://localhost:3000/storyboards/examples/test-actions).
-
+📈 Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
 
 ## Plots
 
 <div>
-    <img width="600px" src="./public/doc/plot-classes.png" alt="" />
+    <img width="350px" src="./public/static/doc/plot-classes.png" alt="" />
     <br>
     <small><i>Figure 4: Plot classes.</i></small>
 </div>
@@ -208,7 +214,7 @@ plot.plot()
 
 See the implementation of each plot class for more details.
 
-See the example line plot `src/pages/storyboards/examples/test-line-plot.tsx` in action <http://localhost:3000/storyboards/examples/test-line-plot>.
+📈 Example line plot  in action [🔗](http://localhost:3000/storyboards/examples/test-line-plot).
 
 ## Feature Action Tables
 
@@ -216,21 +222,24 @@ See the example line plot `src/pages/storyboards/examples/test-line-plot.tsx` in
 
 ### Categorical Feature Action
 
-The feature action tables are implemented as nested React components. Example properties table can be seen in [🔗](http://localhost:3000/storyboards/examples/test-action-properties-table), feature properties table in [🔗](http://localhost:3000/storyboards/examples/test-feature-properties-table) and action table in [🔗](http://localhost:3000/storyboards/examples/test-action-table).
+TODO
+Feature action tables are implemented as nested React components.
 
-Feature action tables ... TODO.
+📈 Example components feature action tables
+
+- Feature properties table [🔗](http://localhost:3000/storyboards/examples/test-feature-properties-table)
+- Action properties table [🔗](http://localhost:3000/storyboards/examples/test-action-properties-table)
+- Action table [🔗](http://localhost:3000/storyboards/examples/test-action-table)
 
 ## Workflow
- 
+
 <div>
-    <img width="600px" src="./public/doc/workflow-classes.png" alt="" />
+    <img width="350px" src="./public/static/doc/workflow-classes.png" alt="" />
     <br>
     <small><i>Figure 3: Workflow classes.</i></small>
 </div>
 
 Story specific workflow
-
-Page -> builder ->
 
 Create workflow of a story:
 
@@ -254,10 +263,10 @@ new Covid19SLWorkflow()
     .create();
 ```
 
-Example stories:
+📈 Example stories
 
-1. Covid19 story with single timeseries: <http://localhost:3000/storyboards/covid19-sl-story>
-2. Machine learning multi-variate story: <http://localhost:3000/storyboards/ml-mv-story>
+- Covid19 story with single timeseries [🔗](http://localhost:3000/storyboards/covid19-sl-story)
+- Machine learning multi-variate story [🔗](http://localhost:3000/storyboards/ml-mv-story)
 
 ## References
 

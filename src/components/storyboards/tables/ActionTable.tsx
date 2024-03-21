@@ -17,21 +17,21 @@ import AddIcon from "@mui/icons-material/Add";
 
 import ActionPropertiesTable from "./ActionPropertiesTable";
 import { ActionTableRow } from "./FeatureActionTableRow";
-import { Actions } from "../actions/Actions";
+import { ActionType } from "../actions/ActionType";
 import { defaultDotProps } from "../actions/Dot";
 import { defaultCircleProps } from "../actions/Circle";
 import { defaultTextBoxProps } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
 
-const getInitialProperties = (action: Actions) => {
+const getInitialProperties = (action: ActionType) => {
   switch (action) {
-    case Actions.DOT:
+    case ActionType.DOT:
       return defaultDotProps;
-    case Actions.CIRCLE:
+    case ActionType.CIRCLE:
       return defaultCircleProps;
-    case Actions.TEXT_BOX:
+    case ActionType.TEXT_BOX:
       return defaultTextBoxProps;
-    case Actions.CONNECTOR:
+    case ActionType.CONNECTOR:
       return defaultConnectorProperties;
     default:
       return {};
@@ -92,7 +92,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   }, [data]); // trigger effect when data changes
 
   const handleAddRow = () => {
-    setRows([...rows, { action: Actions.DOT, properties: defaultDotProps }]);
+    setRows([...rows, { action: ActionType.DOT, properties: defaultDotProps }]);
   };
 
   const handleRemoveRow = (index: number) => {
@@ -101,7 +101,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, action: Actions) => {
+  const handleActionChange = (index: number, action: ActionType) => {
     console.log("ActionTable: index = ", index, ", action = ", action);
 
     const newRows = [...rows];
@@ -145,10 +145,10 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                   className={classes.selectField}
                   value={row.action}
                   onChange={(e) =>
-                    handleActionChange(index, e.target.value as Actions)
+                    handleActionChange(index, e.target.value as ActionType)
                   }
                 >
-                  {Object.values(Actions).map((action) => (
+                  {Object.values(ActionType).map((action) => (
                     <MenuItem key={action} value={action}>
                       {action}
                     </MenuItem>

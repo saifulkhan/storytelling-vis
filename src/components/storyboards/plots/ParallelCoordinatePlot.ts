@@ -7,7 +7,7 @@ import {
 } from "../../../utils/storyboards/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
 import { Coordinate, Action } from "../actions/Action";
-import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
+import { FeatureType } from "../../../utils/storyboards/feature/FeatureType";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type ParallelCoordinatePlotProperties = {};
@@ -383,7 +383,7 @@ export class ParallelCoordinatePlot extends Plot {
     })();
   }
 
-  private showLine(date: Date, type: NumericalFeatures) {
+  private showLine(date: Date, type: FeatureType) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -400,7 +400,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideLine(date: Date, type: NumericalFeatures) {
+  private hideLine(date: Date, type: FeatureType) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -416,7 +416,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private showDots(date: Date, type: NumericalFeatures) {
+  private showDots(date: Date, type: FeatureType) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // return group
@@ -434,7 +434,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideDots(date: Date, type: NumericalFeatures) {
+  private hideDots(date: Date, type: FeatureType) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // returns group
@@ -452,7 +452,7 @@ export class ParallelCoordinatePlot extends Plot {
 
   private showAction(
     date: Date,
-    type: NumericalFeatures,
+    type: FeatureType,
     action: Action
   ): Promise<number> {
     return new Promise<number>((resolve, reject) => {
@@ -487,7 +487,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideAction(date: Date, type: NumericalFeatures, action: Action) {
+  private hideAction(date: Date, type: FeatureType, action: Action) {
     return new Promise<number>((resolve, reject) => {
       return action.hide();
     });
@@ -501,20 +501,20 @@ export class ParallelCoordinatePlot extends Plot {
     return `id-dot-${date.getTime()}`;
   }
 
-  private colorOnShow(type: NumericalFeatures): string {
+  private colorOnShow(type: FeatureType): string {
     return LineColor[type];
   }
 
-  private colorOnHideLine(type: NumericalFeatures) {
-    if (type === NumericalFeatures.MAX || type === NumericalFeatures.MIN) {
+  private colorOnHideLine(type: FeatureType) {
+    if (type === FeatureType.MAX || type === FeatureType.MIN) {
       return LineColor[type];
     } else {
       return StoryboardColors.LightGrey1;
     }
   }
 
-  private opacityOnHideLine(type: NumericalFeatures) {
-    if (type === NumericalFeatures.MAX || type === NumericalFeatures.MIN) {
+  private opacityOnHideLine(type: FeatureType) {
+    if (type === FeatureType.MAX || type === FeatureType.MIN) {
       return 1;
     } else {
       return 0.3;

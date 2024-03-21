@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
-import { Actions } from "./Actions";
+import { ActionType } from "./ActionType";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type TextBoxProps = {
@@ -38,7 +38,7 @@ export class TextBox extends Action {
 
   constructor() {
     super();
-    this.type = Actions.TEXT_BOX;
+    this.type = ActionType.TEXT_BOX;
   }
 
   public setProps(props: TextBoxProps = {}) {

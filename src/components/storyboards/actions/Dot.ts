@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Action, Coordinate } from "./Action";
-import { Actions } from "./Actions";
+import { ActionType } from "./ActionType";
 
 export type DotProps = {
   size?: number;
@@ -20,7 +20,7 @@ export class Dot extends Action {
 
   constructor() {
     super();
-    this.type = Actions.DOT;
+    this.type = ActionType.DOT;
   }
 
   public setProps(props: DotProps = {}) {

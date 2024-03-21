@@ -8,7 +8,7 @@ import {
   searchPeaks,
   searchSlopes,
 } from "./feature-search";
-import { NumericalFeatures } from "./NumericalFeatures";
+import { FeatureType } from "./FeatureType";
 import { TimeseriesData } from "../data-processing/TimeseriesData";
 import {
   FeatureSearchProps,
@@ -43,7 +43,7 @@ export class FeatureFactory {
    ** Search for feature and returns list of feature objects.
    **/
   public search(
-    feature: NumericalFeatures,
+    feature: FeatureType,
     condition: Condition | string,
     rank: number
   ): Feature[] | undefined {
@@ -53,13 +53,13 @@ export class FeatureFactory {
     console.log("FeatureFactory:search: feature: ", feature, ", condition: ", condition, ", rank:", rank);
 
     switch (feature) {
-      case NumericalFeatures.CURRENT:
+      case FeatureType.CURRENT:
         return searchCurrent(this.data, rank, this.props.metric);
 
-      case NumericalFeatures.LAST:
+      case FeatureType.LAST:
         return searchLast(this.data, rank, this.props.metric);
 
-      case NumericalFeatures.PEAK:
+      case FeatureType.PEAK:
         return searchPeaks(
           this.data,
           rank,
@@ -67,13 +67,13 @@ export class FeatureFactory {
           this.props.window
         );
 
-      case NumericalFeatures.MAX:
+      case FeatureType.MAX:
         return searchGlobalMax(this.data, rank, this.props.metric);
 
-      case NumericalFeatures.MIN:
+      case FeatureType.MIN:
         return searchGlobalMin(this.data, rank, this.props.metric);
 
-      case NumericalFeatures.SLOPE:
+      case FeatureType.SLOPE:
         let slopes = searchSlopes(
           this.data,
           rank,

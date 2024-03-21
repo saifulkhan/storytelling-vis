@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatures } from "./NumericalFeatures";
+import { FeatureType } from "./FeatureType";
 
 export class Peak extends NumericalFeature {
   protected normHeight: number;
@@ -8,7 +8,7 @@ export class Peak extends NumericalFeature {
 
   constructor() {
     super();
-    this.type = NumericalFeatures.PEAK;
+    this.type = FeatureType.PEAK;
   }
 
   setNormWidth(normWidth: number) {

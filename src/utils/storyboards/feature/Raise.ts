@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { NumericalFeatures } from "./NumericalFeatures";
+import { FeatureType } from "./FeatureType";
 
 export class Rise extends NumericalFeature {
   grad: number;
@@ -7,7 +7,7 @@ export class Rise extends NumericalFeature {
 
   constructor() {
     super();
-    this.type = NumericalFeatures.RAISE;
+    this.type = FeatureType.RAISE;
   }
 
   setGrad(grad: number) {

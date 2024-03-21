@@ -16,25 +16,25 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ActionPropertiesTable from "./ActionPropertiesTable";
 import { ActionTableRow, FeatureActionTableRow } from "./FeatureActionTableRow";
-import { Actions } from "../actions/Actions";
+import { ActionType } from "../actions/ActionType";
 
 import { defaultDotProps } from "../actions/Dot";
 import { defaultCircleProps } from "../actions/Circle";
 import { defaultTextBoxProps } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
-import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";
+import { FeatureType } from "../../../utils/storyboards/feature/FeatureType";
 import ActionTable from "./ActionTable";
 import FeaturePropertiesTable from "./FeaturePropertiesTable";
 
-const getInitialProperties = (action: Actions) => {
+const getInitialProperties = (action: ActionType) => {
   switch (action) {
-    case Actions.DOT:
+    case ActionType.DOT:
       return defaultDotProps;
-    case Actions.CIRCLE:
+    case ActionType.CIRCLE:
       return defaultCircleProps;
-    case Actions.TEXT_BOX:
+    case ActionType.TEXT_BOX:
       return defaultTextBoxProps;
-    case Actions.CONNECTOR:
+    case ActionType.CONNECTOR:
       return defaultConnectorProperties;
     default:
       return {};
@@ -142,7 +142,7 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   }, [data]); // trigger effect when data changes
 
   const handleAddRow = () => {
-    setRows([...rows, { action: Actions.DOT, properties: defaultDotProps }]);
+    setRows([...rows, { action: ActionType.DOT, properties: defaultDotProps }]);
   };
 
   const handleRemoveRow = (index: number) => {
@@ -151,7 +151,7 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, feature: NumericalFeatures) => {
+  const handleActionChange = (index: number, feature: FeatureType) => {
     console.log("FeatureActionTable: index = ", index, ", action = ", feature);
 
     /*
@@ -212,13 +212,10 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   className={classes.selectField}
                   value={row.feature}
                   onChange={(e) =>
-                    handleActionChange(
-                      index,
-                      e.target.value as NumericalFeatures
-                    )
+                    handleActionChange(index, e.target.value as FeatureType)
                   }
                 >
-                  {Object.values(NumericalFeatures).map((feature) => (
+                  {Object.values(FeatureType).map((feature) => (
                     <MenuItem key={feature} value={feature}>
                       {feature}
                     </MenuItem>

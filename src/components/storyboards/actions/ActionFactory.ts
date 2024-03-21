@@ -1,5 +1,5 @@
 import { Action } from "./Action";
-import { Actions } from "./Actions";
+import { ActionType } from "./ActionType";
 import { Circle, CircleProps } from "./Circle";
 import { ActionGroup } from "./ActionGroup";
 import { Connector, ConnectorProps } from "./Connector";
@@ -10,20 +10,20 @@ export class ActionFactory {
   constructor() {}
 
   public create(
-    action: Actions,
+    action: ActionType,
     props: CircleProps | ConnectorProps | DotProps | TextBoxProps
   ): Action | undefined {
     // prettier-ignore
     // console.log("ActionBuilder:create: action = ", action, ", properties = ", properties);
 
     switch (action) {
-      case Actions.DOT:
+      case ActionType.DOT:
         return new Dot().setProps({...props});
-      case Actions.TEXT_BOX:
+      case ActionType.TEXT_BOX:
         return new TextBox().setProps({...props});
-      case Actions.CIRCLE:
+      case ActionType.CIRCLE:
         return new Circle().setProps({...props});
-      case Actions.CONNECTOR:
+      case ActionType.CONNECTOR:
         return new Connector().setProps({...props});
       default:
         console.error(`Action ${action} is not implemented!`);
