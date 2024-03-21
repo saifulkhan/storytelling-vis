@@ -33,10 +33,84 @@ yarn test
 
 ## Code Structure
 
-We followed the commonly used React and Next.js project structure to organise the source code, with the important folders and files listed below.
+We followed the commonly used React and Next.js project structure to organize the source code, with the most important folders and files listed below.
 
 ```
-TODO
+.
+├── src
+│   ├── components
+│   │   ├── storyboards
+│   │   │   ├── actions
+│   │   │   │   ├── ActionFactory.ts
+│   │   │   │   ├── ActionGroup.ts
+│   │   │   │   ├── Action.ts
+│   │   │   │   ├── ActionType.ts
+│   │   │   │   ├── Circle.ts
+│   │   │   │   ├── Connector.ts
+│   │   │   │   ├── Dot.ts
+│   │   │   │   └── TextBox.ts
+│   │   │   ├── plots
+│   │   │   │   ├── AnimationType.ts
+│   │   │   │   ├── LearningCurve.ts
+│   │   │   │   ├── LinePlot.ts
+│   │   │   │   ├── MirroredBarChart.ts
+│   │   │   │   ├── ParallelCoordinatePlot.ts
+│   │   │   │   ├── Plot.ts
+│   │   │   │   ├── ScrollingSvg.css
+│   │   │   │   ├── ScrollingSvg.ts
+│   │   │   │   └── Timeline.ts
+│   │   │   ├── StoryboardColors.ts
+│   │   │   └── tables
+│   │   │       ├── ActionPropertiesTable.tsx
+│   │   │       ├── ActionTable.tsx
+│   │   │       ├── ...
+│   │   │       ├── FeatureActionTableRow.ts
+│   │   │       ├── FeatureActionTable.tsx
+│   │   │       └── FeaturePropertiesTable.tsx
+│   ├── pages
+│   │   └── storyboards
+│   │       ├── examples
+│   │       │   └── ...
+│   │       ├── covid19-sl-story.tsx
+│   │       ├── feature-action-tables.tsx
+│   │       ├── ml-mv-story.tsx
+│   │       ├── ...
+│   │       └── index.tsx
+│   ├── services
+│   │   └── DataService.ts
+│   └── utils
+│      └── storyboards
+│           ├── common.ts
+│           ├── data-processing
+│           │   ├── Gaussian.ts
+│           │   └── TimeseriesData.ts
+│           ├── feature
+│           │   ├── CategoricalFeature.ts
+│           │   ├── Condition.ts
+│           │   ├── Current.ts
+│           │   ├── Fall.ts
+│           │   ├── FeatureFactory.ts
+│           │   ├── FeatureSearchProps.ts
+│           │   ├── feature-search.ts
+│           │   ├── Feature.ts
+│           │   ├── FeatureType.ts
+│           │   ├── Last.ts
+│           │   ├── Max.ts
+│           │   ├── Min.ts
+│           │   ├── NumericalFeature.ts
+│           │   ├── Peak.ts
+│           │   ├── Raise.ts
+│           │   └── Slope.ts
+│           ├── feature-action-create
+│           │   ├── FeatureActionCreator.ts
+│           │   └── FeatureActionTypes.ts
+│           └── workflow
+│               ├── Covid19SLWorkflow.ts
+│               ├── MLMVWorkflow.ts
+│               └── Workflow.ts
+└── README.md
+
+
 ```
 
 ## API Documentation
@@ -184,32 +258,26 @@ new ActionGroup()
 new <PlotName>()
     .setData([<array of data>])
     .setName(string)
+    .setProps([])
     .setPlotProps(PlotProps)
-    .set<plot specific>Props([])
     .setCanvas(SVGGElement)
     .setActions([<date and action>])
     .animate()
 
 ```
 
-For example, line plot API
+For example, create a line plot and animate actions,
 
 ```ts
 new LinePlot()
     .setData(TimeseriesData[]])
     .setName(name or key)
+    .setProps([])
     .setPlotProps(PlotProps)
-    .setLineProps([])
     .setCanvas(SVGGElement)
     .setActions(<action data>)
     .animate()
 
-```
-
-In order to draw static plot, use the `plot()` method, e.g.,
-
-```ts
-plot.plot()
 ```
 
 See the implementation of each plot class for more details.
