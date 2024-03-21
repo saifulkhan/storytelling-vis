@@ -122,6 +122,7 @@ We followed the commonly used React and Next.js project structure to organize th
     <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
     <small><i>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls.</i></small>
+    <br><br>
 </div>
 
 ### Feature
@@ -130,6 +131,7 @@ We followed the commonly used React and Next.js project structure to organize th
     <img width="350px" src="./public/static/doc/feature-classes.png" alt="" />
     <br>
     <small><i>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. </i></small>
+    <br><br>
 </div>
 
 `Feature` is an abstract class,  `NumericalFeature` and `CategoricalFeature` are two classes inherited from it that describe numerical and semantic features of a time series. The concrete classes, e.g., `Peak`, `Min`, `Max`, etc. holds the numerical properties of timeseries. More firtures can be implemented by extending the base class.
@@ -164,23 +166,27 @@ new Peak()
     .setDataIndex(...);
 ```
 
-Features types are implemented in ``NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. See the contents of folder `src/utils/storyboards/feature` for more details.
+Features types are implemented in `NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. `FeatureFactory` use feature search functions to create features. See the contents of folder `src/utils/storyboards/feature` for more details.
 
 📈 An example feature detection and visualization[🔗](http://localhost:3000/storyboards/examples/test-features).
 
+> Note: The links will work if the server is started following the steps mentioned above.
+
 ### Feature Search
 
-The feature search or feature detection functions are implemented in `feature-search.ts`. Each feature search method is implemented as a pure function.
+The feature search or detection functions are implemented in `feature-search.ts`. Each feature search function is implemented as a pure function.
 
 ### Gaussian
 
 The Gaussian functions are implemented in the `gaussian.ts` file. Similar to the feature search method, the Gaussian functions are also implemented as pure functions.  
 
-📈 Example Gaussian
+📂 See the implementation of Gaussian functions in `src/utils/storyboards/data-processing`.
 
-- Numerical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-nts)
-- Categorical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-cts)
-- Combined Gaussian [🔗](http://localhost:3000/storyboards/examples/test-gaussian-combined)
+Example Gaussian
+
+📈  Numerical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-nts)
+📈  Categorical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-cts)
+📈  Combined Gaussian [🔗](http://localhost:3000/storyboards/examples/test-gaussian-combined)
 
 ## Drawing Actions
 
@@ -188,6 +194,7 @@ The Gaussian functions are implemented in the `gaussian.ts` file. Similar to the
     <img width="450px" src="./public/static/doc/action-classes.png" alt="" />
     <br>
     <small><i>Figure 3: Action classes.</i></small>
+    <br><br>
 </div>
 
 `Action` is an abstract class defining an action's blue print. All the atomic actions, e.g., the circle is implemented in the `Circle` class, node is implemented in the `Dot` class, and so on, inherit this abstract class. The `ActionGroup` class defines a group of actions as a composite design pattern. While we can create action objects just by creating instances of the classes, we have `ActionFactory`, which implements a factory design pattern to streamline and abstract away action creation directly from the feature action table. See the contents of folder `src/components/storyboards/actions` for more details.
@@ -232,7 +239,7 @@ const textBox
 await textBox.move(Coordinate, delay, duration);
 ```
 
-Group multiple actions to a single object,
+A feature may be shown using multiple actions combined, to group those actions together into a single object we use `ActionGroup` class. Creation of action group is as follows.
 
 ```ts
 new ActionGroup()
@@ -242,6 +249,8 @@ new ActionGroup()
     .show();
 ```
 
+See the implementation of various action classes in 📂`src/components/storyboards/actions` for more details.
+
 📈 Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
 
 ## Plots
@@ -250,9 +259,10 @@ new ActionGroup()
     <img width="350px" src="./public/static/doc/plot-classes.png" alt="" />
     <br>
     <small><i>Figure 4: Plot classes.</i></small>
+    <br><br>
 </div>
 
-`Plot` is an abstract class
+`Plot` is an abstract class which defines abstract methods used for creating a plot, setting properties, and animating. The concrete plots, e.g, line plot, parallel coordinate plots implements the actual logics.
 
 ```ts
 new <PlotName>()
@@ -280,24 +290,32 @@ new LinePlot()
 
 ```
 
-See the implementation of each plot class for more details.
+See the implementation of the plot classes in 📂`src/components/storyboards/plots` for more details.
 
 📈 Example line plot  in action [🔗](http://localhost:3000/storyboards/examples/test-line-plot).
 
 ## Feature Action Tables
 
-### Numerical Feature Action
+### Numerical
 
-### Categorical Feature Action
+### Categorical
 
 TODO
 Feature action tables are implemented as nested React components.
 
-📈 Example components feature action tables
+📈 Example components of feature action tables
 
 - Feature properties table [🔗](http://localhost:3000/storyboards/examples/test-feature-properties-table)
 - Action properties table [🔗](http://localhost:3000/storyboards/examples/test-action-properties-table)
 - Action table [🔗](http://localhost:3000/storyboards/examples/test-action-table)
+
+📈 Example feature action tables
+
+- Covid19 single story numerical feature action table [🔗]()
+- Covid19 categorical feature table [🔗]()
+- Machine learning multi-variate story numerical feature action table [🔗]()
+
+See the implementation of various action classes in 📂`/src/components/storyboards/tables` and 📂`src/pages/storyboards` for more details.
 
 ## Workflow
 
@@ -305,6 +323,7 @@ Feature action tables are implemented as nested React components.
     <img width="350px" src="./public/static/doc/workflow-classes.png" alt="" />
     <br>
     <small><i>Figure 3: Workflow classes.</i></small>
+    <br><br>
 </div>
 
 Story specific workflow
@@ -330,6 +349,8 @@ new Covid19SLWorkflow()
     .setCanvas(chartRef.current)
     .create();
 ```
+
+See the implementation of workflows in 📂`src/utils/storyboards/workflow` for more details.
 
 📈 Example stories
 
