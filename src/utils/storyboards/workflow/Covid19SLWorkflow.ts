@@ -8,7 +8,7 @@ import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import { Workflow } from "./Workflow";
 import { DateActionArray } from "../feature-action-create/FeatureActionTypes";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
-import { cts, gmm, nts } from "../data-processing/gaussian";
+import { cts, gmm, nts } from "../data-processing/Gaussian";
 
 const WINDOW = 3;
 const METRIC = "Cases/day";

@@ -1,5 +1,8 @@
 import * as d3 from "d3";
-import { MLTimeseriesData, TimeseriesData } from "./TimeseriesData";
+import {
+  MLTimeseriesData,
+  TimeseriesData,
+} from "./data-processing/TimeseriesData";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;

@@ -4,7 +4,7 @@ import { Peak } from "../feature/Peak";
 import { TimeseriesData } from "./TimeseriesData";
 import { searchPeaks } from "../feature/feature-search";
 import { NumericalFeature } from "../feature/NumericalFeature";
-import { findDateIdx, scaleValue } from "./common";
+import { findDateIdx, scaleValue } from "../common";
 
 const RANK_MAX = 10; /** or r_max  */
 

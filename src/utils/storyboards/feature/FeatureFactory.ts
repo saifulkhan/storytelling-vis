@@ -16,7 +16,7 @@ import {
 } from "../feature/FeatureSearchProps";
 
 import { Feature } from "./Feature";
-import { createPredicate } from "../data-processing/common";
+import { createPredicate } from "../common";
 import { Min } from "./Min";
 import { Max } from "./Max";
 import { Condition } from "./Condition";

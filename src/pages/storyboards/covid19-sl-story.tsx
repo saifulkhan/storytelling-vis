@@ -29,9 +29,12 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
 import { Covid19SLWorkflow } from "../../utils/storyboards/workflow/Covid19SLWorkflow";
-import { covid19Data, covid19SLNFATable } from "../../services/DataService";
+import {
+  getCovid19Data,
+  getCovid19SLNFATable,
+} from "../../services/DataService";
 import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
-import { clean } from "../../utils/storyboards/data-processing/common";
+import { clean } from "../../utils/storyboards/common";
 
 // import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
@@ -61,10 +64,10 @@ const Covid19SLStoryPage = () => {
 
     const fetchData = async () => {
       try {
-        const allData = await covid19Data();
+        const allData = await getCovid19Data();
         setRegionsData(allData);
         setRegions(Object.keys(allData).sort());
-        const table = await covid19SLNFATable();
+        const table = await getCovid19SLNFATable();
         setTableNFA(table);
 
         console.log("useEffect 1: allRegionData: ", allData);

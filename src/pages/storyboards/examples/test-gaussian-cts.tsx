@@ -16,9 +16,12 @@ import {
   LinePlot,
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
-import { semanticGaussians } from "../../../utils/storyboards/data-processing/gaussian";
+import { semanticGaussians } from "../../../utils/storyboards/data-processing/Gaussian";
 import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
-import { covid19SLCFATable, covid19Data } from "../../../services/DataService";
+import {
+  getCovid19SLCFATable,
+  getCovid19Data,
+} from "../../../services/DataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -37,11 +40,11 @@ const ExampleGaussianPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data();
+        const data = await getCovid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
 
-        const fetures = await covid19SLCFATable();
+        const fetures = await getCovid19SLCFATable();
         setCategoricalFeatures(fetures);
         setRegion("Aberdeenshire");
       } catch (error) {

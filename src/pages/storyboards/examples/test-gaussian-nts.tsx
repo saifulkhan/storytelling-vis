@@ -21,8 +21,8 @@ import {
 import {
   gmm,
   smoothing,
-} from "../../../utils/storyboards/data-processing/gaussian";
-import { covid19Data } from "../../../services/DataService";
+} from "../../../utils/storyboards/data-processing/Gaussian";
+import { getCovid19Data } from "../../../services/DataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -38,7 +38,7 @@ const ExampleGaussianPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data();
+        const data = await getCovid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
       } catch (error) {

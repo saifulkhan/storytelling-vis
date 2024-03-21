@@ -4,7 +4,7 @@ import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import {
   findIndexOfDate,
   getObjectKeysArray,
-} from "../../../utils/storyboards/data-processing/common";
+} from "../../../utils/storyboards/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
 import { Coordinate, Action } from "../actions/Action";
 import { NumericalFeatures } from "../../../utils/storyboards/feature/NumericalFeatures";

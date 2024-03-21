@@ -29,7 +29,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
 import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
-import { mLData, mLMVNFATable } from "../../services/DataService";
+import { getMLData, getMLMVNFATable } from "../../services/DataService";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 
 const MLMVStoryPage = () => {
@@ -52,10 +52,10 @@ const MLMVStoryPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await mLData();
+        const data = await getMLData();
         setData(data);
         setKeys(KEYS);
-        const table = await mLMVNFATable();
+        const table = await getMLMVNFATable();
         setNFATable(table);
 
         console.log("MLMVStoryPage: useEffect 1: data: ", data);

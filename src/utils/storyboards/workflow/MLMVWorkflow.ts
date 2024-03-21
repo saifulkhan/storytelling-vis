@@ -9,7 +9,7 @@ import { FeatureActionCreator } from "../feature-action-create/FeatureActionCrea
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { DateActionArray } from "../feature-action-create/FeatureActionTypes";
-import { fromMLToTimeSeriesData } from "../data-processing/common";
+import { fromMLToTimeSeriesData } from "../common";
 
 const WINDOW = 3;
 const METRIC = "accuracy";

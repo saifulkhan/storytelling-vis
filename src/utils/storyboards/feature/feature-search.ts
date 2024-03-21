@@ -5,13 +5,7 @@ import { Max } from "./Max";
 import { Fall } from "./Fall";
 import { Rise } from "./Raise";
 import { TimeseriesData } from "../data-processing/TimeseriesData";
-import {
-  findDateIdx,
-  maxIndex,
-  mean,
-  minIndex,
-  normalise,
-} from "../data-processing/common";
+import { findDateIdx, maxIndex, mean, minIndex, normalise } from "../common";
 import { Current } from "./Current";
 import { Last } from "./Last";
 

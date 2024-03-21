@@ -16,13 +16,13 @@ import Head from "next/head";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
 import { Peak } from "../../../utils/storyboards/feature/Peak";
-import { sliceTimeseriesByDate } from "../../../utils/storyboards/data-processing/common";
+import { sliceTimeseriesByDate } from "../../../utils/storyboards/common";
 import {
   LinePlot,
   LineProps,
 } from "../../../components/storyboards/plots/LinePlot";
 import { Dot } from "../../../components/storyboards/actions/Dot";
-import { covid19Data } from "../../../services/DataService";
+import { getCovid19Data } from "../../../services/DataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -40,7 +40,7 @@ const FeaturesPage = () => {
 
     const fetchData = async () => {
       try {
-        const data = await covid19Data();
+        const data = await getCovid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
         // setRegion("Aberdeenshire");
