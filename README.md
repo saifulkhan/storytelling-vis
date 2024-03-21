@@ -89,10 +89,7 @@ new Peak()
     .setDataIndex(...);
 ```
 
-Features types are implemented in ``NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. See the contents of folder `src/utils/storyboards/feature` for more details. 
-
-See an example of visualization of a feature:
-1. <http://localhost:3000/storyboards/examples/test-features>
+Features types are implemented in ``NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. See the contents of folder `src/utils/storyboards/feature` for more details. See an example of a visualization of a feature [here](http://localhost:3000/storyboards/examples/test-features).
 
 ### Feature Search
 
@@ -102,11 +99,7 @@ The feature search or feature detection functions are implemented in `feature-se
 
 The Gaussian functions are implemented in the `gaussian.ts` file. Similar to the feature search method, the Gaussian functions are also implemented as pure functions.  
 
-Examples of numerical, categorical, and Gaussian processing and visualisation can be seen in,
-
-1. <http://localhost:3000/storyboards/examples/test-gaussian-nts>
-2. <http://localhost:3000/storyboards/examples/test-gaussian-cts>
-3. <http://localhost:3000/storyboards/examples/test-gaussian-combined>
+Examples of numerical, categorical and their Gaussian can be seen in [nts](http://localhost:3000/storyboards/examples/test-gaussian-nts), [cts](http://localhost:3000/storyboards/examples/test-gaussian-cts), and [combined](http://localhost:3000/storyboards/examples/test-gaussian-combined)
 
 ## Drawing Actions
 
@@ -168,8 +161,7 @@ new ActionGroup()
     .show();
 ```
 
-Examples of various actions,
-1. <http://localhost:3000/storyboards/examples/test-actions>
+Examples of various actions can be seen [here](http://localhost:3000/storyboards/examples/test-actions).
 
 
 ## Plots
@@ -214,24 +206,21 @@ In order to draw static plot, use the `plot()` method, e.g.,
 plot.plot()
 ```
 
-See implementation of each plot class for more details.
+See the implementation of each plot class for more details.
 
 See the example line plot `src/pages/storyboards/examples/test-line-plot.tsx` in action <http://localhost:3000/storyboards/examples/test-line-plot>.
 
-## Feature Action Table
+## Feature Action Tables
 
 ### Numerical Feature Action
 
-Nested tables, each tables components are implemented separate React component.
-
-- <http://localhost:3000/storyboards/examples/test-action-properties-table>
-- <http://localhost:3000/storyboards/examples/test-feature-properties-table>
-- <http://localhost:3000/storyboards/examples/test-action-table>
-
 ### Categorical Feature Action
 
-## Workflow
+The feature action tables are implemented as nested React components. Example properties table can be seen in [🔗](http://localhost:3000/storyboards/examples/test-action-properties-table), feature properties table in [🔗](http://localhost:3000/storyboards/examples/test-feature-properties-table) and action table in [🔗](http://localhost:3000/storyboards/examples/test-action-table).
 
+Feature action tables ... TODO.
+
+## Workflow
  
 <div>
     <img width="600px" src="./public/doc/workflow-classes.png" alt="" />
