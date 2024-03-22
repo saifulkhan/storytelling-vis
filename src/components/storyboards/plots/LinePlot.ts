@@ -6,7 +6,7 @@ import {
   findDateIdx,
   findIndexOfDate,
 } from "../../../utils/storyboards/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
+import { DateActionArray } from "../../../utils/storyboards/feature-action/FeatureActionTypes";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",

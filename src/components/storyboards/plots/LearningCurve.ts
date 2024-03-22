@@ -1,8 +1,5 @@
 import * as d3 from "d3";
 import { ScaleLinear } from "d3";
-import { AnimationType } from "src/models/AnimationType";
-import { NumericalFeatureType } from "../../../utils/storyboards/feature-action-create/NumericalFeatureType";
-import { GraphAnnotation, LCPAnnotation } from "./GraphAnnotation";
 
 export type LearningCurveData = {
   index?: number;

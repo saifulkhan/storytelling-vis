@@ -5,7 +5,7 @@ import {
   findIndexOfDate,
   getObjectKeysArray,
 } from "../../../utils/storyboards/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action-create/FeatureActionTypes";
+import { DateActionArray } from "../../../utils/storyboards/feature-action/FeatureActionTypes";
 import { Coordinate, Action } from "../actions/Action";
 import { FeatureType } from "../../../utils/storyboards/feature/FeatureType";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";

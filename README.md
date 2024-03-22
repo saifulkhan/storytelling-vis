@@ -44,7 +44,7 @@ The project is structured following React and Next.js guidelines and practices:
 - `src/components`: UI components including feature action tables, actions, and plots.
 - `src/pages`: Web pages including storyboards, feature-action tables, and examples.
 - `src/services`: Time series and feature action table data services.
-- `src/utils`: Utility functions for data processing, feature extraction and workflow.
+- `src/utils`: Utility functions for data processing, feature and action extraction, and workflow.
 
 ## Sequence Diagram
 
@@ -85,9 +85,9 @@ export enum FeatureType {
 }
 ```
 
-**Creating a Feature:** To instantiate a feature, use the constructor of a concrete feature class. Set properties using method chaining:
+ To instantiate a feature, use the constructor of a concrete feature class. Set properties using method chaining:
 
-For example, when a feature `PEAK` is detected it creates a `Peak` object as follows:
+For example, when a feature `PEAK` is detected it creates a `Peak` object as follows. The default feature properties are used unless defined in feature-action table.
 
 ```ts
 new Peak()
@@ -108,13 +108,15 @@ new Peak()
 
 **Example:** See an example feature detection and its visualization [page](http://localhost:3000/storyboards/examples/test-features).
 
-### Feature Search
+### Feature Search & Gaussian
 
-The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions.
+The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions. The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
 
-### Gaussian
+**Searching a Feature:**
 
-The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
+```ts
+TODO
+```
 
 **Code:** See the implementation of feature detection methods in `src/utils/storyboards/feature` in Gaussian functions in `src/utils/storyboards/data-processing`.
 
@@ -142,7 +144,7 @@ export enum ActionType {
 }
 ```
 
-**Creating Actions:** Instantiate a `Circle` action object and display it within a svg canvas:
+**Creating Actions:** Instantiate a `Circle` action object and display it within a svg canvas. The default action properties are used unless defined in feature-action table.
 
 ```ts
 new Circle()
@@ -203,9 +205,9 @@ new LinePlot()
     .animate()
 ```
 
-**Code:** See the implementation of the plot classes in 📂`src/components/storyboards/plots` for more details.
+**Code:** See the implementation of various plots in `src/components/storyboards/plots`.
 
-**Example:** Example line plot  in action [🔗](http://localhost:3000/storyboards/examples/test-line-plot).
+**Example:** See an example [line plot](http://localhost:3000/storyboards/examples/test-line-plot).
 
 ### Feature Action Tables
 
@@ -216,7 +218,9 @@ new LinePlot()
 TODO
 Feature action tables are implemented as nested React components.
 
-📈 Example components of feature action tables
+**Code:** See the implementation of various action classes in `/src/components/storyboards/tables` and `src/pages/storyboards` for more details.
+
+**Example:** components of feature action tables
 
 - Feature properties table [🔗](http://localhost:3000/storyboards/examples/test-feature-properties-table)
 - Action properties table [🔗](http://localhost:3000/storyboards/examples/test-action-properties-table)
@@ -228,8 +232,6 @@ Feature action tables are implemented as nested React components.
 - Covid19 categorical feature table [🔗]()
 - Machine learning multi-variate story numerical feature action table [🔗]()
 
-See the implementation of various action classes in 📂`/src/components/storyboards/tables` and 📂`src/pages/storyboards` for more details.
-
 ### Workflow
 
 <div>
@@ -239,7 +241,7 @@ See the implementation of various action classes in 📂`/src/components/storybo
     <br><br>
 </div>
 
-Story specific workflow
+Workflows are story specific. Fore each story a concrete workflow class is defined extended from abstract`Workflow` class.
 
 **Creating a Workflow:** For example, Covid19 single location workflow is created by,
 
@@ -252,7 +254,7 @@ new Covid19SLWorkflow()
     .create();
 ```
 
-**Code:** See the implementation of workflows in `src/utils/storyboards/workflow` for more details.
+**Code:** See the implementation of workflows in `src/utils/storyboards/workflow` for more details `src/pages/storyboards`.
 
 **Example:** [Covid19 story with single timeseries](http://localhost:3000/storyboards/covid19-sl-story), and [Machine learning multi-variate story](http://localhost:3000/storyboards/ml-mv-story).
 
