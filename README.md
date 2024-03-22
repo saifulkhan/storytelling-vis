@@ -35,9 +35,9 @@ yarn test
 
 Note: unit tests are under development and may not cover all features.
 
-## Documentation
+# Documentation
 
-### Code Structure
+## Code Structure
 
 The project is structured following React and Next.js guidelines and practices:
 
@@ -46,7 +46,7 @@ The project is structured following React and Next.js guidelines and practices:
 - `src/services`: Time series and feature action table data services.
 - `src/utils`: Utility functions for data processing, feature extraction and workflow.
 
-### Sequence Diagram
+## Sequence Diagram
 
 <!-- <div align="center">  -->
 <div>
@@ -55,6 +55,8 @@ The project is structured following React and Next.js guidelines and practices:
     <small><i>Figure 1: Sequence diagram demonstrating the important classes' and main interaction between various functions.</i></small>
     <br><br>
 </div>
+
+## APIs
 
 ### Feature
 
@@ -118,7 +120,7 @@ The `gaussian.ts` file contains functions for calculating the Gaussian distribut
 
 **Example:** See examples visualization of [numerical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-nts), [categorical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-cts) and [combined gaussian](http://localhost:3000/storyboards/examples/test-gaussian-combined).
 
-## Actions
+### Actions
 
 <div>
     <img width="450px" src="./public/static/doc/action-classes.png" alt="" />
@@ -177,7 +179,7 @@ new ActionGroup()
 
 **Example:** Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
 
-## Plots
+### Plots
 
 <div>
     <img width="350px" src="./public/static/doc/plot-classes.png" alt="" />
@@ -205,11 +207,11 @@ new LinePlot()
 
 **Example:** Example line plot  in action [🔗](http://localhost:3000/storyboards/examples/test-line-plot).
 
-## Feature Action Tables
+### Feature Action Tables
 
-### Numerical
+**Numerical**
 
-### Categorical
+**Categorical**
 
 TODO
 Feature action tables are implemented as nested React components.
@@ -228,7 +230,7 @@ Feature action tables are implemented as nested React components.
 
 See the implementation of various action classes in 📂`/src/components/storyboards/tables` and 📂`src/pages/storyboards` for more details.
 
-## Workflow
+### Workflow
 
 <div>
     <img width="350px" src="./public/static/doc/workflow-classes.png" alt="" />
