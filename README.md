@@ -106,7 +106,7 @@ new Peak()
 
 **Code:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
-**Example:** See an example feature detection and its visualization [page](http://localhost:3000/storyboards/examples/test-features).
+**Example:** See an example feature detection and its visualization [](http://localhost:3000/storyboards/examples/test-features).
 
 ### Feature Search & Gaussian
 
