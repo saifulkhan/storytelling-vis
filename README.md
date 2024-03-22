@@ -1,6 +1,6 @@
 # About
 
-This is the source code of our paper titled Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data.
+This repository contains the source code accompanying our research on utilizing feature-action design patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled [Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data](https://arxiv.org/abs/2402.03116v1)
 
 ## Prerequisite
 
@@ -9,111 +9,42 @@ This is the source code of our paper titled Feature-Action Design Patterns for S
 
 ## Getting Started
 
-Install the packages and dependencies,
+Clone the repository and install dependencies:
 
 ```bash
+git clone https://github.com/saifulkhan/storytelling-vis.git
+cd storytelling-vis
 yarn install
 ```
 
-To start the UI, run the development server,
+Start the development server to view the UI:
 
 ```bash
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the UI.
+Open [http://localhost:3000](http://localhost:3000) in your browser to explore the visualizations.
 
 ### Tests
+
+Execute unit tests:
 
 ```sh
 yarn test
 ```
 
-> Note: Unit tests have yet to be extensively implemented.
+Note: unit tests are under development and may not cover all features.
 
-## Code Structure
+## Documentation
 
-We followed the commonly used React and Next.js project structure to organize the source code, with the most important folders and files listed below.
+### Code Structure
 
-```
-.
-├── src
-│   ├── components
-│   │   ├── storyboards
-│   │   │   ├── actions
-│   │   │   │   ├── ActionFactory.ts
-│   │   │   │   ├── ActionGroup.ts
-│   │   │   │   ├── Action.ts
-│   │   │   │   ├── ActionType.ts
-│   │   │   │   ├── Circle.ts
-│   │   │   │   ├── Connector.ts
-│   │   │   │   ├── Dot.ts
-│   │   │   │   └── TextBox.ts
-│   │   │   ├── plots
-│   │   │   │   ├── AnimationType.ts
-│   │   │   │   ├── LearningCurve.ts
-│   │   │   │   ├── LinePlot.ts
-│   │   │   │   ├── MirroredBarChart.ts
-│   │   │   │   ├── ParallelCoordinatePlot.ts
-│   │   │   │   ├── Plot.ts
-│   │   │   │   ├── ScrollingSvg.css
-│   │   │   │   ├── ScrollingSvg.ts
-│   │   │   │   └── Timeline.ts
-│   │   │   ├── StoryboardColors.ts
-│   │   │   └── tables
-│   │   │       ├── ActionPropertiesTable.tsx
-│   │   │       ├── ActionTable.tsx
-│   │   │       ├── ...
-│   │   │       ├── FeatureActionTableRow.ts
-│   │   │       ├── FeatureActionTable.tsx
-│   │   │       └── FeaturePropertiesTable.tsx
-│   ├── pages
-│   │   └── storyboards
-│   │       ├── examples
-│   │       │   └── ...
-│   │       ├── covid19-sl-story.tsx
-│   │       ├── feature-action-tables.tsx
-│   │       ├── ml-mv-story.tsx
-│   │       ├── ...
-│   │       └── index.tsx
-│   ├── services
-│   │   └── DataService.ts
-│   └── utils
-│      └── storyboards
-│           ├── common.ts
-│           ├── data-processing
-│           │   ├── Gaussian.ts
-│           │   └── TimeseriesData.ts
-│           ├── feature
-│           │   ├── CategoricalFeature.ts
-│           │   ├── Condition.ts
-│           │   ├── Current.ts
-│           │   ├── Fall.ts
-│           │   ├── FeatureFactory.ts
-│           │   ├── FeatureSearchProps.ts
-│           │   ├── feature-search.ts
-│           │   ├── Feature.ts
-│           │   ├── FeatureType.ts
-│           │   ├── Last.ts
-│           │   ├── Max.ts
-│           │   ├── Min.ts
-│           │   ├── NumericalFeature.ts
-│           │   ├── Peak.ts
-│           │   ├── Raise.ts
-│           │   └── Slope.ts
-│           ├── feature-action-create
-│           │   ├── FeatureActionCreator.ts
-│           │   └── FeatureActionTypes.ts
-│           └── workflow
-│               ├── Covid19SLWorkflow.ts
-│               ├── MLMVWorkflow.ts
-│               └── Workflow.ts
-└── README.md
+The project is structured following React and Next.js guidelines and practices:
 
-
-```
-
-## API Documentation
+- `src/components`: UI components including feature action tables, actions, and plots.
+- `src/pages`: Web pages including storyboards, feature-action tables, and examples.
+- `src/services`: Time series and feature action table data services.
+- `src/utils`: Utility functions for data processing, feature extraction and workflow.
 
 ### Sequence Diagram
 
@@ -121,7 +52,7 @@ We followed the commonly used React and Next.js project structure to organize th
 <div>
     <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
-    <small><i>Figure 1: Sequence diagram demonstrating the classes' most important interaction using function calls.</i></small>
+    <small><i>Figure 1: Sequence diagram demonstrating the important classes' and main interaction between various functions.</i></small>
     <br><br>
 </div>
 
@@ -134,24 +65,27 @@ We followed the commonly used React and Next.js project structure to organize th
     <br><br>
 </div>
 
-`Feature` is an abstract class,  `NumericalFeature` and `CategoricalFeature` are two classes inherited from it that describe numerical and semantic features of a time series. The concrete classes, e.g., `Peak`, `Min`, `Max`, etc. holds the numerical properties of timeseries. More firtures can be implemented by extending the base class.
+The `Feature` is an abstract class encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serving the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define timeseries data features. Developers can extend this base class to introduce any number of specialized features.
 
-To create a feature object:
+**Feature Types:** Various features are defined as enumerators, e.g.,
 
 ```ts
-new <FeatureName>()
-    .setDate(Date)
-    .setHeight(number)
-    .setNormWidth(number)
-    .setNormHeight(number)
-    .setRank(number)
-    .setMetric(string)
-    .setStart(Date)
-    .setEnd(Date)
-    .setDataIndex(number);
+export enum FeatureType {
+  CURRENT = "CURRENT",
+  LAST = "LAST",
+  MAX = "MAX",
+  MIN = "MIN",
+  PEAK = "PEAK",
+  VALLEY = "VALLEY",
+  FALL = "FALL",
+  RAISE = "RAISE",
+  SLOPE = "SLOPE",
+}
 ```
 
-For example, to create a Peak object,
+**Creating a Feature:** To instantiate a feature, use the constructor of a concrete feature class. Set properties using method chaining:
+
+For example, when a feature `PEAK` is detected it creates a `Peak` object as follows:
 
 ```ts
 new Peak()
@@ -166,29 +100,25 @@ new Peak()
     .setDataIndex(...);
 ```
 
-Features types are implemented in `NumericalFeatures` and `CategoricalFeatures` enumerators. The `FeatureFactory` implements a factory design pattern which is used for streamlining feature object creation. `FeatureFactory` use feature search functions to create features. See the contents of folder `src/utils/storyboards/feature` for more details.
+**Feature Factory:** The `FeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
 
-📈 An example feature detection and visualization[🔗](http://localhost:3000/storyboards/examples/test-features).
+**Code:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
-> Note: The links will work if the server is started following the steps mentioned above.
+**Example:** See an example feature detection and its visualization [page](http://localhost:3000/storyboards/examples/test-features).
 
 ### Feature Search
 
-The feature search or detection functions are implemented in `feature-search.ts`. Each feature search function is implemented as a pure function.
+The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions.
 
 ### Gaussian
 
-The Gaussian functions are implemented in the `gaussian.ts` file. Similar to the feature search method, the Gaussian functions are also implemented as pure functions.  
+The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
 
-📂 See the implementation of Gaussian functions in `src/utils/storyboards/data-processing`.
+**Code:** See the implementation of feature detection methods in `src/utils/storyboards/feature` in Gaussian functions in `src/utils/storyboards/data-processing`.
 
-Example Gaussian
+**Example:** See examples visualization of [numerical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-nts), [categorical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-cts) and [combined gaussian](http://localhost:3000/storyboards/examples/test-gaussian-combined).
 
-📈  Numerical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-nts)
-📈  Categorical timeseries [🔗](http://localhost:3000/storyboards/examples/test-gaussian-cts)
-📈  Combined Gaussian [🔗](http://localhost:3000/storyboards/examples/test-gaussian-combined)
-
-## Drawing Actions
+## Actions
 
 <div>
     <img width="450px" src="./public/static/doc/action-classes.png" alt="" />
@@ -197,26 +127,20 @@ Example Gaussian
     <br><br>
 </div>
 
-`Action` is an abstract class defining an action's blue print. All the atomic actions, e.g., the circle is implemented in the `Circle` class, node is implemented in the `Dot` class, and so on, inherit this abstract class. The `ActionGroup` class defines a group of actions as a composite design pattern. While we can create action objects just by creating instances of the classes, we have `ActionFactory`, which implements a factory design pattern to streamline and abstract away action creation directly from the feature action table. See the contents of folder `src/components/storyboards/actions` for more details.
+The `Action` abstract class serves as a blueprint for defining atomic actions, e.g., circles, dots, etc. represented by `Circle` and `Dot` classes respectively.
 
-Create an action object,
-
-```ts
-new <ActionName>()
-    .setProps(<Props>)
-    .setCanvas(SVGGElement)
-    .setCoordinate([Coordinate, Coordinate])
-    .show();
-```
-
-Animate action, e.g., show and hide,
+**Action Type:** Various actions are defined as enumerators, e.g.,
 
 ```ts
-await <action>.show(delay, duration);
-await <action>.hide(delay, duration);
+export enum ActionType {
+  DOT = "DOT",
+  CIRCLE = "CIRCLE",
+  TEXT_BOX = "TEXT_BOX",
+  CONNECTOR = "CONNECTOR",
+}
 ```
 
-For example, create a Circle object,
+**Creating Actions:** Instantiate a `Circle` action object and display it within a svg canvas:
 
 ```ts
 new Circle()
@@ -226,20 +150,18 @@ new Circle()
     .show();
 ```
 
-We implemented movement for `TextBox` to a specified coordinate:
+Animated movement for objects, e.g., `TextBox`, can be achieved by:
 
 ```ts
-const textBox 
-= new TextBox()
+new TextBox()
     .setProps(...)
     .setCanvas(...)
     .setCoordinate(...)
-    .show();
-
-await textBox.move(Coordinate, delay, duration);
+    .show()
+    .move(Coordinate, delay, duration);
 ```
 
-A feature may be shown using multiple actions combined, to group those actions together into a single object we use `ActionGroup` class. Creation of action group is as follows.
+**Group Actions:**  The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
 
 ```ts
 new ActionGroup()
@@ -249,9 +171,11 @@ new ActionGroup()
     .show();
 ```
 
-See the implementation of various action classes in 📂`src/components/storyboards/actions` for more details.
+**Action Factory:** The `ActionFactory` utilizes a factory design pattern to simplify the creation of action objects, making it more efficient to generate actions from feature action tables.
 
-📈 Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
+**Code:** Further details can be found in the `src/components/storyboards/actions` directory.
+
+**Example:** Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
 
 ## Plots
 
@@ -264,19 +188,7 @@ See the implementation of various action classes in 📂`src/components/storyboa
 
 `Plot` is an abstract class which defines abstract methods used for creating a plot, setting properties, and animating. The concrete plots, e.g, line plot, parallel coordinate plots implements the actual logics.
 
-```ts
-new <PlotName>()
-    .setData([<array of data>])
-    .setName(string)
-    .setProps([])
-    .setPlotProps(PlotProps)
-    .setCanvas(SVGGElement)
-    .setActions([<date and action>])
-    .animate()
-
-```
-
-For example, create a line plot and animate actions,
+**Creating a Plot:** Create a line plot and animate actions,
 
 ```ts
 new LinePlot()
@@ -287,12 +199,11 @@ new LinePlot()
     .setCanvas(SVGGElement)
     .setActions(<action data>)
     .animate()
-
 ```
 
-See the implementation of the plot classes in 📂`src/components/storyboards/plots` for more details.
+**Code:** See the implementation of the plot classes in 📂`src/components/storyboards/plots` for more details.
 
-📈 Example line plot  in action [🔗](http://localhost:3000/storyboards/examples/test-line-plot).
+**Example:** Example line plot  in action [🔗](http://localhost:3000/storyboards/examples/test-line-plot).
 
 ## Feature Action Tables
 
@@ -328,18 +239,7 @@ See the implementation of various action classes in 📂`/src/components/storybo
 
 Story specific workflow
 
-Create workflow of a story:
-
-```ts
-new  <WorkflowName>()
-    .setName(...)
-    .setData(...)
-    .setNFATable(...)
-    .setCanvas(...)
-    .create();
-```
-
-For example, Covid19 single location workflow is created by,
+**Creating a Workflow:** For example, Covid19 single location workflow is created by,
 
 ```ts
 new Covid19SLWorkflow()
@@ -350,19 +250,16 @@ new Covid19SLWorkflow()
     .create();
 ```
 
-See the implementation of workflows in 📂`src/utils/storyboards/workflow` for more details.
+**Code:** See the implementation of workflows in `src/utils/storyboards/workflow` for more details.
 
-📈 Example stories
-
-- Covid19 story with single timeseries [🔗](http://localhost:3000/storyboards/covid19-sl-story)
-- Machine learning multi-variate story [🔗](http://localhost:3000/storyboards/ml-mv-story)
+**Example:** [Covid19 story with single timeseries](http://localhost:3000/storyboards/covid19-sl-story), and [Machine learning multi-variate story](http://localhost:3000/storyboards/ml-mv-story).
 
 ## References
 
 Please cite our paper as follows:
 
 ```
-@article{khan2024
+@article{khan2024,
     title={Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data}, 
     author={S. Khan and S. Jones and B. Bach and J. Cha and M. Chen and J. Meikle and J. C. Roberts and J. Thiyagalingam and J. Wood and P. D. Ritsos},
     journal={arXiv preprint arXiv:2402.03116},
