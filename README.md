@@ -41,10 +41,36 @@ Note: unit tests are under development and may not cover all features.
 
 The project is structured following React and Next.js guidelines and practices:
 
-- `src/components`: UI components including feature action tables, actions, and plots.
-- `src/pages`: Web pages including storyboards, feature-action tables, and examples.
-- `src/services`: Time series and feature action table data services.
-- `src/utils`: Utility functions for data processing, feature and action extraction, and workflow.
+```
+.
+├── src
+│   ├── components          /* UI components */
+│   │   ├── storyboards
+│   │   │   ├── actions
+│   │   │   │   └── ...     /* Various actions implementation */
+│   │   │   ├── plots
+│   │   │   │   └── ...     /* Various plots implementation */
+│   │   │   └── tables
+│   │   │       └── ...     /* Tables' implemented as nested components */
+│   ├── pages
+│   │   └── storyboards     /* Web templates */
+│   │       ├── examples
+│   │       │   └── ...     /* Example or test vis, e.g., actions, features, plots etc. */
+│   │       └── ...         /* Web vis, e.g., stories, tables, etc. */
+│   ├── services
+│   │   └── ...             /* Time series data, table data, etc. */
+│   └── utils
+│      └── storyboards
+│           ├── data-processing
+│           │   └── ...     /* Data processing, e.g., Gaussian */
+│           ├── feature
+│           │   └── ...     /* Feature detection functions */
+│           ├── feature-action-create
+│           │   └── ...     /* Feature action table to feature extraction and action */
+│           └── workflow
+│               └── ...     /* Story-specific workflows */
+└── ...                     
+```
 
 ## Sequence Diagram
 
@@ -104,7 +130,7 @@ new Peak()
 
 **Feature Factory:** The `FeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
 
-**Code:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
+**Feature APIs:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
 **Example:** See an example feature detection and its visualization [](http://localhost:3000/storyboards/examples/test-features).
 
@@ -118,7 +144,7 @@ The feature search or detection functions are implemented in `feature-search.ts`
 TODO
 ```
 
-**Code:** See the implementation of feature detection methods in `src/utils/storyboards/feature` in Gaussian functions in `src/utils/storyboards/data-processing`.
+**Feature Search APIs:** See the available feature search or detection functions in `src/utils/storyboards/feature/feature-search.ts` and all Gaussian functions in `src/utils/storyboards/data-processing/Gaussian.ts`.
 
 **Example:** See examples visualization of [numerical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-nts), [categorical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-cts) and [combined gaussian](http://localhost:3000/storyboards/examples/test-gaussian-combined).
 
@@ -177,7 +203,7 @@ new ActionGroup()
 
 **Action Factory:** The `ActionFactory` utilizes a factory design pattern to simplify the creation of action objects, making it more efficient to generate actions from feature action tables.
 
-**Code:** Further details can be found in the `src/components/storyboards/actions` directory.
+**Action APIs:** See the available actions in the `src/components/storyboards/actions` folder.
 
 **Example:** Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
 
@@ -205,7 +231,7 @@ new LinePlot()
     .animate()
 ```
 
-**Code:** See the implementation of various plots in `src/components/storyboards/plots`.
+**Action APIs:** See various plots and their APIs in `src/components/storyboards/plots` folder.
 
 **Example:** See an example [line plot](http://localhost:3000/storyboards/examples/test-line-plot).
 
@@ -218,7 +244,7 @@ new LinePlot()
 TODO
 Feature action tables are implemented as nested React components.
 
-**Code:** See the implementation of various action classes in `/src/components/storyboards/tables` and `src/pages/storyboards` for more details.
+**Table APIs:** See the implementation of all tables as nested components in `src/components/storyboards/tables` folder.
 
 **Example:** components of feature action tables
 
@@ -254,7 +280,7 @@ new Covid19SLWorkflow()
     .create();
 ```
 
-**Code:** See the implementation of workflows in `src/utils/storyboards/workflow` for more details `src/pages/storyboards`.
+**Workflow APIs:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
 
 **Example:** [Covid19 story with single timeseries](http://localhost:3000/storyboards/covid19-sl-story), and [Machine learning multi-variate story](http://localhost:3000/storyboards/ml-mv-story).
 
