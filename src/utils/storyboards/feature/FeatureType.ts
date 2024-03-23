@@ -11,6 +11,7 @@ export enum FeatureType {
 }
 
 export enum CategoricalFeatureType {
+  EVENT = "EVENT",
   LOCKDOWN = "LOCKDOWN",
   LOCKDOWN_START = "LOCKDOWN_START",
   LOCKDOWN_END = "LOCKDOWN_END",

@@ -64,9 +64,9 @@ The project is structured following React and Next.js guidelines and practices:
 │           ├── data-processing
 │           │   └── ...     /* Data processing, e.g., Gaussian */
 │           ├── feature
-│           │   └── ...     /* Feature detection functions */
-│           ├── feature-action-create
-│           │   └── ...     /* Feature action table to feature extraction and action */
+│           │   └── ...     /* Feature search functions */
+│           ├── feature-action
+│           │   └── ...     /* Feature-action table, feature search, and creating actions */
 │           └── workflow
 │               └── ...     /* Story-specific workflows */
 └── ...                     
@@ -138,10 +138,14 @@ new Peak()
 
 The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions. The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
 
-**Searching a Feature:**
+**Searching Features:**
 
 ```ts
-TODO
+searchPeaks(<time series>, <properties, e.g., window>)
+```
+
+```ts
+gaussian(<mean>, <std>, ...)
 ```
 
 **Feature Search APIs:** See the available feature search or detection functions in `src/utils/storyboards/feature/feature-search.ts` and all Gaussian functions in `src/utils/storyboards/data-processing/Gaussian.ts`.
@@ -174,9 +178,9 @@ export enum ActionType {
 
 ```ts
 new Circle()
-    .setProps(CircleProps)
-    .setCanvas(SVGGElement)
-    .setCoordinate([Coordinate, Coordinate])
+    .setProps(<props>)
+    .setCanvas(<svg>)
+    .setCoordinate(<coordinates>)
     .show();
 ```
 
@@ -188,14 +192,14 @@ new TextBox()
     .setCanvas(...)
     .setCoordinate(...)
     .show()
-    .move(Coordinate, delay, duration);
+    .move(<coordinates>, ...);
 ```
 
 **Group Actions:**  The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
 
 ```ts
 new ActionGroup()
-    .group([<array of actions>])
+    .group(<actions>)
     .setCanvas(...)
     .setCoordinate(...)
     .show();
@@ -222,12 +226,12 @@ new ActionGroup()
 
 ```ts
 new LinePlot()
-    .setData(TimeseriesData[]])
-    .setName(name or key)
-    .setProps([])
-    .setPlotProps(PlotProps)
-    .setCanvas(SVGGElement)
-    .setActions(<action data>)
+    .setData(<time series data>)
+    .setName(<selected data stream name>)
+    .setProps(<props>)
+    .setPlotProps(<plot props>)
+    .setCanvas(<svg>)
+    .setActions(<actions>)
     .animate()
 ```
 
@@ -237,26 +241,61 @@ new LinePlot()
 
 ### Feature Action Tables
 
-**Numerical**
+We implemented UI for meta-story authors for creating and updating feature action tables. The data structures are shown below. The feature action tables are implemented as nested components.
 
-**Categorical**
+**Numerical Feature Action**
 
-TODO
-Feature action tables are implemented as nested React components.
+```json
+{
+    "feature": <feature name>,
+    "properties": {...},
+    "rank": ...,
+    "actions": [
+      {
+        "action": <action name>,
+        "properties": {
+          "size": ...,
+          "color": ...,
+          ...
+        }
+      },
+    ...
+    ]
+    ...
+  },
+```
 
-**Table APIs:** See the implementation of all tables as nested components in `src/components/storyboards/tables` folder.
+**Categorical Feature Action**
 
-**Example:** components of feature action tables
+```json
 
-- Feature properties table [🔗](http://localhost:3000/storyboards/examples/test-feature-properties-table)
-- Action properties table [🔗](http://localhost:3000/storyboards/examples/test-action-properties-table)
-- Action table [🔗](http://localhost:3000/storyboards/examples/test-action-table)
+  {
+    "feature": <event name>,
+    "date": ...,
+    "description": ...,
+    "rank": ...,
+    "actions": [
+      {
+        "action": <action name>,
+        "properties": {
+          "size": ...,
+          "color": ...,
+          ...
+        }
+      }
+    ]
+    ...
+  },
+```
 
-📈 Example feature action tables
+Available feature action tables in `public/static/storyboards`.
 
-- Covid19 single story numerical feature action table [🔗]()
-- Covid19 categorical feature table [🔗]()
-- Machine learning multi-variate story numerical feature action table [🔗]()
+**Table APIs:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder.
+
+**Example:**
+
+- Nested components of feature action tables [feature properties table](http://localhost:3000/storyboards/examples/test-feature-properties-table), [action properties table](http://localhost:3000/storyboards/examples/test-action-properties-table), [action table](http://localhost:3000/storyboards/examples/test-action-table).
+- Implemented feature action tables, Covid19 single story numerical feature action table [link](), Covid19 categorical feature table [link](), Machine learning multi-variate story numerical feature action table [link]() for meta authors. <TODO>
 
 ### Workflow
 
