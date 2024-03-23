@@ -247,21 +247,21 @@ We implemented UI for meta-story authors for creating and updating feature actio
 
 ```json
 {
-    "feature": <feature name>,
-    "properties": {...},
-    "rank": ...,
+    "feature": "<feature name>",
+    "properties": {"..."},
+    "rank": "...",
     "actions": [
       {
-        "action": <action name>,
+        "action": "<action name>",
         "properties": {
-          "size": ...,
-          "color": ...,
-          ...
+          "size": "...",
+          "color": "...",
+          "..."
         }
       },
-    ...
+    "..."
     ]
-    ...
+    "..."
   },
 ```
 
@@ -270,21 +270,21 @@ We implemented UI for meta-story authors for creating and updating feature actio
 ```json
 
   {
-    "feature": <event name>,
-    "date": ...,
-    "description": ...,
-    "rank": ...,
+    "feature": "<event name>",
+    "date": "...",
+    "description": "...",
+    "rank": "...",
     "actions": [
       {
-        "action": <action name>,
+        "action": "<action name>",
         "properties": {
-          "size": ...,
-          "color": ...,
-          ...
+          "size": "...",
+          "color": "...",
+          "..."
         }
       }
     ]
-    ...
+    "..."
   },
 ```
 
