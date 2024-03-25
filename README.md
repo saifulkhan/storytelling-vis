@@ -1,6 +1,6 @@
 # About
 
-This repository contains the source code accompanying our research on utilizing feature-action design patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled [Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data](https://arxiv.org/abs/2402.03116v1)
+This repository contains the source code accompanying our research on utilizing feature-action design patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
 ## Prerequisite
 
@@ -23,7 +23,7 @@ Start the development server to view the UI:
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to explore the visualizations.
+Open <http://localhost:3000> [⤴]() in your browser to explore the visualizations.
 
 ### Tests
 
@@ -78,7 +78,7 @@ The project is structured following React and Next.js guidelines and practices.
 <div>
     <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
-    <small><i>Figure 1: Sequence diagram demonstrating the important classes' and main interaction between them.</i></small>
+    <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
     <br><br>
 </div>
 
@@ -93,7 +93,7 @@ The project is structured following React and Next.js guidelines and practices.
     <br><br>
 </div>
 
-The `Feature` is an abstract class encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serving the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of timeseries data. Developers can extend this base class to implement new features.
+The `Feature` is an abstract class that encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serve as the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of time series data. Developers can extend this base class to implement new features.
 
 **Feature Types:** Features are defined as enumerators, e.g.,
 
@@ -132,7 +132,7 @@ Use the getter functions to retrieve the feature properties.
 
 **Feature APIs:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
-**Example:** See an example feature detection and its visualization [in](http://localhost:3000/storyboards/examples/test-features).
+**Example:** See an example of feature detection and its visualization [⤴](http://localhost:3000/storyboards/examples/test-features).
 
 ### Feature Search & Gaussian
 
@@ -152,7 +152,7 @@ gaussian(<mean>, <std>, ...)
 
 **Feature Search APIs:** See the available feature search or detection functions in `src/utils/storyboards/feature/feature-search.ts` and all Gaussian functions in `src/utils/storyboards/data-processing/Gaussian.ts`.
 
-**Example:** See examples visualization of [numerical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-nts), [categorical timeseries](http://localhost:3000/storyboards/examples/test-gaussian-cts) and [combined gaussian](http://localhost:3000/storyboards/examples/test-gaussian-combined).
+**Example:** See examples of visualization of numerical timeseries[⤴](http://localhost:3000/storyboards/examples/test-gaussian-nts), categorical timeseries[⤴](http://localhost:3000/storyboards/examples/test-gaussian-cts) and combined gaussian[⤴](http://localhost:3000/storyboards/examples/test-gaussian-combined).
 
 ### Actions
 
@@ -176,7 +176,7 @@ export enum ActionType {
 }
 ```
 
-**Creating Actions:** Instantiate a `Circle` action object and display it within a svg canvas. The default action properties are used unless defined in feature-action table.
+**Creating Actions:** Instantiate a `Circle` action object and display it within an SVG canvas. The default action properties are used unless defined in the feature-action table.
 
 ```ts
 new Circle()
@@ -211,7 +211,7 @@ new ActionGroup()
 
 **Action APIs:** See the available actions in the `src/components/storyboards/actions` folder.
 
-**Example:** Example creation and visualization of various actions [🔗](http://localhost:3000/storyboards/examples/test-actions).
+**Example:** Example creation and visualization of various actions [⤴](http://localhost:3000/storyboards/examples/test-actions).
 
 ### Plots
 
@@ -222,7 +222,7 @@ new ActionGroup()
     <br><br>
 </div>
 
-`Plot` is an abstract class which defines abstract methods used for creating a plot, setting properties, and animating. The concrete plots, e.g, line plot, parallel coordinate plots implements the actual logics.
+`Plot` is an abstract class that defines abstract methods used for creating a plot, setting properties, and animating. The concrete plots, e.g., line plot, and parallel coordinate plots implement the actual logic.
 
 **Creating a Plot:** Create a line plot and animate actions,
 
@@ -239,7 +239,7 @@ new LinePlot()
 
 **Action APIs:** See various plots and their APIs in `src/components/storyboards/plots` folder.
 
-**Example:** See an example [line plot](http://localhost:3000/storyboards/examples/test-line-plot).
+**Example:** See an example line plot[⤴](<http://localhost:3000/storyboards/examples/test-line-plot>).
 
 ### Feature Action Tables
 
@@ -294,8 +294,8 @@ We implemented UIs for meta-story authors for creating and updating feature acti
 
 **Example:**
 
-- See the examples of nested components of feature action tables, e.g., [feature properties table](http://localhost:3000/storyboards/examples/test-feature-properties-table), [action properties table](http://localhost:3000/storyboards/examples/test-action-properties-table), and [action table](http://localhost:3000/storyboards/examples/test-action-table).
-- Implemented feature action tables, Covid19 single story numerical feature action table [link](), Covid19 categorical feature table [link](), Machine learning multi-variate story numerical feature action table [link]() for meta authors. <TODO>
+- See the examples of nested components of feature action tables, e.g., feature properties table[⤴](http://localhost:3000/storyboards/examples/test-feature-properties-table), action properties table[⤴](http://localhost:3000/storyboards/examples/test-action-properties-table), and action table[⤴](http://localhost:3000/storyboards/examples/test-action-table).
+- Implemented feature action tables, Covid19 single story numerical feature action table [⤴](), Covid19 categorical feature table [⤴](), Machine learning multi-variate story numerical feature action table [⤴]() for meta authors. <TODO links>
 
 ### Workflow
 
@@ -321,7 +321,7 @@ new Covid19SLWorkflow()
 
 **Workflow APIs:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
 
-**Example:** [Covid19 story with single timeseries](http://localhost:3000/storyboards/covid19-sl-story), and [Machine learning multi-variate story](http://localhost:3000/storyboards/ml-mv-story).
+**Example:** Covid19 story with single time series [⤴](http://localhost:3000/storyboards/covid19-sl-story), and Machine learning multi-variate story[⤴](http://localhost:3000/storyboards/ml-mv-story).
 
 ## References
 
@@ -336,6 +336,5 @@ Please cite our paper as follows:
 }
 ```
 
-- The first version of the prototype was done in  Observable notebook and can be found in [observablehq](https://observablehq.com/d/0a6e9c35a809660e).
-- Second version of prototype ported from Observable notebook to React.js can be found in [GitHub](https://github.com/saifulkhan/storytelling-vis-v.0.1). These prototypes contain six stories, however only two stories are ported to this new software.
-- Used [React.js](https://react.dev), [Next.js](https://github.com/vercel/next.js), [MUI](https://mui.com) libraries for the UI development.
+- The first version of the prototype was done in  Observable notebook and can be found in Observablehq [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js can be found in the GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). These prototypes contain six stories, however only two stories are ported to this new software.
+- Used React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com) libraries for the UI development.
