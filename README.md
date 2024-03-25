@@ -39,7 +39,7 @@ Note: unit tests are under development and may not cover all features.
 
 ## Code Structure
 
-The project is structured following React and Next.js guidelines and practices:
+The project is structured following React and Next.js guidelines and practices.
 
 ```
 .
@@ -78,7 +78,7 @@ The project is structured following React and Next.js guidelines and practices:
 <div>
     <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
-    <small><i>Figure 1: Sequence diagram demonstrating the important classes' and main interaction between various functions.</i></small>
+    <small><i>Figure 1: Sequence diagram demonstrating the important classes' and main interaction between them.</i></small>
     <br><br>
 </div>
 
@@ -89,13 +89,13 @@ The project is structured following React and Next.js guidelines and practices:
 <div>
     <img width="350px" src="./public/static/doc/feature-classes.png" alt="" />
     <br>
-    <small><i>Figure 2: The ULM diagram of the features. We did not show all the classes or their methods and attributes in this diagram. </i></small>
+    <small><i>Figure 2: The class diagram of the feature classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
 </div>
 
-The `Feature` is an abstract class encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serving the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define timeseries data features. Developers can extend this base class to introduce any number of specialized features.
+The `Feature` is an abstract class encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serving the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of timeseries data. Developers can extend this base class to implement new features.
 
-**Feature Types:** Various features are defined as enumerators, e.g.,
+**Feature Types:** Features are defined as enumerators, e.g.,
 
 ```ts
 export enum FeatureType {
@@ -111,9 +111,7 @@ export enum FeatureType {
 }
 ```
 
- To instantiate a feature, use the constructor of a concrete feature class. Set properties using method chaining:
-
-For example, when a feature `PEAK` is detected it creates a `Peak` object as follows. The default feature properties are used unless defined in feature-action table.
+**Creating Feature:** To instantiate a feature, use the constructor of a concrete feature class. Set properties using method chaining. For example, when a feature `PEAK` is detected it creates a `Peak` object as follows. The default feature properties are used unless defined in feature-action table.
 
 ```ts
 new Peak()
@@ -128,21 +126,27 @@ new Peak()
     .setDataIndex(...);
 ```
 
+Use the getter functions to retrieve the feature properties.
+
 **Feature Factory:** The `FeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
 
 **Feature APIs:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
-**Example:** See an example feature detection and its visualization [](http://localhost:3000/storyboards/examples/test-features).
+**Example:** See an example feature detection and its visualization [in](http://localhost:3000/storyboards/examples/test-features).
 
 ### Feature Search & Gaussian
 
 The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions. The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
 
-**Searching Features:**
+**Feature Detection:**
+
+This is an example of a feature detection function.
 
 ```ts
 searchPeaks(<time series>, <properties, e.g., window>)
 ```
+
+This is an example of calculating Gaussian.
 
 ```ts
 gaussian(<mean>, <std>, ...)
@@ -241,7 +245,7 @@ new LinePlot()
 
 ### Feature Action Tables
 
-We implemented UI for meta-story authors for creating and updating feature action tables. The data structures are shown below. The feature action tables are implemented as nested components.
+We implemented UIs for meta-story authors for creating and updating feature action tables. The data structures of the tables are shown below. The feature action tables are implemented as nested React.js components.
 
 **Numerical Feature Action**
 
@@ -288,13 +292,11 @@ We implemented UI for meta-story authors for creating and updating feature actio
   },
 ```
 
-Available feature action tables in `public/static/storyboards`.
-
-**Table APIs:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder.
+**Table APIs:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
 
 **Example:**
 
-- Nested components of feature action tables [feature properties table](http://localhost:3000/storyboards/examples/test-feature-properties-table), [action properties table](http://localhost:3000/storyboards/examples/test-action-properties-table), [action table](http://localhost:3000/storyboards/examples/test-action-table).
+- See the examples of nested components of feature action tables, e.g., [feature properties table](http://localhost:3000/storyboards/examples/test-feature-properties-table), [action properties table](http://localhost:3000/storyboards/examples/test-action-properties-table), and [action table](http://localhost:3000/storyboards/examples/test-action-table).
 - Implemented feature action tables, Covid19 single story numerical feature action table [link](), Covid19 categorical feature table [link](), Machine learning multi-variate story numerical feature action table [link]() for meta authors. <TODO>
 
 ### Workflow
@@ -306,7 +308,7 @@ Available feature action tables in `public/static/storyboards`.
     <br><br>
 </div>
 
-Workflows are story specific. Fore each story a concrete workflow class is defined extended from abstract`Workflow` class.
+The abstract`Workflow` class is created to define the workflow APIs, and the concrete workflow classes are created for each story. The workflow acts as a facade design pattern and interact with other classes.
 
 **Creating a Workflow:** For example, Covid19 single location workflow is created by,
 
