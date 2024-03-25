@@ -140,13 +140,11 @@ The feature search or detection functions are implemented in `feature-search.ts`
 
 **Feature Detection:**
 
-This is an example of a feature detection function.
+The following are example APIs for peak detection and computing Gaussian distributions.
 
 ```ts
 searchPeaks(<time series>, <properties, e.g., window>)
 ```
-
-This is an example of calculating Gaussian.
 
 ```ts
 gaussian(<mean>, <std>, ...)
