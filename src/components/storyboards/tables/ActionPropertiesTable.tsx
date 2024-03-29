@@ -138,7 +138,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
             </TableCell>
 
             {/* merged rows */}
-            {index === 0 && (
+            {/* {index === 0 && (
               <TableCell
                 className={classes.drawingCell}
                 style={{ verticalAlign: "middle" }}
@@ -146,7 +146,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
               >
                 {drawSvgObject(rows)}
               </TableCell>
-            )}
+            )} */}
           </TableRow>
         ))}
       </TableBody>

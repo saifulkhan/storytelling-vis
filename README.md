@@ -82,7 +82,7 @@ The project is structured following React and Next.js guidelines and practices.
     <br><br>
 </div>
 
-## APIs
+## API
 
 ### Feature
 
@@ -130,7 +130,7 @@ Use the getter functions to retrieve the feature properties.
 
 **Feature Factory:** The `FeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
 
-**Feature APIs:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
+**Feature API:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
 **Example:** See an example of feature detection and its visualization [⤴](http://localhost:3000/storyboards/examples/test-features).
 
@@ -140,7 +140,7 @@ The feature search or detection functions are implemented in `feature-search.ts`
 
 **Feature Detection:**
 
-The following are example APIs for peak detection and computing Gaussian distributions.
+The following are example API for peak detection and computing Gaussian distributions.
 
 ```ts
 searchPeaks(<time series>, <properties, e.g., window>)
@@ -150,7 +150,7 @@ searchPeaks(<time series>, <properties, e.g., window>)
 gaussian(<mean>, <std>, ...)
 ```
 
-**Feature Search APIs:** See the available feature search or detection functions in `src/utils/storyboards/feature/feature-search.ts` and all Gaussian functions in `src/utils/storyboards/data-processing/Gaussian.ts`.
+**Feature Search API:** See the available feature search or detection functions in `src/utils/storyboards/feature/feature-search.ts` and all Gaussian functions in `src/utils/storyboards/data-processing/Gaussian.ts`.
 
 **Example:** See examples of visualization of numerical timeseries[⤴](http://localhost:3000/storyboards/examples/test-gaussian-nts), categorical timeseries[⤴](http://localhost:3000/storyboards/examples/test-gaussian-cts) and combined gaussian[⤴](http://localhost:3000/storyboards/examples/test-gaussian-combined).
 
@@ -209,7 +209,7 @@ new ActionGroup()
 
 **Action Factory:** The `ActionFactory` utilizes a factory design pattern to simplify the creation of action objects, making it more efficient to generate actions from feature action tables.
 
-**Action APIs:** See the available actions in the `src/components/storyboards/actions` folder.
+**Action API:** See the available actions in the `src/components/storyboards/actions` folder.
 
 **Example:** Example creation and visualization of various actions [⤴](http://localhost:3000/storyboards/examples/test-actions).
 
@@ -237,7 +237,7 @@ new LinePlot()
     .animate()
 ```
 
-**Action APIs:** See various plots and their APIs in `src/components/storyboards/plots` folder.
+**Action API:** See various plots and their API in `src/components/storyboards/plots` folder.
 
 **Example:** See an example line plot[⤴](<http://localhost:3000/storyboards/examples/test-line-plot>).
 
@@ -290,7 +290,7 @@ We implemented UIs for meta-story authors for creating and updating feature acti
   },
 ```
 
-**Table APIs:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
+**Table API:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
 
 **Example:**
 
@@ -306,7 +306,7 @@ We implemented UIs for meta-story authors for creating and updating feature acti
     <br><br>
 </div>
 
-The abstract`Workflow` class is created to define the workflow APIs, and the concrete workflow classes are created for each story. The workflow acts as a facade design pattern and interact with other classes.
+The abstract`Workflow` class is created to define the workflow API, and the concrete workflow classes are created for each story. The workflow acts as a facade design pattern and interact with other classes.
 
 **Creating a Workflow:** For example, Covid19 single location workflow is created by,
 
@@ -319,7 +319,7 @@ new Covid19SLWorkflow()
     .create();
 ```
 
-**Workflow APIs:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
+**Workflow API:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
 
 **Example:** Covid19 story with single time series [⤴](http://localhost:3000/storyboards/covid19-sl-story), and Machine learning multi-variate story[⤴](http://localhost:3000/storyboards/ml-mv-story).
 
