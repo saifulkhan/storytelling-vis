@@ -1,4 +1,5 @@
 export enum FeatureType {
+  FIRST = "FIRST",
   CURRENT = "CURRENT",
   LAST = "LAST",
   MAX = "MAX",

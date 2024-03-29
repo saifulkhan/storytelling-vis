@@ -70,7 +70,7 @@ const useStyles = makeStyles({
   //   margin: "10px",
   // },
   featureCell: {
-    width: "10%",
+    width: "15%",
     // display: "flex",
     // alignItems: "center",
     fontSize: "12px",
@@ -91,7 +91,7 @@ const useStyles = makeStyles({
     // border: "none", // remove border
   },
   actionCell: {
-    width: "65%",
+    width: "60%",
     // fontSize: "12px",
     // padding: "2px", // reduce padding
     // border: "none", // remove border

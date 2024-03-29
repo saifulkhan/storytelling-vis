@@ -72,17 +72,63 @@ The project is structured following React and Next.js guidelines and practices.
 └── ...                     
 ```
 
-## Sequence Diagram
-
-<!-- <div align="center">  -->
-<div>
-    <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
-    <br>
-    <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
-    <br><br>
-</div>
-
 ## API
+
+### Feature Action Tables
+
+We implemented UIs for meta-story authors for creating and updating feature action tables. The data structures of the tables are shown below. The feature action tables are implemented as nested React.js components.
+
+**Numerical Feature Action**
+
+```json
+{
+    "feature": "<feature name>",
+    "properties": {"..."},
+    "rank": "...",
+    "actions": [
+      {
+        "action": "<action name>",
+        "properties": {
+          "size": "...",
+          "color": "...",
+          "..."
+        }
+      },
+    "..."
+    ]
+    "..."
+  },
+```
+
+**Categorical Feature Action**
+
+```json
+
+  {
+    "feature": "<event name>",
+    "date": "...",
+    "description": "...",
+    "rank": "...",
+    "actions": [
+      {
+        "action": "<action name>",
+        "properties": {
+          "size": "...",
+          "color": "...",
+          "..."
+        }
+      }
+    ]
+    "..."
+  },
+```
+
+**Table API:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
+
+**Example:**
+
+- See the examples of nested components of feature action tables, e.g., feature properties table[⤴](http://localhost:3000/storyboards/examples/test-feature-properties-table), action properties table[⤴](http://localhost:3000/storyboards/examples/test-action-properties-table), and action table[⤴](http://localhost:3000/storyboards/examples/test-action-table).
+- Implemented feature action tables, Covid19 single story numerical feature action table [⤴](), Covid19 categorical feature table [⤴](), Machine learning multi-variate story numerical feature action table [⤴]() for meta authors. <TODO links>
 
 ### Feature
 
@@ -241,62 +287,6 @@ new LinePlot()
 
 **Example:** See an example line plot[⤴](<http://localhost:3000/storyboards/examples/test-line-plot>).
 
-### Feature Action Tables
-
-We implemented UIs for meta-story authors for creating and updating feature action tables. The data structures of the tables are shown below. The feature action tables are implemented as nested React.js components.
-
-**Numerical Feature Action**
-
-```json
-{
-    "feature": "<feature name>",
-    "properties": {"..."},
-    "rank": "...",
-    "actions": [
-      {
-        "action": "<action name>",
-        "properties": {
-          "size": "...",
-          "color": "...",
-          "..."
-        }
-      },
-    "..."
-    ]
-    "..."
-  },
-```
-
-**Categorical Feature Action**
-
-```json
-
-  {
-    "feature": "<event name>",
-    "date": "...",
-    "description": "...",
-    "rank": "...",
-    "actions": [
-      {
-        "action": "<action name>",
-        "properties": {
-          "size": "...",
-          "color": "...",
-          "..."
-        }
-      }
-    ]
-    "..."
-  },
-```
-
-**Table API:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
-
-**Example:**
-
-- See the examples of nested components of feature action tables, e.g., feature properties table[⤴](http://localhost:3000/storyboards/examples/test-feature-properties-table), action properties table[⤴](http://localhost:3000/storyboards/examples/test-action-properties-table), and action table[⤴](http://localhost:3000/storyboards/examples/test-action-table).
-- Implemented feature action tables, Covid19 single story numerical feature action table [⤴](), Covid19 categorical feature table [⤴](), Machine learning multi-variate story numerical feature action table [⤴]() for meta authors. <TODO links>
-
 ### Workflow
 
 <div>
@@ -322,6 +312,16 @@ new Covid19SLWorkflow()
 **Workflow API:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
 
 **Example:** Covid19 story with single time series [⤴](http://localhost:3000/storyboards/covid19-sl-story), and Machine learning multi-variate story[⤴](http://localhost:3000/storyboards/ml-mv-story).
+
+## Sequence Diagram of a Workflow
+
+<!-- <div align="center">  -->
+<div>
+    <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
+    <br>
+    <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
+    <br><br>
+</div>
 
 ## References
 
