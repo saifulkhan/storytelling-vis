@@ -336,5 +336,6 @@ Please cite our paper as follows:
 }
 ```
 
-- The first version of the prototype was done in  Observable notebook and can be found in Observablehq [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js can be found in the GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). These prototypes contain six stories, however only two stories are ported to this new software.
+- The first version of the prototype was done in  Observable notebook and can be found in Observablehq [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js can be found in the GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1).
+- The previous prototypes contain six stories, however, in this new repository so far we only ported two stories. We will gradually port the remaining four stories and will also add more stories.
 - Used React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com) libraries for the UI development.
