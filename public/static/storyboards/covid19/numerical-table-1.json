@@ -25,7 +25,7 @@
         "action": "TEXT_BOX",
         "properties": {
           "title": "${date}",
-          "message": "By ${date}, the number of cases reached peak, ${value} in region ${name}.",
+          "message": "By ${date}, the number of peaks at ${value}.",
           "backgroundColor": "#d3d3d3",
           "width": 200
         }
