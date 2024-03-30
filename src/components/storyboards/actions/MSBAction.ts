@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { ActionType } from "./ActionType";
-import { FeatureType } from "../../../utils/storyboards/feature/FeatureType";
+import { MSBActionName } from "./MSBActionName";
+import { MSBFeatureName } from "../../../utils/storyboards/feature/MSBFeatureName";
 import { CategoricalFeatures } from "../../../utils/storyboards/feature/CategoricalFeatures";
 
 export type Coordinate = [number, number];
@@ -8,21 +8,21 @@ export type Coordinate = [number, number];
 const DELAY = 0,
   DURATION = 1000;
 
-export abstract class Action {
-  protected type: ActionType;
+export abstract class MSBAction {
+  protected type: MSBActionName;
   protected props: any;
   protected svg: SVGGElement;
   protected node: any;
   protected coordinate0: Coordinate;
   protected coordinate1: Coordinate;
-  protected featureType?: FeatureType | CategoricalFeatures;
+  protected featureType?: MSBFeatureName | CategoricalFeatures;
 
   constructor() {}
 
   public abstract setProps(properties: unknown): this;
   public abstract updateProps(properties: any): this;
 
-  public getType(): ActionType {
+  public getType(): MSBActionName {
     return this.type;
   }
 
@@ -91,7 +91,7 @@ export abstract class Action {
     d3.select(this.svg).append(() => this.node);
   }
 
-  public setFeatureType(featureType: FeatureType | CategoricalFeatures) {
+  public setFeatureType(featureType: MSBFeatureName | CategoricalFeatures) {
     this.featureType = featureType;
     return this;
   }

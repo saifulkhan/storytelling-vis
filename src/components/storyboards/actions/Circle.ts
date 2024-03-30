@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { Action, Coordinate } from "./Action";
-import { ActionType } from "./ActionType";
+import { MSBAction, Coordinate } from "./MSBAction";
+import { MSBActionName } from "./MSBActionName";
 
 export type CircleProps = {
   size?: number;
@@ -16,13 +16,13 @@ export const defaultCircleProps: CircleProps = {
   opacity: 1,
 };
 
-export class Circle extends Action {
+export class Circle extends MSBAction {
   protected props: CircleProps;
   protected circleNode: any;
 
   constructor() {
     super();
-    this.type = ActionType.CIRCLE;
+    this.type = MSBActionName.CIRCLE;
   }
 
   public setProps(properties: CircleProps = {}) {

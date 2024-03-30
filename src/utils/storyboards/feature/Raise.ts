@@ -1,5 +1,5 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { FeatureType } from "./FeatureType";
+import { MSBFeatureName } from "./MSBFeatureName";
 
 export class Rise extends NumericalFeature {
   grad: number;
@@ -7,7 +7,7 @@ export class Rise extends NumericalFeature {
 
   constructor() {
     super();
-    this.type = FeatureType.RAISE;
+    this.type = MSBFeatureName.RAISE;
   }
 
   setGrad(grad: number) {

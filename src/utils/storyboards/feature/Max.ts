@@ -1,9 +1,9 @@
 import { NumericalFeature } from "./NumericalFeature";
-import { FeatureType } from "./FeatureType";
+import { MSBFeatureName } from "./MSBFeatureName";
 
 export class Max extends NumericalFeature {
   constructor() {
     super();
-    this.type = FeatureType.MAX;
+    this.type = MSBFeatureName.MAX;
   }
 }

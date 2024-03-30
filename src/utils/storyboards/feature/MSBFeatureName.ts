@@ -1,4 +1,4 @@
-export enum FeatureType {
+export enum MSBFeatureName {
   FIRST = "FIRST",
   CURRENT = "CURRENT",
   LAST = "LAST",
@@ -9,11 +9,5 @@ export enum FeatureType {
   FALL = "FALL",
   RAISE = "RAISE",
   SLOPE = "SLOPE",
-}
-
-export enum CategoricalFeatureType {
   EVENT = "EVENT",
-  LOCKDOWN = "LOCKDOWN",
-  LOCKDOWN_START = "LOCKDOWN_START",
-  LOCKDOWN_END = "LOCKDOWN_END",
 }

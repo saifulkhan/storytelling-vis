@@ -1,19 +1,19 @@
 import { TimeseriesData } from "../data-processing/TimeseriesData";
-import { Feature } from "../feature/Feature";
-import { ActionFactory } from "../../../components/storyboards/actions/ActionFactory";
+import { MSBFeature } from "../feature/MSBFeature";
+import { MSBActionFactory } from "../../../components/storyboards/actions/MSBActionFactory";
 import {
   ActionTableRow,
   FeatureActionTableRow as FeatureActionTableRow,
 } from "../../../components/storyboards/tables/FeatureActionTableRow";
-import { FeatureFactory } from "../feature/FeatureFactory";
-import { Action } from "../../../components/storyboards/actions/Action";
+import { MSBFeatureFactory } from "../feature/MSBFeatureFactory";
+import { MSBAction } from "../../../components/storyboards/actions/MSBAction";
 import { DateActionArray } from "./FeatureActionTypes";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
 } from "../feature/FeatureSearchProps";
 
-export class FeatureActionFactory {
+export class MSBMSBFeatureActionFactory {
   private data: TimeseriesData[];
   private table: FeatureActionTableRow[];
   private props: FeatureSearchProps;
@@ -37,33 +37,33 @@ export class FeatureActionFactory {
 
   public create() {
     const dataActionArray: DateActionArray = [];
-    const actionFactory = new ActionFactory();
-    const featureFactory = new FeatureFactory()
+    const actionFactory = new MSBActionFactory();
+    const featureFactory = new MSBFeatureFactory()
       .setProps(this.props)
       .setData(this.data);
 
-    console.log("FeatureActionFactory:create: data: ", this.data);
+    console.log("MSBFeatureActionFactory:create: data: ", this.data);
 
     this.table.forEach((row: FeatureActionTableRow) => {
       // prettier-ignore
-      console.log("FeatureActionFactory:create: row = ", row);
+      console.log("MSBFeatureActionFactory:create: row = ", row);
 
       //
       // search features
       //
-      const features: Feature[] = featureFactory.search(
+      const features: MSBFeature[] = featureFactory.search(
         row.feature,
         row.properties,
         row.rank
       );
       // prettier-ignore
-      console.log("FeatureActionFactory:create: feature:", row.feature, ", features = ", features);
+      console.log("MSBFeatureActionFactory:create: feature:", row.feature, ", features = ", features);
 
       //
       // create actions of each features
       //
-      features.forEach((feature: Feature) => {
-        let actions: Action[] = [];
+      features.forEach((feature: MSBFeature) => {
+        let actions: MSBAction[] = [];
         row.actions.forEach((rowIn: ActionTableRow) => {
           //
           // create action
@@ -73,18 +73,18 @@ export class FeatureActionFactory {
             ?.setFeatureType(feature?.getType());
           actions.push(action);
           // prettier-ignore
-          // console.log("FeatureActionFactory: action = ", action);
+          // console.log("MSBFeatureActionFactory: action = ", action);
         });
 
         //
         // group all actions of the feature
         //
-        const action: Action = actionFactory
+        const action: MSBAction = actionFactory
           .group(actions)
           ?.setFeatureType(feature?.getType());
         dataActionArray.push([feature.date, action]);
 
-        console.log("FeatureActionFactory:create: action = ", action);
+        console.log("MSBFeatureActionFactory:create: action = ", action);
       });
     });
 

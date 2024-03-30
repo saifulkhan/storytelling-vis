@@ -1,12 +1,11 @@
-import { CategoricalFeatures } from "./CategoricalFeatures";
-import { FeatureType } from "./FeatureType";
+import { MSBFeatureName } from "./MSBFeatureName";
 
-export abstract class Feature {
+export abstract class MSBFeature {
   protected date: Date;
   protected start: Date;
   protected end: Date;
   protected rank: number;
-  protected type: CategoricalFeatures | FeatureType;
+  protected type: MSBFeatureName;
   protected metric: string;
   protected dataIndex: number;
 
@@ -21,7 +20,7 @@ export abstract class Feature {
     return this.date;
   }
 
-  setType(type: FeatureType | CategoricalFeatures) {
+  setType(type: MSBFeatureName) {
     this.type = type;
     return this;
   }

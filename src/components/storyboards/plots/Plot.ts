@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Coordinate } from "../actions/Action";
+import { Coordinate } from "../actions/MSBAction";
 
 export type PlotProps = {
   title?: string;

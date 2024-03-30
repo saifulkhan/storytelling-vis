@@ -1,6 +1,6 @@
-import { Feature } from "./Feature";
+import { MSBFeature } from "./MSBFeature";
 
-export class NumericalFeature extends Feature {
+export class NumericalFeature extends MSBFeature {
   protected height: number;
 
   constructor() {

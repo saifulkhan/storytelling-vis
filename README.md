@@ -74,9 +74,13 @@ The project is structured following React and Next.js guidelines and practices.
 
 ## API
 
-### Feature Action Tables
+MSB: Meta-Storyboard
+
+### MSB Feature Action Tables
 
 We implemented UIs for meta-story authors for creating and updating feature action tables. The data structures of the tables are shown below. The feature action tables are implemented as nested React.js components.
+
+TODO: Rename and refactor names, e.g., feature -> featureName, etc.
 
 **Numerical Feature Action**
 
@@ -125,26 +129,30 @@ We implemented UIs for meta-story authors for creating and updating feature acti
 
 **Table API:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
 
+**MSB Feature Action Factory API:**
+
+TODO: Show an example.
+
 **Example:**
 
 - See the examples of nested components of feature action tables, e.g., feature properties table[⤴](http://localhost:3000/storyboards/examples/test-feature-properties-table), action properties table[⤴](http://localhost:3000/storyboards/examples/test-action-properties-table), and action table[⤴](http://localhost:3000/storyboards/examples/test-action-table).
 - Implemented feature action tables, Covid19 single story numerical feature action table [⤴](), Covid19 categorical feature table [⤴](), Machine learning multi-variate story numerical feature action table [⤴]() for meta authors. <TODO links>
 
-### Feature
+### MSB Feature
 
 <div>
     <img width="350px" src="./public/static/doc/feature-classes.png" alt="" />
     <br>
-    <small><i>Figure 2: The class diagram of the feature classes. Please see the source code for all classes, their methods and attributes. </i></small>
+    <small><i>Figure 2: The class diagram of the MSB feature classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
 </div>
 
-The `Feature` is an abstract class that encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serve as the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of time series data. Developers can extend this base class to implement new features.
+The `MSBFeature` is an abstract class that encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serve as the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of time series data. Developers can extend this base class to implement new features.
 
 **Feature Types:** Features are defined as enumerators, e.g.,
 
 ```ts
-export enum FeatureType {
+export enum MSBFeatureName {
   CURRENT = "CURRENT",
   LAST = "LAST",
   MAX = "MAX",
@@ -157,7 +165,9 @@ export enum FeatureType {
 }
 ```
 
-**Creating Feature:** To instantiate a feature, use the constructor of a concrete feature class. Set properties using method chaining. For example, when a feature `PEAK` is detected it creates a `Peak` object as follows. The default feature properties are used unless defined in feature-action table.
+TODO: Complete the list of feature types.
+
+**Creating MSB Feature:** To instantiate a MSB feature, use the constructor of a concrete feature class. Set properties using method chaining. For example, when a feature `PEAK` is detected it creates a `Peak` object as follows. The default feature properties are used unless defined in feature-action table.
 
 ```ts
 new Peak()
@@ -174,9 +184,11 @@ new Peak()
 
 Use the getter functions to retrieve the feature properties.
 
-**Feature Factory:** The `FeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
+**MSB Feature Factory:** The `MSBFeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
 
-**Feature API:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
+TODO: Show an example.
+
+**MSB Feature API:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
 
 **Example:** See an example of feature detection and its visualization [⤴](http://localhost:3000/storyboards/examples/test-features).
 
@@ -186,7 +198,7 @@ The feature search or detection functions are implemented in `feature-search.ts`
 
 **Feature Detection:**
 
-The following are example API for peak detection and computing Gaussian distributions.
+The following are examples API for peak detection and computing Gaussian distributions.
 
 ```ts
 searchPeaks(<time series>, <properties, e.g., window>)
@@ -200,7 +212,7 @@ gaussian(<mean>, <std>, ...)
 
 **Example:** See examples of visualization of numerical timeseries[⤴](http://localhost:3000/storyboards/examples/test-gaussian-nts), categorical timeseries[⤴](http://localhost:3000/storyboards/examples/test-gaussian-cts) and combined gaussian[⤴](http://localhost:3000/storyboards/examples/test-gaussian-combined).
 
-### Actions
+### MSB Actions
 
 <div>
     <img width="450px" src="./public/static/doc/action-classes.png" alt="" />
@@ -209,12 +221,12 @@ gaussian(<mean>, <std>, ...)
     <br><br>
 </div>
 
-The `Action` abstract class serves as a blueprint for defining atomic actions, e.g., circles, dots, etc. represented by `Circle` and `Dot` classes respectively.
+The `MSBAction` abstract class serves as a blueprint for defining atomic actions, e.g., circles, dots, etc. represented by `Circle` and `Dot` classes respectively.
 
 **Action Type:** Various actions are defined as enumerators, e.g.,
 
 ```ts
-export enum ActionType {
+export enum MSBActionName {
   DOT = "DOT",
   CIRCLE = "CIRCLE",
   TEXT_BOX = "TEXT_BOX",
@@ -222,7 +234,9 @@ export enum ActionType {
 }
 ```
 
-**Creating Actions:** Instantiate a `Circle` action object and display it within an SVG canvas. The default action properties are used unless defined in the feature-action table.
+TODO: Complete the list of action types.
+
+**Creating MSB Actions:** Instantiate a `Circle` action object and display it within an SVG canvas. The default action properties are used unless defined in the feature-action table.
 
 ```ts
 new Circle()
@@ -243,19 +257,21 @@ new TextBox()
     .move(<coordinates>, ...);
 ```
 
-**Group Actions:**  The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
+**Group MSB Actions:**  The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
 
 ```ts
-new ActionGroup()
+new MSBActionGroup()
     .group(<actions>)
     .setCanvas(...)
     .setCoordinate(...)
     .show();
 ```
 
-**Action Factory:** The `ActionFactory` utilizes a factory design pattern to simplify the creation of action objects, making it more efficient to generate actions from feature action tables.
+**MSB Action Factory:** The `ActionFactory` utilizes a factory design pattern to simplify the creation of action objects, making it more efficient to generate actions from feature action tables.
 
-**Action API:** See the available actions in the `src/components/storyboards/actions` folder.
+TODO: Show an example.
+
+**MSB Action API:** See the available actions in the `src/components/storyboards/actions` folder.
 
 **Example:** Example creation and visualization of various actions [⤴](http://localhost:3000/storyboards/examples/test-actions).
 
@@ -283,11 +299,11 @@ new LinePlot()
     .animate()
 ```
 
-**Action API:** See various plots and their API in `src/components/storyboards/plots` folder.
+**MSB Action API:** See various plots and their API in `src/components/storyboards/plots` folder.
 
 **Example:** See an example line plot[⤴](<http://localhost:3000/storyboards/examples/test-line-plot>).
 
-### Workflow
+### MSB Workflow
 
 <div>
     <img width="350px" src="./public/static/doc/workflow-classes.png" alt="" />

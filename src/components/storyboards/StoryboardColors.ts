@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { FeatureType } from "../../utils/storyboards/feature/FeatureType";
+import { MSBFeatureName } from "../../utils/storyboards/feature/MSBFeatureName";
 
 export enum StoryboardColors {
   DarkGreen = "#006400",
@@ -30,28 +30,28 @@ export enum StoryboardColors {
 }
 
 export const LineColor = {} as any;
-LineColor[FeatureType.CURRENT] = StoryboardColors.Orange;
-LineColor[FeatureType.LAST] = StoryboardColors.PaleCyan;
-LineColor[FeatureType.MAX] = StoryboardColors.Green;
-LineColor[FeatureType.MIN] = StoryboardColors.Purple;
-LineColor[FeatureType.PEAK] = StoryboardColors.LightGreen;
-LineColor[FeatureType.VALLEY] = StoryboardColors.PalePurple;
+LineColor[MSBFeatureName.CURRENT] = StoryboardColors.Orange;
+LineColor[MSBFeatureName.LAST] = StoryboardColors.PaleCyan;
+LineColor[MSBFeatureName.MAX] = StoryboardColors.Green;
+LineColor[MSBFeatureName.MIN] = StoryboardColors.Purple;
+LineColor[MSBFeatureName.PEAK] = StoryboardColors.LightGreen;
+LineColor[MSBFeatureName.VALLEY] = StoryboardColors.PalePurple;
 
 export const DotColor = {} as any;
-DotColor[FeatureType.CURRENT] = StoryboardColors.Orange;
-DotColor[FeatureType.LAST] = StoryboardColors.PaleCyan;
-DotColor[FeatureType.MAX] = StoryboardColors.Green;
-DotColor[FeatureType.MIN] = StoryboardColors.Purple;
-DotColor[FeatureType.PEAK] = StoryboardColors.LightGreen;
-DotColor[FeatureType.VALLEY] = StoryboardColors.PalePurple;
+DotColor[MSBFeatureName.CURRENT] = StoryboardColors.Orange;
+DotColor[MSBFeatureName.LAST] = StoryboardColors.PaleCyan;
+DotColor[MSBFeatureName.MAX] = StoryboardColors.Green;
+DotColor[MSBFeatureName.MIN] = StoryboardColors.Purple;
+DotColor[MSBFeatureName.PEAK] = StoryboardColors.LightGreen;
+DotColor[MSBFeatureName.VALLEY] = StoryboardColors.PalePurple;
 
 export const TextColor = {} as any;
-TextColor[FeatureType.CURRENT] = StoryboardColors.DarkOrange;
-TextColor[FeatureType.LAST] = StoryboardColors.DarkCyan;
-TextColor[FeatureType.MAX] = StoryboardColors.DarkGreen;
-TextColor[FeatureType.MIN] = StoryboardColors.DarkPurple;
-TextColor[FeatureType.PEAK] = StoryboardColors.LightGreen;
-TextColor[FeatureType.VALLEY] = StoryboardColors.PalePurple;
+TextColor[MSBFeatureName.CURRENT] = StoryboardColors.DarkOrange;
+TextColor[MSBFeatureName.LAST] = StoryboardColors.DarkCyan;
+TextColor[MSBFeatureName.MAX] = StoryboardColors.DarkGreen;
+TextColor[MSBFeatureName.MIN] = StoryboardColors.DarkPurple;
+TextColor[MSBFeatureName.PEAK] = StoryboardColors.LightGreen;
+TextColor[MSBFeatureName.VALLEY] = StoryboardColors.PalePurple;
 
 export function getSchemeTableau10(n: number) {
   const colorScheme = d3.schemeTableau10;

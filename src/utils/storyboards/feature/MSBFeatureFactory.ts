@@ -8,22 +8,18 @@ import {
   searchPeaks,
   searchSlopes,
 } from "./feature-search";
-import { FeatureType } from "./FeatureType";
+import { MSBFeatureName } from "./MSBFeatureName";
 import { TimeseriesData } from "../data-processing/TimeseriesData";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
-} from "../feature/FeatureSearchProps";
+} from "./FeatureSearchProps";
 
-import { Feature } from "./Feature";
+import { MSBFeature } from "./MSBFeature";
 import { createPredicate } from "../common";
-import { Min } from "./Min";
-import { Max } from "./Max";
 import { Condition } from "./Condition";
-import { Current } from "./Current";
-import { Last } from "./Last";
 
-export class FeatureFactory {
+export class MSBFeatureFactory {
   private data: TimeseriesData[];
   private props: FeatureSearchProps;
 
@@ -43,23 +39,23 @@ export class FeatureFactory {
    ** Search for feature and returns list of feature objects.
    **/
   public search(
-    feature: FeatureType,
+    feature: MSBFeatureName,
     condition: Condition | string,
     rank: number
-  ): Feature[] | undefined {
-    console.log("FeatureFactory:search: props =", this.props);
-    console.log("FeatureFactory:search: data =", this.data);
+  ): MSBFeature[] | undefined {
+    console.log("MSBFeatureFactory:search: props =", this.props);
+    console.log("MSBFeatureFactory:search: data =", this.data);
     // prettier-ignore
-    console.log("FeatureFactory:search: feature: ", feature, ", condition: ", condition, ", rank:", rank);
+    console.log("MSBFeatureFactory:search: feature: ", feature, ", condition: ", condition, ", rank:", rank);
 
     switch (feature) {
-      case FeatureType.CURRENT:
+      case MSBFeatureName.CURRENT:
         return searchCurrent(this.data, rank, this.props.metric);
 
-      case FeatureType.LAST:
+      case MSBFeatureName.LAST:
         return searchLast(this.data, rank, this.props.metric);
 
-      case FeatureType.PEAK:
+      case MSBFeatureName.PEAK:
         return searchPeaks(
           this.data,
           rank,
@@ -67,13 +63,13 @@ export class FeatureFactory {
           this.props.window
         );
 
-      case FeatureType.MAX:
+      case MSBFeatureName.MAX:
         return searchGlobalMax(this.data, rank, this.props.metric);
 
-      case FeatureType.MIN:
+      case MSBFeatureName.MIN:
         return searchGlobalMin(this.data, rank, this.props.metric);
 
-      case FeatureType.SLOPE:
+      case MSBFeatureName.SLOPE:
         let slopes = searchSlopes(
           this.data,
           rank,
@@ -110,7 +106,7 @@ export class FeatureFactory {
         return createPredicate(`obj.${attr} != ${value}`);
       default:
         // prettier-ignore
-        console.error(`FeatureFactory:predicate: condition = ${key} not implemented!`)
+        console.error(`MSBFeatureFactory:predicate: condition = ${key} not implemented!`)
     }
   }
 }

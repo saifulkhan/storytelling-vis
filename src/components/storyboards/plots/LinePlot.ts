@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { Action, Coordinate } from "../actions/Action";
+import { MSBAction, Coordinate } from "../actions/MSBAction";
 import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
 import {
   findDateIdx,

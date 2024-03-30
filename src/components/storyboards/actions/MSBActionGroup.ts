@@ -1,14 +1,14 @@
-import { Action, Coordinate } from "./Action";
-import { ActionZOrder } from "./ActionType";
+import { MSBAction, Coordinate } from "./MSBAction";
+import { ActionZOrder } from "./MSBActionName";
 
-export class ActionGroup extends Action {
-  private actions: Action[];
+export class MSBActionGroup extends MSBAction {
+  private actions: MSBAction[];
 
   constructor() {
     super();
   }
 
-  group(actions: Action[]) {
+  group(actions: MSBAction[]) {
     this.actions = [...actions];
     return this;
   }
@@ -18,31 +18,32 @@ export class ActionGroup extends Action {
   }
 
   public updateProps(extraObj: any) {
-    this.actions.map((d: Action) => d.updateProps(extraObj));
+    this.actions.map((d: MSBAction) => d.updateProps(extraObj));
     return this;
   }
 
   public setCanvas(svg: SVGGElement) {
     this.actions.sort(
-      (a: Action, b: Action) => ActionZOrder[b.type] - ActionZOrder[a.type]
+      (a: MSBAction, b: MSBAction) =>
+        ActionZOrder[b.type] - ActionZOrder[a.type]
     );
     // console.log("ActionGroup:setCanvas: ordered actions: ", this.actions);
-    this.actions.map((d: Action) => d.setCanvas(svg));
+    this.actions.map((d: MSBAction) => d.setCanvas(svg));
     return this;
   }
 
   public setCoordinate(coordinate: [Coordinate, Coordinate]) {
-    this.actions.map((d: Action) => d.setCoordinate(coordinate));
+    this.actions.map((d: MSBAction) => d.setCoordinate(coordinate));
     return this;
   }
 
   public show(): Promise<number[]> {
-    const promises = this.actions.map((d: Action) => d.show());
+    const promises = this.actions.map((d: MSBAction) => d.show());
     return Promise.all(promises);
   }
 
   public hide(): Promise<number[]> {
-    const promises = this.actions.map((d: Action) => d.hide());
+    const promises = this.actions.map((d: MSBAction) => d.hide());
     return Promise.all(promises);
   }
 
@@ -51,7 +52,7 @@ export class ActionGroup extends Action {
     delay?: number,
     duration?: number
   ): Promise<any> {
-    const promises = this.actions.map((d: Action) =>
+    const promises = this.actions.map((d: MSBAction) =>
       d.move(coordinate, delay, duration)
     );
     return Promise.all(promises);

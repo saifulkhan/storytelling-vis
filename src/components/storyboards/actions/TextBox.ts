@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { Action, Coordinate } from "./Action";
-import { ActionType } from "./ActionType";
+import { MSBAction, Coordinate } from "./MSBAction";
+import { MSBActionName } from "./MSBActionName";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type TextBoxProps = {
@@ -27,7 +27,7 @@ const PADDING = 3;
 const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
-export class TextBox extends Action {
+export class TextBox extends MSBAction {
   protected props: TextBoxProps;
   protected rectNode: any;
   protected titleNode: any;
@@ -38,7 +38,7 @@ export class TextBox extends Action {
 
   constructor() {
     super();
-    this.type = ActionType.TEXT_BOX;
+    this.type = MSBActionName.TEXT_BOX;
   }
 
   public setProps(props: TextBoxProps = {}) {

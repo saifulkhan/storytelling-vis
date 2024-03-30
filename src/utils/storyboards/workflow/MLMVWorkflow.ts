@@ -3,9 +3,9 @@
  **/
 
 import * as d3 from "d3";
-import { Workflow } from "./Workflow";
+import { MSBWorkflow } from "./MSBWorkflow";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
-import { FeatureActionFactory } from "../feature-action/FeatureActionFactory";
+import { MSBFeatureActionFactory } from "../feature-action/MSBFeatureActionFactory";
 import { MLTimeseriesData } from "../data-processing/TimeseriesData";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { DateActionArray } from "../feature-action/FeatureActionTypes";
@@ -14,7 +14,7 @@ import { fromMLToTimeSeriesData } from "../common";
 const WINDOW = 3;
 const METRIC = "accuracy";
 
-export class MLMVWorkflow extends Workflow {
+export class MLMVWorkflow extends MSBWorkflow {
   constructor() {
     super();
   }
@@ -51,7 +51,7 @@ export class MLMVWorkflow extends Workflow {
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
     const data = fromMLToTimeSeriesData(this.data, this.name);
 
-    const actions: DateActionArray = new FeatureActionFactory()
+    const actions: DateActionArray = new MSBFeatureActionFactory()
       .setProps({ metric: METRIC, window: WINDOW })
       .setData(data)
       .setTable(this.table)

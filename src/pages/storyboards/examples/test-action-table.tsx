@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
-import { ActionType } from "../../../components/storyboards/actions/ActionType";
+import { MSBActionName } from "../../../components/storyboards/actions/MSBActionName";
 import ActionTable from "../../../components/storyboards/tables/ActionTable";
 
 const mockData: ActionTableRow[] = [
   {
-    action: ActionType.DOT,
+    action: MSBActionName.DOT,
     properties: {
       size: 5,
       color: "#FF0000",
@@ -13,7 +13,7 @@ const mockData: ActionTableRow[] = [
     },
   },
   {
-    action: ActionType.CIRCLE,
+    action: MSBActionName.CIRCLE,
     properties: {
       size: 10,
       strokeWidth: 2,
@@ -22,7 +22,7 @@ const mockData: ActionTableRow[] = [
     },
   },
   {
-    action: ActionType.TEXT_BOX,
+    action: MSBActionName.TEXT_BOX,
     properties: {
       title: "Example Text",
       message: "Lorem ipsum dolor sit amet",
@@ -31,7 +31,7 @@ const mockData: ActionTableRow[] = [
     },
   },
   {
-    action: ActionType.CONNECTOR,
+    action: MSBActionName.CONNECTOR,
     properties: {
       stroke: "#FFFF00",
       opacity: 0.8,

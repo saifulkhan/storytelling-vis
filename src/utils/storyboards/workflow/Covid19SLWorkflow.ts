@@ -3,9 +3,9 @@
  **/
 
 import { TimeseriesData } from "../data-processing/TimeseriesData";
-import { FeatureActionFactory as FeatureActionFactory } from "../feature-action/FeatureActionFactory";
+import { MSBFeatureActionFactory as MSBFeatureActionFactory } from "../feature-action/MSBFeatureActionFactory";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
-import { Workflow } from "./Workflow";
+import { MSBWorkflow } from "./MSBWorkflow";
 import { DateActionArray } from "../feature-action/FeatureActionTypes";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { cts, gmm, nts } from "../data-processing/Gaussian";
@@ -13,7 +13,7 @@ import { cts, gmm, nts } from "../data-processing/Gaussian";
 const WINDOW = 3;
 const METRIC = "Cases/day";
 
-export class Covid19SLWorkflow extends Workflow {
+export class Covid19SLWorkflow extends MSBWorkflow {
   constructor() {
     super();
   }
@@ -51,7 +51,7 @@ export class Covid19SLWorkflow extends Workflow {
     // console.log("execute: ranked nts = ", this.nts);
     // console.log("execute: ranked cts = ", this.cts);
 
-    const actions: DateActionArray = new FeatureActionFactory()
+    const actions: DateActionArray = new MSBFeatureActionFactory()
       .setProps({
         metric: METRIC,
         window: WINDOW,

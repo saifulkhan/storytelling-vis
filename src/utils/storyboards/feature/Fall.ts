@@ -1,6 +1,6 @@
 import { number } from "yup";
 import { NumericalFeature } from "./NumericalFeature";
-import { FeatureType } from "./FeatureType";
+import { MSBFeatureName } from "./MSBFeatureName";
 
 export class Fall extends NumericalFeature {
   grad: number;
@@ -15,7 +15,7 @@ export class Fall extends NumericalFeature {
     end?: Date
   ) {
     super(date, height, rank, metric, start, end);
-    this.type = FeatureType.FALL;
+    this.type = MSBFeatureName.FALL;
   }
 
   setGrad(grad: number) {

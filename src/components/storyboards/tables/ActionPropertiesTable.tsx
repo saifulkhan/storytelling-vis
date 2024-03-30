@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import * as d3 from "d3";
-import { ActionFactory } from "../actions/ActionFactory";
-import { ActionType } from "../actions/ActionType";
+import { MSBActionFactory } from "../actions/MSBActionFactory";
+import { MSBActionName } from "../actions/MSBActionName";
 
 const useStyles = makeStyles({
   table: {
@@ -63,7 +63,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   const [rows, setRows] = useState({ ...data });
   const chartRef = useRef(null);
 
-  const actionFactory = new ActionFactory();
+  const actionFactory = new MSBActionFactory();
 
   // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
@@ -90,7 +90,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     d3.select(chartRef.current).select("svg").remove();
     const svg = d3.select(chartRef.current).append("svg").node();
 
-    if (data.action == ActionType.TEXT_BOX) {
+    if (data.action == MSBActionName.TEXT_BOX) {
       data.width = 80;
       data.title = "Title";
       data.message = "Message";

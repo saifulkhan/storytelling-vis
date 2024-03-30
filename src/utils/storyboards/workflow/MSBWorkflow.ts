@@ -4,7 +4,7 @@ import {
   TimeseriesData,
 } from "../data-processing/TimeseriesData";
 
-export abstract class Workflow {
+export abstract class MSBWorkflow {
   protected svg: SVGSVGElement;
   protected data: TimeseriesData[] | MLTimeseriesData[];
   protected table: FeatureActionTableRow[] = [];

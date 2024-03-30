@@ -1,6 +1,12 @@
-import { Feature } from "./Feature";
+import { MSBFeature } from "./MSBFeature";
 
-export class CategoricalFeature extends Feature {
+export enum MSBCategoricalFeatureName {
+  LOCKDOWN = "LOCKDOWN",
+  LOCKDOWN_START = "LOCKDOWN_START",
+  LOCKDOWN_END = "LOCKDOWN_END",
+}
+
+export class CategoricalFeature extends MSBFeature {
   protected description: string;
 
   constructor() {
