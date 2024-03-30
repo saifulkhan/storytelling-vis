@@ -4,16 +4,24 @@ This repository contains the source code accompanying our research on utilizing 
 
 ## Prerequisite
 
+The following environment and packages are required.
+
 - Node.js v20.11.1
 - yarn or npm
 
 ## Getting Started
 
-Clone the repository and install dependencies:
+Clone the repository.
 
 ```bash
 git clone https://github.com/saifulkhan/storytelling-vis.git
 cd storytelling-vis
+
+```
+
+Install all dependent packages.
+
+```bash
 yarn install
 ```
 
