@@ -86,12 +86,12 @@ const Dashboard: React.FC<DashboardType> = ({ children }) => {
         </Box>
       </Drawer>
       <AppContent>
-        <Navbar onDrawerToggle={handleDrawerToggle} />
+        {/* <Navbar onDrawerToggle={handleDrawerToggle} /> */}
         <MainContent p={isLgUp ? 12 : 5}>
           {children}
           <Outlet />
         </MainContent>
-        <Footer />
+        {/* <Footer /> */}
       </AppContent>
       <Settings />
     </Root>

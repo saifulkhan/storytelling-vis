@@ -83,17 +83,18 @@ export interface SidebarProps {
   showFooter?: boolean;
 }
 
-const Sidebar = ({ items, showFooter = true, ...rest }: SidebarProps) => {
+const Sidebar = ({ items, showFooter = false, ...rest }: SidebarProps) => {
   return (
     <Drawer variant="permanent" {...rest}>
-      <Link href="/" legacyBehavior>
+      {/* TODO: Add brand */}
+      {/* <Link href="/" legacyBehavior>
         <Brand>
           <BrandIcon />{" "}
           <Box ml={1}>
             Mira <BrandChip label="PRO" />
           </Box>
         </Brand>
-      </Link>
+      </Link> */}
       <SidebarNav items={items} />
       {!!showFooter && <Footer />}
     </Drawer>

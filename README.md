@@ -1,6 +1,6 @@
 # About
 
-This repository contains the source code accompanying our research on utilizing feature-action design patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
+This repository contains the source code accompanying our research on utilizing Meta Story Board (MSB) Feature-Action Design Patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
 ## Prerequisite
 
@@ -55,9 +55,9 @@ The project is structured following React and Next.js guidelines and practices.
 │   ├── components          /* UI components */
 │   │   ├── storyboards
 │   │   │   ├── actions
-│   │   │   │   └── ...     /* Various actions implementation */
+│   │   │   │   └── ...     /* Various MSB actions */
 │   │   │   ├── plots
-│   │   │   │   └── ...     /* Various plots implementation */
+│   │   │   │   └── ...     /* Various plots */
 │   │   │   └── tables
 │   │   │       └── ...     /* Tables' implemented as nested components */
 │   ├── pages
@@ -72,9 +72,9 @@ The project is structured following React and Next.js guidelines and practices.
 │           ├── data-processing
 │           │   └── ...     /* Data processing, e.g., Gaussian */
 │           ├── feature
-│           │   └── ...     /* Feature search functions */
+│           │   └── ...     /* Feature MSB search functions */
 │           ├── feature-action
-│           │   └── ...     /* Feature-action table, feature search, and creating actions */
+│           │   └── ...     /* MSB feature-action table, feature search, and creating actions */
 │           └── workflow
 │               └── ...     /* Story-specific workflows */
 └── ...                     
@@ -103,7 +103,7 @@ TODO: Rename and refactor names, e.g., feature -> featureName, etc.
         "properties": {
           "size": "...",
           "color": "...",
-          "..."
+          "...": "...",
         }
       },
     "..."
@@ -127,7 +127,7 @@ TODO: Rename and refactor names, e.g., feature -> featureName, etc.
         "properties": {
           "size": "...",
           "color": "...",
-          "..."
+          "...": "...",
         }
       }
     ]

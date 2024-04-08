@@ -3,6 +3,7 @@
  **/
 
 import { useEffect, useState, useRef } from "react";
+import type { ReactElement } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
@@ -28,15 +29,14 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
+
+import DashboardLayout from "../../layouts/Dashboard";
 import { Covid19SLWorkflow } from "../../utils/storyboards/workflow/Covid19SLWorkflow";
 import {
   getCovid19Data,
   getCovid19SLNFATable,
 } from "../../services/DataService";
 import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
-import { clean } from "../../utils/storyboards/common";
-
-// import DashboardLayout from "src/components/dashboard-layout/DashboardLayout";
 
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
@@ -133,7 +133,6 @@ const Covid19SLStoryPage = () => {
       <Head>
         <title>Covid19 Single Location Story</title>
       </Head>
-      {/* <DashboardLayout> */}
       <Box
         sx={{
           backgroundColor: "background.default",
@@ -218,7 +217,8 @@ const Covid19SLStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!region}
+                        // disabled={!region}
+                        disabled={true}
                         onClick={handleBeginningButton}
                         component="span"
                       >
@@ -229,7 +229,8 @@ const Covid19SLStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!region}
+                        // disabled={!region}
+                        disabled={true}
                         onClick={handleBackButton}
                         startIcon={<ArrowBackIosIcon />}
                         component="span"
@@ -241,7 +242,8 @@ const Covid19SLStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!region}
+                        // disabled={!region}
+                        disabled={true}
                         onClick={handlePlayButton}
                         endIcon={<ArrowForwardIosIcon />}
                         component="span"
@@ -264,9 +266,12 @@ const Covid19SLStoryPage = () => {
           </Card>
         </Container>
       </Box>
-      {/* </DashboardLayout> */}
     </>
   );
+};
+
+Covid19SLStoryPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default Covid19SLStoryPage;

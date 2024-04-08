@@ -497,6 +497,25 @@ export function searchGlobalMin(
 }
 
 /**
+ ** The function returns first data point
+ **/
+export function searchFirst(
+  data: TimeseriesData[],
+  rank: number,
+  metric: string
+): Min[] {
+  let dataX = data[0];
+  return [
+    new Last()
+      .setDate(dataX.date)
+      .setHeight(dataX.y)
+      .setRank(rank)
+      .setMetric(metric)
+      .setDataIndex(findDateIdx(dataX.date, data)),
+  ];
+}
+
+/**
  ** The function returns current data points.
  **/
 export function searchCurrent(

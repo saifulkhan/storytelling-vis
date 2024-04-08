@@ -13,7 +13,7 @@ import {
   defaultFeatureSearchProps,
 } from "../feature/FeatureSearchProps";
 
-export class MSBMSBFeatureActionFactory {
+export class MSBFeatureActionFactory {
   private data: TimeseriesData[];
   private table: FeatureActionTableRow[];
   private props: FeatureSearchProps;

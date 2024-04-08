@@ -2,6 +2,7 @@ import { Peak } from "./Peak";
 import { Slope } from "./Slope";
 import {
   searchCurrent,
+  searchFirst,
   searchGlobalMax,
   searchGlobalMin,
   searchLast,
@@ -49,6 +50,9 @@ export class MSBFeatureFactory {
     console.log("MSBFeatureFactory:search: feature: ", feature, ", condition: ", condition, ", rank:", rank);
 
     switch (feature) {
+      case MSBFeatureName.FIRST:
+        return searchFirst(this.data, rank, this.props.metric);
+
       case MSBFeatureName.CURRENT:
         return searchCurrent(this.data, rank, this.props.metric);
 
@@ -94,9 +98,9 @@ export class MSBFeatureFactory {
     switch (key) {
       case "eq":
         return createPredicate(`obj.${attr} == ${value}`);
-      case "le":
+      case "lte":
         return createPredicate(`obj.${attr} <= ${value}`);
-      case "ge":
+      case "gte":
         return createPredicate(`obj.${attr}>= ${value}`);
       case "lt":
         return createPredicate(`obj.${attr} < ${value}`);

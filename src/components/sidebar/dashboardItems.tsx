@@ -1,5 +1,3 @@
-import { SidebarItemsType } from "../../types/sidebar";
-
 import {
   BookOpen,
   Briefcase,
@@ -16,308 +14,126 @@ import {
   Sliders,
   Users,
 } from "react-feather";
+import CoronavirusIcon from "@mui/icons-material/Coronavirus";
+import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
+import ScienceIcon from "@mui/icons-material/Science";
+import { SidebarItemsType } from "../../types/sidebar";
 
 const pagesSection = [
   {
-    href: "/dashboard",
-    icon: Sliders,
-    title: "Dashboard",
+    href: "/storyboards",
+    icon: ModelTrainingIcon,
+    title: "Machine Learning",
     children: [
       {
-        href: "/dashboard/default",
-        title: "Default",
-      },
-      {
-        href: "/dashboard/analytics",
-        title: "Analytics",
-      },
-      {
-        href: "/dashboard/saas",
-        title: "SaaS",
+        href: "/storyboards/ml-mv-story",
+        title: "Multivariate",
       },
     ],
   },
   {
-    href: "/pages",
-    icon: Layout,
-    title: "Pages",
+    href: "/storyboards",
+    icon: CoronavirusIcon,
+    title: "COVID-19",
     children: [
       {
-        href: "/pages/profile",
-        title: "Profile",
-      },
-      {
-        href: "/pages/settings",
-        title: "Settings",
-      },
-      {
-        href: "/pages/pricing",
-        title: "Pricing",
-      },
-      {
-        href: "/pages/chat",
-        title: "Chat",
-      },
-      {
-        href: "/pages/blank",
-        title: "Blank Page",
+        href: "/storyboards/covid19-sl-story",
+        title: "Single Location",
       },
     ],
   },
-  {
-    href: "/projects",
-    icon: Briefcase,
-    title: "Projects",
-    badge: "8",
-  },
-  {
-    href: "/orders",
-    icon: ShoppingCart,
-    title: "Orders",
-  },
-  {
-    href: "/invoices",
-    icon: CreditCard,
-    title: "Invoices",
-    children: [
-      {
-        href: "/invoices",
-        title: "List",
-      },
-      {
-        href: "/invoices/detail",
-        title: "Detail",
-      },
-    ],
-  },
-  {
-    href: "/tasks",
-    icon: CheckSquare,
-    title: "Tasks",
-    badge: "17",
-  },
-  {
-    href: "/calendar",
-    icon: Calendar,
-    title: "Calendar",
-  },
-  {
-    href: "/auth",
-    icon: Users,
-    title: "Auth",
-    children: [
-      {
-        href: "/auth/sign-in",
-        title: "Sign In",
-      },
-      {
-        href: "/auth/sign-up",
-        title: "Sign Up",
-      },
-      {
-        href: "/auth/reset-password",
-        title: "Reset Password",
-      },
-      {
-        href: "/auth/404",
-        title: "404 Page",
-      },
-      {
-        href: "/auth/500",
-        title: "500 Page",
-      },
-    ],
-  },
-] as SidebarItemsType[];
+] as unknown as SidebarItemsType[];
 
-const elementsSection = [
+const testSection = [
   {
-    href: "/components",
-    icon: Grid,
-    title: "Components",
+    href: "/storyboards/examples",
+    icon: ScienceIcon,
+    title: "Feature Action Tables",
     children: [
       {
-        href: "/components/alerts",
-        title: "Alerts",
+        href: "/storyboards/examples/test-feature-properties-table",
+        title: "Feature properties table",
       },
       {
-        href: "/components/accordion",
-        title: "Accordion",
+        href: "/storyboards/examples/test-action-properties-table",
+        title: "Action properties table",
       },
       {
-        href: "/components/avatars",
-        title: "Avatars",
-      },
-      {
-        href: "/components/badges",
-        title: "Badges",
-      },
-      {
-        href: "/components/buttons",
-        title: "Buttons",
-      },
-      {
-        href: "/components/cards",
-        title: "Cards",
-      },
-      {
-        href: "/components/chips",
-        title: "Chips",
-      },
-      {
-        href: "/components/dialogs",
-        title: "Dialogs",
-      },
-      {
-        href: "/components/lists",
-        title: "Lists",
-      },
-      {
-        href: "/components/menus",
-        title: "Menus",
-      },
-      {
-        href: "/components/pagination",
-        title: "Pagination",
-      },
-      {
-        href: "/components/progress",
-        title: "Progress",
-      },
-      {
-        href: "/components/snackbars",
-        title: "Snackbars",
-      },
-      {
-        href: "/components/tooltips",
-        title: "Tooltips",
+        href: "/storyboards/examples/test-action-table",
+        title: "Action table",
       },
     ],
   },
   {
-    href: "/charts",
-    icon: PieChart,
-    title: "Charts",
+    href: "/storyboards/examples",
+    icon: ScienceIcon,
+    title: "MSB Actions",
     children: [
       {
-        href: "/charts/chartjs",
-        title: "Chart.js",
-      },
-      {
-        href: "/charts/apexcharts",
-        title: "ApexCharts",
+        href: "/storyboards/examples/test-actions",
+        title: "Various actions",
       },
     ],
   },
   {
-    href: "/forms",
-    icon: CheckSquare,
-    title: "Forms",
+    href: "/storyboards/examples",
+    icon: ScienceIcon,
+    title: "Plots",
     children: [
       {
-        href: "/forms/pickers",
-        title: "Pickers",
-      },
-      {
-        href: "/forms/selection-controls",
-        title: "Selection Controls",
-      },
-      {
-        href: "/forms/selects",
-        title: "Selects",
-      },
-      {
-        href: "/forms/text-fields",
-        title: "Text Fields",
-      },
-      {
-        href: "/forms/editors",
-        title: "Editors",
-      },
-      {
-        href: "/forms/formik",
-        title: "Formik",
+        href: "/storyboards/examples/test-line-plot",
+        title: "Line plot",
       },
     ],
   },
   {
-    href: "/tables",
-    icon: List,
-    title: "Tables",
+    href: "/storyboards/examples",
+    icon: ScienceIcon,
+    title: "Gaussian",
     children: [
       {
-        href: "/tables/simple-table",
-        title: "Simple Table",
+        href: "/storyboards/examples/test-gaussian-nts",
+        title: "Numerical timeseries",
       },
       {
-        href: "/tables/advanced-table",
-        title: "Advanced Table",
+        href: "/storyboards/examples/test-gaussian-cts",
+        title: "Categorical timeseries",
       },
       {
-        href: "/tables/data-grid",
-        title: "Data Grid",
+        href: "/storyboards/examples/test-gaussian-combined",
+        title: "Gaussian combined",
       },
     ],
   },
-  {
-    href: "/icons",
-    icon: Heart,
-    title: "Icons",
-    children: [
-      {
-        href: "/icons/material-icons",
-        title: "Material Icons",
-      },
-      {
-        href: "/icons/feather-icons",
-        title: "Feather Icons",
-      },
-    ],
-  },
-  {
-    href: "/maps",
-    icon: Map,
-    title: "Maps",
-    children: [
-      {
-        href: "/maps/google-maps",
-        title: "Google Maps",
-      },
-      {
-        href: "/maps/vector-maps",
-        title: "Vector Maps",
-      },
-    ],
-  },
-] as SidebarItemsType[];
+] as unknown as SidebarItemsType[];
 
-const docsSection = [
-  {
-    href: "/documentation/welcome",
-    icon: BookOpen,
-    title: "Documentation",
-  },
-  {
-    href: "/changelog",
-    icon: List,
-    title: "Changelog",
-    badge: "v4.2.0",
-  },
-] as SidebarItemsType[];
+// const docsSection = [
+//   {
+//     href: "/documentation/welcome",
+//     icon: BookOpen,
+//     title: "Documentation",
+//   },
+//   {
+//     href: "/changelog",
+//     icon: List,
+//     title: "Changelog",
+//     badge: "v4.2.0",
+//   },
+// ] as SidebarItemsType[];
 
 const navItems = [
   {
-    title: "Pages",
+    title: "STORIES",
     pages: pagesSection,
   },
   {
-    title: "Elements",
-    pages: elementsSection,
+    title: "TESTS",
+    pages: testSection,
   },
-  {
-    title: "Mira Pro",
-    pages: docsSection,
-  },
+  // {
+  //   title: "Document",
+  //   pages: docsSection,
+  // },
 ];
 
 export default navItems;

@@ -3,9 +3,9 @@
  **/
 
 import { useEffect, useState, useRef } from "react";
+import type { ReactElement } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
 import {
   Avatar,
   Button,
@@ -28,6 +28,8 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { blue } from "@mui/material/colors";
+
+import DashboardLayout from "../../layouts/Dashboard";
 import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
 import { getMLData, getMLMVNFATable } from "../../services/DataService";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
@@ -105,7 +107,6 @@ const MLMVStoryPage = () => {
       <Head>
         <title>ML Multivariate Story</title>
       </Head>
-      {/* <DashboardLayout> */}
       <Box
         sx={{
           backgroundColor: "background.default",
@@ -171,7 +172,8 @@ const MLMVStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!key}
+                        // disabled={!key}
+                        disabled={true}
                         onClick={handleBeginningButton}
                         component="span"
                       >
@@ -182,7 +184,8 @@ const MLMVStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!key}
+                        // disabled={!key}
+                        disabled={true}
                         onClick={handleBackButton}
                         startIcon={<ArrowBackIosIcon />}
                         component="span"
@@ -194,7 +197,8 @@ const MLMVStoryPage = () => {
                     <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                       <Button
                         variant="contained"
-                        disabled={!key}
+                        // disabled={!key}
+                        disabled={true}
                         onClick={handlePlayButton}
                         endIcon={<ArrowForwardIosIcon />}
                         component="span"
@@ -217,9 +221,12 @@ const MLMVStoryPage = () => {
           </Card>
         </Container>
       </Box>
-      {/* </DashboardLayout> */}
     </>
   );
+};
+
+MLMVStoryPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default MLMVStoryPage;

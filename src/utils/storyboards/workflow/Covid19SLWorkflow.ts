@@ -3,7 +3,7 @@
  **/
 
 import { TimeseriesData } from "../data-processing/TimeseriesData";
-import { MSBFeatureActionFactory as MSBFeatureActionFactory } from "../feature-action/MSBFeatureActionFactory";
+import { MSBFeatureActionFactory } from "../feature-action/MSBFeatureActionFactory";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import { MSBWorkflow } from "./MSBWorkflow";
 import { DateActionArray } from "../feature-action/FeatureActionTypes";

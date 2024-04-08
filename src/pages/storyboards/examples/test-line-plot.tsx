@@ -4,7 +4,7 @@ import Head from "next/head";
 import { Box } from "@mui/material";
 
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
-import { covid19data } from "../../../services/timeseries-data";
+import { getCovid19Data } from "../../../services/DataService";
 
 const TestLinePlotPage = () => {
   const chartRef = useRef(null);
@@ -24,7 +24,7 @@ const TestLinePlotPage = () => {
       .append("g")
       .node();
 
-    covid19data().then((d) => {
+    getCovid19Data().then((d) => {
       console.log(d);
       const data = [d["Aberdeenshire"], d["Angus"], d["Barnet"]];
 
