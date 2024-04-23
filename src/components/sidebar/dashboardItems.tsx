@@ -17,6 +17,7 @@ import {
 import CoronavirusIcon from "@mui/icons-material/Coronavirus";
 import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
 import ScienceIcon from "@mui/icons-material/Science";
+import TableViewIcon from "@mui/icons-material/TableView";
 import { SidebarItemsType } from "../../types/sidebar";
 
 const pagesSection = [
@@ -41,6 +42,11 @@ const pagesSection = [
         title: "Single Location",
       },
     ],
+  },
+  {
+    href: "/storyboards/feature-action-tables",
+    icon: TableViewIcon,
+    title: "Feature Action Tables",
   },
 ] as unknown as SidebarItemsType[];
 
@@ -127,7 +133,7 @@ const navItems = [
     pages: pagesSection,
   },
   {
-    title: "TESTS",
+    title: "EXAMPLES / TESTS",
     pages: testSection,
   },
   // {

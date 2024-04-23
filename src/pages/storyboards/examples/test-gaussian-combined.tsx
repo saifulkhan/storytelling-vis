@@ -147,11 +147,12 @@ const TestGaussianCombinedPage = () => {
     // console.log("peaks1:", peaks1);
 
     peaks.forEach((d, i) => {
-      new Circle()
+      new Dot()
         .setProps({
           strokeWidth: 3,
           size: 8,
-          color: i < segment - 1 ? "#00FF00" : "grey",
+          color: "green",
+          opacity: i < segment - 1 ? 1 : 0.2,
         })
         .setCanvas(chartRef.current)
         .setCoordinate(plot.getCoordinates(d.getDate(), 3))
