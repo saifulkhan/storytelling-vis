@@ -96,16 +96,15 @@ We implemented a user interface for meta-story authors for creating and updating
     "actions": [
       {
         "actionName": "...",
-        "actionProperties": { },
+        "actionProperties": {
           "size": "...",
           "color": "...",
           "...": "...",
         }
       },
-    "..."
-    ]
-    "..."
-  },
+      "..."
+    ],
+},
 ```
 
 **Categorical Feature Action**
@@ -120,14 +119,14 @@ We implemented a user interface for meta-story authors for creating and updating
     "actions": [
       {
         "actionName": "...",
-        "actionProperties": { },
+        "actionProperties": {
           "size": "...",
           "color": "...",
           "...": "...",
         }
-      }
+      },
+      "..."
     ]
-    "..."
   },
 ```
 
