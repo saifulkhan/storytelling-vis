@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import type { ReactElement } from "react";
 
+import DashboardLayout from "../../layouts/Dashboard";
 import FeatureActionTable from "../../components/storyboards/tables/FeatureActionTable";
 import { FeatureActionTableRow } from "../../components/storyboards/tables/FeatureActionTableRow";
 import { getCovid19SLNFATable } from "../../services/DataService";
@@ -26,6 +28,10 @@ const FeatureActionTablesPage = () => {
       <FeatureActionTable data={data} setData={setData} />
     </div>
   );
+};
+
+FeatureActionTablesPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default FeatureActionTablesPage;
