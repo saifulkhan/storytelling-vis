@@ -114,112 +114,112 @@ const MLMVStoryPage = () => {
           py: 8,
         }}
       >
-        <Container>
-          <Card sx={{}}>
-            <CardHeader
-              avatar={
-                <Avatar style={{ backgroundColor: blue[500] }}>
-                  <AutoStoriesIcon />
-                </Avatar>
-              }
-              title="ML Multivariate Story"
-              subheader="Choose a hyperparameter, and click play to animate the story"
-            />
-            <CardContent sx={{ pt: "8px" }}>
-              {loading ? (
-                <Box sx={{ height: 40 }}>
-                  <Fade
-                    in={loading}
-                    style={{
-                      transitionDelay: loading ? "800ms" : "0ms",
-                    }}
-                    unmountOnExit
-                  >
-                    <LinearProgress />
-                  </Fade>
-                </Box>
-              ) : (
-                <>
-                  <FormGroup
-                    sx={{
-                      flexDirection: {
-                        xs: "column",
-                        sm: "row",
-                        alignItems: "center",
-                      },
-                    }}
-                  >
-                    <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                      <InputLabel id="select-region-label">
-                        Select hyperparameter
-                      </InputLabel>
-                      <Select
-                        labelId="select-region-label"
-                        id="select-region-label"
-                        displayEmpty
-                        onChange={handleSelection}
-                        value={key}
-                        input={<OutlinedInput label="Select hyperparameter" />}
-                      >
-                        {keys.map((d) => (
-                          <MenuItem key={d} value={d}>
-                            {d}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+        {/* <Container> */}
+        <Card sx={{}}>
+          <CardHeader
+            avatar={
+              <Avatar style={{ backgroundColor: blue[500] }}>
+                <AutoStoriesIcon />
+              </Avatar>
+            }
+            title="ML Multivariate Story"
+            subheader="Choose a hyperparameter, and click play to animate the story"
+          />
+          <CardContent sx={{ pt: "8px" }}>
+            {loading ? (
+              <Box sx={{ height: 40 }}>
+                <Fade
+                  in={loading}
+                  style={{
+                    transitionDelay: loading ? "800ms" : "0ms",
+                  }}
+                  unmountOnExit
+                >
+                  <LinearProgress />
+                </Fade>
+              </Box>
+            ) : (
+              <>
+                <FormGroup
+                  sx={{
+                    flexDirection: {
+                      xs: "column",
+                      sm: "row",
+                      alignItems: "center",
+                    },
+                  }}
+                >
+                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
+                    <InputLabel id="select-region-label">
+                      Select hyperparameter
+                    </InputLabel>
+                    <Select
+                      labelId="select-region-label"
+                      id="select-region-label"
+                      displayEmpty
+                      onChange={handleSelection}
+                      value={key}
+                      input={<OutlinedInput label="Select hyperparameter" />}
+                    >
+                      {keys.map((d) => (
+                        <MenuItem key={d} value={d}>
+                          {d}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-                    <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                      <Button
-                        variant="contained"
-                        // disabled={!key}
-                        disabled={true}
-                        onClick={handleBeginningButton}
-                        component="span"
-                      >
-                        Beginning
-                      </Button>
-                    </FormControl>
+                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
+                    <Button
+                      variant="contained"
+                      // disabled={!key}
+                      disabled={true}
+                      onClick={handleBeginningButton}
+                      component="span"
+                    >
+                      Beginning
+                    </Button>
+                  </FormControl>
 
-                    <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                      <Button
-                        variant="contained"
-                        // disabled={!key}
-                        disabled={true}
-                        onClick={handleBackButton}
-                        startIcon={<ArrowBackIosIcon />}
-                        component="span"
-                      >
-                        Back
-                      </Button>
-                    </FormControl>
+                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
+                    <Button
+                      variant="contained"
+                      // disabled={!key}
+                      disabled={true}
+                      onClick={handleBackButton}
+                      startIcon={<ArrowBackIosIcon />}
+                      component="span"
+                    >
+                      Back
+                    </Button>
+                  </FormControl>
 
-                    <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                      <Button
-                        variant="contained"
-                        // disabled={!key}
-                        disabled={true}
-                        onClick={handlePlayButton}
-                        endIcon={<ArrowForwardIosIcon />}
-                        component="span"
-                      >
-                        Play
-                      </Button>
-                    </FormControl>
-                  </FormGroup>
-                  <svg
-                    ref={chartRef}
-                    style={{
-                      width: WIDTH,
-                      height: HEIGHT,
-                      border: "0px solid",
-                    }}
-                  ></svg>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </Container>
+                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
+                    <Button
+                      variant="contained"
+                      // disabled={!key}
+                      disabled={true}
+                      onClick={handlePlayButton}
+                      endIcon={<ArrowForwardIosIcon />}
+                      component="span"
+                    >
+                      Play
+                    </Button>
+                  </FormControl>
+                </FormGroup>
+                <svg
+                  ref={chartRef}
+                  style={{
+                    width: WIDTH,
+                    height: HEIGHT,
+                    border: "0px solid",
+                  }}
+                ></svg>
+              </>
+            )}
+          </CardContent>
+        </Card>
+        {/* </Container> */}
       </Box>
     </>
   );

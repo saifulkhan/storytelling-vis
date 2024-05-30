@@ -140,131 +140,131 @@ const Covid19SLStoryPage = () => {
           py: 8,
         }}
       >
-        <Container>
-          <Card sx={{ minWidth: 1200 }}>
-            <CardHeader
-              avatar={
-                <Avatar style={{ backgroundColor: blue[500] }}>
-                  <AutoStoriesIcon />
-                </Avatar>
-              }
-              title="Covid19 Single Location Story"
-              subheader="Choose a segment value, a region, and click play to animate the story"
-            />
-            <CardContent sx={{ pt: "8px" }}>
-              {loading ? (
-                <Box sx={{ height: 40 }}>
-                  <Fade
-                    in={loading}
-                    style={{
-                      transitionDelay: loading ? "800ms" : "0ms",
-                    }}
-                    unmountOnExit
-                  >
-                    <LinearProgress />
-                  </Fade>
-                </Box>
-              ) : (
-                <>
-                  <FormGroup
-                    sx={{
-                      flexDirection: {
-                        xs: "column",
-                        sm: "row",
-                        alignItems: "center",
-                      },
-                    }}
-                  >
-                    <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
-                      Set segment value
+        {/* <Container> */}
+        <Card sx={{ minWidth: 1200 }}>
+          <CardHeader
+            avatar={
+              <Avatar style={{ backgroundColor: blue[500] }}>
+                <AutoStoriesIcon />
+              </Avatar>
+            }
+            title="Covid19 Single Location Story"
+            subheader="Choose a segment value, a region, and click play to animate the story"
+          />
+          <CardContent sx={{ pt: "8px" }}>
+            {loading ? (
+              <Box sx={{ height: 40 }}>
+                <Fade
+                  in={loading}
+                  style={{
+                    transitionDelay: loading ? "800ms" : "0ms",
+                  }}
+                  unmountOnExit
+                >
+                  <LinearProgress />
+                </Fade>
+              </Box>
+            ) : (
+              <>
+                <FormGroup
+                  sx={{
+                    flexDirection: {
+                      xs: "column",
+                      sm: "row",
+                      alignItems: "center",
+                    },
+                  }}
+                >
+                  <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
+                    Set segment value
+                  </InputLabel>
+                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
+                    <Slider
+                      // labelId="segment-slider"
+                      aria-label="Segments"
+                      defaultValue={3}
+                      getAriaValueText={valuetext}
+                      step={1}
+                      marks
+                      min={0}
+                      max={5}
+                      value={segment}
+                      valueLabelDisplay="auto"
+                      onChange={handleChangeSlider}
+                    />
+                  </FormControl>
+
+                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
+                    <InputLabel id="select-region-label">
+                      Select region
                     </InputLabel>
-                    <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                      <Slider
-                        // labelId="segment-slider"
-                        aria-label="Segments"
-                        defaultValue={3}
-                        getAriaValueText={valuetext}
-                        step={1}
-                        marks
-                        min={0}
-                        max={5}
-                        value={segment}
-                        valueLabelDisplay="auto"
-                        onChange={handleChangeSlider}
-                      />
-                    </FormControl>
+                    <Select
+                      labelId="select-region-label"
+                      id="select-region-label"
+                      displayEmpty
+                      onChange={handleSelection}
+                      value={region}
+                      input={<OutlinedInput label="Select region" />}
+                    >
+                      {regions.map((d) => (
+                        <MenuItem key={d} value={d}>
+                          {d}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-                    <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                      <InputLabel id="select-region-label">
-                        Select region
-                      </InputLabel>
-                      <Select
-                        labelId="select-region-label"
-                        id="select-region-label"
-                        displayEmpty
-                        onChange={handleSelection}
-                        value={region}
-                        input={<OutlinedInput label="Select region" />}
-                      >
-                        {regions.map((d) => (
-                          <MenuItem key={d} value={d}>
-                            {d}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
+                    <Button
+                      variant="contained"
+                      // disabled={!region}
+                      disabled={true}
+                      onClick={handleBeginningButton}
+                      component="span"
+                    >
+                      Beginning
+                    </Button>
+                  </FormControl>
 
-                    <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                      <Button
-                        variant="contained"
-                        // disabled={!region}
-                        disabled={true}
-                        onClick={handleBeginningButton}
-                        component="span"
-                      >
-                        Beginning
-                      </Button>
-                    </FormControl>
+                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
+                    <Button
+                      variant="contained"
+                      // disabled={!region}
+                      disabled={true}
+                      onClick={handleBackButton}
+                      startIcon={<ArrowBackIosIcon />}
+                      component="span"
+                    >
+                      Back
+                    </Button>
+                  </FormControl>
 
-                    <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                      <Button
-                        variant="contained"
-                        // disabled={!region}
-                        disabled={true}
-                        onClick={handleBackButton}
-                        startIcon={<ArrowBackIosIcon />}
-                        component="span"
-                      >
-                        Back
-                      </Button>
-                    </FormControl>
-
-                    <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                      <Button
-                        variant="contained"
-                        // disabled={!region}
-                        disabled={true}
-                        onClick={handlePlayButton}
-                        endIcon={<ArrowForwardIosIcon />}
-                        component="span"
-                      >
-                        Play
-                      </Button>
-                    </FormControl>
-                  </FormGroup>
-                  <svg
-                    ref={chartRef}
-                    style={{
-                      width: WIDTH,
-                      height: HEIGHT,
-                      border: "0px solid",
-                    }}
-                  ></svg>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </Container>
+                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
+                    <Button
+                      variant="contained"
+                      // disabled={!region}
+                      disabled={true}
+                      onClick={handlePlayButton}
+                      endIcon={<ArrowForwardIosIcon />}
+                      component="span"
+                    >
+                      Play
+                    </Button>
+                  </FormControl>
+                </FormGroup>
+                <svg
+                  ref={chartRef}
+                  style={{
+                    width: WIDTH,
+                    height: HEIGHT,
+                    border: "0px solid",
+                  }}
+                ></svg>
+              </>
+            )}
+          </CardContent>
+        </Card>
+        {/* </Container> */}
       </Box>
     </>
   );

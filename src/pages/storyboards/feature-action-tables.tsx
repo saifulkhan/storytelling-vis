@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import type { ReactElement } from "react";
+import Head from "next/head";
+import Box from "@mui/material/Box";
+import { Container } from "@mui/material";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import FeatureActionTable from "../../components/storyboards/tables/FeatureActionTable";
@@ -24,9 +27,20 @@ const FeatureActionTablesPage = () => {
   }, []); // Empty dependency array means this effect runs once on mount
 
   return (
-    <div>
-      <FeatureActionTable data={data} setData={setData} />
-    </div>
+    <>
+      <Head>
+        <title>Feature Action Table</title>
+      </Head>
+      <Box
+        sx={{
+          // backgroundColor: "background.default",
+          minHeight: "100%",
+          py: 8,
+        }}
+      >
+        <FeatureActionTable data={data} setData={setData} />
+      </Box>
+    </>
   );
 };
 
