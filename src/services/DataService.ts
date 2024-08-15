@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-
 import {
   MLTimeseriesData,
   TimeseriesData,
@@ -56,21 +55,6 @@ export async function getMLData() {
   });
 
   return data;
-}
-
-export async function getCovid19SLCFATable() {
-  const FILE = "/static/storyboards/covid19/categorical-table-1.json";
-  return await readJSON(FILE);
-}
-
-export async function getCovid19SLNFATable() {
-  const FILE = "/static/storyboards/covid19/numerical-table-1.json";
-  return await readJSON(FILE);
-}
-
-export async function getMLMVNFATable() {
-  const FILE = "/static/storyboards/ml/numerical-table-1.json";
-  return await readJSON(FILE);
 }
 
 //

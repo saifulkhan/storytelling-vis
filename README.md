@@ -1,7 +1,7 @@
 
 ⚠️ This repository is under development and the code is not ready for production!
 
-# About
+## About
 
 This repository contains the source code accompanying our research on utilizing Meta Story Board (MSB) Feature-Action Design Patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
@@ -34,7 +34,7 @@ Start the development server to view the UI:
 yarn dev
 ```
 
-Open <http://localhost:3000> [⤴]() in your browser to explore the visualizations.
+Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui) to see a few examples.
 
 ### Tests
 
@@ -353,6 +353,14 @@ new Covid19SLWorkflow()
 **Code:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
 
 **Example:** See COVID-19 story with a single time series and Machine learning multi-variate story in the UI.
+
+## UI
+
+### Feature Action Tables
+
+To add a new table `src/services/TableService.ts`
+
+### Stories
 
 ## References
 
