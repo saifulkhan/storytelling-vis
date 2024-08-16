@@ -350,6 +350,8 @@ new Covid19SLWorkflow()
     <br><br>
 </div>
 
+TODO: `TableService`
+
 **Code:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
 
 **Example:** See COVID-19 story with a single time series and Machine learning multi-variate story in the UI.
