@@ -32,11 +32,9 @@ import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import { Covid19SLWorkflow } from "../../utils/storyboards/workflow/Covid19SLWorkflow";
-import {
-  getCovid19Data,
-  getCovid19SLNFATable,
-} from "../../services/DataService";
+import { getCovid19Data } from "../../services/DataService";
 import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
+import { getTableData } from "../../services/TableService";
 
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
@@ -67,7 +65,7 @@ const Covid19SLStoryPage = () => {
         const allData = await getCovid19Data();
         setRegionsData(allData);
         setRegions(Object.keys(allData).sort());
-        const table = await getCovid19SLNFATable();
+        const table = await getTableData("COVID-19: Single Location");
         setTableNFA(table);
 
         console.log("useEffect 1: allRegionData: ", allData);

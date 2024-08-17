@@ -31,8 +31,9 @@ import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
-import { getMLData, getMLMVNFATable } from "../../services/DataService";
+import { getMLData } from "../../services/DataService";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
+import { getTableData } from "../../services/TableService";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,
@@ -57,7 +58,7 @@ const MLMVStoryPage = () => {
         const data = await getMLData();
         setData(data);
         setKeys(KEYS);
-        const table = await getMLMVNFATable();
+        const table = await getTableData("ML: Multivariate");
         setNFATable(table);
 
         console.log("MLMVStoryPage: useEffect 1: data: ", data);
