@@ -20,7 +20,7 @@ export const defaultPlotProps: PlotProps = {
 };
 
 export abstract class Plot {
-  protected svg: SVGSVGElement;
+  protected svg: SVGSVGElement | undefined;
   protected node: any;
 
   constructor() {}
@@ -28,11 +28,15 @@ export abstract class Plot {
   public abstract setPlotProps(props: PlotProps): this;
   public abstract setName(properties: unknown): this;
   public abstract setCanvas(svg: SVGSVGElement): this;
-  public abstract plot();
-  public abstract setActions(unknown): this;
-  public abstract animate();
+  public abstract plot(): void;
+  public abstract setActions(unknown: unknown): this;
+  public abstract animate(): void;
+  public abstract play(): void;
+  public abstract pause(): void;
   public abstract getCoordinates(...args: unknown[]): [Coordinate, Coordinate];
   protected clean() {
-    d3.select(this.svg).selectAll("*").remove();
+    if (this.svg) {
+      d3.select(this.svg).selectAll("*").remove();
+    }
   }
 }

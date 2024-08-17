@@ -11,7 +11,7 @@ import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
   MAGIC_NO = 10,
-  LINE_STROKE_WIDTH = 1,
+  LINE_STROKE_WIDTH = 2,
   LINE_STROKE = "#2a363b",
   DOT_SIZE = 2,
   TITLE_FONT_FAMILY = "Arial Narrow",
@@ -31,19 +31,17 @@ export class LinePlot extends Plot {
   data: TimeseriesData[][];
   lineProps: LineProps[] = [];
   plotProps: PlotProps;
-
   svg: SVGSVGElement;
   selector;
   width: number;
   height: number;
   margin: any;
-
   xAxis: unknown;
   leftAxis: unknown;
   rightAxis: unknown;
-
   actions: any;
   name = "";
+  private isPlaying: boolean = false;
 
   constructor() {
     super();
@@ -167,40 +165,51 @@ export class LinePlot extends Plot {
     return this;
   }
 
-  public animate(lineIndex: number = 0) {
-    // TODO: if no actions
-    // if (!this._actions || !this._actions.length) {
-    //   // draw static
-    //   this._draw();
-    //   return this;
-    // }
+  /**
+   ** Animation related methods
+   **/
+
+  public async animate(lineIndex: number = 0) {
+    if (!this.actions || !this.actions.length) {
+      this.plot(); // draw static line if no actions
+      return this;
+    }
+
+    console.log("LinePlot:animate: actions = ", this.actions);
 
     let start = 0;
     const dataX = this.data[lineIndex];
 
-    (async () => {
-      for (let [date, action] of this.actions) {
-        const idx = findIndexOfDate(dataX, date);
-        console.log("LinePlot:animate: action = ", action);
-        // update actions coord, text etc.
-        action
-          .updateProps({
-            date: date.toLocaleDateString(),
-            name: this.name,
-            value: dataX[idx].y,
-            horizontalAlign: this.getHorizontalAlign(date),
-            verticalAlign: "top" as VerticalAlign,
-          })
-          .setCanvas(this.svg)
-          .setCoordinate(this.getCoordinates(date, lineIndex));
+    // (async () => {
+    for (let [date, action] of this.actions) {
+      if (!this.isPlaying) break; // stop if not running
 
-        const end = idx;
-        await this._animate(start, end, lineIndex);
-        await action.show();
-        await action.hide();
-        start = end;
-      }
-    })();
+      const idx = findIndexOfDate(dataX, date);
+      console.log("LinePlot:animate: action = ", action);
+
+      // update actions coord, text etc.
+      action
+        .updateProps({
+          date: date.toLocaleDateString(),
+          name: this.name,
+          value: dataX[idx].y,
+          horizontalAlign: this.getHorizontalAlign(date),
+          verticalAlign: "top" as VerticalAlign,
+        })
+        .setCanvas(this.svg)
+        .setCoordinate(this.getCoordinates(date, lineIndex));
+
+      const end = idx;
+      await this._animate(start, end, lineIndex);
+
+      // Wait for pause/resume if paused
+      // await this.checkPaused();
+
+      await action.show();
+      await action.hide();
+      start = end;
+    }
+    // })();
   }
 
   private _animate(start: number, stop: number, lineIndex: number = 0) {
@@ -239,7 +248,7 @@ export class LinePlot extends Plot {
 
     // Animate current path with duration given by user
     return new Promise<number>((resolve, reject) => {
-      path
+      const transition = path
         .transition()
         .ease(d3.easeLinear)
         .delay(1000)
@@ -248,7 +257,29 @@ export class LinePlot extends Plot {
         .on("end", () => {
           resolve(delay + duration);
         });
+
+      const check = async () => {
+        if (this.isPaused) {
+          transition.stop(); // Stop the transition
+          await this.checkPaused(); // Wait until resume
+          transition.restart(); // Restart the transition
+        }
+        requestAnimationFrame(check); // Continuously check
+      };
+
+      check(); // Start checking for pause
     });
+  }
+
+  // Method to pause the animation
+  public pause() {
+    this.isPlaying = false;
+  }
+
+  // Method to resume the animation
+  public play() {
+    this.isPlaying = true;
+    this.animate();
   }
 
   /**

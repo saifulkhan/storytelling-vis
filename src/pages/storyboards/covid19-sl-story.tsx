@@ -28,6 +28,7 @@ import { makeStyles } from "@mui/styles";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
@@ -49,6 +50,7 @@ const Covid19SLStoryPage = () => {
     Record<string, TimeseriesData[]>
   >({});
   const [tableNFA, setTableNFA] = useState<any>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // slider formatted value
   const valuetext = (value) => `${value}`;
@@ -84,9 +86,9 @@ const Covid19SLStoryPage = () => {
 
     const regionData = regionsData[region];
 
-    console.log("useEffect 2: region: ", region);
-    console.log("useEffect 2: regionData: ", regionData);
-    console.log("useEffect 2: tableNFA: ", regionData);
+    console.log("Covid19Story1Page: useEffect 2: region: ", region);
+    console.log("Covid19Story1Page: useEffect 2: regionData: ", regionData);
+    console.log("Covid19Story1Page: useEffect 2: tableNFA: ", regionData);
 
     // clean(chartRef.current);
 
@@ -120,11 +122,23 @@ const Covid19SLStoryPage = () => {
     }
   };
 
+  const handlePlayButton = () => {
+    console.log("Covid19Story1Page: handlePlayButton: isPlaying = ", isPlaying);
+    if (isPlaying) {
+      console.log("Covid19Story1Page: isPlaying = ", isPlaying);
+      workflow.pause();
+      setIsPlaying(false);
+    } else {
+      // Start the animation
+      console.log("Covid19Story1Page: isPlaying = ", isPlaying);
+      workflow.play();
+      setIsPlaying(true);
+    }
+  };
+
   const handleBeginningButton = () => {};
 
   const handleBackButton = () => {};
-
-  const handlePlayButton = () => {};
 
   return (
     <>
@@ -240,13 +254,14 @@ const Covid19SLStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!region}
-                      disabled={true}
+                      disabled={!region}
                       onClick={handlePlayButton}
-                      endIcon={<ArrowForwardIosIcon />}
+                      endIcon={
+                        isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
+                      }
                       component="span"
                     >
-                      Play
+                      {isPlaying ? "Pause" : "Play"}
                     </Button>
                   </FormControl>
                 </FormGroup>
