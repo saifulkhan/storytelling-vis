@@ -162,6 +162,11 @@ export class LinePlot extends Plot {
    **/
   public setActions(actions: DateActionArray = []) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
+    this.currentActionIdx = 0;
+    this.prevAction = null;
+    this.startDataIdx = 0;
+    this.endDataIdx = 0;
+
     return this;
   }
 
@@ -169,57 +174,57 @@ export class LinePlot extends Plot {
    ** Animation related methods
    **/
 
-  public async animate(lineIndex: number = 0) {
-    if (!this.actions || !this.actions.length) {
-      this.plot(); // draw static line if no actions
-      return this;
-    }
+  runLoop() {
+    const loop = async () => {
+      if (
+        !this.isPlayingRef.current ||
+        this.currentActionIdx >= this.actions.length
+      ) {
+        return;
+      }
 
-    console.log("LinePlot:animate: actions = ", this.actions);
+      if (this.prevAction) {
+        await this.prevAction.hide();
+      }
 
-    let start = 0;
-    const dataX = this.data[lineIndex];
+      const lineNum = 0; // TODO: we can animate first line at the moment
+      let [date, action] = this.actions[this.currentActionIdx];
+      const dataX = this.data[lineNum];
+      const dataIdx = findIndexOfDate(dataX, date);
 
-    // (async () => {
-    for (let [date, action] of this.actions) {
-      if (!this.isPlaying) break; // stop if not running
-
-      const idx = findIndexOfDate(dataX, date);
-      console.log("LinePlot:animate: action = ", action);
-
-      // update actions coord, text etc.
       action
         .updateProps({
           date: date.toLocaleDateString(),
           name: this.name,
-          value: dataX[idx].y,
+          value: dataX[dataIdx].y,
           horizontalAlign: this.getHorizontalAlign(date),
           verticalAlign: "top" as VerticalAlign,
         })
         .setCanvas(this.svg)
-        .setCoordinate(this.getCoordinates(date, lineIndex));
+        .setCoordinate(this.getCoordinates(date, lineNum));
 
-      const end = idx;
-      await this._animate(start, end, lineIndex);
-
-      // Wait for pause/resume if paused
-      // await this.checkPaused();
-
+      await this.animate(this.startDataIdx, dataIdx, lineNum);
       await action.show();
-      await action.hide();
-      start = end;
-    }
-    // })();
+      this.prevAction = action;
+      // await action.hide();
+
+      this.startDataIdx = dataIdx;
+
+      this.currentActionIdx++;
+      this.animationRef = requestAnimationFrame(loop);
+    };
+
+    loop();
   }
 
-  private _animate(start: number, stop: number, lineIndex: number = 0) {
+  private animate(start: number, stop: number, lineNum: number = 0) {
     // prettier-ignore
     // console.log(`LinePlot: lineIndex = ${lineIndex}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineIndex]);
 
-    const dataX = this.data[lineIndex].slice(start, stop + 1);
-    const p = this.lineProps[lineIndex];
-    const yAxis = this.leftOrRightAxis(lineIndex);
+    const dataX = this.data[lineNum].slice(start, stop + 1);
+    const p = this.lineProps[lineNum];
+    const yAxis = this.leftOrRightAxis(lineNum);
 
     const line = (xAxis, yAxis) => {
       return d3
@@ -257,29 +262,7 @@ export class LinePlot extends Plot {
         .on("end", () => {
           resolve(delay + duration);
         });
-
-      const check = async () => {
-        if (this.isPaused) {
-          transition.stop(); // Stop the transition
-          await this.checkPaused(); // Wait until resume
-          transition.restart(); // Restart the transition
-        }
-        requestAnimationFrame(check); // Continuously check
-      };
-
-      check(); // Start checking for pause
     });
-  }
-
-  // Method to pause the animation
-  public pause() {
-    this.isPlaying = false;
-  }
-
-  // Method to resume the animation
-  public play() {
-    this.isPlaying = true;
-    this.animate();
   }
 
   /**

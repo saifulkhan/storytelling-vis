@@ -32,14 +32,18 @@ import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
-import { Covid19SLWorkflow } from "../../utils/storyboards/workflow/Covid19SLWorkflow";
 import { getCovid19Data } from "../../services/DataService";
 import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 import { getTableData } from "../../services/TableService";
+import { LinePlot } from "../../components/storyboards/plots/LinePlot";
+import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
+import { DateActionArray } from "../../utils/storyboards/feature-action/FeatureActionTypes";
+import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/MSBFeatureActionFactory";
 
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
     HEIGHT = 500;
+  const valuetext = (value) => `${value}`; // slider formatted value
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(null);
@@ -50,12 +54,45 @@ const Covid19SLStoryPage = () => {
     Record<string, TimeseriesData[]>
   >({});
   const [tableNFA, setTableNFA] = useState<any>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
-  // slider formatted value
-  const valuetext = (value) => `${value}`;
+  const linePlot = useRef(new LinePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(linePlot);
 
-  const workflow = new Covid19SLWorkflow();
+  useEffect(() => {
+    if (!region || !regionsData[region] || !chartRef.current) return;
+
+    const regionData = regionsData[region];
+
+    console.log("Covid19Story1Page: useEffect 2: region: ", region);
+    console.log("Covid19Story1Page: useEffect 2: regionData: ", regionData);
+
+    const actions: DateActionArray = new MSBFeatureActionFactory()
+      .setProps({
+        metric: "",
+        window: 10,
+      })
+      .setTable(tableNFA)
+      .setData(regionData)
+      .create();
+
+    linePlot
+      .setData([regionData])
+      .setName(region)
+      .setPlotProps({
+        title: `${region}`,
+        xLabel: "Date",
+        leftAxisLabel: "Number of cases",
+      })
+      .setLineProps([])
+      .setCanvas(chartRef.current)
+      .setActions(actions);
+
+    // if (isPlaying) togglePlayPause();
+
+    pause();
+
+    return () => {};
+  }, [region, regionsData, tableNFA]);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -81,27 +118,6 @@ const Covid19SLStoryPage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (!region || !regionsData[region] || !chartRef.current) return;
-
-    const regionData = regionsData[region];
-
-    console.log("Covid19Story1Page: useEffect 2: region: ", region);
-    console.log("Covid19Story1Page: useEffect 2: regionData: ", regionData);
-    console.log("Covid19Story1Page: useEffect 2: tableNFA: ", regionData);
-
-    // clean(chartRef.current);
-
-    workflow
-      .setName(region)
-      .setData(regionData)
-      .setNFATable(tableNFA)
-      .setCanvas(chartRef.current)
-      .create();
-
-    return () => {};
-  }, [region, regionsData, tableNFA]);
-
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;
     // prettier-ignore
@@ -119,20 +135,6 @@ const Covid19SLStoryPage = () => {
       // segmentData(selectedSegment);
       setSegment(1);
       // segmentData(1);
-    }
-  };
-
-  const handlePlayButton = () => {
-    console.log("Covid19Story1Page: handlePlayButton: isPlaying = ", isPlaying);
-    if (isPlaying) {
-      console.log("Covid19Story1Page: isPlaying = ", isPlaying);
-      workflow.pause();
-      setIsPlaying(false);
-    } else {
-      // Start the animation
-      console.log("Covid19Story1Page: isPlaying = ", isPlaying);
-      workflow.play();
-      setIsPlaying(true);
     }
   };
 
@@ -193,6 +195,7 @@ const Covid19SLStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
                     <Slider
                       // labelId="segment-slider"
+                      disabled={true}
                       aria-label="Segments"
                       defaultValue={3}
                       getAriaValueText={valuetext}
@@ -253,13 +256,14 @@ const Covid19SLStoryPage = () => {
 
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
-                      variant="contained"
                       disabled={!region}
-                      onClick={handlePlayButton}
+                      variant="contained"
+                      color={isPlaying ? "secondary" : "primary"}
+                      onClick={togglePlayPause}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }
-                      component="span"
+                      sx={{ width: 120 }}
                     >
                       {isPlaying ? "Pause" : "Play"}
                     </Button>
