@@ -11,7 +11,7 @@ import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
   MAGIC_NO = 10,
-  LINE_STROKE_WIDTH = 1,
+  LINE_STROKE_WIDTH = 2,
   LINE_STROKE = "#2a363b",
   DOT_SIZE = 2,
   TITLE_FONT_FAMILY = "Arial Narrow",
@@ -31,19 +31,17 @@ export class LinePlot extends Plot {
   data: TimeseriesData[][];
   lineProps: LineProps[] = [];
   plotProps: PlotProps;
-
   svg: SVGSVGElement;
   selector;
   width: number;
   height: number;
   margin: any;
-
   xAxis: unknown;
   leftAxis: unknown;
   rightAxis: unknown;
-
   actions: any;
   name = "";
+  private isPlaying: boolean = false;
 
   constructor() {
     super();
@@ -164,53 +162,69 @@ export class LinePlot extends Plot {
    **/
   public setActions(actions: DateActionArray = []) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
+    this.currentActionIdx = 0;
+    this.prevAction = null;
+    this.startDataIdx = 0;
+    this.endDataIdx = 0;
+
     return this;
   }
 
-  public animate(lineIndex: number = 0) {
-    // TODO: if no actions
-    // if (!this._actions || !this._actions.length) {
-    //   // draw static
-    //   this._draw();
-    //   return this;
-    // }
+  /**
+   ** Animation related methods
+   **/
 
-    let start = 0;
-    const dataX = this.data[lineIndex];
-
-    (async () => {
-      for (let [date, action] of this.actions) {
-        const idx = findIndexOfDate(dataX, date);
-        console.log("LinePlot:animate: action = ", action);
-        // update actions coord, text etc.
-        action
-          .updateProps({
-            date: date.toLocaleDateString(),
-            name: this.name,
-            value: dataX[idx].y,
-            horizontalAlign: this.getHorizontalAlign(date),
-            verticalAlign: "top" as VerticalAlign,
-          })
-          .setCanvas(this.svg)
-          .setCoordinate(this.getCoordinates(date, lineIndex));
-
-        const end = idx;
-        await this._animate(start, end, lineIndex);
-        await action.show();
-        await action.hide();
-        start = end;
+  runLoop() {
+    const loop = async () => {
+      if (
+        !this.isPlayingRef.current ||
+        this.currentActionIdx >= this.actions.length
+      ) {
+        return;
       }
-    })();
+
+      if (this.prevAction) {
+        await this.prevAction.hide();
+      }
+
+      const lineNum = 0; // TODO: we can animate first line at the moment
+      let [date, action] = this.actions[this.currentActionIdx];
+      const dataX = this.data[lineNum];
+      const dataIdx = findIndexOfDate(dataX, date);
+
+      action
+        .updateProps({
+          date: date.toLocaleDateString(),
+          name: this.name,
+          value: dataX[dataIdx].y,
+          horizontalAlign: this.getHorizontalAlign(date),
+          verticalAlign: "top" as VerticalAlign,
+        })
+        .setCanvas(this.svg)
+        .setCoordinate(this.getCoordinates(date, lineNum));
+
+      await this.animate(this.startDataIdx, dataIdx, lineNum);
+      await action.show();
+      this.prevAction = action;
+      // await action.hide();
+
+      this.startDataIdx = dataIdx;
+
+      this.currentActionIdx++;
+      this.animationRef = requestAnimationFrame(loop);
+    };
+
+    loop();
   }
 
-  private _animate(start: number, stop: number, lineIndex: number = 0) {
+  private animate(start: number, stop: number, lineNum: number = 0) {
     // prettier-ignore
     // console.log(`LinePlot: lineIndex = ${lineIndex}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineIndex]);
 
-    const dataX = this.data[lineIndex].slice(start, stop + 1);
-    const p = this.lineProps[lineIndex];
-    const yAxis = this.leftOrRightAxis(lineIndex);
+    const dataX = this.data[lineNum].slice(start, stop + 1);
+    const p = this.lineProps[lineNum];
+    const yAxis = this.leftOrRightAxis(lineNum);
 
     const line = (xAxis, yAxis) => {
       return d3
@@ -239,7 +253,7 @@ export class LinePlot extends Plot {
 
     // Animate current path with duration given by user
     return new Promise<number>((resolve, reject) => {
-      path
+      const transition = path
         .transition()
         .ease(d3.easeLinear)
         .delay(1000)

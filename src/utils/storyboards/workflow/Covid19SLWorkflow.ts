@@ -14,12 +14,14 @@ const WINDOW = 3;
 const METRIC = "Cases/day";
 
 export class Covid19SLWorkflow extends MSBWorkflow {
+  private animationInterval: number | null = null;
+
   constructor() {
     super();
   }
 
   public setData(data: TimeseriesData[]) {
-    this.data = data;
+    this.data = data as TimeseriesData[];
     return this;
   }
 
@@ -36,15 +38,15 @@ export class Covid19SLWorkflow extends MSBWorkflow {
     return this;
   }
 
-  public setCanvas(svg: SVGGElement) {
+  public setCanvas(svg: SVGSVGElement) {
     this.svg = svg;
     console.log("Covid19SLWorkflow:setCanvas: svg = ", this.svg);
     return this;
   }
 
   public create() {
-    console.log("Covid19SLWorkflow:setup: data:", this.data);
-    console.log("Covid19SLWorkflow:setup: table:", this.table);
+    console.log("Covid19SLWorkflow: create: data = ", this.data);
+    console.log("Covid19SLWorkflow: create: table = ", this.table);
 
     // this.nts = gmm(this.data, "Cases/day", WINDOW);
     // this.cts = cts();
@@ -60,18 +62,32 @@ export class Covid19SLWorkflow extends MSBWorkflow {
       .setData(this.data)
       .create();
 
-    console.log("Covid19SLWorkflow:setup: actions: ", actions);
+    console.log("Covid19SLWorkflow: create: actions = ", actions);
 
-    new LinePlot()
+    this.plot = new LinePlot()
       .setData([this.data])
       .setName(this.name)
       .setPlotProps({})
       .setLineProps([])
       .setCanvas(this.svg)
-      .setActions(actions)
-      .animate();
+      .setActions(actions);
+    // .animate();
     // .plot();
 
     return this;
+  }
+
+  public play() {
+    console.log("Covid19SLWorkflow: play");
+    if (this.plot) {
+      this.plot.play();
+    }
+  }
+
+  public pause() {
+    console.log("Covid19SLWorkflow: pause");
+    if (this.plot) {
+      this.plot.pause();
+    }
   }
 }

@@ -20,19 +20,50 @@ export const defaultPlotProps: PlotProps = {
 };
 
 export abstract class Plot {
-  protected svg: SVGSVGElement;
+  protected svg: SVGSVGElement | undefined;
   protected node: any;
+  // play and pause related
+  protected animationRef: number | null = null;
+  protected isPlayingRef: { current: boolean } = { current: false };
+  protected prevAction: any = null;
+  protected currentActionIdx: number = 0;
+  protected startDataIdx: number = 0;
+  protected endDataIdx: number = 0;
 
   constructor() {}
   public abstract setData(...args: unknown[]): this;
   public abstract setPlotProps(props: PlotProps): this;
   public abstract setName(properties: unknown): this;
   public abstract setCanvas(svg: SVGSVGElement): this;
-  public abstract plot();
-  public abstract setActions(unknown): this;
-  public abstract animate();
+  public abstract plot(): void;
+  public abstract setActions(unknown: unknown): this;
   public abstract getCoordinates(...args: unknown[]): [Coordinate, Coordinate];
   protected clean() {
-    d3.select(this.svg).selectAll("*").remove();
+    if (this.svg) {
+      d3.select(this.svg).selectAll("*").remove();
+    }
+  }
+
+  // public abstract animate(start: number): void;
+
+  togglePlayPause() {
+    this.isPlayingRef.current = !this.isPlayingRef.current;
+  }
+
+  runLoop(): void {
+    return;
+  }
+
+  play() {
+    this.isPlayingRef.current = true;
+    this.runLoop();
+  }
+
+  pause() {
+    this.isPlayingRef.current = false;
+
+    if (this.animationRef) {
+      cancelAnimationFrame(this.animationRef);
+    }
   }
 }

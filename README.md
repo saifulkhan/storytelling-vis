@@ -1,8 +1,4 @@
 
-⚠️ This repository is under development and the code is not ready for production!
-
-## About
-
 This repository contains the source code accompanying our research on utilizing Meta Story Board (MSB) Feature-Action Design Patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
 ## Prerequisite
@@ -364,6 +360,13 @@ To add a new table `src/services/TableService.ts`
 
 ### Stories
 
+## Support
+
+This code is not production-ready. If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/storytelling-vis/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
+
+- The first version of the prototype was done in  Observable notebook and can be found in Observablehq [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js can be found on GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1).
+- The previous prototypes contain six stories, however, in this new repository so far we only ported two stories. We will gradually port the remaining four stories and will also add more stories.
+
 ## References
 
 Please cite our paper as follows:
@@ -377,6 +380,4 @@ Please cite our paper as follows:
 }
 ```
 
-- The first version of the prototype was done in  Observable notebook and can be found in Observablehq [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js can be found in the GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1).
-- The previous prototypes contain six stories, however, in this new repository so far we only ported two stories. We will gradually port the remaining four stories and will also add more stories.
-- Used React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com) libraries for the UI development.
+- Used d3.js[⤴](https://d3js.org/), React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com), and other libraries.
