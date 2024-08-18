@@ -133,7 +133,7 @@ const navItems = [
     pages: pagesSection,
   },
   {
-    title: "EXAMPLES / TESTS",
+    title: "EXAMPLES & TESTS",
     pages: testSection,
   },
   // {
