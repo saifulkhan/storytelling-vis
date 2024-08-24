@@ -137,14 +137,14 @@ function Demo({ title, themeVariant }: DemoProps) {
 function Demos() {
   return (
     <Wrapper>
-      <Heading>Select a demo</Heading>
+      <Heading>Change Theme</Heading>
 
-      <Box px={4} my={3}>
+      {/* <Box px={4} my={3}>
         <Alert icon={false} severity="info">
           <strong>Hello!</strong> Select your style below. Choose the ones that
           best fits your needs.
         </Alert>
-      </Box>
+      </Box> */}
 
       <Box px={4} my={3}>
         <Grid container spacing={3}>
@@ -157,14 +157,14 @@ function Demos() {
         </Grid>
       </Box>
 
-      <Box my={3} mx={4}>
+      {/* <Box my={3} mx={4}>
         <Link href="/documentation/welcome" legacyBehavior>
           <Button variant="outlined" size="large" fullWidth={true}>
             Documentation
           </Button>
         </Link>
-      </Box>
-      <Box my={3} mx={4}>
+      </Box> */}
+      {/* <Box my={3} mx={4}>
         <Button
           href="https://mui.com/store/items/mira-pro-react-material-admin-dashboard/"
           variant="contained"
@@ -175,7 +175,7 @@ function Demos() {
         >
           Get Mira Pro
         </Button>
-      </Box>
+      </Box> */}
     </Wrapper>
   );
 }

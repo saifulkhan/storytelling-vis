@@ -21,23 +21,34 @@ const FeatureActionTablesPage = () => {
   const [tables, setTables] = useState<string[]>([]);
 
   useEffect(() => {
-    const _tables = getTables();
-    setTables(_tables);
+    const fetchData = async () => {
+      const _tables = getTables();
+      setTables(_tables);
+      setSelectedTable(_tables[0]);
+      console.log("tables: ", _tables);
+
+      await fetchTableData(_tables[0]);
+    };
+
+    fetchData();
   }, []);
+
+  const fetchTableData = async (table: string) => {
+    try {
+      console.log("table: ", table);
+      const tableData = (await getTableData(table)) as FeatureActionTableRow[];
+      console.log("tableData: ", tableData);
+      setData(tableData);
+    } catch (e) {
+      console.error("Failed to fetch table data:", e);
+    }
+  };
 
   const handleTableChange = async (
     event: React.ChangeEvent<{ value: string }>
   ) => {
     setSelectedTable(event.target.value);
-    try {
-      const table = (await getTableData(
-        selectedTable
-      )) as FeatureActionTableRow[];
-      console.log("table: ", table);
-      setData(table);
-    } catch (e) {
-      console.error("Failed to fetch data:", e);
-    }
+    fetchTableData(event.target.value);
   };
 
   const handleCreateTable = () => {
@@ -88,11 +99,11 @@ const FeatureActionTablesPage = () => {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Button variant="contained" onClick={handleCreateTable}>
-              Create
+            <Button variant="contained" disabled onClick={handleCreateTable}>
+              New
             </Button>
             <Box sx={{ width: 8 }} /> {/* Add space between buttons */}
-            <Button variant="contained" onClick={handleSaveTable}>
+            <Button variant="contained" disabled onClick={handleSaveTable}>
               Save
             </Button>
           </Box>
