@@ -78,6 +78,9 @@ export class ParallelCoordinatePlot extends Plot {
   yScale;
   staticLineColorMap;
 
+  playDate: Date;
+  playFeatureType;
+
   constructor() {
     super();
   }
@@ -345,42 +348,49 @@ export class ParallelCoordinatePlot extends Plot {
   public setActions(actions: DateActionArray) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
 
-    return this;
-  }
-
-  public animate() {
-    // draw static
-    // if (!this._actions || !this._actions.length) {
-    //   this._draw();
-    //   return;
-    // }
-
     this.drawAxis();
     this.drawLinesAndDotsHidden();
 
-    (async () => {
-      let lastDate, lastFeatureType;
-      for (const [date, action] of this.actions) {
-        console.log("PCP:animate: action:", action);
+    return this;
+  }
 
-        if (lastDate && lastFeatureType) {
-          await Promise.all([
-            this.hideDots(lastDate, lastFeatureType),
-            this.hideLine(lastDate, lastFeatureType),
-          ]);
-        }
+  /**
+   ** Animation related methods
+   **/
 
-        const featureType = action.getFeatureType();
-        await Promise.all([
-          this.showDots(date, featureType),
-          this.showLine(date, featureType),
-          this.showAction(date, featureType, action),
-        ]);
-
-        lastDate = date;
-        lastFeatureType = featureType;
+  animate() {
+    const loop = async () => {
+      if (
+        !this.isPlayingRef.current ||
+        this.playActionIdx >= this.actions.length
+      ) {
+        return;
       }
-    })();
+
+      console.log("PCP:runLoop: ", this.playActionIdx, this.playDate);
+      if (this.playDate && this.playFeatureType) {
+        await Promise.all([
+          this.hideDots(this.playDate, this.playFeatureType),
+          this.hideLine(this.playDate, this.playFeatureType),
+        ]);
+      }
+
+      let [date, action] = this.actions[this.playActionIdx];
+      const featureType = action.getFeatureType();
+      await Promise.all([
+        this.showDots(date, featureType),
+        this.showLine(date, featureType),
+        this.showAction(date, featureType, action),
+      ]);
+
+      this.playDate = date;
+      this.playFeatureType = featureType;
+
+      this.playActionIdx++;
+      this.animationRef = requestAnimationFrame(loop);
+    };
+
+    loop();
   }
 
   private showLine(date: Date, type: MSBFeatureName) {
@@ -461,8 +471,10 @@ export class ParallelCoordinatePlot extends Plot {
       action
         .updateProps({
           date: date.toLocaleDateString(),
-          mean_test_accuracy: data["mean_test_accuracy"],
-          mean_training_accuracy: data["mean_training_accuracy"],
+          mean_test_accuracy: (data["mean_test_accuracy"] * 100)?.toFixed(2),
+          mean_training_accuracy: (
+            data["mean_training_accuracy"] * 100
+          )?.toFixed(2),
           horizontalAlign: "middle" as HorizontalAlign,
           verticalAlign: "top" as VerticalAlign,
         })
@@ -550,99 +562,5 @@ export class ParallelCoordinatePlot extends Plot {
 
   private topRightCoordinate(): Coordinate {
     return [this.width - this.margin.left - ANNO_X_POS, ANNO_Y_POS];
-  }
-
-  old() {
-    //
-    //
-    //
-
-    // Position annotations & hide them
-    this._annotations.forEach((d, idx) => {
-      // Try to get the graphAnnotation object if undefined set array elem to false
-      const graphAnnotation: GraphAnnotation = d?.graphAnnotation;
-      if (!graphAnnotation) {
-        return;
-      }
-
-      if (d && graphAnnotation) {
-        const xScale = this.xScaleMap.get(d.originAxis);
-        const x = xScale(d.data[d.originAxis]);
-        const y = this.yScale(d.originAxis);
-
-        graphAnnotation.x(x);
-        graphAnnotation.y(y);
-
-        // If add to svg and set opacity to 0 (to hide it)
-        graphAnnotation.id(`id-annotation-${idx}`).addTo(this.svg);
-        graphAnnotation.hideAnnotation();
-
-        // Save the coordinates in PCAnnotation object
-        d.origin = [x, y];
-        if (d.featureType === NumericalFeatureType.MIN) {
-          d.destination = [this.margin.right + ANNO_X_POS, ANNO_Y_POS];
-        } else if (
-          d.featureType === NumericalFeatureType.CURRENT ||
-          d.featureType === NumericalFeatureType.LAST
-        ) {
-          d.destination = [xAxisMid, ANNO_Y_POS];
-        } else if (d.featureType === NumericalFeatureType.MAX) {
-          d.destination = [
-            this.width - this.margin.left - ANNO_X_POS,
-            ANNO_Y_POS,
-          ];
-        }
-      }
-    });
-
-    //
-    //
-    //
-    const currIdx = this._animationCounter;
-    const prevIdx = this._animationCounter - 1;
-    const currAnn: PCPAnnotation = this._annotations[currIdx];
-    const prevAnn: PCPAnnotation = this._annotations[prevIdx];
-
-    // prettier-ignore
-    // console.log("PCP: _animateForward: currAnnotation = ", currAnn);
-
-    // Show current line & its dots
-    this.showLine(currIdx);
-    this.shotDots(currIdx);
-
-    // Show the annotation and move it to its destination
-    currAnn?.graphAnnotation?.showAnnotation(0);
-    currAnn?.graphAnnotation?.updatePosAnimate(
-      currAnn.destination[0],
-      currAnn.destination[1]
-    );
-
-    // Hide previous line & its dots
-    if (prevAnn?.featureType === NumericalFeatureType.CURRENT) {
-      this.hideLine(prevIdx);
-      this.hideDots(prevIdx);
-    }
-
-    // Check if there is any past MAX line exists
-    if (currAnn?.featureType === NumericalFeatureType.MAX) {
-      this._annotations.slice(0, currIdx).forEach((d, idx) => {
-        if (d.featureType === NumericalFeatureType.MAX) {
-          this.hideLine(idx);
-          this.hideDots(idx);
-        }
-      });
-    }
-
-    // Check if there is any past MIN line exists
-    if (currAnn?.featureType === NumericalFeatureType.MIN) {
-      this._annotations.slice(0, currIdx).forEach((d, idx) => {
-        if (d.featureType === NumericalFeatureType.MIN) {
-          this.hideLine(idx);
-          this.hideDots(idx);
-        }
-      });
-    }
-
-    this._animationCounter += 1;
   }
 }

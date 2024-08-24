@@ -27,6 +27,7 @@ import { makeStyles } from "@mui/styles";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
@@ -34,36 +35,50 @@ import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
 import { getMLData } from "../../services/DataService";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 import { getTableData } from "../../services/TableService";
+import { ParallelCoordinatePlot } from "../../components/storyboards/plots/ParallelCoordinatePlot";
+import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
+import {
+  fromMLToTimeSeriesData,
+  sortMLTimeseriesData,
+} from "../../utils/storyboards/common";
+import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/MSBFeatureActionFactory";
+import { DateActionArray } from "../../utils/storyboards/feature-action/FeatureActionTypes";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,
     HEIGHT = 800;
-  const KEYS = ["channels", "kernel_size", "layers", "samples_per_class"];
+  const HYPERPARAMS = [
+    "channels",
+    "kernel_size",
+    "layers",
+    "samples_per_class",
+  ];
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(null);
-  const [keys, setKeys] = useState<string[]>([]);
-  const [key, setKey] = useState<string>(null);
+  const [hyperparam, setHyperparam] = useState<string>(null);
   const [data, setData] = useState<MLTimeseriesData[]>(null);
-  const [nFATable, setNFATable] = useState<any>(null);
+  const [table, setTable] = useState<any>(null);
 
-  const workflow = new MLMVWorkflow();
+  const plot = useRef(new ParallelCoordinatePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
+  // Load ML data and feature action table data
   useEffect(() => {
     if (!chartRef.current) return;
     setLoading(true);
 
     const fetchData = async () => {
       try {
-        const data = await getMLData();
-        setData(data);
-        setKeys(KEYS);
-        const table = await getTableData("ML: Multivariate");
-        setNFATable(table);
+        const _data = await getMLData();
+        setData(_data);
+        const _table = await getTableData("ML: Multivariate");
+        setTable(_table);
 
         console.log("MLMVStoryPage: useEffect 1: data: ", data);
+        console.log("MLMVStoryPage: useEffect 1: table: ", table);
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("MLMVStoryPage: Failed to fetch data:", error);
       } finally {
         setLoading(false);
       }
@@ -74,26 +89,38 @@ const MLMVStoryPage = () => {
     return () => {};
   }, []);
 
+  // Once a hyperparameter/key is selected create feature-actions and plot
   useEffect(() => {
-    if (!key || !data || !chartRef.current) return;
+    if (!hyperparam || !data || !chartRef.current) return;
 
-    console.log("useEffect 2: key: ", key);
-    console.log("useEffect 2: data: ", data);
+    console.log("MLMVStoryPage: useEffect 2: key: ", hyperparam);
+    console.log("MLMVStoryPage: useEffect 2: data: ", data[hyperparam]);
 
-    workflow
-      .setName(key)
-      .setData(data)
-      .setNFATable(nFATable)
-      .setCanvas(chartRef.current)
+    // FeatureActionBuilder takes TimeseriesData, so we need to transform it
+    const _data = sortMLTimeseriesData(data, hyperparam);
+
+    const actions: DateActionArray = new MSBFeatureActionFactory()
+      .setProps({ metric: "accuracy", window: 0 })
+      .setData(_data)
+      .setTable(table)
       .create();
 
+    plot
+      .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
+      .setName(hyperparam)
+      .setData(_data)
+      .setCanvas(chartRef.current)
+      .setActions(actions);
+
+    pause();
+
     return () => {};
-  }, [key]);
+  }, [hyperparam]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newKey = event.target.value;
     if (newKey) {
-      setKey(newKey);
+      setHyperparam(newKey);
     }
   };
 
@@ -159,10 +186,10 @@ const MLMVStoryPage = () => {
                       id="select-region-label"
                       displayEmpty
                       onChange={handleSelection}
-                      value={key}
+                      value={hyperparam}
                       input={<OutlinedInput label="Select hyperparameter" />}
                     >
-                      {keys.map((d) => (
+                      {HYPERPARAMS.map((d) => (
                         <MenuItem key={d} value={d}>
                           {d}
                         </MenuItem>
@@ -197,14 +224,16 @@ const MLMVStoryPage = () => {
 
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
+                      disabled={!hyperparam}
                       variant="contained"
-                      // disabled={!key}
-                      disabled={true}
-                      onClick={handlePlayButton}
-                      endIcon={<ArrowForwardIosIcon />}
-                      component="span"
+                      color={isPlaying ? "secondary" : "primary"}
+                      onClick={togglePlayPause}
+                      endIcon={
+                        isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
+                      }
+                      sx={{ width: 120 }}
                     >
-                      Play
+                      {isPlaying ? "Pause" : "Play"}
                     </Button>
                   </FormControl>
                 </FormGroup>
