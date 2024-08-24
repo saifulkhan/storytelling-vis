@@ -54,9 +54,32 @@ const Covid19SLStoryPage = () => {
     Record<string, TimeseriesData[]>
   >({});
   const [tableNFA, setTableNFA] = useState<any>(null);
-
   const linePlot = useRef(new LinePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(linePlot);
+
+  useEffect(() => {
+    if (!chartRef.current) return;
+    console.log("Covid19Story1Page: useEffect 1: fetchData");
+    setLoading(true);
+
+    const fetchData = async () => {
+      try {
+        const allData = await getCovid19Data();
+        setRegionsData(allData);
+        setRegions(Object.keys(allData).sort());
+        const table = await getTableData("COVID-19: Single Location");
+        setTableNFA(table);
+
+        console.log("Covid19Story1Page: useEffect 1: allRegionData: ", allData);
+      } catch (error) {
+        console.error("Covid19Story1Page: Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (!region || !regionsData[region] || !chartRef.current) return;
@@ -87,36 +110,10 @@ const Covid19SLStoryPage = () => {
       .setCanvas(chartRef.current)
       .setActions(actions);
 
-    // if (isPlaying) togglePlayPause();
-
     pause();
 
     return () => {};
   }, [region, regionsData, tableNFA]);
-
-  useEffect(() => {
-    if (!chartRef.current) return;
-    console.log("useEffect 1: fetchData");
-    setLoading(true);
-
-    const fetchData = async () => {
-      try {
-        const allData = await getCovid19Data();
-        setRegionsData(allData);
-        setRegions(Object.keys(allData).sort());
-        const table = await getTableData("COVID-19: Single Location");
-        setTableNFA(table);
-
-        console.log("useEffect 1: allRegionData: ", allData);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;

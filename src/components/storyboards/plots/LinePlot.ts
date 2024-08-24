@@ -41,7 +41,8 @@ export class LinePlot extends Plot {
   rightAxis: unknown;
   actions: any;
   name = "";
-  private isPlaying: boolean = false;
+  startDataIdx: number = 0; // start index of data for animation
+  endDataIdx: number = 0; // end index of data for animation
 
   constructor() {
     super();
@@ -162,8 +163,8 @@ export class LinePlot extends Plot {
    **/
   public setActions(actions: DateActionArray = []) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
-    this.currentActionIdx = 0;
-    this.prevAction = null;
+    this.playActionIdx = 0;
+    this.lastAction = null;
     this.startDataIdx = 0;
     this.endDataIdx = 0;
 
@@ -174,21 +175,21 @@ export class LinePlot extends Plot {
    ** Animation related methods
    **/
 
-  runLoop() {
+  animate() {
     const loop = async () => {
       if (
         !this.isPlayingRef.current ||
-        this.currentActionIdx >= this.actions.length
+        this.playActionIdx >= this.actions.length
       ) {
         return;
       }
 
-      if (this.prevAction) {
-        await this.prevAction.hide();
+      if (this.lastAction) {
+        await this.lastAction.hide();
       }
 
       const lineNum = 0; // TODO: we can animate first line at the moment
-      let [date, action] = this.actions[this.currentActionIdx];
+      let [date, action] = this.actions[this.playActionIdx];
       const dataX = this.data[lineNum];
       const dataIdx = findIndexOfDate(dataX, date);
 
@@ -203,21 +204,19 @@ export class LinePlot extends Plot {
         .setCanvas(this.svg)
         .setCoordinate(this.getCoordinates(date, lineNum));
 
-      await this.animate(this.startDataIdx, dataIdx, lineNum);
+      await this._animate(this.startDataIdx, dataIdx, lineNum);
       await action.show();
-      this.prevAction = action;
-      // await action.hide();
 
+      this.lastAction = action;
       this.startDataIdx = dataIdx;
-
-      this.currentActionIdx++;
+      this.playActionIdx++;
       this.animationRef = requestAnimationFrame(loop);
     };
 
     loop();
   }
 
-  private animate(start: number, stop: number, lineNum: number = 0) {
+  private _animate(start: number, stop: number, lineNum: number = 0) {
     // prettier-ignore
     // console.log(`LinePlot: lineIndex = ${lineIndex}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineIndex]);

@@ -25,10 +25,8 @@ export abstract class Plot {
   // play and pause related
   protected animationRef: number | null = null;
   protected isPlayingRef: { current: boolean } = { current: false };
-  protected prevAction: any = null;
-  protected currentActionIdx: number = 0;
-  protected startDataIdx: number = 0;
-  protected endDataIdx: number = 0;
+  protected lastAction: any = null;
+  protected playActionIdx: number = 0;
 
   constructor() {}
   public abstract setData(...args: unknown[]): this;
@@ -50,13 +48,13 @@ export abstract class Plot {
     this.isPlayingRef.current = !this.isPlayingRef.current;
   }
 
-  runLoop(): void {
+  animate(): void {
     return;
   }
 
   play() {
     this.isPlayingRef.current = true;
-    this.runLoop();
+    this.animate();
   }
 
   pause() {
