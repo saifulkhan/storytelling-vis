@@ -8,6 +8,14 @@ export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
 }
 
+export function sortMLTimeseriesData(data: MLTimeseriesData[], key: string) {
+  // sort data by selected key, e.g, "kernel_size"
+  return data
+    .slice()
+    .sort((a, b) => d3.ascending(a[key], b[key]))
+    .sort((a, b) => d3.ascending(a["date"], b["date"]));
+}
+
 export function sliceTimeseriesByDate(
   data: TimeseriesData[],
   start: Date,
