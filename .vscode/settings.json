@@ -2,5 +2,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "workbench.colorTheme": "Default Dark Modern"
+  "workbench.colorTheme": "Anysphere"
 }
