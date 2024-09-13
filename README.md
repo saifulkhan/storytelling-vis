@@ -316,27 +316,7 @@ new LinePlot()
 
 **Example:** See the examples/tests in the UI.
 
-### MSB Workflow
-
-<div>
-    <img width="350px" src="./public/static/doc/workflow-classes.png" alt="" />
-    <br>
-    <small><i>Figure 3: Workflow classes.</i></small>
-    <br><br>
-</div>
-
-The abstract`Workflow` class is created to define the workflow API, and the concrete workflow classes are created for each story. The workflow acts as a facade design pattern and interact with other classes.
-
-**Creating a Workflow:** For example, Covid19 single location workflow is created by,
-
-```ts
-new Covid19SLWorkflow()
-    .setName(region)
-    .setData(regionData)
-    .setNFATable(tableNFA)
-    .setCanvas(chartRef.current)
-    .create();
-```
+### Creating Story
 
 <!-- <div align="center">  -->
 <div>
@@ -346,19 +326,15 @@ new Covid19SLWorkflow()
     <br><br>
 </div>
 
-TODO: `TableService`
-
-**Code:** See the implementation of various workflows in `src/utils/storyboards/workflow` folder, and how they are instantiated in story pages in `src/pages/storyboards` folder.
+**Code:** See the implementation of story pages in `src/pages/storyboards` folder.
 
 **Example:** See COVID-19 story with a single time series and Machine learning multi-variate story in the UI.
 
 ## UI
 
-### Feature Action Tables
+### Feature Action Tables UI
 
-To add a new table `src/services/TableService.ts`
-
-### Stories
+To add a new table, see `src/services/TableService.ts`
 
 ## Support
 
