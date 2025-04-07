@@ -31,14 +31,12 @@ import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
-import { MLMVWorkflow } from "../../utils/storyboards/workflow/MLMVWorkflow";
 import { getMLData } from "../../services/DataService";
 import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
 import { getTableData } from "../../services/TableService";
 import { ParallelCoordinatePlot } from "../../components/storyboards/plots/ParallelCoordinatePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
 import {
-  fromMLToTimeSeriesData,
   sortMLTimeseriesData,
 } from "../../utils/storyboards/common";
 import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/MSBFeatureActionFactory";
@@ -133,7 +131,7 @@ const MLMVStoryPage = () => {
   return (
     <>
       <Head>
-        <title>ML Multivariate Story</title>
+        <title>ML: Multivariate Story</title>
       </Head>
       <Box
         sx={{
@@ -150,7 +148,7 @@ const MLMVStoryPage = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="ML Multivariate Story"
+            title="ML: Multivariate Story"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>
