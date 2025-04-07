@@ -15,9 +15,9 @@ import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/Time
 import {
   LinePlot,
   LineProps,
-} from "../../../components/storyboards/plots/LinePlot";
+} from "../../../components/storyboard/plots/LinePlot";
 import { semanticGaussians } from "../../../utils/storyboards/data-processing/Gaussian";
-import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
+import { getSchemeTableau10 } from "../../../components/storyboard/StoryboardColors";
 import {
   getCovid19SLCFATable,
   getCovid19Data,

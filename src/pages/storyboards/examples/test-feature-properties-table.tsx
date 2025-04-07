@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FeaturePropertiesTable from "../../../components/storyboards/tables/FeaturePropertiesTable";
+import FeaturePropertiesTable from "../../../components/storyboard/tables/FeaturePropertiesTable";
 
 const TestFeaturePropertiesTablePage = () => {
   const [data, setData] = useState({

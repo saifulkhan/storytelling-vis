@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import Head from "next/head";
 import { Box } from "@mui/material";
 
-import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
+import { LinePlot } from "../../../components/storyboard/plots/LinePlot";
 import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const TestLinePlotPage = () => {

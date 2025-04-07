@@ -20,8 +20,8 @@ import { sliceTimeseriesByDate } from "../../../utils/storyboards/common";
 import {
   LinePlot,
   LineProps,
-} from "../../../components/storyboards/plots/LinePlot";
-import { Dot } from "../../../components/storyboards/actions/Dot";
+} from "../../../components/storyboard/plots/LinePlot";
+import { Dot } from "../../../components/storyboard/actions/Dot";
 import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,

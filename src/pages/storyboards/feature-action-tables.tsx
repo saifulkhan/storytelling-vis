@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 
 import DashboardLayout from "../../layouts/Dashboard";
-import FeatureActionTable from "../../components/storyboards/tables/FeatureActionTable";
-import { FeatureActionTableRow } from "../../components/storyboards/tables/FeatureActionTableRow";
+import FeatureActionTable from "../../components/storyboard/tables/FeatureActionTable";
+import { FeatureActionTableRow } from "../../components/storyboard/tables/FeatureActionTableRow";
 import { getTableData, getTables } from "../../services/FATableService";
 
 const FeatureActionTablesPage = () => {

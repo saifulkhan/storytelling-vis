@@ -17,7 +17,7 @@ import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
 import {
   LinePlot,
   LineProps,
-} from "../../../components/storyboards/plots/LinePlot";
+} from "../../../components/storyboard/plots/LinePlot";
 import {
   combinedBounds,
   gmm,
@@ -25,9 +25,9 @@ import {
   semanticBounds,
   semanticGaussians,
 } from "../../../utils/storyboards/data-processing/Gaussian";
-import { Dot } from "../../../components/storyboards/actions/Dot";
-import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardColors";
-import { Circle } from "../../../components/storyboards/actions/Circle";
+import { Dot } from "../../../components/storyboard/actions/Dot";
+import { getSchemeTableau10 } from "../../../components/storyboard/StoryboardColors";
+import { Circle } from "../../../components/storyboard/actions/Circle";
 import {
   getCovid19SLCFATable,
   getCovid19Data,

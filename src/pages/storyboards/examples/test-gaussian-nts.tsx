@@ -17,7 +17,7 @@ import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/Time
 import {
   LinePlot,
   LineProps,
-} from "../../../components/storyboards/plots/LinePlot";
+} from "../../../components/storyboard/plots/LinePlot";
 import {
   gmm,
   smoothing,

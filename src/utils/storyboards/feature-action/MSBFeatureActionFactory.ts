@@ -1,12 +1,12 @@
 import { TimeSeriesPoint } from "../data-processing/TimeSeriesPoint";
 import { MSBFeature } from "../feature/MSBFeature";
-import { MSBActionFactory } from "../../../components/storyboards/actions/MSBActionFactory";
+import { MSBActionFactory } from "../../../components/storyboard/actions/MSBActionFactory";
 import {
   ActionTableRow,
   FeatureActionTableRow as FeatureActionTableRow,
-} from "../../../components/storyboards/tables/FeatureActionTableRow";
+} from "../../../components/storyboard/tables/FeatureActionTableRow";
 import { MSBFeatureFactory } from "../feature/MSBFeatureFactory";
-import { MSBAction } from "../../../components/storyboards/actions/MSBAction";
+import { MSBAction } from "../../../components/storyboard/actions/MSBAction";
 import { DateActionArray } from "./FeatureActionTypes";
 import {
   FeatureSearchProps,

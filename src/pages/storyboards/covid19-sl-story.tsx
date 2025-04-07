@@ -34,7 +34,7 @@ import DashboardLayout from "../../layouts/Dashboard";
 import { getCovid19Data } from "../../services/TimeSeriesDataService";
 import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeSeriesPoint";
 import { getTableData } from "../../services/FATableService";
-import { LinePlot } from "../../components/storyboards/plots/LinePlot";
+import { LinePlot } from "../../components/storyboard/plots/LinePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
 import { DateActionArray } from "../../utils/storyboards/feature-action/FeatureActionTypes";
 import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/MSBFeatureActionFactory";

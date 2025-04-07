@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { ActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
-import { MSBActionName } from "../../../components/storyboards/actions/MSBActionName";
-import ActionTable from "../../../components/storyboards/tables/ActionTable";
+import { ActionTableRow } from "../../../components/storyboard/tables/FeatureActionTableRow";
+import { MSBActionName } from "../../../components/storyboard/actions/MSBActionName";
+import ActionTable from "../../../components/storyboard/tables/ActionTable";
 
 const mockData: ActionTableRow[] = [
   {

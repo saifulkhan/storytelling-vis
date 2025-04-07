@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ActionPropertiesTable from "../../../components/storyboards/tables/ActionPropertiesTable";
+import ActionPropertiesTable from "../../../components/storyboard/tables/ActionPropertiesTable";
 
 const TestActionPropertiesTablePage = () => {
   const [data, setData] = useState({

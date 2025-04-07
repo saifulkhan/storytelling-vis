@@ -3,12 +3,12 @@ import Head from "next/head";
 import { Box } from "@mui/material";
 import * as d3 from "d3";
 
-import { Coordinate } from "../../../components/storyboards/actions/MSBAction";
-import { Dot } from "../../../components/storyboards/actions/Dot";
-import { TextBox } from "../../../components/storyboards/actions/TextBox";
-import { Connector } from "../../../components/storyboards/actions/Connector";
-import { Circle } from "../../../components/storyboards/actions/Circle";
-import { MSBActionGroup } from "../../../components/storyboards/actions/MSBActionGroup";
+import { Coordinate } from "../../../components/storyboard/actions/MSBAction";
+import { Dot } from "../../../components/storyboard/actions/Dot";
+import { TextBox } from "../../../components/storyboard/actions/TextBox";
+import { Connector } from "../../../components/storyboard/actions/Connector";
+import { Circle } from "../../../components/storyboard/actions/Circle";
+import { MSBActionGroup } from "../../../components/storyboard/actions/MSBActionGroup";
 
 const TestActionsPage = () => {
   const chartRef = useRef(null);
