@@ -207,7 +207,7 @@ export class MirroredBarChart {
       .attr("width", BAR_WIDTH)
       .attr(
         "height",
-        (d) => this._yScale1(0) - this._yScale1(d.mean_test_accuracy),
+        (d) => this._yScale1(0) - this._yScale1(d.mean_test_accuracy)
       )
       .attr("fill", this._color1);
 
@@ -220,7 +220,7 @@ export class MirroredBarChart {
         "y",
         (d) =>
           (this._height - this._margin.top - this._margin.bottom) / 2 +
-          BAR_XAXIS_GAP,
+          BAR_XAXIS_GAP
       )
       .attr("width", BAR_WIDTH)
       .attr("height", (d) => -this._yScale2(0) + this._yScale2(d.y))
@@ -274,12 +274,12 @@ export class MirroredBarChart {
         .attr("x", (d) => this._xScale(point.date))
         .attr(
           "y",
-          (d) => this._yScale1(point.mean_test_accuracy) - BAR_XAXIS_GAP,
+          (d) => this._yScale1(point.mean_test_accuracy) - BAR_XAXIS_GAP
         )
         .attr("width", BAR_WIDTH)
         .attr(
           "height",
-          (d) => this._yScale1(0) - this._yScale1(point.mean_test_accuracy),
+          (d) => this._yScale1(0) - this._yScale1(point.mean_test_accuracy)
         )
         .attr("fill", this._color1);
 
@@ -290,7 +290,7 @@ export class MirroredBarChart {
           "y",
           (d) =>
             (this._height - this._margin.top - this._margin.bottom) / 2 +
-            BAR_XAXIS_GAP,
+            BAR_XAXIS_GAP
         )
         .attr("width", BAR_WIDTH)
         .attr("height", (d) => -this._yScale2(0) + this._yScale2(point.y))
@@ -398,7 +398,7 @@ export class MirroredBarChart {
         "transform",
         `translate(0, ${
           (this._height - this._margin.top - this._margin.bottom) / 2
-        })`,
+        })`
       )
       .call(xAxis)
       .style("font-size", FONT_SIZE)

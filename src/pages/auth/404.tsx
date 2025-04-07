@@ -44,7 +44,7 @@ function Page404() {
   );
 }
 
-Page404.getLayout = function getLayout(page: ReactElement) {
+Page404.getLayout = function getLayout(page: ReactElement<any>) {
   return <AuthLayout>{page}</AuthLayout>;
 };
 

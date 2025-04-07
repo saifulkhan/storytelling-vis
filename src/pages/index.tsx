@@ -29,7 +29,7 @@ function Presentation() {
   );
 }
 
-Presentation.getLayout = function getLayout(page: ReactElement) {
+Presentation.getLayout = function getLayout(page: ReactElement<any>) {
   return <PresentationLayout>{page}</PresentationLayout>;
 };
 

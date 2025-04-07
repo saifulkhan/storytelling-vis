@@ -6,7 +6,7 @@ export interface PostMountRedirectToPageProps {
   children?: React.ReactNode;
 }
 
-const PostMountRedirectToPage: React.VoidFunctionComponent<
+const PostMountRedirectToPage: React.FunctionComponent<
   PostMountRedirectToPageProps
 > = ({ data, children }) => {
   const [ready, setReady] = React.useState(false);

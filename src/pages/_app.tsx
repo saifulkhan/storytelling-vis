@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type JSX } from "react";
 import type { ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";

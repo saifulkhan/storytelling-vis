@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type JSX } from "react";
 
 import { SidebarItemsType } from "../../types/sidebar";
 import SidebarNavListItem from "./SidebarNavListItem";

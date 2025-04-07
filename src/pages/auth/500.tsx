@@ -45,7 +45,7 @@ function Page500() {
   );
 }
 
-Page500.getLayout = function getLayout(page: ReactElement) {
+Page500.getLayout = function getLayout(page: ReactElement<any>) {
   return <AuthLayout>{page}</AuthLayout>;
 };
 

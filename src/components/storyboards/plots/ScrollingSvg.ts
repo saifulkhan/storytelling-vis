@@ -13,7 +13,7 @@ export class ScrollingSvg {
     width = 600,
     height = 500,
     timeline = true,
-    onScrollCallback = undefined,
+    onScrollCallback = undefined
   ) {
     this.width = width;
 
@@ -72,7 +72,7 @@ export class ScrollingSvg {
           // prettier-ignore
           // console.log("ScrollingSvg: 1 opacity, visContainer.node().value.event", visContainer.node().value.event,"val = ", val);
           return val;
-        }, // Only the currently central event is opaque
+        } // Only the currently central event is opaque
       )
       .html((d) => `<h5>${d.date || ""}</h5>${d.description || ""}`);
 
@@ -86,11 +86,11 @@ export class ScrollingSvg {
         "scrollingSvg: scrollLeft ",
         this.scrollContainer.node().scrollLeft,
         ", sectionSize",
-        sectionSize,
+        sectionSize
       );
 
       this.container.node().value.event = Math.round(
-        this.scrollContainer.node().scrollLeft / sectionSize,
+        this.scrollContainer.node().scrollLeft / sectionSize
       );
       this.container
         .node()

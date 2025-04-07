@@ -30,4 +30,6 @@ module.exports = withTM({
 
     return config;
   },
+  // Ensure React 19 compatibility
+  reactStrictMode: true,
 });
