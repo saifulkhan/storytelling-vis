@@ -32,7 +32,7 @@ import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import { getCovid19Data } from "../../services/DataService";
-import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeSeriesPoint";
 import { getTableData } from "../../services/TableService";
 import { LinePlot } from "../../components/storyboards/plots/LinePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import {
   TimeSeriesPoint,
-} from "./data-processing/TimeseriesPoint";
+} from "./data-processing/TimeSeriesPoint";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;

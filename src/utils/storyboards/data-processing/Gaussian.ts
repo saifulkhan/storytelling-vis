@@ -1,7 +1,7 @@
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { CategoricalFeatures } from "../feature/CategoricalFeatures";
 import { Peak } from "../feature/Peak";
-import { TimeSeriesPoint } from "./TimeseriesPoint";
+import { TimeSeriesPoint } from "./TimeSeriesPoint";
 import { searchPeaks } from "../feature/feature-search";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { findDateIdx, scaleValue } from "../common";

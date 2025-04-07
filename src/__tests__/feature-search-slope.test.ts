@@ -1,4 +1,4 @@
-import { TimeSeriesPoint } from "../utils/storyboards/data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../utils/storyboards/data-processing/TimeSeriesPoint";
 import { searchSlopes } from "../utils/storyboards/feature/feature-search";
 
 describe("searchSlopes", () => {

@@ -4,7 +4,7 @@ import { Min } from "./Min";
 import { Max } from "./Max";
 import { Fall } from "./Fall";
 import { Rise } from "./Raise";
-import { TimeSeriesPoint } from "../data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../data-processing/TimeSeriesPoint";
 import { findDateIdx, maxIndex, mean, minIndex, normalise } from "../common";
 import { Current } from "./Current";
 import { Last } from "./Last";

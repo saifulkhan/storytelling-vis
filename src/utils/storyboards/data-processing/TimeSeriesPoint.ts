@@ -4,3 +4,4 @@ export interface TimeSeriesPoint {
   [key: string]: any;
 }
  
+export type TimeSeriesData = TimeSeriesPoint[];

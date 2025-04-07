@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeSeriesPoint";
 import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
 import { Peak } from "../../../utils/storyboards/feature/Peak";
 import { sliceTimeseriesByDate } from "../../../utils/storyboards/common";

@@ -39,7 +39,7 @@ import {
 } from "../../utils/storyboards/common";
 import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/MSBFeatureActionFactory";
 import { DateActionArray } from "../../utils/storyboards/feature-action/FeatureActionTypes";
-import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeSeriesPoint";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,

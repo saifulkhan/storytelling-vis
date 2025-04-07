@@ -10,7 +10,7 @@ import {
   searchSlopes,
 } from "./feature-search";
 import { MSBFeatureName } from "./MSBFeatureName";
-import { TimeSeriesPoint } from "../data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../data-processing/TimeSeriesPoint";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,

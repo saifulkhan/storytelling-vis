@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { TimeSeriesPoint } from "../utils/storyboards/data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../utils/storyboards/data-processing/TimeSeriesPoint";
 
 export async function getCovid19Data() {
   const FILE =
