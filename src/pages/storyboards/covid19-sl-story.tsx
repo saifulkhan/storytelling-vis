@@ -24,7 +24,6 @@ import {
   SelectChangeEvent,
   Fade,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -142,7 +141,7 @@ const Covid19SLStoryPage = () => {
   return (
     <>
       <Head>
-        <title>Covid19 Single Location Story</title>
+        <title>Covid19: Single Location Story</title>
       </Head>
       <Box
         sx={{
@@ -159,7 +158,7 @@ const Covid19SLStoryPage = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="Covid19 Single Location Story"
+            title="Covid19: Single Location Story"
             subheader="Choose a segment value, a region, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>
