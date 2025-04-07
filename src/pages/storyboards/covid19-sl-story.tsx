@@ -32,7 +32,7 @@ import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import { getCovid19Data } from "../../services/DataService";
-import { TimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeseriesPoint";
 import { getTableData } from "../../services/TableService";
 import { LinePlot } from "../../components/storyboards/plots/LinePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
@@ -50,7 +50,7 @@ const Covid19SLStoryPage = () => {
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>(null);
   const [regionsData, setRegionsData] = useState<
-    Record<string, TimeseriesData[]>
+    Record<string, TimeSeriesPoint[]>
   >({});
   const [tableNFA, setTableNFA] = useState<any>(null);
   const linePlot = useRef(new LinePlot()).current;

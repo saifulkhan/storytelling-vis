@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeseriesPoint";
 import {
   LinePlot,
   LineProps,
@@ -28,7 +28,7 @@ const WIDTH = 1500,
 
 const ExampleGaussianPage = () => {
   const ctsChartRef = useRef(null);
-  const [locData, setLocData] = useState<Record<string, TimeseriesData[]>>({});
+  const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
   const [regions, setRegions] = useState<string[]>(undefined);
   const [region, setRegion] = useState<string>(undefined);
 

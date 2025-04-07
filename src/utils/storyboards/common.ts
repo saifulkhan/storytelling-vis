@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import {
   MLTimeseriesData,
-  TimeseriesData,
-} from "./data-processing/TimeseriesData";
+  TimeSeriesPoint,
+} from "./data-processing/TimeseriesPoint";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
@@ -12,15 +12,23 @@ export function sortMLTimeseriesData(data: MLTimeseriesData[], key: string) {
   // sort data by selected key, e.g, "kernel_size"
   return data
     .slice()
+    .map(item => {
+      // Ensure the y property is populated for compatibility with TimeseriesData
+      // Use mean_test_accuracy as the default value for y if it's not already set
+      if (item.y === undefined) {
+        item.y = item.mean_test_accuracy;
+      }
+      return item;
+    })
     .sort((a, b) => d3.ascending(a[key], b[key]))
     .sort((a, b) => d3.ascending(a["date"], b["date"]));
 }
 
 export function sliceTimeseriesByDate(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   start: Date,
   end: Date
-): TimeseriesData[] {
+): TimeSeriesPoint[] {
   return data.filter((item) => item.date >= start && item.date <= end);
 }
 
@@ -48,11 +56,11 @@ export function createPredicate(
  **  Function to find index of a date in the timeseries data
  **/
 
-export function findDateIdx(date: Date, data: TimeseriesData[]): number {
+export function findDateIdx(date: Date, data: TimeSeriesPoint[]): number {
   return data.findIndex((d) => d.date.getTime() == date.getTime());
 }
 
-export function findIndexOfDate(data: TimeseriesData[], date: Date): number {
+export function findIndexOfDate(data: TimeSeriesPoint[], date: Date): number {
   return data.findIndex((d) => {
     for (const key in d) {
       if (
@@ -71,7 +79,7 @@ export function findIndexOfDate(data: TimeseriesData[], date: Date): number {
  **  Function to find indices of dates in the time series data
  **/
 export function findIndicesOfDates(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   dates: Date[]
 ): number[] {
   const indices: number[] = [];
@@ -244,7 +252,7 @@ export function scaleValue(
 export function fromMLToTimeSeriesData(
   data: MLTimeseriesData[],
   key: string
-): TimeseriesData[] {
+): TimeSeriesPoint[] {
   return data.map((d: MLTimeseriesData) => {
     return {
       date: d.date,

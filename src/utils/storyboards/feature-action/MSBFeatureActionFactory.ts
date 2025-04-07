@@ -1,4 +1,4 @@
-import { TimeseriesData } from "../data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../data-processing/TimeseriesPoint";
 import { MSBFeature } from "../feature/MSBFeature";
 import { MSBActionFactory } from "../../../components/storyboards/actions/MSBActionFactory";
 import {
@@ -14,7 +14,7 @@ import {
 } from "../feature/FeatureSearchProps";
 
 export class MSBFeatureActionFactory {
-  private data: TimeseriesData[];
+  private data: TimeSeriesPoint[];
   private table: FeatureActionTableRow[];
   private props: FeatureSearchProps;
 
@@ -30,7 +30,7 @@ export class MSBFeatureActionFactory {
     return this;
   }
 
-  public setData(data: TimeseriesData[]) {
+  public setData(data: TimeSeriesPoint[]) {
     this.data = data;
     return this;
   }

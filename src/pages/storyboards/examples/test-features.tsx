@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeseriesPoint";
 import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
 import { Peak } from "../../../utils/storyboards/feature/Peak";
 import { sliceTimeseriesByDate } from "../../../utils/storyboards/common";
@@ -30,8 +30,8 @@ const WIDTH = 1500,
 const FeaturesPage = () => {
   const chartRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const [locData, setLocData] = useState<Record<string, TimeseriesData[]>>({});
-  const [data, setData] = useState<TimeseriesData[]>([]);
+  const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
+  const [data, setData] = useState<TimeSeriesPoint[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
 

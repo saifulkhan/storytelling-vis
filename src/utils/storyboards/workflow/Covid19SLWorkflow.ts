@@ -2,7 +2,7 @@
  ** Implements Covid19 single location story workflow
  **/
 
-import { TimeseriesData } from "../data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../data-processing/TimeseriesPoint";
 import { MSBFeatureActionFactory } from "../feature-action/MSBFeatureActionFactory";
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
 import { MSBWorkflow } from "./MSBWorkflow";
@@ -20,8 +20,8 @@ export class Covid19SLWorkflow extends MSBWorkflow {
     super();
   }
 
-  public setData(data: TimeseriesData[]) {
-    this.data = data as TimeseriesData[];
+  public setData(data: TimeSeriesPoint[]) {
+    this.data = data as TimeSeriesPoint[];
     return this;
   }
 

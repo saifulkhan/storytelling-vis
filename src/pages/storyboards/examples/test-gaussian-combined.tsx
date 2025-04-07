@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeseriesPoint";
 import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
 import {
   LinePlot,
@@ -38,7 +38,7 @@ const WIDTH = 1500,
 
 const TestGaussianCombinedPage = () => {
   const chartRef = useRef(null);
-  const [locData, setLocData] = useState<Record<string, TimeseriesData[]>>({});
+  const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
   const [categoricalFeatures, setCategoricalFeatures] = useState<string>([]);

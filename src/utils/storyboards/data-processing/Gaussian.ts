@@ -1,14 +1,14 @@
 import { CategoricalFeature } from "../feature/CategoricalFeature";
 import { CategoricalFeatures } from "../feature/CategoricalFeatures";
 import { Peak } from "../feature/Peak";
-import { TimeseriesData } from "./TimeseriesData";
+import { TimeSeriesPoint } from "./TimeseriesPoint";
 import { searchPeaks } from "../feature/feature-search";
 import { NumericalFeature } from "../feature/NumericalFeature";
 import { findDateIdx, scaleValue } from "../common";
 
 const RANK_MAX = 10; /** or r_max  */
 
-export function gmm(data: TimeseriesData[], metric: string, window: number) {
+export function gmm(data: TimeSeriesPoint[], metric: string, window: number) {
   // step 1. create nts
   let peaks = searchPeaks(data, undefined, metric, window);
   // step 1.a. rank peaks by its height, assign rank between 1 to MAX_RANK
@@ -38,7 +38,7 @@ export function gmm(data: TimeseriesData[], metric: string, window: number) {
  ** Create numerical timeseries (nts)
  **/
 export function nts(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   metric: string,
   window: number
 ): Peak[] {
@@ -103,7 +103,7 @@ const EIGHT = 8,
  **/
 export function toGaussian(
   features: NumericalFeature[] | CategoricalFeature[] | Peak[],
-  data: TimeseriesData[]
+  data: TimeSeriesPoint[]
 ): number[][] {
   console.log("toGaussian: features:", features);
 
@@ -173,7 +173,7 @@ export function semanticGaussians(data, categoricalFeatures, smoothing = 11) {
   return gaussians;
 }
 
-export function smoothing(data: TimeseriesData[], smoothingVal = 11) {
+export function smoothing(data: TimeSeriesPoint[], smoothingVal = 11) {
   const smoothData = gaussianSmoothTS(data, 3, smoothingVal);
   console.log("smoothing: smoothData: ", smoothData);
 

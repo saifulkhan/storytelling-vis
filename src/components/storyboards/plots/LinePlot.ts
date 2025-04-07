@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { MSBAction, Coordinate } from "../actions/MSBAction";
-import { TimeseriesData } from "../../../utils/storyboards/data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeseriesPoint";
 import {
   findDateIdx,
   findIndexOfDate,
@@ -28,7 +28,7 @@ export type LineProps = {
 };
 
 export class LinePlot extends Plot {
-  data: TimeseriesData[][];
+  data: TimeSeriesPoint[][];
   lineProps: LineProps[] = [];
   plotProps: PlotProps;
   svg: SVGSVGElement;
@@ -74,7 +74,7 @@ export class LinePlot extends Plot {
     return this;
   }
 
-  public setData(data: TimeseriesData[][]) {
+  public setData(data: TimeSeriesPoint[][]) {
     this.data = data;
     console.log("LinePlot: data = ", this.data);
     return this;
@@ -114,10 +114,10 @@ export class LinePlot extends Plot {
     const line = (xAxis, yAxis) => {
       return d3
         .line()
-        .x((d: TimeseriesData) => {
+        .x((d: TimeSeriesPoint) => {
           return xAxis(d.date);
         })
-        .y((d: TimeseriesData) => {
+        .y((d: TimeSeriesPoint) => {
           if (typeof d.y !== "number" || Number.isNaN(d.y)) {
             console.log(d);
             d.y = 0;
@@ -127,7 +127,7 @@ export class LinePlot extends Plot {
     };
 
     // draw line and dots
-    this.data?.forEach((dataX: TimeseriesData[], i: number) => {
+    this.data?.forEach((dataX: TimeSeriesPoint[], i: number) => {
       const p = this.lineProps[i];
       const yAxis = this.leftOrRightAxis(i);
 
@@ -228,8 +228,8 @@ export class LinePlot extends Plot {
     const line = (xAxis, yAxis) => {
       return d3
         .line()
-        .x((d: TimeseriesData) => xAxis(d.date))
-        .y((d: TimeseriesData) => yAxis(d.y));
+        .x((d: TimeSeriesPoint) => xAxis(d.date))
+        .y((d: TimeSeriesPoint) => yAxis(d.y));
     };
 
     // create a path with the data
@@ -272,10 +272,10 @@ export class LinePlot extends Plot {
     d3.select(this.svg).selectAll(ID_AXIS_SELECTION).remove();
 
     // combine the data to create a plot with left and right axes
-    let dataOnLeft: TimeseriesData[] = [];
-    let dataOnRight: TimeseriesData[] = [];
+    let dataOnLeft: TimeSeriesPoint[] = [];
+    let dataOnRight: TimeSeriesPoint[] = [];
 
-    this.data.forEach((d: TimeseriesData[], i: number) => {
+    this.data.forEach((d: TimeSeriesPoint[], i: number) => {
       if (this.lineProps[i].onRightAxis) {
         dataOnRight = dataOnRight.concat(d);
       } else {
@@ -381,19 +381,19 @@ export class LinePlot extends Plot {
   /**
    ** Create x and y scales
    **/
-  private xScale(data: TimeseriesData[], w, m) {
+  private xScale(data: TimeSeriesPoint[], w, m) {
     const xScale = d3
       .scaleTime()
-      .domain(d3.extent(data, (d: TimeseriesData) => d.date))
+      .domain(d3.extent(data, (d: TimeSeriesPoint) => d.date))
       .nice()
       .range([m.left, w - m.right]);
     return xScale;
   }
 
-  private yScale(data: TimeseriesData[], h, m) {
+  private yScale(data: TimeSeriesPoint[], h, m) {
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d: TimeseriesData) => d.y)])
+      .domain([0, d3.max(data, (d: TimeSeriesPoint) => d.y)])
       .nice()
       .range([h - m.bottom, m.top]);
     return yScale;

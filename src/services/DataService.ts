@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import {
   MLTimeseriesData,
-  TimeseriesData,
-} from "../utils/storyboards/data-processing/TimeseriesData";
+  TimeSeriesPoint,
+} from "../utils/storyboards/data-processing/TimeseriesPoint";
 
 export async function getCovid19Data() {
   const FILE =
@@ -10,7 +10,7 @@ export async function getCovid19Data() {
 
   const csv: any[] = await readCSV(FILE);
   const data: {
-    [key: string]: TimeseriesData[];
+    [key: string]: TimeSeriesPoint[];
   } = {};
 
   csv.forEach((row) => {
@@ -27,7 +27,7 @@ export async function getCovid19Data() {
 
   for (const region in data) {
     data[region].sort(
-      (e1: TimeseriesData, e2: TimeseriesData) =>
+      (e1: TimeSeriesPoint, e2: TimeSeriesPoint) =>
         e1.date.getTime() - e2.date.getTime()
     );
   }

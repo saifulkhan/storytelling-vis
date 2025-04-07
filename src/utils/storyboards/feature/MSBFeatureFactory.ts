@@ -10,7 +10,7 @@ import {
   searchSlopes,
 } from "./feature-search";
 import { MSBFeatureName } from "./MSBFeatureName";
-import { TimeseriesData } from "../data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../data-processing/TimeseriesPoint";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
@@ -21,7 +21,7 @@ import { createPredicate } from "../common";
 import { Condition } from "./Condition";
 
 export class MSBFeatureFactory {
-  private data: TimeseriesData[];
+  private data: TimeSeriesPoint[];
   private props: FeatureSearchProps;
 
   constructor() {}
@@ -31,7 +31,7 @@ export class MSBFeatureFactory {
     return this;
   }
 
-  public setData(data: TimeseriesData[]) {
+  public setData(data: TimeSeriesPoint[]) {
     this.data = data;
     return this;
   }

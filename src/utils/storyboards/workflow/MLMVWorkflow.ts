@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { MSBWorkflow } from "./MSBWorkflow";
 import { ParallelCoordinatePlot } from "../../../components/storyboards/plots/ParallelCoordinatePlot";
 import { MSBFeatureActionFactory } from "../feature-action/MSBFeatureActionFactory";
-import { MLTimeseriesData } from "../data-processing/TimeseriesData";
+import { MLTimeseriesData } from "../data-processing/TimeseriesPoint";
 import { FeatureActionTableRow } from "../../../components/storyboards/tables/FeatureActionTableRow";
 import { DateActionArray } from "../feature-action/FeatureActionTypes";
 import { fromMLToTimeSeriesData } from "../common";

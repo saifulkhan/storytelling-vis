@@ -31,7 +31,7 @@ import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import { getMLData } from "../../services/DataService";
-import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesData";
+import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesPoint";
 import { getTableData } from "../../services/TableService";
 import { ParallelCoordinatePlot } from "../../components/storyboards/plots/ParallelCoordinatePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";

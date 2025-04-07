@@ -4,7 +4,7 @@ import { Min } from "./Min";
 import { Max } from "./Max";
 import { Fall } from "./Fall";
 import { Rise } from "./Raise";
-import { TimeseriesData } from "../data-processing/TimeseriesData";
+import { TimeSeriesPoint } from "../data-processing/TimeseriesPoint";
 import { findDateIdx, maxIndex, mean, minIndex, normalise } from "../common";
 import { Current } from "./Current";
 import { Last } from "./Last";
@@ -15,7 +15,7 @@ import { Last } from "./Last";
  ** remove duplicates, and eliminate peaks that are part of a larger peak.
  **/
 export function searchPeaks(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string,
   window: number
@@ -131,7 +131,7 @@ function searchPeakStart(idx: number, norm: number[]): number {
  * Function to find maximum points based on height difference between window
  * midpoint and edges.
  */
-function searchMaxes(data: TimeseriesData[], window: number): number[] {
+function searchMaxes(data: TimeSeriesPoint[], window: number): number[] {
   // centre of window
   const centre = Math.floor((window - 1) / 2);
   const maxes: number[] = [];
@@ -161,7 +161,7 @@ function searchMaxes(data: TimeseriesData[], window: number): number[] {
  */
 
 export function searchSlopes(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string,
   window: number
@@ -462,7 +462,7 @@ export function findLocalMinMax(input: any[], key: string, window = 2): any {
  ** The function search global max in a given timeseries.
  **/
 export function searchGlobalMax(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string
 ): Max[] {
@@ -481,7 +481,7 @@ export function searchGlobalMax(
  ** The function search global min in a given timeseries.
  **/
 export function searchGlobalMin(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string
 ): Min[] {
@@ -500,7 +500,7 @@ export function searchGlobalMin(
  ** The function returns first data point
  **/
 export function searchFirst(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string
 ): Min[] {
@@ -519,7 +519,7 @@ export function searchFirst(
  ** The function returns current data points.
  **/
 export function searchCurrent(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string
 ): Min[] {
@@ -537,7 +537,7 @@ export function searchCurrent(
  ** The function last data point
  **/
 export function searchLast(
-  data: TimeseriesData[],
+  data: TimeSeriesPoint[],
   rank: number,
   metric: string
 ): Min[] {
