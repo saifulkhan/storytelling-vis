@@ -1,8 +1,5 @@
 import * as d3 from "d3";
-import {
-  MLTimeseriesData,
-  TimeSeriesPoint,
-} from "../utils/storyboards/data-processing/TimeseriesPoint";
+import { TimeSeriesPoint } from "../utils/storyboards/data-processing/TimeseriesPoint";
 
 export async function getCovid19Data() {
   const FILE =
@@ -39,7 +36,7 @@ export async function getMLData() {
   const FILE = "/static/storyboards/ml/data.csv";
 
   const csv: any[] = await readCSV(FILE);
-  const data: MLTimeseriesData[] = [];
+  const data: TimeSeriesPoint[] = [];
 
   // convert string to number and date
   csv.forEach((row) => {

@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import {
-  MLTimeseriesData,
   TimeSeriesPoint,
 } from "./data-processing/TimeseriesPoint";
 
@@ -8,7 +7,7 @@ export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
 }
 
-export function sortMLTimeseriesData(data: MLTimeseriesData[], key: string) {
+export function sortTimeseriesData(data: TimeSeriesPoint[], key: string) {
   // sort data by selected key, e.g, "kernel_size"
   return data
     .slice()
@@ -250,10 +249,10 @@ export function scaleValue(
 }
 
 export function fromMLToTimeSeriesData(
-  data: MLTimeseriesData[],
+  data: TimeSeriesPoint[],
   key: string
 ): TimeSeriesPoint[] {
-  return data.map((d: MLTimeseriesData) => {
+  return data.map((d: TimeSeriesPoint) => {
     return {
       date: d.date,
       y: d[key],

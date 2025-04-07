@@ -31,15 +31,15 @@ import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
 import { getMLData } from "../../services/DataService";
-import { MLTimeseriesData } from "../../utils/storyboards/data-processing/TimeseriesPoint";
 import { getTableData } from "../../services/TableService";
 import { ParallelCoordinatePlot } from "../../components/storyboards/plots/ParallelCoordinatePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
 import {
-  sortMLTimeseriesData,
+  sortTimeseriesData,
 } from "../../utils/storyboards/common";
 import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/MSBFeatureActionFactory";
 import { DateActionArray } from "../../utils/storyboards/feature-action/FeatureActionTypes";
+import { TimeSeriesPoint } from "../../utils/storyboards/data-processing/TimeseriesPoint";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,
@@ -54,7 +54,7 @@ const MLMVStoryPage = () => {
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(null);
   const [hyperparam, setHyperparam] = useState<string>(null);
-  const [data, setData] = useState<MLTimeseriesData[]>(null);
+  const [data, setData] = useState<TimeSeriesPoint[]>(null);
   const [table, setTable] = useState<any>(null);
 
   const plot = useRef(new ParallelCoordinatePlot()).current;
@@ -94,7 +94,7 @@ const MLMVStoryPage = () => {
     console.log("MLMVStoryPage: useEffect 2: data: ", data[hyperparam]);
 
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
-    const _data = sortMLTimeseriesData(data, hyperparam);
+    const _data = sortTimeseriesData(data, hyperparam);
 
     const actions: DateActionArray = new MSBFeatureActionFactory()
       .setProps({ metric: "accuracy", window: 0 })
