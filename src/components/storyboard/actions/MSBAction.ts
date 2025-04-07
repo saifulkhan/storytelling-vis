@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { MSBActionName } from "./MSBActionName";
-import { MSBFeatureName } from "../../../utils/storyboards/feature/MSBFeatureName";
-import { CategoricalFeatures } from "../../../utils/storyboards/feature/CategoricalFeatures";
+import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
+import { CategoricalFeatures } from "../../../utils/feature/CategoricalFeatures";
 
 export type Coordinate = [number, number];
 

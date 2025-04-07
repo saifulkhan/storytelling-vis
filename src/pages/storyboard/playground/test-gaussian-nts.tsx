@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import * as d3 from "d3";
+import { schemeTableau10, schemeCategory10 } from "d3-scale-chromatic";
 import {
   Box,
   FormControl,
@@ -11,42 +13,34 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "../../../utils/data-processing/TimeSeriesPoint";
 import {
   LinePlot,
   LineProps,
 } from "../../../components/storyboard/plots/LinePlot";
-import { semanticGaussians } from "../../../utils/storyboards/data-processing/Gaussian";
-import { getSchemeTableau10 } from "../../../components/storyboard/StoryboardColors";
 import {
-  getCovid19SLCFATable,
-  getCovid19Data,
-} from "../../../services/TimeSeriesDataService";
+  gmm,
+  smoothing,
+} from "../../../utils/data-processing/Gaussian";
+import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
 
 const ExampleGaussianPage = () => {
-  const ctsChartRef = useRef(null);
+  const ntsChartRef = useRef(null);
   const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
   const [regions, setRegions] = useState<string[]>(undefined);
   const [region, setRegion] = useState<string>(undefined);
 
-  const [categorialFeatures, setCategoricalFeatures] =
-    useState<string>(undefined);
-
   useEffect(() => {
-    if (!ctsChartRef.current) return;
+    if (!ntsChartRef.current) return;
 
     const fetchData = async () => {
       try {
         const data = await getCovid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
-
-        const fetures = await getCovid19SLCFATable();
-        setCategoricalFeatures(fetures);
-        setRegion("Aberdeenshire");
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -58,29 +52,48 @@ const ExampleGaussianPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!region || !locData[region] || !ctsChartRef.current) return;
+    if (!region || !locData[region] || !ntsChartRef.current) return;
 
     const data = locData[region];
 
     //
-    // Categorical Features
+    // Numerical Features
     //
+    smoothing(data);
 
-    // let categorialFeatures = cts();
-    const categoricalGauss = semanticGaussians(data, categorialFeatures, 11);
-    console.log("categoricalGauss:", categoricalGauss);
-    categoricalGauss.unshift(data);
+    const gaussian = gmm(data, "", 10);
+    console.log("gaussian = ", gaussian);
+    const gaussTS = gaussian.map((d, i) => {
+      return d.map((d1, i1) => {
+        return { date: data[i1].date, y: d1 };
+      });
+    });
+    console.log("gaussTS = ", gaussTS);
 
-    new LinePlot()
-      .setData(categoricalGauss)
+    // const peaksData = peaks.map((peak) =>
+    //   sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
+    // );
+    gaussTS.unshift(data);
+
+    // console.log("TestFeatures: peaksData = ", peaksData);
+
+    d3.select(ntsChartRef.current)
+      .append("svg")
+      .attr("width", WIDTH)
+      .attr("height", HEIGHT)
+      .append("g")
+      .node();
+
+    const plot = new LinePlot()
+      .setData(gaussTS)
       .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
-        rightAxisLabel: "Rank",
+        rightAxisLabel: "Ranks",
       })
       .setLineProps(
-        categoricalGauss.map((d, i) => {
+        gaussTS.map((d, i) => {
           if (i === 0) {
             return {
               stroke: "#D3D3D3",
@@ -88,17 +101,15 @@ const ExampleGaussianPage = () => {
             } as LineProps;
           } else {
             return {
-              stroke: getSchemeTableau10(i - 1),
+              stroke: schemeCategory10[i - 1],
               strokeWidth: 2,
               onRightAxis: true,
             } as LineProps;
           }
         })
       )
-      .setCanvas(ctsChartRef.current)
+      .setCanvas(ntsChartRef.current)
       .plot();
-
-    //
   }, [region]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {
@@ -111,7 +122,7 @@ const ExampleGaussianPage = () => {
   return (
     <>
       <Head>
-        <title>Test Gaussian of Categorical Timeseries</title>
+        <title>Test Gaussian of Numerical Timeseries</title>
       </Head>
 
       <Box
@@ -122,8 +133,9 @@ const ExampleGaussianPage = () => {
         }}
       >
         <Typography variant="h6">
-          Show Gaussian of Categorical Timeseries
+          Show Gaussian of Numerical Timeseries
         </Typography>
+
         <FormControl component="fieldset" variant="standard">
           <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
             Select region
@@ -144,7 +156,7 @@ const ExampleGaussianPage = () => {
           </Select>
 
           <svg
-            ref={ctsChartRef}
+            ref={ntsChartRef}
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,

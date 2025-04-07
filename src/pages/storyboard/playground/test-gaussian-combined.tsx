@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeSeriesPoint";
-import { searchPeaks } from "../../../utils/storyboards/feature/feature-search";
+import { TimeSeriesPoint } from "../../../utils/data-processing/TimeSeriesPoint";
+import { searchPeaks } from "../../../utils/feature-action/feature-search";
 import {
   LinePlot,
   LineProps,
@@ -24,14 +24,10 @@ import {
   peakSegment,
   semanticBounds,
   semanticGaussians,
-} from "../../../utils/storyboards/data-processing/Gaussian";
+} from "../../../utils/data-processing/Gaussian";
 import { Dot } from "../../../components/storyboard/actions/Dot";
 import { getSchemeTableau10 } from "../../../components/storyboard/StoryboardColors";
-import { Circle } from "../../../components/storyboard/actions/Circle";
-import {
-  getCovid19SLCFATable,
-  getCovid19Data,
-} from "../../../services/TimeSeriesDataService";
+import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -54,9 +50,6 @@ const TestGaussianCombinedPage = () => {
         const data = await getCovid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
-
-        const fetures = await getCovid19SLCFATable();
-        setCategoricalFeatures(fetures);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }

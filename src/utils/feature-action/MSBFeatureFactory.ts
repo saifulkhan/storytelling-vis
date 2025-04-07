@@ -1,5 +1,3 @@
-import { Peak } from "./Peak";
-import { Slope } from "./Slope";
 import {
   searchCurrent,
   searchFirst,

@@ -1,17 +1,17 @@
 import { TimeSeriesPoint } from "../data-processing/TimeSeriesPoint";
-import { MSBFeature } from "../feature/MSBFeature";
-import { MSBActionFactory } from "../../../components/storyboard/actions/MSBActionFactory";
+import { MSBFeature } from "./MSBFeature";
+import { MSBActionFactory } from "../../components/storyboard/actions/MSBActionFactory";
 import {
   ActionTableRow,
-  FeatureActionTableRow as FeatureActionTableRow,
-} from "../../../components/storyboard/tables/FeatureActionTableRow";
-import { MSBFeatureFactory } from "../feature/MSBFeatureFactory";
-import { MSBAction } from "../../../components/storyboard/actions/MSBAction";
+  FeatureActionTableRow,
+} from "../../components/storyboard/tables/FeatureActionTableRow";
+import { MSBFeatureFactory } from "./MSBFeatureFactory";
+import { MSBAction } from "../../components/storyboard/actions/MSBAction";
 import { DateActionArray } from "./FeatureActionTypes";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
-} from "../feature/FeatureSearchProps";
+} from "./FeatureSearchProps";
 
 export class MSBFeatureActionFactory {
   private data: TimeSeriesPoint[];

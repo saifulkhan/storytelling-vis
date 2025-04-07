@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { schemeTableau10, schemeCategory10 } from "d3-scale-chromatic";
+import { schemeTableau10 } from "d3-scale-chromatic";
 import {
   Box,
   FormControl,
@@ -13,34 +13,37 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "../../../utils/data-processing/TimeSeriesPoint";
+import { searchPeaks } from "../../../utils/feature-action/feature-search";
+import { Peak } from "../../../utils/feature-action/Peak";
+import { sliceTimeseriesByDate } from "../../../utils/common";
 import {
   LinePlot,
   LineProps,
 } from "../../../components/storyboard/plots/LinePlot";
-import {
-  gmm,
-  smoothing,
-} from "../../../utils/storyboards/data-processing/Gaussian";
+import { Dot } from "../../../components/storyboard/actions/Dot";
 import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
 
-const ExampleGaussianPage = () => {
-  const ntsChartRef = useRef(null);
+const FeaturesPage = () => {
+  const chartRef = useRef(null);
+  const [loading, setLoading] = useState(true);
   const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
-  const [regions, setRegions] = useState<string[]>(undefined);
-  const [region, setRegion] = useState<string>(undefined);
+  const [data, setData] = useState<TimeSeriesPoint[]>([]);
+  const [regions, setRegions] = useState<string[]>([]);
+  const [region, setRegion] = useState<string>("");
 
   useEffect(() => {
-    if (!ntsChartRef.current) return;
+    if (!chartRef.current) return;
 
     const fetchData = async () => {
       try {
         const data = await getCovid19Data();
         setLocData(data);
         setRegions(Object.keys(data).sort());
+        // setRegion("Aberdeenshire");
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -52,32 +55,21 @@ const ExampleGaussianPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!region || !locData[region] || !ntsChartRef.current) return;
+    if (!region || !locData[region] | !chartRef.current) return;
 
-    const data = locData[region];
+    const peaks: Peak[] = searchPeaks(data, undefined, undefined, 10);
 
-    //
-    // Numerical Features
-    //
-    smoothing(data);
+    console.log("TestFeatures: data = ", data);
+    console.log("FeaturesPage: peaks = ", peaks);
 
-    const gaussian = gmm(data, "", 10);
-    console.log("gaussian = ", gaussian);
-    const gaussTS = gaussian.map((d, i) => {
-      return d.map((d1, i1) => {
-        return { date: data[i1].date, y: d1 };
-      });
-    });
-    console.log("gaussTS = ", gaussTS);
+    const peaksStartEnd = peaks.map((peak) =>
+      sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
+    );
+    peaksStartEnd.unshift(data);
 
-    // const peaksData = peaks.map((peak) =>
-    //   sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
-    // );
-    gaussTS.unshift(data);
+    console.log("TestFeatures: peaksData = ", peaksStartEnd);
 
-    // console.log("TestFeatures: peaksData = ", peaksData);
-
-    d3.select(ntsChartRef.current)
+    d3.select(chartRef.current)
       .append("svg")
       .attr("width", WIDTH)
       .attr("height", HEIGHT)
@@ -85,56 +77,54 @@ const ExampleGaussianPage = () => {
       .node();
 
     const plot = new LinePlot()
-      .setData(gaussTS)
+      .setData(peaksStartEnd)
       .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
         leftAxisLabel: "Number of cases",
-        rightAxisLabel: "Ranks",
       })
       .setLineProps(
-        gaussTS.map((d, i) => {
-          if (i === 0) {
-            return {
-              stroke: "#D3D3D3",
-              strokeWidth: 1,
-            } as LineProps;
-          } else {
-            return {
-              stroke: schemeCategory10[i - 1],
-              strokeWidth: 2,
-              onRightAxis: true,
-            } as LineProps;
-          }
+        peaksStartEnd.map((d, i) => {
+          return {
+            stroke: schemeTableau10[i],
+            strokeWidth: 1.5,
+          } as LineProps;
         })
       )
-      .setCanvas(ntsChartRef.current)
+      .setCanvas(chartRef.current)
       .plot();
-  }, [region]);
+
+    peaks.forEach((peak) => {
+      console.log(plot.getCoordinates(peak.getDate()));
+      new Dot()
+        .setProps({ color: "#FF5349" })
+        .setCanvas(chartRef.current)
+        .setCoordinate(plot.getCoordinates(peak.getDate()))
+        .show();
+    });
+  }, [data, region]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {
     const region = event.target.value;
     if (region) {
       setRegion(region);
+      setData(locData[region]);
     }
   };
 
   return (
     <>
       <Head>
-        <title>Test Gaussian of Numerical Timeseries</title>
+        <title>Test Features</title>
       </Head>
 
       <Box
         sx={{
-          // backgroundColor: "background.default",
           minHeight: "100%",
           py: 8,
         }}
       >
-        <Typography variant="h6">
-          Show Gaussian of Numerical Timeseries
-        </Typography>
+        <Typography variant="h6">Show peaks</Typography>
 
         <FormControl component="fieldset" variant="standard">
           <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
@@ -148,7 +138,7 @@ const ExampleGaussianPage = () => {
             value={region}
             input={<OutlinedInput label="Select region" />}
           >
-            {regions?.map((d) => (
+            {regions.map((d) => (
               <MenuItem key={d} value={d}>
                 {d}
               </MenuItem>
@@ -156,7 +146,7 @@ const ExampleGaussianPage = () => {
           </Select>
 
           <svg
-            ref={ntsChartRef}
+            ref={chartRef}
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
@@ -169,4 +159,4 @@ const ExampleGaussianPage = () => {
   );
 };
 
-export default ExampleGaussianPage;
+export default FeaturesPage;

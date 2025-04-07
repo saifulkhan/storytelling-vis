@@ -30,7 +30,25 @@ Start the development server to view the UI:
 yarn dev
 ```
 
-Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui) to see a few examples.
+Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
+
+**Implemented Stories:**
+1. [localhost:3000/storyboard/ml-mv-story](http://localhost:3000/storyboard/ml-mv-story)
+2. [localhost:3000/storyboard/ml-provenance-story](http://localhost:3000/storyboard/ml-provenance-story)
+3. [localhost:3000/storyboard/covid19-story](http://localhost:3000/storyboard/covid19-sl-story)
+
+**Playground (testing various components):**
+
+1. [localhost:3000/storyboard/playground/test-play-pause-loop](http://localhost:3000/storyboard/playground/test-play-pause-loop)
+2. [localhost:3000/storyboard/playground/test-line-plot](http://localhost:3000/storyboard/playground/test-line-plot)
+3. [localhost:3000/storyboard/playground/test-gaussian-nts](http://localhost:3000/storyboard/playground/test-gaussian-nts)
+4. [localhost:3000/storyboard/playground/test-gaussian-cts](http://localhost:3000/storyboard/playground/test-gaussian-cts)
+5. [localhost:3000/storyboard/playground/test-gaussian-combined](http://localhost:3000/storyboard/playground/test-gaussian-combined)
+6. [localhost:3000/storyboard/playground/test-features](http://localhost:3000/storyboard/playground/test-features)
+7. [localhost:3000/storyboard/playground/test-feature-properties-table](http://localhost:3000/storyboard/playground/test-feature-properties-table)
+7. [localhost:3000/storyboard/playground/test-actions](http://localhost:3000/storyboard/playground/test-actions)
+8. [localhost:3000/storyboard/playground/test-action-table](http://localhost:3000/storyboard/playground/test-action-table)
+9. [localhost:3000/storyboard/playground/test-action-properties-table](http://localhost:3000/storyboard/playground/test-action-properties-table)
 
 ### Tests
 

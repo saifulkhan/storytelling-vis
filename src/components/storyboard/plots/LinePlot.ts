@@ -5,7 +5,7 @@ import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/Time
 import {
   findDateIdx,
   findIndexOfDate,
-} from "../../../utils/storyboards/common";
+} from "../../../utils/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action/FeatureActionTypes";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 

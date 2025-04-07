@@ -1,5 +1,5 @@
-import { MSBAction } from "../../../components/storyboard/actions/MSBAction";
-import { MSBFeature } from "../feature/MSBFeature";
+import { MSBAction } from "../../components/storyboard/actions/MSBAction";
+import { MSBFeature } from "./MSBFeature";
 
 export type DateFeaturesMap = Map<Date, MSBFeature[]>;
 export type DateActionArray = [Date, MSBAction][];

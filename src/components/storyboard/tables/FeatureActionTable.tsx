@@ -22,7 +22,7 @@ import { defaultDotProps } from "../actions/Dot";
 import { defaultCircleProps } from "../actions/Circle";
 import { defaultTextBoxProps } from "../actions/TextBox";
 import { defaultConnectorProperties } from "../actions/Connector";
-import { MSBFeatureName } from "../../../utils/storyboards/feature/MSBFeatureName";
+import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
 import ActionTable from "./ActionTable";
 import FeaturePropertiesTable from "./FeaturePropertiesTable";
 

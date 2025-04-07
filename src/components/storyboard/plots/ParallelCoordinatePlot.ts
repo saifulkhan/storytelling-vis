@@ -4,10 +4,10 @@ import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import {
   findIndexOfDate,
   getObjectKeysArray,
-} from "../../../utils/storyboards/common";
+} from "../../../utils/common";
 import { DateActionArray } from "../../../utils/storyboards/feature-action/FeatureActionTypes";
 import { Coordinate, MSBAction } from "../actions/MSBAction";
-import { MSBFeatureName } from "../../../utils/storyboards/feature/MSBFeatureName";
+import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type ParallelCoordinatePlotProperties = {};

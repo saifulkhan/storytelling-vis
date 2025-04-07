@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { MSBFeatureName } from "../../utils/storyboards/feature/MSBFeatureName";
+import { MSBFeatureName } from "../../utils/feature-action/MSBFeatureName";
 
 export enum StoryboardColors {
   DarkGreen = "#006400",

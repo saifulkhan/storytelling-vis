@@ -1,4 +1,3 @@
-import { number } from "yup";
 import { NumericalFeature } from "./NumericalFeature";
 import { MSBFeatureName } from "./MSBFeatureName";
 

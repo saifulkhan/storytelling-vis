@@ -1,5 +1,5 @@
-import { Condition } from "../../../utils/storyboards/feature/Condition";
-import { MSBFeatureName } from "../../../utils/storyboards/feature/MSBFeatureName";
+import { Condition } from "../../../utils/feature-action/Condition";
+import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
 import { MSBActionName } from "../actions/MSBActionName";
 import { CircleProps } from "../actions/Circle";
 import { ConnectorProps } from "../actions/Connector";

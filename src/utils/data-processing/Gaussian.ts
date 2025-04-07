@@ -1,9 +1,7 @@
-import { CategoricalFeature } from "../feature/CategoricalFeature";
-import { CategoricalFeatures } from "../feature/CategoricalFeatures";
-import { Peak } from "../feature/Peak";
+import { Peak } from "../feature-action/Peak";
 import { TimeSeriesPoint } from "./TimeSeriesPoint";
-import { searchPeaks } from "../feature/feature-search";
-import { NumericalFeature } from "../feature/NumericalFeature";
+import { searchPeaks } from "../feature-action/feature-search";
+import { NumericalFeature } from "../feature-action/NumericalFeature";
 import { findDateIdx, scaleValue } from "../common";
 
 const RANK_MAX = 10; /** or r_max  */
