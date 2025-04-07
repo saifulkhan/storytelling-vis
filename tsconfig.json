@@ -19,6 +19,10 @@
     "noEmit": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"]
+    },
     "typeRoots": [
       "src/types",
       "node_modules/@types"

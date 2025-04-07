@@ -29,12 +29,12 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import DashboardLayout from "../../layouts/Dashboard";
-import { getMLData } from "../../services/TimeSeriesDataService";
-import { getTableData } from "../../services/FATableService";
-import { MirroredBarChart, MirroredBarChartData } from "../../components/storyboard/plots/MirroredBarChart";
-import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
-import { sortTimeseriesData } from "../../utils/common";
+import DashboardLayout from "src/layouts/Dashboard";
+import { getMLData } from "src/services/TimeSeriesDataService";
+import { getTableData } from "src/services/FATableService";
+import { MirroredBarChart, MirroredBarChartData } from "src/components/storyboard/plots/MirroredBarChart";
+import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
+import { sortTimeseriesData } from "src/utils/common";
  
 const MLMirroredBarStoryPage = () => {
   const WIDTH = 1200,

@@ -1,5 +1,6 @@
 import * as d3 from "d3";
-import { MSBAction, Coordinate } from "./MSBAction";
+import { MSBAction } from "./MSBAction";
+import { Coordinate } from "src/types/coordinate";
 import { MSBActionName } from "./MSBActionName";
 
 export type DotProps = {

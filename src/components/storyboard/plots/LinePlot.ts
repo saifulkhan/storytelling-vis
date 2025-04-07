@@ -1,13 +1,10 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { Coordinate } from "../../../types/coordinate";
-import { TimeSeriesPoint } from "../../../utils/data-processing/TimeSeriesPoint";
-import {
-  findDateIdx,
-  findIndexOfDate,
-} from "../../../utils/common";
-import { DateActionArray } from "../../../utils/feature-action/FeatureActionTypes";
-import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
+import { Coordinate } from "src/types/coordinate";
+import { TimeSeriesPoint } from "src/utils/data-processing/TimeSeriesPoint";
+import { findDateIdx, findIndexOfDate } from "src/utils/common";
+import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
   MAGIC_NO = 10,

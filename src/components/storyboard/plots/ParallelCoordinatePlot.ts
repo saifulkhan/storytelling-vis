@@ -1,14 +1,12 @@
 import * as d3 from "d3";
 import { StoryboardColors, LineColor } from "../StoryboardColors";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import {
-  findIndexOfDate,
-  getObjectKeysArray,
-} from "../../../utils/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action/FeatureActionTypes";
-import { Coordinate, MSBAction } from "../actions/MSBAction";
-import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
-import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
+import { findIndexOfDate, getObjectKeysArray } from "src/utils/common";
+import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { Coordinate } from "src/types/coordinate";
+import { MSBAction } from "../actions/MSBAction";
+import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
+import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -31,7 +29,7 @@ const DELAY_SHOW = 0,
 const ANNO_Y_POS = 20,
   ANNO_X_POS = 75;
 
-const xScaleMap = (data, keys, width, margin) => {
+const xScaleMap = (data: any[], keys: string[], width: number, margin: {left: number, right: number}) => {
   return new Map(
     Array.from(keys, (key) => {
       // array of all keys, e.g.,  ['date', 'mean_test_accuracy', 'channels', 'kernel_size', 'layers', ...]

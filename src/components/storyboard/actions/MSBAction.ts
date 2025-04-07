@@ -1,19 +1,19 @@
 import * as d3 from "d3";
 import { MSBActionName } from "./MSBActionName";
-import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
-import { MSBCategoricalFeatureName } from "../../../utils/feature-action/CategoricalFeature";
-import { Coordinate } from "../../../types/coordinate";
+import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
+import { MSBCategoricalFeatureName } from "src/utils/feature-action/CategoricalFeature";
+import { Coordinate } from "src/types/coordinate";
 
 const DELAY = 0,
   DURATION = 1000;
 
 export abstract class MSBAction {
-  protected type: MSBActionName;
-  protected props: any;
-  protected svg: SVGGElement;
-  protected node: any;
-  protected coordinate0: Coordinate;
-  protected coordinate1: Coordinate;
+  protected type!: MSBActionName;
+  protected props: any = {};
+  protected svg!: SVGGElement;
+  protected node: any = null;
+  protected coordinate0!: Coordinate;
+  protected coordinate1!: Coordinate;
   protected featureType?: MSBFeatureName | MSBCategoricalFeatureName;
 
   constructor() {}

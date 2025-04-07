@@ -1,5 +1,6 @@
 import * as d3 from "d3";
-import { MSBAction, Coordinate } from "./MSBAction";
+import { MSBAction } from "./MSBAction";
+import { Coordinate } from "src/types/coordinate";
 import { MSBActionName } from "./MSBActionName";
 
 export type ConnectorProps = {
@@ -14,7 +15,7 @@ export const defaultConnectorProperties: ConnectorProps = {
 
 export class Connector extends MSBAction {
   protected props: ConnectorProps;
-  protected connectorNode: nay;
+  protected connectorNode: any;
 
   constructor() {
     super();

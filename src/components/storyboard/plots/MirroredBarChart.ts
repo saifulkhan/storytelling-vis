@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { Coordinate } from "../actions/MSBAction";
+import { Coordinate } from "src/types/coordinate";
 
 // Define the AnimationType type if it's not available from the original import
 type AnimationType = "beginning" | "back" | "play" | "pause";

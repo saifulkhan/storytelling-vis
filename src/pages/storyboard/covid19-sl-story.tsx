@@ -30,14 +30,14 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import DashboardLayout from "../../layouts/Dashboard";
-import { getCovid19Data } from "../../services/TimeSeriesDataService";
-import { TimeSeriesPoint } from "../../utils/data-processing/TimeSeriesPoint";
-import { getTableData } from "../../services/FATableService";
-import { LinePlot } from "../../components/storyboard/plots/LinePlot";
-import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
-import { DateActionArray } from "../../utils/feature-action/FeatureActionTypes";
-import { MSBFeatureActionFactory } from "../../utils/feature-action/MSBFeatureActionFactory";
+import DashboardLayout from "src/layouts/Dashboard";
+import { getCovid19Data } from "src/services/TimeSeriesDataService";
+import { TimeSeriesPoint } from "src/utils/data-processing/TimeSeriesPoint";
+import { getTableData } from "src/services/FATableService";
+import { LinePlot } from "src/components/storyboard/plots/LinePlot";
+import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
+import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,

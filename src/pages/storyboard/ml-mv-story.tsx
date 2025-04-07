@@ -29,15 +29,15 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import DashboardLayout from "../../layouts/Dashboard";
-import { getMLData } from "../../services/TimeSeriesDataService";
-import { getTableData } from "../../services/FATableService";
-import { ParallelCoordinatePlot } from "../../components/storyboard/plots/ParallelCoordinatePlot";
-import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
-import { sortTimeseriesData } from "../../utils/common";
-import { MSBFeatureActionFactory } from "../../utils/feature-action/MSBFeatureActionFactory";
-import { DateActionArray } from "../../utils/feature-action/FeatureActionTypes";
-import { TimeSeriesPoint } from "../../utils/data-processing/TimeSeriesPoint";
+import DashboardLayout from "src/layouts/Dashboard";
+import { getMLData } from "src/services/TimeSeriesDataService";
+import { getTableData } from "src/services/FATableService";
+import { ParallelCoordinatePlot } from "src/components/storyboard/plots/ParallelCoordinatePlot";
+import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
+import { sortTimeseriesData } from "src/utils/common";
+import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
+import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { TimeSeriesPoint } from "src/utils/data-processing/TimeSeriesPoint";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,
@@ -99,6 +99,8 @@ const MLMVStoryPage = () => {
       .setData(_data)
       .setTable(table)
       .create();
+
+    console.log("MLMVStoryPage: useEffect 2: actions: ", actions);
 
     plot
       .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
