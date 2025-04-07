@@ -65,7 +65,7 @@ const TestLinePlotPage = () => {
   return (
     <>
       <Head>
-        <title>Test Line Plot</title>
+        <title>Playground | Line Plot</title>
       </Head>
 
       <Box

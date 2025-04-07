@@ -115,7 +115,7 @@ const FeaturesPage = () => {
   return (
     <>
       <Head>
-        <title>Test Features</title>
+        <title>Playground | Features</title>
       </Head>
 
       <Box

@@ -128,7 +128,7 @@ const MLMVStoryPage = () => {
   return (
     <>
       <Head>
-        <title>ML: Multivariate Story</title>
+        <title>Storyboard | ML Multivariate</title>
       </Head>
       <Box
         sx={{

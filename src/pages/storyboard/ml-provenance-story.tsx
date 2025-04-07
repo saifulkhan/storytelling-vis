@@ -169,7 +169,7 @@ const MLMirroredBarStoryPage = () => {
   return (
     <>
       <Head>
-        <title key="title">ML Mirrored Bar Chart Story</title>
+        <title key="title">Storyboard | ML Provenance</title>
       </Head>
       <Box
         sx={{

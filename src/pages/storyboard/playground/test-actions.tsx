@@ -105,7 +105,7 @@ const TestActionsPage = () => {
   return (
     <>
       <Head>
-        <title>Test Features</title>
+        <title>Playground | Actions</title>
       </Head>
 
       <Box

@@ -122,7 +122,7 @@ const ExampleGaussianPage = () => {
   return (
     <>
       <Head>
-        <title>Test Gaussian of Numerical Timeseries</title>
+        <title>Playground | Gaussian NTS</title>
       </Head>
 
       <Box

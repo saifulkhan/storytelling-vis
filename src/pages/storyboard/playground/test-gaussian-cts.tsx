@@ -111,7 +111,7 @@ const ExampleGaussianPage = () => {
   return (
     <>
       <Head>
-        <title>Test Gaussian of Categorical Timeseries</title>
+        <title>Playground | Gaussian CTS</title>
       </Head>
 
       <Box

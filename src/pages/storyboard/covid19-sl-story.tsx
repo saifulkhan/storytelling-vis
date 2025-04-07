@@ -141,7 +141,7 @@ const Covid19SLStoryPage = () => {
   return (
     <>
       <Head>
-        <title>Covid19: Single Location Story</title>
+        <title>Storyboard | COVID-19 Single Location</title>
       </Head>
       <Box
         sx={{

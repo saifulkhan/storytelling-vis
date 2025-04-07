@@ -173,7 +173,7 @@ const TestGaussianCombinedPage = () => {
   return (
     <>
       <Head>
-        <title>Test Gaussian Combined</title>
+        <title>Playground | Gaussian Combined</title>
       </Head>
 
       <Box
