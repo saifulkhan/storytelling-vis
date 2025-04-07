@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import { Box, CssBaseline, Paper as MuiPaper } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { spacing } from "@mui/system";
+import { Spacing } from "@mui/system";
 
 import GlobalStyle from "../components/GlobalStyle";
 import dashboardItems from "../components/sidebar/dashboardItems";
@@ -33,7 +33,7 @@ const AppContent = styled.div`
   max-width: 100%;
 `;
 
-const Paper = styled(MuiPaper)(spacing);
+const Paper = styled(MuiPaper)(Spacing);
 
 const MainContent = styled(Paper)`
   flex: 1;

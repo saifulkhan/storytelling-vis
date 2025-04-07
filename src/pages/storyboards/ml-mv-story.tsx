@@ -52,10 +52,10 @@ const MLMVStoryPage = () => {
   ];
 
   const chartRef = useRef(null);
-  const [loading, setLoading] = useState<boolean>(null);
-  const [hyperparam, setHyperparam] = useState<string>(null);
-  const [data, setData] = useState<TimeSeriesPoint[]>(null);
-  const [table, setTable] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hyperparam, setHyperparam] = useState<string>("");
+  const [data, setData] = useState<TimeSeriesPoint[]>([]);
+  const [table, setTable] = useState<any>({});
 
   const plot = useRef(new ParallelCoordinatePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
@@ -91,7 +91,7 @@ const MLMVStoryPage = () => {
     if (!hyperparam || !data || !chartRef.current) return;
 
     console.log("MLMVStoryPage: useEffect 2: key: ", hyperparam);
-    console.log("MLMVStoryPage: useEffect 2: data: ", data[hyperparam]);
+    console.log("MLMVStoryPage: useEffect 2: data: ", data);
 
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
     const _data = sortTimeseriesData(data, hyperparam);

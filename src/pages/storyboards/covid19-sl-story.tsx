@@ -42,13 +42,13 @@ import { MSBFeatureActionFactory } from "../../utils/storyboards/feature-action/
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
     HEIGHT = 500;
-  const valuetext = (value) => `${value}`; // slider formatted value
+  const valuetext = (value: number): string => `${value}`; // slider formatted value
 
   const chartRef = useRef(null);
-  const [loading, setLoading] = useState<boolean>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>(null);
+  const [region, setRegion] = useState<string>("");
   const [regionsData, setRegionsData] = useState<
     Record<string, TimeSeriesPoint[]>
   >({});
@@ -123,10 +123,10 @@ const Covid19SLStoryPage = () => {
     }
   };
 
-  const handleChangeSlider = (event) => {
-    const selectedSegment = event.target.value;
+  const handleChangeSlider = (event: Event, newValue: number | number[]) => {
+    const selectedSegment = newValue as number;
     console.log("Covid19Story1Page: selectedSegment = ", selectedSegment);
-    if (selectedSegment && selectedSegment !== segment) {
+    if (selectedSegment !== undefined && selectedSegment !== segment) {
       // setSegment(selectedSegment);
       // segmentData(selectedSegment);
       setSegment(1);

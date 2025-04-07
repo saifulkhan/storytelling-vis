@@ -1,31 +1,16 @@
-import React, { type JSX } from "react";
 import type { ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { Provider } from "react-redux";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { CacheProvider, EmotionCache } from "@emotion/react";
-
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-import "chart.js/auto";
-
-// Note: Remove the following line if you want to disable the API mocks.
-// import "../mocks";
-
-import "../vendor/jvectormap.css";
-import "../vendor/perfect-scrollbar.css";
-import "@fullcalendar/common/main.css";
-import "@fullcalendar/daygrid/main.css";
-
-import "../i18n";
 import createTheme from "../theme";
 
 import { ThemeProvider } from "../contexts/ThemeContext";
 import useTheme from "../hooks/useTheme";
-// import { store } from "../redux/store";
 import createEmotionCache from "../utils/createEmotionCache";
 
 const clientSideEmotionCache = createEmotionCache();
@@ -57,16 +42,11 @@ function App({
           titleTemplate="%s | Mira"
           defaultTitle="Mira - React Material Admin Dashboard"
         />
-        {/* <Provider store={store}> */}
-          {/* @ts-ignore */}
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <MuiThemeProvider theme={createTheme(theme)}>
-              {/* <AuthProvider> */}
-                {getLayout(<Component {...pageProps} />)}
-              {/* </AuthProvider> */}
-            </MuiThemeProvider>
-          </LocalizationProvider>
-        {/* </Provider> */}
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <MuiThemeProvider theme={createTheme(theme)}>
+            {getLayout(<Component {...pageProps} />)}
+          </MuiThemeProvider>
+        </LocalizationProvider>
       </HelmetProvider>
     </CacheProvider>
   );
