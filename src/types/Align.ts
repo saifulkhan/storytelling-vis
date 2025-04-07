@@ -1,2 +1,2 @@
-export type HorizontalAlign = "right" | "left" | "middle";
-export type VerticalAlign = "top" | "bottom" | "middle";
+export type HorizontalAlign = 'left' | 'center' | 'right';
+export type VerticalAlign = 'top' | 'middle' | 'bottom';

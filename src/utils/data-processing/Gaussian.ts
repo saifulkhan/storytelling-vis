@@ -1,5 +1,5 @@
 import { Peak } from "../feature-action/Peak";
-import { TimeSeriesPoint } from "./TimeSeriesPoint";
+import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
 import { searchPeaks } from "../feature-action/feature-search";
 import { NumericalFeature } from "../feature-action/NumericalFeature";
 import { findDateIdx, scaleValue } from "../common";

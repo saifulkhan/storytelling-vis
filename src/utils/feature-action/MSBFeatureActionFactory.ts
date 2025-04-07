@@ -1,4 +1,4 @@
-import { TimeSeriesPoint } from "../data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
 import { MSBFeature } from "./MSBFeature";
 import { MSBActionFactory } from "../../components/storyboard/actions/MSBActionFactory";
 import {

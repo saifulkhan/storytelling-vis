@@ -18,7 +18,7 @@ export const defaultCircleProps: CircleProps = {
 };
 
 export class Circle extends MSBAction {
-  protected props: CircleProps;
+  protected props: CircleProps = defaultCircleProps;
   protected circleNode: any;
 
   constructor() {
@@ -38,15 +38,15 @@ export class Circle extends MSBAction {
     return this;
   }
 
-  protected draw() {
+  public draw() {
     this.circleNode = d3
       .create("svg")
       .append("circle")
       .attr("fill", "none")
-      .attr("r", this.props.size)
-      .attr("stroke-width", this.props.strokeWidth)
-      .attr("stroke", this.props.color)
-      .attr("opacity", this.props.opacity)
+      .attr("r", this.props.size!)
+      .attr("stroke-width", this.props.strokeWidth!)
+      .attr("stroke", this.props.color!)
+      .attr("opacity", this.props.opacity!)
       .node();
     this.node.appendChild(this.circleNode);
   }

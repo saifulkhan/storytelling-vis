@@ -29,13 +29,15 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import DashboardLayout from "src/layouts/Dashboard";
 import { getMLData } from "src/services/TimeSeriesDataService";
 import { getTableData } from "src/services/FATableService";
-import { MirroredBarChart, MirroredBarChartData } from "src/components/storyboard/plots/MirroredBarChart";
+import {
+  MirroredBarChart,
+  MirroredBarChartData,
+} from "src/components/storyboard/plots/MirroredBarChart";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
- 
+
 const MLMirroredBarStoryPage = () => {
   const WIDTH = 1200,
     HEIGHT = 800;
@@ -58,7 +60,7 @@ const MLMirroredBarStoryPage = () => {
     plotRef.current = new MirroredBarChart();
   }
   const plot = plotRef.current;
-  
+
   // Use the plot instance with the usePlayPauseLoop hook
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
@@ -93,24 +95,29 @@ const MLMirroredBarStoryPage = () => {
     if (!hyperparam || !data || !chartRef.current) return;
 
     console.log("MLMirroredBarStoryPage: useEffect 2: key: ", hyperparam);
-    console.log("MLMirroredBarStoryPage: useEffect 2: data: ", data[hyperparam]);
+    console.log(
+      "MLMirroredBarStoryPage: useEffect 2: data: ",
+      data[hyperparam]
+    );
 
     // FeatureActionBuilder takes TimeseriesData, so we need to transform it
     const _data = sortTimeseriesData(data, hyperparam);
 
     // Convert TimeSeriesPoint to MirroredBarChartData
-    const chartData: MirroredBarChartData[] = _data.map(item => ({
+    const chartData: MirroredBarChartData[] = _data.map((item) => ({
       date: new Date(item.date),
       y: (item as any)[hyperparam] as number, // Parameter value using type assertion
       mean_test_accuracy: item.mean_test_accuracy,
-      mean_training_accuracy: item.mean_training_accuracy
+      mean_training_accuracy: item.mean_training_accuracy,
     }));
 
     // Create simplified annotations for the chart
     const annotations = _data.map((item, index) => ({
       start: index,
       end: index,
-      text: `${new Date(item.date).toLocaleDateString()}: ${item.mean_test_accuracy?.toFixed(2)}`
+      text: `${new Date(
+        item.date
+      ).toLocaleDateString()}: ${item.mean_test_accuracy?.toFixed(2)}`,
     }));
 
     plot
@@ -285,11 +292,6 @@ const MLMirroredBarStoryPage = () => {
       </Box>
     </>
   );
-};
-
-// Define the layout for this page
-MLMirroredBarStoryPage.getLayout = function getLayout(page: ReactElement): ReactNode {
-  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default MLMirroredBarStoryPage;

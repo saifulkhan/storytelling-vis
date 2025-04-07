@@ -35,13 +35,13 @@ export class Dot extends MSBAction {
     return this;
   }
 
-  protected draw() {
+  public draw() {
     this.dotNode = d3
       .create("svg")
       .append("circle")
-      .attr("r", this.props.size)
-      .attr("fill", this.props.color)
-      .attr("opacity", this.props.opacity)
+      .attr("r", this.props.size!)
+      .attr("fill", this.props.color!)
+      .attr("opacity", this.props.opacity!)
       .node();
 
     this.node.appendChild(this.dotNode);

@@ -113,7 +113,7 @@ const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
     setData(newRows);
   };
 
-  const handleRemoveRow = (keyToRemove) => {
+  const handleRemoveRow = (keyToRemove: string) => {
     // destructure to omit the key to remove
     const { [keyToRemove]: _, ...newRows } = rows;
     setRows(newRows);

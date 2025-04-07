@@ -36,15 +36,15 @@ const xScaleMap = (data: any[], keys: string[], width: number, margin: {left: nu
       // key is one of teh key, e.g., 'date'
       let scale;
       if (key === "date") {
-        scale = d3.scaleTime(
-          d3.extent(data, (d) => d[key]),
-          [margin.left, width - margin.right]
-        );
+        // Create scale with proper typing and handle possible undefined values
+        scale = d3.scaleTime()
+          .domain(d3.extent(data, (d) => d[key] as Date) as [Date, Date] || [new Date(), new Date()])
+          .range([margin.left, width - margin.right]);
       } else {
-        scale = d3.scaleLinear(
-          d3.extent(data, (d) => +d[key]),
-          [margin.left, width - margin.right]
-        );
+        // Create scale with proper typing and handle possible undefined values
+        scale = d3.scaleLinear()
+          .domain(d3.extent(data, (d) => +d[key]) as [number, number] || [0, 1])
+          .range([margin.left, width - margin.right]);
       }
 
       return [key, scale];
@@ -52,7 +52,7 @@ const xScaleMap = (data: any[], keys: string[], width: number, margin: {left: nu
   );
 };
 
-const yScale = (keys, height, margin) => {
+const yScale = (keys: string[], height: number, margin: { top: number, bottom: number }) => {
   return d3.scalePoint(keys, [margin.top, height - margin.bottom]);
 };
 
@@ -60,24 +60,24 @@ export class ParallelCoordinatePlot extends Plot {
   public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
     throw new Error("Method not implemented.");
   }
-  data: any[];
-  plotProps: PlotProps;
-  svg: SVGSVGElement;
-  name: string;
-  actions: any[];
+  data: any[] = [];
+  plotProps: PlotProps = { ...defaultPlotProps };
+  svg!: SVGSVGElement;
+  name: string = "";
+  actions: any[] = [];
 
-  width: number;
-  height: number;
-  margin;
+  width: number = 0;
+  height: number = 0;
+  margin = MARGIN;
 
-  AxisNames: string[];
-  selectedAxis: string;
-  xScaleMap;
-  yScale;
-  staticLineColorMap;
+  AxisNames: string[] = [];
+  selectedAxis: string = "";
+  xScaleMap: any;
+  yScale: any;
+  staticLineColorMap: any;
 
-  playDate: Date;
-  playFeatureType;
+  playDate!: Date;
+  playFeatureType: any;
 
   constructor() {
     super();
@@ -85,7 +85,7 @@ export class ParallelCoordinatePlot extends Plot {
 
   public setPlotProps(props: PlotProps) {
     this.plotProps = { ...defaultPlotProps, ...props };
-    this.margin = this.plotProps.margin;
+    this.margin = this.plotProps.margin || MARGIN;
     console.log("margin:", this.margin);
     return this;
   }
@@ -176,9 +176,9 @@ export class ParallelCoordinatePlot extends Plot {
         if (d === that.selectedAxis) {
           d3.select(this)
             .attr("color", SELECTED_AXIS_COLOR)
-            .call(d3.axisBottom(that.xScaleMap.get(d)));
+            .call(d3.axisBottom(that.xScaleMap.get(d)) as any);
         } else {
-          d3.select(this).call(d3.axisBottom(that.xScaleMap.get(d)));
+          d3.select(this).call(d3.axisBottom(that.xScaleMap.get(d)) as any);
         }
       })
       // Label axis
@@ -212,8 +212,8 @@ export class ParallelCoordinatePlot extends Plot {
       })
       .y(([key]) => this.yScale(key));
 
-    const cross = (d) =>
-      d3.cross(this.AxisNames, [d], (key, d) => [key, +d[key]]);
+    const cross = (d: any) =>
+      d3.cross(this.AxisNames, [d], (key: string, d: any) => [key, +d[key]]);
 
     //
     // Draw lines
@@ -231,7 +231,8 @@ export class ParallelCoordinatePlot extends Plot {
         // d is a row of the data, e.g., {kernel_size: 11, layers: 13, ...}
         // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
         const a = cross(d);
-        const l = line(a);
+        // Add type assertion to make TypeScript happy
+        const l = line(a as any);
         return l;
       })
       .attr("id", (d) => `id-line-${d.date}`);
@@ -278,10 +279,10 @@ export class ParallelCoordinatePlot extends Plot {
       })
       .y(([key]) => this.yScale(key));
 
-    const cross = (d) => {
+    const cross = (d: any) => {
       // given d is a row of the data, e.g., {date: 1677603855000, kernel_size: 11, layers: 13, ...},
       // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
-      return d3.cross(this.AxisNames, [d], (key, d) => [key, +d[key]]);
+      return d3.cross(this.AxisNames, [d], (key: string, d: any) => [key, +d[key]]);
     };
 
     //
@@ -297,7 +298,8 @@ export class ParallelCoordinatePlot extends Plot {
         // d.data is a data point, e.g., {kernel_size: 11, layers: 13, ...}
         // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
         const a = cross(d);
-        const l = line(a);
+        // Add type assertion to make TypeScript happy
+        const l = line(a as any);
         return l;
       })
       .attr("fill", "none")

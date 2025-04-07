@@ -55,9 +55,9 @@ const FeaturesPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!region || !locData[region] || !chartRef.current) return;
+    if (!region || !locData[region] | !chartRef.current) return;
 
-    const peaks: Peak[] = searchPeaks(data, 1, "cases", 10);
+    const peaks: Peak[] = searchPeaks(data, undefined, undefined, 10);
 
     console.log("TestFeatures: data = ", data);
     console.log("FeaturesPage: peaks = ", peaks);
@@ -76,40 +76,32 @@ const FeaturesPage = () => {
       .append("g")
       .node();
 
-    // Make sure chartRef.current is not null before using it
-    if (chartRef.current) {
-      const plot = new LinePlot()
-        .setData(peaksStartEnd)
-        .setPlotProps({
-          xLabel: "Date",
-          title: `${region}`,
-          leftAxisLabel: "Number of cases",
+    const plot = new LinePlot()
+      .setData(peaksStartEnd)
+      .setPlotProps({
+        xLabel: "Date",
+        title: `${region}`,
+        leftAxisLabel: "Number of cases",
+      })
+      .setLineProps(
+        peaksStartEnd.map((d, i) => {
+          return {
+            stroke: schemeTableau10[i],
+            strokeWidth: 1.5,
+          } as LineProps;
         })
-        .setLineProps(
-          peaksStartEnd.map((d, i) => {
-            return {
-              stroke: schemeTableau10[i],
-              strokeWidth: 1.5,
-            } as LineProps;
-          })
-        )
+      )
+      .setCanvas(chartRef.current)
+      .plot();
+
+    peaks.forEach((peak) => {
+      console.log(plot.getCoordinates(peak.getDate()));
+      new Dot()
+        .setProps({ color: "#FF5349" })
         .setCanvas(chartRef.current)
-        .plot();
-        
-      peaks.forEach((peak) => {
-        console.log(plot.getCoordinates(peak.getDate()));
-        // Add null check for chartRef.current
-        if (chartRef.current) {
-          new Dot()
-            .setProps({ color: "#FF5349" })
-            .setCanvas(chartRef.current)
-            .setCoordinate(plot.getCoordinates(peak.getDate()))
-            .show();
-        }
-      });
-    }
-
-
+        .setCoordinate(plot.getCoordinates(peak.getDate()))
+        .show();
+    });
   }, [data, region]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {
@@ -123,7 +115,7 @@ const FeaturesPage = () => {
   return (
     <>
       <Head>
-        <title>Playground | Features</title>
+        <title>Test Features</title>
       </Head>
 
       <Box

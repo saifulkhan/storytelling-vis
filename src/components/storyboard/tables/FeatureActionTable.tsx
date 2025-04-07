@@ -144,7 +144,12 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   const handleAddRow = () => {
     setRows([
       ...rows,
-      { action: MSBActionName.DOT, properties: defaultDotProps },
+      { 
+        feature: MSBFeatureName.MAX, // Default feature
+        properties: {}, // Empty condition
+        rank: rows.length + 1, // Default rank
+        actions: [{ action: MSBActionName.DOT, properties: defaultDotProps }] // Default action
+      },
     ]);
   };
 
@@ -244,7 +249,7 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   type="number"
                   key={index} // ensure each instance has a unique key
                   value={row.rank}
-                  onChange={(e) => handleRankChange(index, e.target.value)}
+                  onChange={(e) => handleRankChange(index, parseInt(e.target.value, 10))}
                 />
               </TableCell>
 

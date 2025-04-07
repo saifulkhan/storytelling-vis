@@ -30,13 +30,14 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { getCovid19Data } from "src/services/TimeSeriesDataService";
-import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { getTableData } from "src/services/FATableService";
-import { LinePlot } from "src/components/storyboard/plots/LinePlot";
-import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
-import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
+import DashboardLayout from "../../layouts/Dashboard";
+import { getCovid19Data } from "../../services/TimeSeriesDataService";
+import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
+import { getTableData } from "../../services/FATableService";
+import { LinePlot } from "../../components/storyboard/plots/LinePlot";
+import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
+import { DateActionArray } from "../../utils/feature-action/FeatureActionTypes";
+import { MSBFeatureActionFactory } from "../../utils/feature-action/MSBFeatureActionFactory";
 
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
@@ -140,7 +141,7 @@ const Covid19SLStoryPage = () => {
   return (
     <>
       <Head>
-        <title>Storyboard | COVID-19 Single Location</title>
+        <title>Covid19: Single Location Story</title>
       </Head>
       <Box
         sx={{
@@ -280,6 +281,10 @@ const Covid19SLStoryPage = () => {
       </Box>
     </>
   );
+};
+
+Covid19SLStoryPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default Covid19SLStoryPage;

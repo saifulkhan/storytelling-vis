@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { Coordinate } from "src/types/coordinate";
-import { TimeSeriesPoint } from "src/utils/data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { findDateIdx, findIndexOfDate } from "src/utils/common";
 import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
@@ -25,18 +25,18 @@ export type LineProps = {
 };
 
 export class LinePlot extends Plot {
-  data: TimeSeriesPoint[][];
+  data: TimeSeriesPoint[][] = [];
   lineProps: LineProps[] = [];
-  plotProps: PlotProps;
-  svg: SVGSVGElement;
-  selector;
-  width: number;
-  height: number;
-  margin: any;
-  xAxis: unknown;
-  leftAxis: unknown;
-  rightAxis: unknown;
-  actions: any;
+  plotProps: PlotProps = { ...defaultPlotProps };
+  svg!: SVGSVGElement;
+  selector: any;
+  width: number = 0;
+  height: number = 0;
+  margin: any = {};
+  xAxis: any;
+  leftAxis: any;
+  rightAxis: any;
+  actions: any = [];
   name = "";
   startDataIdx: number = 0; // start index of data for animation
   endDataIdx: number = 0; // end index of data for animation
@@ -108,9 +108,9 @@ export class LinePlot extends Plot {
    **/
   public plot() {
     console.log("LinePlot:_draw: _data: ", this.data);
-    const line = (xAxis, yAxis) => {
+    const line = (xAxis: any, yAxis: any) => {
       return d3
-        .line()
+        .line<TimeSeriesPoint>()
         .x((d: TimeSeriesPoint) => {
           return xAxis(d.date);
         })
@@ -145,8 +145,8 @@ export class LinePlot extends Plot {
           .data(dataX.map(Object.values))
           .join("circle")
           .attr("r", DOT_SIZE)
-          .attr("cx", (d) => this.xAxis(d[0]))
-          .attr("cy", (d) => yAxis(d[1]))
+          .attr("cx", (d: any) => this.xAxis(d[0]))
+          .attr("cy", (d: any) => yAxis(d[1]))
           .style("fill", p.stroke)
           .attr("opacity", 0.5);
       }
@@ -222,9 +222,9 @@ export class LinePlot extends Plot {
     const p = this.lineProps[lineNum];
     const yAxis = this.leftOrRightAxis(lineNum);
 
-    const line = (xAxis, yAxis) => {
+    const line = (xAxis: any, yAxis: any) => {
       return d3
-        .line()
+        .line<TimeSeriesPoint>()
         .x((d: TimeSeriesPoint) => xAxis(d.date))
         .y((d: TimeSeriesPoint) => yAxis(d.y));
     };
@@ -238,7 +238,7 @@ export class LinePlot extends Plot {
       .attr("d", line(this.xAxis, yAxis)(dataX));
 
     const length = path.node().getTotalLength();
-    const duration = 1000 || length * 4;
+    const duration = length * 4 || 1000;
 
     // Hide the path initially
     path
@@ -295,7 +295,7 @@ export class LinePlot extends Plot {
     this.selector
       .append("g")
       .attr("transform", `translate(0, ${this.height - this.margin.bottom})`)
-      .call(d3.axisBottom(this.xAxis).ticks());
+      .call(d3.axisBottom(this.xAxis).ticks(5));
 
     // draw x axis label on bottom
     this.selector
@@ -378,19 +378,19 @@ export class LinePlot extends Plot {
   /**
    ** Create x and y scales
    **/
-  private xScale(data: TimeSeriesPoint[], w, m) {
+  private xScale(data: TimeSeriesPoint[], w: number, m: any) {
     const xScale = d3
       .scaleTime()
-      .domain(d3.extent(data, (d: TimeSeriesPoint) => d.date))
+      .domain(d3.extent(data, (d: TimeSeriesPoint) => d.date) as [Date, Date] || [new Date(), new Date()])
       .nice()
       .range([m.left, w - m.right]);
     return xScale;
   }
 
-  private yScale(data: TimeSeriesPoint[], h, m) {
+  private yScale(data: TimeSeriesPoint[], h: number, m: any) {
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d: TimeSeriesPoint) => d.y)])
+      .domain([0, d3.max(data, (d: TimeSeriesPoint) => d.y) || 0])
       .nice()
       .range([h - m.bottom, m.top]);
     return yScale;

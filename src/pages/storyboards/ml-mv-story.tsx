@@ -1,12 +1,11 @@
 /**
- ** Implements Covid19 single location story
+ ** Implements machine learning multivariate (MLMV) story
  **/
 
 import { useEffect, useState, useRef } from "react";
 import type { ReactElement } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
 import {
   Avatar,
   Button,
@@ -30,106 +29,93 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { getCovid19Data } from "src/services/TimeSeriesDataService";
-import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { getTableData } from "src/services/FATableService";
-import { LinePlot } from "src/components/storyboard/plots/LinePlot";
-import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
-import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
+import DashboardLayout from "../../layouts/Dashboard";
+import { getMLData } from "../../services/TimeSeriesDataService";
+import { getTableData } from "../../services/FATableService";
+import { ParallelCoordinatePlot } from "../../components/storyboard/plots/ParallelCoordinatePlot";
+import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
+import { sortTimeseriesData } from "../../utils/common";
+import { MSBFeatureActionFactory } from "../../utils/feature-action/MSBFeatureActionFactory";
+import { DateActionArray } from "../../utils/feature-action/FeatureActionTypes";
+import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
 
-const Covid19SLStoryPage = () => {
+const MLMVStoryPage = () => {
   const WIDTH = 1200,
-    HEIGHT = 500;
-  const valuetext = (value: number): string => `${value}`; // slider formatted value
+    HEIGHT = 800;
+  const HYPERPARAMS = [
+    "channels",
+    "kernel_size",
+    "layers",
+    "samples_per_class",
+  ];
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [segment, setSegment] = useState<number>(3);
-  const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
-  const [regionsData, setRegionsData] = useState<
-    Record<string, TimeSeriesPoint[]>
-  >({});
-  const [tableNFA, setTableNFA] = useState<any>(null);
-  const linePlot = useRef(new LinePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(linePlot);
+  const [hyperparam, setHyperparam] = useState<string>("");
+  const [data, setData] = useState<TimeSeriesPoint[]>([]);
+  const [table, setTable] = useState<any>({});
 
+  const plot = useRef(new ParallelCoordinatePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
+
+  // Load ML data and feature action table data
   useEffect(() => {
     if (!chartRef.current) return;
-    console.log("Covid19Story1Page: useEffect 1: fetchData");
     setLoading(true);
 
     const fetchData = async () => {
       try {
-        const allData = await getCovid19Data();
-        setRegionsData(allData);
-        setRegions(Object.keys(allData).sort());
-        const table = await getTableData("COVID-19: Single Location");
-        setTableNFA(table);
+        const _data = await getMLData();
+        setData(_data);
+        const _table = await getTableData("ML: Multivariate");
+        setTable(_table);
 
-        console.log("Covid19Story1Page: useEffect 1: allRegionData: ", allData);
+        console.log("MLMVStoryPage: useEffect 1: data: ", data);
+        console.log("MLMVStoryPage: useEffect 1: table: ", table);
       } catch (error) {
-        console.error("Covid19Story1Page: Failed to fetch data:", error);
+        console.error("MLMVStoryPage: Failed to fetch data:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
+
+    return () => {};
   }, []);
 
+  // Once a hyperparameter/key is selected create feature-actions and plot
   useEffect(() => {
-    if (!region || !regionsData[region] || !chartRef.current) return;
+    if (!hyperparam || !data || !chartRef.current) return;
 
-    const regionData = regionsData[region];
+    console.log("MLMVStoryPage: useEffect 2: key: ", hyperparam);
+    console.log("MLMVStoryPage: useEffect 2: data: ", data);
 
-    console.log("Covid19Story1Page: useEffect 2: region: ", region);
-    console.log("Covid19Story1Page: useEffect 2: regionData: ", regionData);
+    // FeatureActionBuilder takes TimeseriesData, so we need to transform it
+    const _data = sortTimeseriesData(data, hyperparam);
 
     const actions: DateActionArray = new MSBFeatureActionFactory()
-      .setProps({
-        metric: "",
-        window: 10,
-      })
-      .setTable(tableNFA)
-      .setData(regionData)
+      .setProps({ metric: "accuracy", window: 0 })
+      .setData(_data)
+      .setTable(table)
       .create();
 
-    linePlot
-      .setData([regionData])
-      .setName(region)
-      .setPlotProps({
-        title: `${region}`,
-        xLabel: "Date",
-        leftAxisLabel: "Number of cases",
-      })
-      .setLineProps([])
+    plot
+      .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
+      .setName(hyperparam)
+      .setData(_data)
       .setCanvas(chartRef.current)
       .setActions(actions);
 
     pause();
 
     return () => {};
-  }, [region, regionsData, tableNFA]);
+  }, [hyperparam]);
 
   const handleSelection = (event: SelectChangeEvent) => {
-    const newRegion = event.target.value;
-    // prettier-ignore
-    // console.log("Covid19Story1Page:handleSelection: newRegion = ", newRegion);
-    if (newRegion) {
-      setRegion(newRegion);
-    }
-  };
-
-  const handleChangeSlider = (event: Event, newValue: number | number[]) => {
-    const selectedSegment = newValue as number;
-    console.log("Covid19Story1Page: selectedSegment = ", selectedSegment);
-    if (selectedSegment !== undefined && selectedSegment !== segment) {
-      // setSegment(selectedSegment);
-      // segmentData(selectedSegment);
-      setSegment(1);
-      // segmentData(1);
+    const newKey = event.target.value;
+    if (newKey) {
+      setHyperparam(newKey);
     }
   };
 
@@ -137,10 +123,12 @@ const Covid19SLStoryPage = () => {
 
   const handleBackButton = () => {};
 
+  const handlePlayButton = () => {};
+
   return (
     <>
       <Head>
-        <title>Storyboard | COVID-19 Single Location</title>
+        <title>ML: Multivariate Story</title>
       </Head>
       <Box
         sx={{
@@ -150,15 +138,15 @@ const Covid19SLStoryPage = () => {
         }}
       >
         {/* <Container> */}
-        <Card sx={{ minWidth: 1200 }}>
+        <Card sx={{}}>
           <CardHeader
             avatar={
               <Avatar style={{ backgroundColor: blue[500] }}>
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="Covid19: Single Location Story"
-            subheader="Choose a segment value, a region, and click play to animate the story"
+            title="ML: Multivariate Story"
+            subheader="Choose a hyperparameter, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>
             {loading ? (
@@ -184,39 +172,19 @@ const Covid19SLStoryPage = () => {
                     },
                   }}
                 >
-                  <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
-                    Set segment value
-                  </InputLabel>
-                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                    <Slider
-                      // labelId="segment-slider"
-                      disabled={true}
-                      aria-label="Segments"
-                      defaultValue={3}
-                      getAriaValueText={valuetext}
-                      step={1}
-                      marks
-                      min={0}
-                      max={5}
-                      value={segment}
-                      valueLabelDisplay="auto"
-                      onChange={handleChangeSlider}
-                    />
-                  </FormControl>
-
                   <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
                     <InputLabel id="select-region-label">
-                      Select region
+                      Select hyperparameter
                     </InputLabel>
                     <Select
                       labelId="select-region-label"
                       id="select-region-label"
                       displayEmpty
                       onChange={handleSelection}
-                      value={region}
-                      input={<OutlinedInput label="Select region" />}
+                      value={hyperparam}
+                      input={<OutlinedInput label="Select hyperparameter" />}
                     >
-                      {regions.map((d) => (
+                      {HYPERPARAMS.map((d) => (
                         <MenuItem key={d} value={d}>
                           {d}
                         </MenuItem>
@@ -227,7 +195,7 @@ const Covid19SLStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!region}
+                      // disabled={!key}
                       disabled={true}
                       onClick={handleBeginningButton}
                       component="span"
@@ -239,7 +207,7 @@ const Covid19SLStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!region}
+                      // disabled={!key}
                       disabled={true}
                       onClick={handleBackButton}
                       startIcon={<ArrowBackIosIcon />}
@@ -251,7 +219,7 @@ const Covid19SLStoryPage = () => {
 
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
-                      disabled={!region}
+                      disabled={!hyperparam}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
                       onClick={togglePlayPause}
@@ -282,4 +250,8 @@ const Covid19SLStoryPage = () => {
   );
 };
 
-export default Covid19SLStoryPage;
+MLMVStoryPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
+
+export default MLMVStoryPage;

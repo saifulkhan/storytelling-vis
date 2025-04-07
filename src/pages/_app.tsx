@@ -3,15 +3,17 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { CacheProvider, EmotionCache } from "@emotion/react";
-import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
+import { ThemeProvider as MuiThemeProvider, createTheme } from "@mui/material/styles";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import createCache from "@emotion/cache";
 
-import createTheme from "../theme";
+const defaultTheme = createTheme();
 
-import { ThemeProvider } from "../contexts/ThemeContext";
-import useTheme from "../hooks/useTheme";
-import createEmotionCache from "../utils/createEmotionCache";
+// Create a simple emotion cache for client-side rendering
+const createEmotionCache = (): EmotionCache => {
+  return createCache({ key: 'css' });
+};
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -31,8 +33,6 @@ function App({
   emotionCache = clientSideEmotionCache,
   pageProps,
 }: MyAppProps) {
-  const { theme } = useTheme();
-
   const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
 
   return (
@@ -43,7 +43,7 @@ function App({
           defaultTitle="Storyboard"
         />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <MuiThemeProvider theme={createTheme(theme)}>
+          <MuiThemeProvider theme={defaultTheme}>
             {getLayout(<Component {...pageProps} />)}
           </MuiThemeProvider>
         </LocalizationProvider>
@@ -52,16 +52,4 @@ function App({
   );
 }
 
-const withThemeProvider = (Component: any) => {
-  const AppWithThemeProvider = (props: JSX.IntrinsicAttributes) => {
-    return (
-      <ThemeProvider>
-        <Component {...props} />
-      </ThemeProvider>
-    );
-  };
-  AppWithThemeProvider.displayName = "AppWithThemeProvider";
-  return AppWithThemeProvider;
-};
-
-export default withThemeProvider(App);
+export default App;

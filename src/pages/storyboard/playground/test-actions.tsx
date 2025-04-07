@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Box } from "@mui/material";
 import * as d3 from "d3";
 
-import { Coordinate } from "../../../components/storyboard/actions/MSBAction";
+import { Coordinate } from "../../../types/coordinate";
 import { Dot } from "../../../components/storyboard/actions/Dot";
 import { TextBox } from "../../../components/storyboard/actions/TextBox";
 import { Connector } from "../../../components/storyboard/actions/Connector";

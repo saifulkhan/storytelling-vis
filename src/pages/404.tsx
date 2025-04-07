@@ -5,17 +5,18 @@ import Link from "next/link";
 import { Helmet } from "react-helmet-async";
 
 import { Button as MuiButton, Typography } from "@mui/material";
-import { spacing } from "@mui/system";
 
-const Button = styled(MuiButton)(spacing);
+const Button = styled(MuiButton)`
+  margin-top: 16px;
+`;
 
 const Wrapper = styled.div`
-  padding: ${(props) => props.theme.spacing(6)};
+  padding: 48px;
   text-align: center;
   background: transparent;
 
-  ${(props) => props.theme.breakpoints.up("md")} {
-    padding: ${(props) => props.theme.spacing(10)};
+  @media (min-width: 960px) {
+    padding: 80px;
   }
 `;
 
@@ -34,7 +35,7 @@ function Page404() {
       </Typography>
 
       <Link href="/" passHref legacyBehavior>
-        <Button variant="contained" color="secondary" mt={2}>
+        <Button variant="contained" color="secondary">
           Return to website
         </Button>
       </Link>

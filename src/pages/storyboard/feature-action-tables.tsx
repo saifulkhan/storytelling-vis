@@ -8,15 +8,15 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 
-import DashboardLayout from "../../layouts/Dashboard";
 import FeatureActionTable from "../../components/storyboard/tables/FeatureActionTable";
 import { FeatureActionTableRow } from "../../components/storyboard/tables/FeatureActionTableRow";
 import { getTableData, getTables } from "../../services/FATableService";
 
 const FeatureActionTablesPage = () => {
-  const [data, setData] = useState<FeatureActionTableRow[]>();
+  const [data, setData] = useState<FeatureActionTableRow[]>([]);
   const [selectedTable, setSelectedTable] = useState<string>("");
   const [tables, setTables] = useState<string[]>([]);
 
@@ -44,9 +44,7 @@ const FeatureActionTablesPage = () => {
     }
   };
 
-  const handleTableChange = async (
-    event: React.ChangeEvent<{ value: string }>
-  ) => {
+  const handleTableChange = async (event: SelectChangeEvent<string>) => {
     setSelectedTable(event.target.value);
     fetchTableData(event.target.value);
   };
@@ -112,10 +110,6 @@ const FeatureActionTablesPage = () => {
       </Box>
     </>
   );
-};
-
-FeatureActionTablesPage.getLayout = function getLayout(page: ReactElement) {
-  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default FeatureActionTablesPage;

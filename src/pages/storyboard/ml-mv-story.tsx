@@ -29,7 +29,6 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import DashboardLayout from "src/layouts/Dashboard";
 import { getMLData } from "src/services/TimeSeriesDataService";
 import { getTableData } from "src/services/FATableService";
 import { ParallelCoordinatePlot } from "src/components/storyboard/plots/ParallelCoordinatePlot";
@@ -37,7 +36,7 @@ import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
-import { TimeSeriesPoint } from "src/utils/data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 
 const MLMVStoryPage = () => {
   const WIDTH = 1200,
@@ -249,10 +248,6 @@ const MLMVStoryPage = () => {
       </Box>
     </>
   );
-};
-
-MLMVStoryPage.getLayout = function getLayout(page: ReactElement) {
-  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default MLMVStoryPage;

@@ -18,19 +18,19 @@ export class MSBActionFactory {
 
     switch (action) {
       case MSBActionName.DOT:
-        return new Dot().setProps({...props});
+        return new Dot().setProps(props as DotProps);
       case MSBActionName.TEXT_BOX:
-        return new TextBox().setProps({...props});
+        return new TextBox().setProps(props as TextBoxProps);
       case MSBActionName.CIRCLE:
-        return new Circle().setProps({...props});
+        return new Circle().setProps(props as CircleProps);
       case MSBActionName.CONNECTOR:
-        return new Connector().setProps({...props});
+        return new Connector().setProps(props as ConnectorProps);
       default:
         console.error(`Action ${action} is not implemented!`);
     }
   }
 
-  public group(actions: MSBAction[]): MSBAction {
+  public group(actions: MSBAction[]): MSBActionGroup {
     const action = new MSBActionGroup();
     return action.group(actions);
   }

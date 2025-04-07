@@ -69,10 +69,10 @@ const yScale2 = (data: MirroredBarChartData[], h = HEIGHT, m = MARGIN) => {
 };
 
 export class MirroredBarChart extends Plot {
-  _selector: string;
+  _selector: string = "";
   // We use _svgElement to store the SVG element to avoid conflict with base class svg property
   _svgElement: SVGSVGElement | undefined;
-  _data: MirroredBarChartData[];
+  _data: MirroredBarChartData[] = [];
 
   _title = "";
   _xLabel = "";
@@ -80,10 +80,10 @@ export class MirroredBarChart extends Plot {
   _yLabel2 = "";
   _color1 = "Black";
   _color2 = "Blue";
-  _width: number;
-  _height: number;
-  _margin: { top: number; right: number; bottom: number; left: number };
-  _ticks = false;
+  _width: number = WIDTH;
+  _height: number = HEIGHT;
+  _margin: { top: number; right: number; bottom: number; left: number } = MARGIN;
+  _ticks: number | boolean = false;
   plotProps: PlotProps = { ...defaultPlotProps };
 
   _xScale: any;
@@ -107,7 +107,7 @@ export class MirroredBarChart extends Plot {
   /**
    * We pass height, width & margin here to keep it consistent with the svg() method.
    */
-  selector(selector, height = HEIGHT, width = WIDTH, margin = MARGIN) {
+  selector(selector: string, height = HEIGHT, width = WIDTH, margin = MARGIN) {
     this._selector = selector;
     this._height = height;
     this._width = width;
@@ -209,22 +209,22 @@ export class MirroredBarChart extends Plot {
     return this;
   }
 
-  title(title) {
+  title(title: string) {
     this._title = title;
     return this;
   }
 
-  xLabel(xLabel) {
+  xLabel(xLabel: string) {
     this._xLabel = xLabel;
     return this;
   }
 
-  yLabel1(yLabel) {
+  yLabel1(yLabel: string) {
     this._yLabel1 = yLabel;
     return this;
   }
 
-  yLabel2(yLabel) {
+  yLabel2(yLabel: string) {
     this._yLabel2 = yLabel;
     return this;
   }
@@ -239,22 +239,22 @@ export class MirroredBarChart extends Plot {
     return this;
   }
 
-  ticks(ticks) {
+  ticks(ticks: number) {
     this._ticks = ticks;
     return this;
   }
 
-  height(height) {
+  height(height: number) {
     this._height = height;
     return this;
   }
 
-  width(width) {
+  width(width: number) {
     this._width = width;
     return this;
   }
 
-  margin(margin) {
+  margin(margin: { top: number; right: number; bottom: number; left: number }) {
     this._margin = margin;
     return this;
   }

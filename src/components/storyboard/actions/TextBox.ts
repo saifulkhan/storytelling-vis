@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import { MSBAction } from "./MSBAction";
-import { Coordinate } from "src/types/coordinate";
+import { Coordinate } from "../../../types/coordinate";
 import { MSBActionName } from "./MSBActionName";
-import { HorizontalAlign, VerticalAlign } from "src/types/Align";
+import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 export type TextBoxProps = {
   title?: string;
@@ -20,7 +20,7 @@ export const defaultTextBoxProps: TextBoxProps = {
   backgroundColor: "#F8F8F8",
   width: 300,
   showConnector: false,
-  horizontalAlign: "middle",
+  horizontalAlign: "center",
   verticalAlign: "middle",
 };
 
@@ -29,13 +29,13 @@ const FONT_FAMILY = "Arial Narrow";
 const FONT_SIZE = "12px";
 
 export class TextBox extends MSBAction {
-  protected props: TextBoxProps;
+  protected props: TextBoxProps = defaultTextBoxProps;
   protected rectNode: any;
   protected titleNode: any;
   protected messageNode: any;
   protected textNode: any;
   protected connectorNode: any;
-  protected spaceWidth: number;
+  protected spaceWidth: number = 0;
 
   constructor() {
     super();
@@ -49,8 +49,8 @@ export class TextBox extends MSBAction {
 
   public updateProps(extra: any) {
     console.log("TextBox:updateProps: extra: ", extra);
-    this.props.message = this.updateStringTemplate(this.props.message, extra);
-    this.props.title = this.updateStringTemplate(this.props.title, extra);
+    this.props.message = this.updateStringTemplate(this.props.message!, extra);
+    this.props.title = this.updateStringTemplate(this.props.title!, extra);
     console.log("TextBox:updateProps: ", this.props.message, this.props.title);
 
     this.props.horizontalAlign = extra.horizontalAlign;
@@ -65,12 +65,12 @@ export class TextBox extends MSBAction {
     return this;
   }
 
-  protected draw() {
+  public draw() {
     this.rectNode = d3
       .create("svg")
       .append("rect")
-      .attr("fill", this.props.backgroundColor)
-      .attr("width", this.props.width)
+      .attr("fill", this.props.backgroundColor!)
+      .attr("width", this.props.width!)
       .attr("rx", 3)
       .node();
     this.node.appendChild(this.rectNode);
@@ -95,7 +95,7 @@ export class TextBox extends MSBAction {
     this.textNode = d3
       .create("svg")
       .append("g")
-      .attr("fill", this.props.backgroundColor)
+      .attr("fill", this.props.backgroundColor!)
       .node();
 
     this.connectorNode = d3
@@ -112,8 +112,8 @@ export class TextBox extends MSBAction {
     this.node.appendChild(this.connectorNode);
 
     // wrap title and message
-    this.wrap(this.titleNode, this.props.title);
-    this.wrap(this.messageNode, this.props.message);
+    this.wrap(this.titleNode, this.props.title!);
+    this.wrap(this.messageNode, this.props.message!);
 
     // y position of message, give some space after title
     let height = this.titleNode.getBoundingClientRect().height;
@@ -139,8 +139,8 @@ export class TextBox extends MSBAction {
       word: string
     ): number => {
       const wordElem = element.appendChild(
-        d3.create("svg").append("tspan").text(word).node()
-      );
+        d3.create("svg").append("tspan").text(word).node() as SVGTSpanElement
+      ) as SVGTSpanElement;
 
       // console.log("TextBox:_wrap wordElem =", wordElem);
       // wordElem = <tspan>​{DATE},​</tspan>​
@@ -158,7 +158,7 @@ export class TextBox extends MSBAction {
           .attr("x", 0)
           .attr("dy", "1.1em")
           .text(words.join(" ") + " ")
-          .node()
+          .node() as SVGTSpanElement
       );
     };
 
@@ -176,8 +176,8 @@ export class TextBox extends MSBAction {
 
     // keep adding words to row until width exceeds span then create new row
     let accumulatedWidth = 0;
-    let wordsInLine = [];
-    const messageWidth = this.props.width - PADDING;
+    let wordsInLine: string[] = [];
+    const messageWidth = this.props.width! - PADDING;
 
     for (let i = 0; i < wordWidthArr.length; i++) {
       const word = wordWidthArr[i].word,
@@ -218,7 +218,7 @@ export class TextBox extends MSBAction {
 
     if (this.props.horizontalAlign === "left") {
       x = x2 - width;
-    } else if (this.props.horizontalAlign === "middle") {
+    } else if (this.props.horizontalAlign === "center") {
       x = x2 - width / 2;
     } else if (this.props.horizontalAlign === "right") {
       x = x2;
@@ -239,7 +239,7 @@ export class TextBox extends MSBAction {
     );
 
     // align texts
-    this.correctTextAlignment(this.titleNode, width, "middle");
+    this.correctTextAlignment(this.titleNode, width, "center");
     this.correctTextAlignment(this.messageNode, width);
 
     // connector
@@ -295,17 +295,17 @@ export class TextBox extends MSBAction {
     });
 
     // align texts
-    this.correctTextAlignment(this.titleNode, width, "middle");
+    this.correctTextAlignment(this.titleNode, width, "center");
     this.correctTextAlignment(this.messageNode, width);
 
     return Promise.all([promise1, promise2]);
   }
 
-  private correctTextAlignment(textElem, width, align = undefined) {
+  private correctTextAlignment(textElem: SVGTextElement, width: number, align: string = "left") {
     const alignToX = () => {
       // uses the width and alignment of text to calculate correct x values of
       // tspan elements
-      return (width / 2) * (align == "middle" ? 1 : align == "end" ? 2 : 0);
+      return (width / 2) * (align == "center" ? 1 : align == "right" ? 2 : 0);
     };
 
     // aligns tspan elements based on chosen alignment

@@ -14,7 +14,7 @@ export const defaultConnectorProperties: ConnectorProps = {
 };
 
 export class Connector extends MSBAction {
-  protected props: ConnectorProps;
+  protected props: ConnectorProps = defaultConnectorProperties;
   protected connectorNode: any;
 
   constructor() {
@@ -34,12 +34,12 @@ export class Connector extends MSBAction {
     return this;
   }
 
-  protected draw() {
+  public draw() {
     this.connectorNode = d3
       .create("svg")
       .append("line")
-      .attr("stroke", this.props.stroke)
-      .attr("opacity", this.props.opacity)
+      .attr("stroke", this.props.stroke!)
+      .attr("opacity", this.props.opacity!)
       .style("stroke-dasharray", "5,5")
       .node();
     this.node.appendChild(this.connectorNode);

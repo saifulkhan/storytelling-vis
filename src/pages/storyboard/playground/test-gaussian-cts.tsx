@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeSeriesPoint } from "../../../utils/data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "../../../types/TimeSeriesPoint";
 import {
   LinePlot,
   LineProps,

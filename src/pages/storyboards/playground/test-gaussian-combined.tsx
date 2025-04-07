@@ -37,10 +37,10 @@ const TestGaussianCombinedPage = () => {
   const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
-  const [categoricalFeatures, setCategoricalFeatures] = useState<string>("");
+  const [categoricalFeatures, setCategoricalFeatures] = useState<string>([]);
   const [segment, setSegment] = useState<number>(3);
   // slider formatted value
-  const valuetext = (value: any) => `${value}`;
+  const valuetext = (value) => `${value}`;
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -173,7 +173,7 @@ const TestGaussianCombinedPage = () => {
   return (
     <>
       <Head>
-        <title>Playground | Gaussian Combined</title>
+        <title>Test Gaussian Combined</title>
       </Head>
 
       <Box

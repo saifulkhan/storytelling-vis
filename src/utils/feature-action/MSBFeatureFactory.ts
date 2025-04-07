@@ -8,7 +8,7 @@ import {
   searchSlopes,
 } from "./feature-search";
 import { MSBFeatureName } from "./MSBFeatureName";
-import { TimeSeriesPoint } from "../data-processing/TimeSeriesPoint";
+import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,

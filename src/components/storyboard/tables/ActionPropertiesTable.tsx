@@ -61,7 +61,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   // console.log("ActionPropertiesTable: re-rendered: data = ", data);
   const classes = useStyles();
   const [rows, setRows] = useState({ ...data });
-  const chartRef = useRef(null);
+  const chartRef = useRef<SVGSVGElement | null>(null);
 
   const actionFactory = new MSBActionFactory();
 
@@ -83,7 +83,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   );
   const totalRows = entries.length;
 
-  function drawSvgObject(data) {
+  function drawSvgObject(data: Record<string, any>) {
     const margin = { top: 0, right: 0, bottom: 0, left: 0 };
     const height = 75 - margin.top - margin.bottom;
     const width = 100 - margin.left - margin.right;
@@ -98,7 +98,7 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     console.log({ ...data });
     const action = actionFactory.create(data.action, data);
     action
-      ?.setCanvas(chartRef.current)
+      ?.setCanvas(chartRef.current as unknown as SVGGElement)
       .setCoordinate([
         [50, 75],
         [50, 50],

@@ -1,7 +1,13 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
-import createEmotionCache from "../utils/createEmotionCache";
+import createCache from "@emotion/cache";
+import { EmotionCache } from "@emotion/react";
+
+// Create a simple emotion cache for client-side rendering
+const createEmotionCache = (): EmotionCache => {
+  return createCache({ key: 'css' });
+};
 
 export default class MyDocument extends Document {
   render() {
