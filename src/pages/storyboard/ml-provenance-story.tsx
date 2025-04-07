@@ -185,7 +185,7 @@ const MLMirroredBarStoryPage = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="ML Mirrored Bar Chart Story"
+            title="Machine Learning: Provenance Story"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>

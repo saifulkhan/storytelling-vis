@@ -1,12 +1,12 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { MSBAction, Coordinate } from "../actions/MSBAction";
-import { TimeSeriesPoint } from "../../../utils/storyboards/data-processing/TimeSeriesPoint";
+import { Coordinate } from "../../../types/coordinate";
+import { TimeSeriesPoint } from "../../../utils/data-processing/TimeSeriesPoint";
 import {
   findDateIdx,
   findIndexOfDate,
 } from "../../../utils/common";
-import { DateActionArray } from "../../../utils/storyboards/feature-action/FeatureActionTypes";
+import { DateActionArray } from "../../../utils/feature-action/FeatureActionTypes";
 import { HorizontalAlign, VerticalAlign } from "../../../types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",

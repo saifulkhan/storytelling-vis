@@ -137,7 +137,6 @@ const MLMVStoryPage = () => {
           py: 8,
         }}
       >
-        {/* <Container> */}
         <Card sx={{}}>
           <CardHeader
             avatar={
@@ -145,7 +144,7 @@ const MLMVStoryPage = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="ML: Multivariate Story"
+            title="Machine Learning: Multivariate Story"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>

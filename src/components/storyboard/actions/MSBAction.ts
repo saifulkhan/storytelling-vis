@@ -1,9 +1,8 @@
 import * as d3 from "d3";
 import { MSBActionName } from "./MSBActionName";
 import { MSBFeatureName } from "../../../utils/feature-action/MSBFeatureName";
-import { CategoricalFeatures } from "../../../utils/feature/CategoricalFeatures";
-
-export type Coordinate = [number, number];
+import { MSBCategoricalFeatureName } from "../../../utils/feature-action/CategoricalFeature";
+import { Coordinate } from "../../../types/coordinate";
 
 const DELAY = 0,
   DURATION = 1000;
@@ -15,7 +14,7 @@ export abstract class MSBAction {
   protected node: any;
   protected coordinate0: Coordinate;
   protected coordinate1: Coordinate;
-  protected featureType?: MSBFeatureName | CategoricalFeatures;
+  protected featureType?: MSBFeatureName | MSBCategoricalFeatureName;
 
   constructor() {}
 
@@ -91,7 +90,7 @@ export abstract class MSBAction {
     d3.select(this.svg).append(() => this.node);
   }
 
-  public setFeatureType(featureType: MSBFeatureName | CategoricalFeatures) {
+  public setFeatureType(featureType: MSBFeatureName | MSBCategoricalFeatureName) {
     this.featureType = featureType;
     return this;
   }
