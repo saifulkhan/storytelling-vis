@@ -4,8 +4,6 @@ import styled from "@emotion/styled";
 import Link from "next/link";
 import { Helmet } from "react-helmet-async";
 
-import AuthLayout from "../layouts/Auth";
-
 import { Button as MuiButton, Typography } from "@mui/material";
 import { spacing } from "@mui/system";
 
@@ -43,9 +41,5 @@ function Page404() {
     </Wrapper>
   );
 }
-
-Page404.getLayout = function getLayout(page: ReactElement<any>) {
-  return <AuthLayout>{page}</AuthLayout>;
-};
 
 export default Page404;

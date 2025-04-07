@@ -8,7 +8,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { spacing } from "@mui/system";
 
 import GlobalStyle from "../components/GlobalStyle";
-import NavbarSimple from "../components/navbar/NavbarSimple";
 import docItems from "../components/sidebar/docItems";
 import Sidebar from "../components/sidebar/Sidebar";
 import Settings from "../components/Settings";
@@ -87,7 +86,6 @@ const Doc: React.FC<DocType> = ({ children }) => {
         </Box>
       </Drawer>
       <AppContent>
-        <NavbarSimple onDrawerToggle={handleDrawerToggle} />
         <MainContent p={isLgUp ? 12 : 5}>
           {children}
           <Outlet />
