@@ -4,7 +4,7 @@ import Head from "next/head";
 import { Box } from "@mui/material";
 
 import { LinePlot } from "../../../components/storyboards/plots/LinePlot";
-import { getCovid19Data } from "../../../services/DataService";
+import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const TestLinePlotPage = () => {
   const chartRef = useRef(null);

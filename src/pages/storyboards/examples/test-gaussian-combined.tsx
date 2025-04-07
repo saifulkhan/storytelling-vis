@@ -31,7 +31,7 @@ import { Circle } from "../../../components/storyboards/actions/Circle";
 import {
   getCovid19SLCFATable,
   getCovid19Data,
-} from "../../../services/DataService";
+} from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;

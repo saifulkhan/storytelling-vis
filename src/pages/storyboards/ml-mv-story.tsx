@@ -30,8 +30,8 @@ import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
 import DashboardLayout from "../../layouts/Dashboard";
-import { getMLData } from "../../services/DataService";
-import { getTableData } from "../../services/TableService";
+import { getMLData } from "../../services/TimeSeriesDataService";
+import { getTableData } from "../../services/FATableService";
 import { ParallelCoordinatePlot } from "../../components/storyboards/plots/ParallelCoordinatePlot";
 import usePlayPauseLoop from "../../hooks/usePlayPauseLoop";
 import {

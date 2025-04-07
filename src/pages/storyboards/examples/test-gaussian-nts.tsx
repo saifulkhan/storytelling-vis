@@ -22,7 +22,7 @@ import {
   gmm,
   smoothing,
 } from "../../../utils/storyboards/data-processing/Gaussian";
-import { getCovid19Data } from "../../../services/DataService";
+import { getCovid19Data } from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;

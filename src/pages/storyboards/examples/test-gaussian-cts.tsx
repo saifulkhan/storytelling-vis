@@ -21,7 +21,7 @@ import { getSchemeTableau10 } from "../../../components/storyboards/StoryboardCo
 import {
   getCovid19SLCFATable,
   getCovid19Data,
-} from "../../../services/DataService";
+} from "../../../services/TimeSeriesDataService";
 
 const WIDTH = 1500,
   HEIGHT = 500;
