@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 import { Badge, Grid, Avatar, Typography } from "@mui/material";
 
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 
 const Footer = styled.div`
   background-color: ${(props) =>
@@ -37,7 +37,7 @@ const FooterBadge = styled(Badge)`
 `;
 
 const SidebarFooter = ({ ...rest }) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   return (
     <Footer {...rest}>
@@ -51,22 +51,15 @@ const SidebarFooter = ({ ...rest }) => {
             }}
             variant="dot"
           >
-            {!!user && <Avatar alt={user.displayName} src={user.avatar} />}
             {/* Demo data */}
-            {!user && (
-              <Avatar
-                alt="Lucy Lavender"
-                src="/static/img/avatars/avatar-1.jpg"
-              />
-            )}
+            <Avatar
+              alt="Lucy Lavender"
+              src="/static/img/avatars/avatar-1.jpg"
+            />
           </FooterBadge>
         </Grid>
         <Grid item>
-          {!!user && (
-            <FooterText variant="body2">{user.displayName}</FooterText>
-          )}
-          {/* Demo data */}
-          {!user && <FooterText variant="body2">Lucy Lavender</FooterText>}
+          <FooterText variant="body2">Lucy Lavender</FooterText>
           <FooterSubText variant="caption">UX Designer</FooterSubText>
         </Grid>
       </Grid>

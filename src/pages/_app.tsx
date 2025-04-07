@@ -13,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "chart.js/auto";
 
 // Note: Remove the following line if you want to disable the API mocks.
-import "../mocks";
+// import "../mocks";
 
 import "../vendor/jvectormap.css";
 import "../vendor/perfect-scrollbar.css";
@@ -25,13 +25,8 @@ import createTheme from "../theme";
 
 import { ThemeProvider } from "../contexts/ThemeContext";
 import useTheme from "../hooks/useTheme";
-import { store } from "../redux/store";
+// import { store } from "../redux/store";
 import createEmotionCache from "../utils/createEmotionCache";
-
-import { AuthProvider } from "../contexts/JWTContext";
-// import { AuthProvider } from "../contexts/FirebaseAuthContext";
-// import { AuthProvider } from "../contexts/Auth0Context";
-// import { AuthProvider } from "../contexts/CognitoContext";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -62,16 +57,16 @@ function App({
           titleTemplate="%s | Mira"
           defaultTitle="Mira - React Material Admin Dashboard"
         />
-        <Provider store={store}>
+        {/* <Provider store={store}> */}
           {/* @ts-ignore */}
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <MuiThemeProvider theme={createTheme(theme)}>
-              <AuthProvider>
+              {/* <AuthProvider> */}
                 {getLayout(<Component {...pageProps} />)}
-              </AuthProvider>
+              {/* </AuthProvider> */}
             </MuiThemeProvider>
           </LocalizationProvider>
-        </Provider>
+        {/* </Provider> */}
       </HelmetProvider>
     </CacheProvider>
   );
