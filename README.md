@@ -33,22 +33,29 @@ yarn dev
 Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
 
 **Implemented Stories:**
-1. [localhost:3000/storyboard/ml-mv-story](http://localhost:3000/storyboard/ml-mv-story)
-2. [localhost:3000/storyboard/ml-provenance-story](http://localhost:3000/storyboard/ml-provenance-story)
-3. [localhost:3000/storyboard/covid19-story](http://localhost:3000/storyboard/covid19-sl-story)
+
+- [localhost:3000/story-covid19-single](http://localhost:3000/story-covid19-single)
+- [localhost:3000/story-ml-mirorred-bar](http://localhost:3000/story-ml-mirorred-bar)
+- [localhost:3000/story-ml-pcp](http://localhost:3000/story-ml-pcp)
+
 
 **Playground (testing various components):**
 
-1. [localhost:3000/storyboard/playground/test-play-pause-loop](http://localhost:3000/storyboard/playground/test-play-pause-loop)
-2. [localhost:3000/storyboard/playground/test-line-plot](http://localhost:3000/storyboard/playground/test-line-plot)
-3. [localhost:3000/storyboard/playground/test-gaussian-nts](http://localhost:3000/storyboard/playground/test-gaussian-nts)
-4. [localhost:3000/storyboard/playground/test-gaussian-cts](http://localhost:3000/storyboard/playground/test-gaussian-cts)
-5. [localhost:3000/storyboard/playground/test-gaussian-combined](http://localhost:3000/storyboard/playground/test-gaussian-combined)
-6. [localhost:3000/storyboard/playground/test-features](http://localhost:3000/storyboard/playground/test-features)
-7. [localhost:3000/storyboard/playground/test-feature-properties-table](http://localhost:3000/storyboard/playground/test-feature-properties-table)
-7. [localhost:3000/storyboard/playground/test-actions](http://localhost:3000/storyboard/playground/test-actions)
-8. [localhost:3000/storyboard/playground/test-action-table](http://localhost:3000/storyboard/playground/test-action-table)
-9. [localhost:3000/storyboard/playground/test-action-properties-table](http://localhost:3000/storyboard/playground/test-action-properties-table)
+- [localhost:3000/playground/test-action-properties-table](http://localhost:3000/playground/test-action-properties-table)
+- [localhost:3000/playground/test-action-table](http://localhost:3000/playground/test-action-table)
+- [localhost:3000/playground/test-actions](http://localhost:3000/playground/test-actions)
+- [localhost:3000/playground/test-feature-properties-table](http://localhost:3000/playground/test-feature-properties-table)
+- [localhost:3000/playground/test-features](http://localhost:3000/playground/test-features)
+- [localhost:3000/playground/test-gaussian-combined](http://localhost:3000/playground/test-gaussian-combined)
+- [localhost:3000/playground/test-gaussian-cts](http://localhost:3000/playground/test-gaussian-cts)
+- [localhost:3000/playground/test-gaussian-nts](http://localhost:3000/playground/test-gaussian-nts)
+- [localhost:3000/playground/test-line-plot](http://localhost:3000/playground/test-line-plot)
+
+
+
+
+
+- [localhost:3000/playground/test-play-pause-loop](http://localhost:3000/playground/test-play-pause-loop)
 
 ### Tests
 
@@ -353,6 +360,102 @@ new LinePlot()
 ### Feature Action Tables UI
 
 To add a new table, see `src/services/TableService.ts`
+
+## Using as a Library
+
+This project can be used as a reusable component library in other React applications. Follow these steps to build and use it as a library:
+
+### Building the Library
+
+```bash
+# Install dependencies
+yarn install
+
+# Build the library
+yarn build:lib
+```
+
+This will generate the library in the `dist` directory.
+
+### Using the Library in Another Project
+
+#### Option 1: Local Installation
+
+You can install the library locally using:
+
+```bash
+# From your other project
+npm install --save /path/to/storytelling-vis
+# or with yarn
+yarn add file:/path/to/storytelling-vis
+```
+
+#### Option 2: Publishing to npm
+
+You can publish the library to npm:
+
+```bash
+# Login to npm
+npm login
+
+# Publish the package
+npm publish
+```
+
+Then install it in your project:
+
+```bash
+npm install --save storytelling-vis
+# or with yarn
+yarn add storytelling-vis
+```
+
+### Usage Example
+
+```jsx
+import React from 'react';
+import { LinePlot, Circle, MSBActionFactory } from 'storytelling-vis';
+
+const MyComponent = () => {
+  const svgRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    if (svgRef.current) {
+      const data = [...]; // Your time series data
+      
+      // Create a line plot
+      const plot = new LinePlot()
+        .setData(data)
+        .setName('My Data')
+        .setProps({
+          width: 800,
+          height: 400,
+          margin: { top: 20, right: 20, bottom: 30, left: 50 }
+        })
+        .setCanvas(svgRef.current);
+      
+      // Show the plot
+      plot.show();
+      
+      // Create actions
+      const actionFactory = new MSBActionFactory();
+      const circle = actionFactory.create('CIRCLE', {
+        size: 10,
+        color: 'red'
+      });
+      
+      // Add actions to the plot
+      circle.setCanvas(svgRef.current)
+        .setCoordinate([100, 100])
+        .show();
+    }
+  }, []);
+  
+  return <svg ref={svgRef} width="800" height="400"></svg>;
+};
+
+export default MyComponent;
+```
 
 ## Support
 

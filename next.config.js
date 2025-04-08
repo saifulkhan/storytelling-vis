@@ -1,35 +1,30 @@
 const withTM = require("next-transpile-modules")([
-  // "@fullcalendar/core",
   "@babel/preset-react",
-  // "@fullcalendar/common",
-  // "@fullcalendar/daygrid",
-  // "@fullcalendar/interaction",
-  // "@fullcalendar/react",
 ]);
 
-module.exports = withTM({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      use: [
-        {
-          loader: "@svgr/webpack",
-          options: {
-            svgoConfig: {
-              plugins: [
-                {
-                  name: "removeViewBox",
-                  active: false,
-                },
-              ],
-            },
+      use: [{
+        loader: "@svgr/webpack",
+        options: {
+          svgoConfig: {
+            plugins: [{
+              name: "removeViewBox",
+              active: false,
+            }],
           },
         },
-      ],
+      }],
     });
 
     return config;
   },
-  // Ensure React 19 compatibility
-  reactStrictMode: true,
-});
+  // This ensures that Next.js can find your pages in the src directory
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+};
+
+module.exports = withTM(nextConfig);

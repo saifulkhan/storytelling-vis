@@ -1,0 +1,30 @@
+# Source files
+src/pages
+src/services
+public
+.next
+node_modules
+
+# Config files
+.eslintrc
+.prettierrc
+jest.config.js
+next.config.js
+tsconfig.json
+
+# Git files
+.git
+.gitignore
+
+# Development files
+*.log
+.DS_Store
+.vscode
+.idea
+
+# Tests
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
