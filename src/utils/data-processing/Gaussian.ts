@@ -1,14 +1,15 @@
-import { Peak } from "../feature-action/Peak";
-import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
-import { searchPeaks } from "../feature-action/feature-search";
-import { NumericalFeature } from "../feature-action/NumericalFeature";
-import { findDateIdx, scaleValue } from "../common";
+import { Peak } from "src/utils/feature-action/Peak";
+import { TimeSeriesPoint, TimeSeriesData } from "src/types/TimeSeriesPoint";
+import { searchPeaks } from "src/utils/feature-action/feature-search";
+import { NumericalFeature } from "src/utils/feature-action/NumericalFeature";
+import { CategoricalFeature } from "src/utils/feature-action/CategoricalFeature";
+import { findDateIdx, scaleValue } from "src/utils/common";
 
 const RANK_MAX = 10; /** or r_max  */
 
-export function gmm(data: TimeSeriesPoint[], metric: string, window: number) {
+export function gmm(data: TimeSeriesData, metric: string, window: number) {
   // step 1. create nts
-  let peaks = searchPeaks(data, undefined, metric, window);
+  let peaks = searchPeaks(data, 0, metric, window);
   // step 1.a. rank peaks by its height, assign rank between 1 to MAX_RANK
   peaks = rankByNormHeight(peaks);
   console.log("gmm: ranked nts: ", peaks);
@@ -36,11 +37,11 @@ export function gmm(data: TimeSeriesPoint[], metric: string, window: number) {
  ** Create numerical timeseries (nts)
  **/
 export function nts(
-  data: TimeSeriesPoint[],
+  data: TimeSeriesData,
   metric: string,
   window: number
 ): Peak[] {
-  return searchPeaks(data, undefined, undefined, 10);
+  return searchPeaks(data, 0, metric, window);
 }
 
 function rankByHeight(peaks: Peak[]) {
@@ -86,10 +87,6 @@ function rankByNormHeight(peaks: Peak[]) {
  ** Create categorical timeseries (cts)
  **/
 
-//
-//
-//
-
 const EIGHT = 8,
   THREE = 3;
 
@@ -105,11 +102,35 @@ export function toGaussian(
 ): number[][] {
   console.log("toGaussian: features:", features);
 
-  const featuresGauss: number[][] = features.map((d) => {
-    const index = findDateIdx(d.getDate(), data);
-    // return gaussian(index, d.getRank(), data.length);
-    return gaussian(index, d.getNormHeight(), data.length);
-  });
+  // Ensure we have features to process
+  if (!features || features.length === 0) {
+    return [];
+  }
+
+  const featuresGauss: number[][] = features.map(
+    (d: NumericalFeature | CategoricalFeature | Peak) => {
+      // Make sure we can get a date from the feature
+      if (!d || typeof d.getDate !== 'function') {
+        console.error('Invalid feature object:', d);
+        return Array(data.length).fill(0);
+      }
+      
+      const index = findDateIdx(d.getDate(), data);
+      
+      // Use type guard to check if getNormHeight exists on the object
+      let height: number;
+      if ('getNormHeight' in d && typeof d.getNormHeight === 'function') {
+        height = d.getNormHeight();
+      } else if ('getRank' in d && typeof d.getRank === 'function') {
+        height = d.getRank();
+      } else {
+        console.error('Feature missing required methods:', d);
+        height = 0;
+      }
+      
+      return gaussian(index, height, data.length);
+    }
+  );
 
   return featuresGauss;
 }
@@ -121,12 +142,7 @@ export function toGaussian(
  ** Returns: Array of numbers [y1, y2, ...]
  **/
 // TODO: scope of improvement: w, len
-function gaussian(
-  mean: number,
-  h: number,
-  len: number,
-  w = undefined
-): number[] {
+function gaussian(mean: number, h: number, len: number, w?: number): number[] {
   const std = w ? w / 3 : (h * EIGHT) / THREE;
   // prettier-ignore
   console.log(`gaussian: mean: ${mean}, h: ${h}, len: ${len}, w: ${w}, std: ${std}`);
@@ -153,61 +169,56 @@ export function maxBounds(featuresGauss: number[][]): number[] {
   return max;
 }
 
-//
-//
-//
 
-export function semanticGaussians(data, categoricalFeatures, smoothing = 11) {
+export function semanticGaussians(
+  data: TimeSeriesData,
+  categoricalFeatures: CategoricalFeature[],
+  smoothing = 11
+): Array<{ date: Date; y: number }[]> {
   const smooth = gaussianSmoothTS(data, 3, smoothing);
-  const gaussians = categoricalFeatures.map((e) => {
+  const gaussians = categoricalFeatures.map((e: CategoricalFeature) => {
     // Get the indexes of the range of the points included in the data feature
-    let idx = findDateIdx(new Date(e.date), data);
-    let gauss = gaussian(idx, e.rank, data.length);
-    gauss = gauss.map((d, i) => {
+    let idx = findDateIdx(e.getDate(), data);
+    let gauss = gaussian(idx, e.getRank(), data.length);
+    // Convert number[] to array of objects with date and y properties
+    return gauss.map((d, i) => {
       return { date: data[i].date, y: d };
     });
-    return gauss;
   });
   return gaussians;
 }
 
-export function smoothing(data: TimeSeriesPoint[], smoothingVal = 11) {
+export function smoothing(
+  data: TimeSeriesData,
+  smoothingVal = 11
+): Array<{ date: Date; y: number }[]> {
   const smoothData = gaussianSmoothTS(data, 3, smoothingVal);
   console.log("smoothing: smoothData: ", smoothData);
 
-  //const rises = searchPeaks(smoothData, undefined, undefined, 10).map(
-  // (d) => console.log(d)
-  // new Rise(smoothData[r.start].date)
-  //   .setStart(smoothData[r.start].date)
-  //   .setEnd(smoothData[r.end].date)
-  //   .setMetric(metric)
-  //   .setHeight(Math.round(r.height))
-  //   .setGrad(r.grad)
-  //   .setNormGrad(r.normGrad)
-  //   .setRank(r.rank)
-  //);
-
-  const peaks = searchPeaks(data, undefined, undefined, 10);
+  const peaks = searchPeaks(data, 0, "y", 10);
   console.log("smoothing: peaks: ", peaks);
 
-  const gaussians = peaks.map((e) => {
+  const gaussians = peaks.map((e: Peak) => {
     let midIdx = findDateIdx(e.getDate(), data);
     let gauss = gaussian(midIdx, e.getRank(), data.length);
-    gauss = gauss.map((d, i) => {
+    // Convert number[] to array of objects with date and y properties
+    return gauss.map((d: number, i: number) => {
       return { date: data[i].date, y: d };
     });
-
-    return gauss;
   });
 
   console.log("smoothing: gaussians: ", gaussians);
 
   return gaussians;
 }
-export const gaussianSmoothTS = (data, sigma, n) => {
+export const gaussianSmoothTS = (
+  data: TimeSeriesData,
+  sigma: number,
+  n: number
+) => {
   return smoothToTS(
     gaussianSmooth(
-      data.map((o) => o.y),
+      data.map((o: TimeSeriesPoint) => o.y ?? 0),
       sigma,
       n
     ),
@@ -216,23 +227,27 @@ export const gaussianSmoothTS = (data, sigma, n) => {
   );
 };
 
-export const smoothToTS = (smoothData, originalData, n) => {
+export const smoothToTS = (
+  smoothData: number[],
+  originalData: TimeSeriesData,
+  n: number
+) => {
   const half = Math.floor(n / 2);
-  return smoothData.map((d, i) => {
+  return smoothData.map((d: number, i: number) => {
     return { date: originalData[i + half].date, y: d };
   });
 };
 
-export const gaussianSmooth = (data, sigma, n) => {
-  const gaussian = (sigma, n) => {
+export const gaussianSmooth = (data: number[], sigma: number, n: number) => {
+  const gaussian = (sigma: number, n: number) => {
     const even = n % 2 == 0;
     if (even) throw "Cannot use even filter size for gaussian smoothing.";
 
     const half = Math.floor(n / 2);
-    const xs = [...Array(n)].map((_, i) => i - half);
+    const xs = [...Array(n)].map((_: any, i: number) => i - half);
 
     const gs = xs.map(
-      (x) =>
+      (x: number) =>
         (1 / (sigma * (2 * Math.PI) ** 0.5)) *
         Math.exp(-(x ** 2) / (2 * sigma ** 2))
     );
@@ -245,49 +260,72 @@ export const gaussianSmooth = (data, sigma, n) => {
   const half = Math.floor(n / 2);
   const validRegion = half == 0 ? data : data.slice(half, -half);
 
-  const smoothData = validRegion.map((_, i) =>
-    gaussKernel.reduce((s, g, j) => s + g * data[i + j], 0)
+  const smoothData = validRegion.map((_: number, i: number) =>
+    gaussKernel.reduce(
+      (s: number, g: number, j: number) => s + g * data[i + j],
+      0
+    )
   );
 
   return smoothData;
 };
 
-//
-//
-//
 
-export function semanticBounds(data, semanticGaussians) {
-  return maxBounds(semanticGaussians.map((g) => g.map((d) => d.y))).map(
-    (d, i) => {
-      return { date: data[i].date, y: d };
-    }
-  );
+export function semanticBounds(
+  data: TimeSeriesData,
+  semanticGaussians: Array<{ date: Date; y: number }[]>
+) {
+  return maxBounds(
+    semanticGaussians.map((g: { date: Date; y: number }[]) =>
+      g.map((d: { date: Date; y: number }) => d.y)
+    )
+  ).map((d: number, i: number) => {
+    return { date: data[i].date, y: d };
+  });
 }
 
-//
-//
-//
 
 /**
  ** Combines ranked timeseries by averaging their bounds at each point.
  ** Takes an array of max bounds as input [bounds1, bounds2, ...].
  ** Returns a single combined bound.
  **/
-function combineBounds(bounds) {
+function combineBounds(bounds: number[][]) {
   const len = bounds[0].length;
   const numBounds = bounds.length;
   const combination = [...Array(len).fill(0)];
-  bounds.forEach((b) => b.forEach((d, i) => (combination[i] += d / numBounds)));
+  bounds.forEach((b: number[]) =>
+    b.forEach((d: number, i: number) => (combination[i] += d / numBounds))
+  );
   return combination;
 }
 
-export function combinedBounds(data, dataBounds, semanticBounds) {
+export function combinedBounds(
+  data: TimeSeriesData,
+  dataBounds: Array<{ date: Date; y: number }>,
+  semanticBounds: Array<{ date: Date; y: number }>
+): Array<{ date: Date; y: number }> {
   console.log("bounds:", data, dataBounds, semanticBounds);
 
-  const bounds = [dataBounds, semanticBounds].map((b) => b.map((d) => d.y));
+  // Validate inputs
+  if (!data || !data.length || !dataBounds || !semanticBounds) {
+    console.error('Invalid inputs to combinedBounds');
+    return data.map(d => ({ date: d.date, y: 0 }));
+  }
+
+  // Extract y values from both bounds arrays
+  const bounds = [dataBounds, semanticBounds].map(
+    (b: Array<{ date: Date; y: number }>) =>
+      b.map((d: { date: Date; y: number }) => d.y)
+  );
+  
   console.log("bounds:", bounds);
+  
+  // Combine the bounds
   const comb = combineBounds(bounds);
-  return comb.map((d, i) => {
+  
+  // Map back to TimeSeriesData format
+  return comb.map((d: number, i: number) => {
     return { date: data[i].date, y: d };
   });
 }
@@ -296,29 +334,38 @@ export function combinedBounds(data, dataBounds, semanticBounds) {
 //
 //
 
-export function peakSegment(peaks: Peak[], dataLength, ignoreHeight = false) {
-  const peaksCpy = peaks.map((d, _) => {
+export function peakSegment(
+  peaks: Peak[],
+  dataLength: number,
+  ignoreHeight = false
+) {
+  const peaksCpy = peaks.map((d: Peak, _: number) => {
     return { idx: d.getDataIndex(), h: d.getNormHeight() };
   });
 
   console.log("peaksCpy: ", peaksCpy);
   // return
-  const ordering = [];
+  const ordering: { idx: number; h: number }[] = [];
   while (peaksCpy.length) {
-    let bestPeak;
-    peaksCpy.forEach((v1, i) => {
+    let bestPeak:
+      | { valley: { idx: number; h: number }; idx: number; score: number }
+      | undefined;
+    peaksCpy.forEach((v1: { idx: number; h: number }, i: number) => {
       let closestDist = ordering.reduce(
-        (closest, v2) => Math.min(closest, Math.abs(v1.idx - v2.idx)),
+        (closest: number, v2: { idx: number; h: number }) =>
+          Math.min(closest, Math.abs(v1.idx - v2.idx)),
         Math.min(v1.idx, dataLength - v1.idx)
       );
-      let score = (closestDist / dataLength) * (ignoreHeight || v1.h / 2);
+      let score = (closestDist / dataLength) * (ignoreHeight ? 1 : v1.h / 2);
       bestPeak =
         bestPeak && bestPeak.score > score
           ? bestPeak
           : { valley: v1, idx: i, score: score };
     });
-    peaksCpy.splice(bestPeak.idx, 1);
-    ordering.push(bestPeak.valley);
+    if (bestPeak) {
+      peaksCpy.splice(bestPeak.idx, 1);
+      ordering.push(bestPeak.valley);
+    }
   }
   return ordering;
 }

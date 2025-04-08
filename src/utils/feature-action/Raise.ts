@@ -2,8 +2,8 @@ import { NumericalFeature } from "./NumericalFeature";
 import { MSBFeatureName } from "./MSBFeatureName";
 
 export class Rise extends NumericalFeature {
-  grad: number;
-  normGrad: number;
+  protected grad: number = 0;
+  protected normGrad: number = 0;
 
   constructor() {
     super();

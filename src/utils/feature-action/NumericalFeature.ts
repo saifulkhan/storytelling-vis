@@ -1,7 +1,7 @@
 import { MSBFeature } from "./MSBFeature";
 
 export class NumericalFeature extends MSBFeature {
-  protected height: number;
+  protected height: number = 0;
 
   constructor() {
     super();

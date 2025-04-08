@@ -2,9 +2,9 @@ import { NumericalFeature } from "./NumericalFeature";
 import { MSBFeatureName } from "./MSBFeatureName";
 
 export class Peak extends NumericalFeature {
-  protected normHeight: number;
-  protected normWidth: number;
-  protected normDuration: number;
+  protected normHeight: number = 0;
+  protected normWidth: number = 0;
+  protected normDuration: number = 0;
 
   constructor() {
     super();

@@ -2,8 +2,8 @@ import { NumericalFeature } from "./NumericalFeature";
 import { MSBFeatureName } from "./MSBFeatureName";
 
 export class Fall extends NumericalFeature {
-  grad: number;
-  normGrad: number;
+  protected grad: number = 0;
+  protected normGrad: number = 0;
 
   constructor(
     date: Date,
@@ -13,8 +13,14 @@ export class Fall extends NumericalFeature {
     start?: Date,
     end?: Date
   ) {
-    super(date, height, rank, metric, start, end);
+    super();
     this.type = MSBFeatureName.FALL;
+    this.setDate(date);
+    this.setHeight(height);
+    if (rank !== undefined) this.setRank(rank);
+    if (metric !== undefined) this.setMetric(metric);
+    if (start !== undefined) this.setStart(start);
+    if (end !== undefined) this.setEnd(end);
   }
 
   setGrad(grad: number) {

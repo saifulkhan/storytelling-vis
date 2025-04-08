@@ -9,7 +9,15 @@ export abstract class MSBFeature {
   protected metric: string;
   protected dataIndex: number;
 
-  constructor() {}
+  constructor() {
+    this.date = new Date();
+    this.start = new Date();
+    this.end = new Date();
+    this.rank = 0;
+    this.type = MSBFeatureName.UNKNOWN;
+    this.metric = "";
+    this.dataIndex = 0;
+  }
 
   setDate(date: Date) {
     this.date = date;

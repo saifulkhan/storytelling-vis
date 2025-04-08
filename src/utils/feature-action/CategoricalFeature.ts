@@ -7,7 +7,7 @@ export enum MSBCategoricalFeatureName {
 }
 
 export class CategoricalFeature extends MSBFeature {
-  protected description: string;
+  protected description: string = '';
 
   constructor() {
     super();

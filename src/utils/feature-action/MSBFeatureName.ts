@@ -10,4 +10,5 @@ export enum MSBFeatureName {
   RAISE = "RAISE",
   SLOPE = "SLOPE",
   EVENT = "EVENT",
+  UNKNOWN = "UNKNOWN",
 }

@@ -1,4 +1,4 @@
-import { MSBAction } from "../../components/storyboard/actions/MSBAction";
+import { MSBAction } from "src/components/actions/MSBAction";
 import { MSBFeature } from "./MSBFeature";
 
 export type DateFeaturesMap = Map<Date, MSBFeature[]>;

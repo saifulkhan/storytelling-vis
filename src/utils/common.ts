@@ -1,17 +1,15 @@
 import * as d3 from "d3";
-import {
-  TimeSeriesPoint,
-} from "../types/TimeSeriesPoint";
+import { TimeSeriesPoint, TimeSeriesData } from "../types/TimeSeriesPoint";
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
 }
 
-export function sortTimeseriesData(data: TimeSeriesPoint[], key: string) {
+export function sortTimeseriesData(data: TimeSeriesData, key: keyof TimeSeriesPoint): TimeSeriesData {
   // sort data by selected key, e.g, "kernel_size"
   return data
     .slice()
-    .map(item => {
+    .map((item) => {
       // Ensure the y property is populated for compatibility with TimeseriesData
       // Use mean_test_accuracy as the default value for y if it's not already set
       if (item.y === undefined) {
@@ -24,10 +22,10 @@ export function sortTimeseriesData(data: TimeSeriesPoint[], key: string) {
 }
 
 export function sliceTimeseriesByDate(
-  data: TimeSeriesPoint[],
+  data: TimeSeriesData,
   start: Date,
   end: Date
-): TimeSeriesPoint[] {
+): TimeSeriesData {
   return data.filter((item) => item.date >= start && item.date <= end);
 }
 
@@ -55,11 +53,11 @@ export function createPredicate(
  **  Function to find index of a date in the timeseries data
  **/
 
-export function findDateIdx(date: Date, data: TimeSeriesPoint[]): number {
+export function findDateIdx(date: Date, data: TimeSeriesData): number {
   return data.findIndex((d) => d.date.getTime() == date.getTime());
 }
 
-export function findIndexOfDate(data: TimeSeriesPoint[], date: Date): number {
+export function findIndexOfDate(data: TimeSeriesData, date: Date): number {
   return data.findIndex((d) => {
     for (const key in d) {
       if (
@@ -78,12 +76,11 @@ export function findIndexOfDate(data: TimeSeriesPoint[], date: Date): number {
  **  Function to find indices of dates in the time series data
  **/
 export function findIndicesOfDates(
-  data: TimeSeriesPoint[],
+  data: TimeSeriesData,
   dates: Date[]
 ): number[] {
   const indices: number[] = [];
 
-  // iterate through the time series data
   for (let i = 0; i < data.length; i++) {
     const currentDate = data[i].date;
     // check if the current date exists in the array of dates to find
@@ -97,37 +94,39 @@ export function findIndicesOfDates(
 /**
  ** Function to set a value in the map if it doesn't exist, otherwise get the existing value and then set it again
  **/
-export function setOrUpdateMap(
-  map: Map<unknown, unknown>,
-  key: unknown,
-  value: unknown[] | unknown
-) {
+export function setOrUpdateMap<K, V>(
+  map: Map<K, V[] | Array<V>>,
+  key: K,
+  value: V
+): void {
   if (map.has(key)) {
     const existingValue = map.get(key);
-    existingValue?.push(value);
-    map.set(key, existingValue!);
+    if (existingValue && Array.isArray(existingValue)) {
+      existingValue.push(value);
+      map.set(key, existingValue);
+    }
   } else {
     map.set(key, [value]);
   }
 }
 
-export function sortObjectKeysInPlace(obj) {
+export function sortObjectKeysInPlace<T extends Record<string, any>>(obj: T): T {
   let keys = Object.keys(obj);
   keys.sort();
-  let sortedObj = {};
+  let sortedObj: Record<string, any> = {};
   keys.forEach((key) => {
     sortedObj[key] = obj[key];
   });
   // Reassign the sorted keys to the original object
   Object.keys(sortedObj).forEach((key) => {
-    obj[key] = sortedObj[key];
+    (obj as Record<string, any>)[key] = sortedObj[key];
   });
-  return obj; // Optional: Return the sorted object
+  return obj;
 }
 
 export function getObjectKeysArray(obj: any[]): string[] {
   // function to check if a value is an object
-  const isObject = (value) => {
+  const isObject = (value: unknown): boolean => {
     return value !== null && typeof value === "object" && !Array.isArray(value);
   };
 
@@ -141,54 +140,62 @@ export function getObjectKeysArray(obj: any[]): string[] {
   return keys;
 }
 
-export function maxIndex(values, valueof?) {
-  let max;
+export function maxIndex<T>(values: Iterable<T>, valueof?: (value: T, index: number, array: Iterable<T>) => number | null | undefined): number {
+  let max: number | undefined;
   let maxIndex = -1;
   let index = -1;
   if (valueof === undefined) {
     for (const value of values) {
       ++index;
+      const numValue = value as unknown as number;
       if (
-        value != null &&
-        (max < value || (max === undefined && value >= value))
+        numValue != null &&
+        (max === undefined || max < numValue)
       ) {
-        (max = value), (maxIndex = index);
+        max = numValue;
+        maxIndex = index;
       }
     }
   } else {
-    for (let value of values) {
+    for (const item of values) {
+      const value = valueof(item, ++index, values);
       if (
-        (value = valueof(value, ++index, values)) != null &&
-        (max < value || (max === undefined && value >= value))
+        value != null &&
+        (max === undefined || max < value)
       ) {
-        (max = value), (maxIndex = index);
+        max = value;
+        maxIndex = index;
       }
     }
   }
   return maxIndex;
 }
 
-export function minIndex(values, valueof?) {
-  let min;
+export function minIndex<T>(values: Iterable<T>, valueof?: (value: T, index: number, array: Iterable<T>) => number | null | undefined): number {
+  let min: number | undefined;
   let minIndex = -1;
   let index = -1;
   if (valueof === undefined) {
     for (const value of values) {
       ++index;
+      const numValue = value as unknown as number;
       if (
-        value != null &&
-        (min > value || (min === undefined && value >= value))
+        numValue != null &&
+        (min === undefined || min > numValue)
       ) {
-        (min = value), (minIndex = index);
+        min = numValue;
+        minIndex = index;
       }
     }
   } else {
-    for (let value of values) {
+    for (const item of values) {
+      const value = valueof(item, ++index, values);
       if (
-        (value = valueof(value, ++index, values)) != null &&
-        (min > value || (min === undefined && value >= value))
+        value != null &&
+        (min === undefined || min > value)
       ) {
-        (min = value), (minIndex = index);
+        min = value;
+        minIndex = index;
       }
     }
   }
@@ -216,8 +223,8 @@ export function normalise(data: number[]) {
  * We remove the need for array x as we assume y data is equally spaced and we only want the gradient.
  */
 
-export function linRegGrad(y) {
-  let slope = {};
+export function linRegGrad(y: number[]): number {
+  let slope: number = 0;
   const n = y.length;
   let sum_x = 0;
   let sum_y = 0;
@@ -249,9 +256,9 @@ export function scaleValue(
 }
 
 export function fromMLToTimeSeriesData(
-  data: TimeSeriesPoint[],
+  data: TimeSeriesData,
   key: string
-): TimeSeriesPoint[] {
+): TimeSeriesData {
   return data.map((d: TimeSeriesPoint) => {
     return {
       date: d.date,

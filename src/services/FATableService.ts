@@ -7,16 +7,19 @@ const STORY_JSON = {
   "ML: Multivariate": "/static/storyboards/ml/numerical-table-1.json",
 };
 
-export function getTables() {
-  return Object.keys(STORY_JSON);
+// Define a type for the valid table names
+export type TableName = keyof typeof STORY_JSON;
+
+export function getTables(): TableName[] {
+  return Object.keys(STORY_JSON) as TableName[];
 }
 
-export async function getTableData(table: string) {
+export async function getTableData(table: TableName) {
   const file = STORY_JSON[table];
   return await d3.json(file);
 }
 
-export async function saveTableData(table: string, data: any) {
+export async function saveTableData(table: TableName, data: any) {
   const file = STORY_JSON[table];
   const jsonData = JSON.stringify(data, null, 2);
   //  fs.writeFileSync(file, jsonData);
