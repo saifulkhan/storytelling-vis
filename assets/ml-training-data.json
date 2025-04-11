@@ -1,0 +1,596 @@
+[
+  {
+    "date": "2023-02-16T00:18:38.000Z",
+    "mean_test_accuracy": 0.803966667,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 3,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T02:18:03.000Z",
+    "mean_test_accuracy": 0.8284,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 4,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T04:22:23.000Z",
+    "mean_test_accuracy": 0.837533333,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 5,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T06:29:26.000Z",
+    "mean_test_accuracy": 0.851366667,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 6,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T08:38:22.000Z",
+    "mean_test_accuracy": 0.857566667,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 7,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T10:51:27.000Z",
+    "mean_test_accuracy": 0.859633333,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 8,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T13:10:45.000Z",
+    "mean_test_accuracy": 0.8636,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 9,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T15:34:15.000Z",
+    "mean_test_accuracy": 0.8665,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 10,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T18:02:50.000Z",
+    "mean_test_accuracy": 0.8669,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 11,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T20:34:16.000Z",
+    "mean_test_accuracy": 0.862933333,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 12,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T23:13:16.000Z",
+    "mean_test_accuracy": 0.864433333,
+    "mean_training_accuracy": 0.999946667,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-17T01:54:35.000Z",
+    "mean_test_accuracy": 0.866233333,
+    "mean_training_accuracy": 0.999933333,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 14,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-17T04:39:06.000Z",
+    "mean_test_accuracy": 0.865533333,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 15,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-17T07:26:25.000Z",
+    "mean_test_accuracy": 0.8675,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 16,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-17T10:16:29.000Z",
+    "mean_test_accuracy": 0.8652,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 17,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-17T13:10:25.000Z",
+    "mean_test_accuracy": 0.8574,
+    "mean_training_accuracy": 0.9996,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 18,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-24T12:27:53.000Z",
+    "mean_test_accuracy": 0.608566667,
+    "mean_training_accuracy": 0.765966667,
+    "channels": 2,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-24T20:54:06.000Z",
+    "mean_test_accuracy": 0.638733333,
+    "mean_training_accuracy": 0.872193333,
+    "channels": 3,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-24T22:08:41.000Z",
+    "mean_test_accuracy": 0.6792,
+    "mean_training_accuracy": 0.9454,
+    "channels": 4,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-09T03:32:45.000Z",
+    "mean_test_accuracy": 0.7175,
+    "mean_training_accuracy": 0.974826667,
+    "channels": 5,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-09T05:36:34.000Z",
+    "mean_test_accuracy": 0.7328,
+    "mean_training_accuracy": 0.984393333,
+    "channels": 6,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-11T00:49:05.000Z",
+    "mean_test_accuracy": 0.752866667,
+    "mean_training_accuracy": 0.989906667,
+    "channels": 7,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-08T04:01:47.000Z",
+    "mean_test_accuracy": 0.771233333,
+    "mean_training_accuracy": 0.993313333,
+    "channels": 8,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-10T21:08:52.000Z",
+    "mean_test_accuracy": 0.782966667,
+    "mean_training_accuracy": 0.995466667,
+    "channels": 9,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-10T22:29:23.000Z",
+    "mean_test_accuracy": 0.7896,
+    "mean_training_accuracy": 0.995066667,
+    "channels": 10,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-10T23:49:42.000Z",
+    "mean_test_accuracy": 0.794466667,
+    "mean_training_accuracy": 0.99582,
+    "channels": 11,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-14T19:00:06.000Z",
+    "mean_test_accuracy": 0.802933333,
+    "mean_training_accuracy": 0.99706,
+    "channels": 12,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-14T20:16:36.000Z",
+    "mean_test_accuracy": 0.809433333,
+    "mean_training_accuracy": 0.997766667,
+    "channels": 13,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-14T21:34:05.000Z",
+    "mean_test_accuracy": 0.814733333,
+    "mean_training_accuracy": 0.998953333,
+    "channels": 14,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-14T22:51:22.000Z",
+    "mean_test_accuracy": 0.821966667,
+    "mean_training_accuracy": 0.999133333,
+    "channels": 15,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-07T10:50:18.000Z",
+    "mean_test_accuracy": 0.8259,
+    "mean_training_accuracy": 0.998813333,
+    "channels": 16,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T09:40:58.000Z",
+    "mean_test_accuracy": 0.835433333,
+    "mean_training_accuracy": 0.999966667,
+    "channels": 17,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T10:58:49.000Z",
+    "mean_test_accuracy": 0.836033333,
+    "mean_training_accuracy": 0.999453333,
+    "channels": 18,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-21T08:42:49.000Z",
+    "mean_test_accuracy": 0.8403,
+    "mean_training_accuracy": 0.9995,
+    "channels": 19,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-21T10:01:48.000Z",
+    "mean_test_accuracy": 0.845666667,
+    "mean_training_accuracy": 0.999966667,
+    "channels": 20,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-23T07:33:24.000Z",
+    "mean_test_accuracy": 0.843,
+    "mean_training_accuracy": 0.999846667,
+    "channels": 21,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-23T08:50:44.000Z",
+    "mean_test_accuracy": 0.837,
+    "mean_training_accuracy": 0.998553333,
+    "channels": 22,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T12:16:51.000Z",
+    "mean_test_accuracy": 0.856,
+    "mean_training_accuracy": 1,
+    "channels": 23,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T13:34:38.000Z",
+    "mean_test_accuracy": 0.8509,
+    "mean_training_accuracy": 0.9992,
+    "channels": 24,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T14:53:08.000Z",
+    "mean_test_accuracy": 0.856533333,
+    "mean_training_accuracy": 0.99986,
+    "channels": 25,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T16:10:57.000Z",
+    "mean_test_accuracy": 0.856966667,
+    "mean_training_accuracy": 0.999886667,
+    "channels": 26,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T17:28:38.000Z",
+    "mean_test_accuracy": 0.861266667,
+    "mean_training_accuracy": 1,
+    "channels": 27,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T18:46:35.000Z",
+    "mean_test_accuracy": 0.856866667,
+    "mean_training_accuracy": 0.999566667,
+    "channels": 28,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T20:04:14.000Z",
+    "mean_test_accuracy": 0.8589,
+    "mean_training_accuracy": 0.999586667,
+    "channels": 29,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-27T21:22:10.000Z",
+    "mean_test_accuracy": 0.861333333,
+    "mean_training_accuracy": 0.999053333,
+    "channels": 30,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T21:54:07.000Z",
+    "mean_test_accuracy": 0.8652,
+    "mean_training_accuracy": 0.999866667,
+    "channels": 31,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T23:13:16.000Z",
+    "mean_test_accuracy": 0.864433333,
+    "mean_training_accuracy": 0.999946667,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-16T23:13:16.000Z",
+    "mean_test_accuracy": 0.864433333,
+    "mean_training_accuracy": 0.999946667,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T13:04:29.000Z",
+    "mean_test_accuracy": 0.854333333,
+    "mean_training_accuracy": 0.999213333,
+    "channels": 32,
+    "kernel_size": 4,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T12:54:17.000Z",
+    "mean_test_accuracy": 0.8582,
+    "mean_training_accuracy": 0.999773333,
+    "channels": 32,
+    "kernel_size": 5,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T13:02:48.000Z",
+    "mean_test_accuracy": 0.842666667,
+    "mean_training_accuracy": 0.998253333,
+    "channels": 32,
+    "kernel_size": 6,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T13:18:49.000Z",
+    "mean_test_accuracy": 0.833133333,
+    "mean_training_accuracy": 0.998413333,
+    "channels": 32,
+    "kernel_size": 7,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T13:19:18.000Z",
+    "mean_test_accuracy": 0.818966667,
+    "mean_training_accuracy": 0.99842,
+    "channels": 32,
+    "kernel_size": 8,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T14:16:51.000Z",
+    "mean_test_accuracy": 0.8108,
+    "mean_training_accuracy": 0.996486667,
+    "channels": 32,
+    "kernel_size": 9,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T14:19:52.000Z",
+    "mean_test_accuracy": 0.799733333,
+    "mean_training_accuracy": 0.99768,
+    "channels": 32,
+    "kernel_size": 10,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T17:16:43.000Z",
+    "mean_test_accuracy": 0.788033333,
+    "mean_training_accuracy": 0.99682,
+    "channels": 32,
+    "kernel_size": 11,
+    "layers": 13,
+    "samples_per_class": 50000
+  },
+  {
+    "date": "2023-02-28T17:10:26.000Z",
+    "mean_test_accuracy": 0.672833333,
+    "mean_training_accuracy": 0.998,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 5000
+  },
+  {
+    "date": "2023-02-28T17:18:59.000Z",
+    "mean_test_accuracy": 0.7536,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 10000
+  },
+  {
+    "date": "2023-02-28T16:35:24.000Z",
+    "mean_test_accuracy": 0.7919,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 15000
+  },
+  {
+    "date": "2023-02-28T16:42:53.000Z",
+    "mean_test_accuracy": 0.8138,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 20000
+  },
+  {
+    "date": "2023-02-28T16:52:12.000Z",
+    "mean_test_accuracy": 0.827966667,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 25000
+  },
+  {
+    "date": "2023-02-28T17:00:16.000Z",
+    "mean_test_accuracy": 0.837766667,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 30000
+  },
+  {
+    "date": "2023-02-28T16:53:52.000Z",
+    "mean_test_accuracy": 0.849,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 35000
+  },
+  {
+    "date": "2023-02-28T17:04:07.000Z",
+    "mean_test_accuracy": 0.8544,
+    "mean_training_accuracy": 1,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 40000
+  },
+  {
+    "date": "2023-02-28T17:04:15.000Z",
+    "mean_test_accuracy": 0.8595,
+    "mean_training_accuracy": 0.999874074,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 45000
+  },
+  {
+    "date": "2023-02-16T23:13:16.000Z",
+    "mean_test_accuracy": 0.864433333,
+    "mean_training_accuracy": 0.999946667,
+    "channels": 32,
+    "kernel_size": 3,
+    "layers": 13,
+    "samples_per_class": 50000
+  }
+]

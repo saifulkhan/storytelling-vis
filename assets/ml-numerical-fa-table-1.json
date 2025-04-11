@@ -1,0 +1,66 @@
+[
+  {
+    "feature": "MIN",
+    "properties": {},
+    "rank": 5,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "title": "${date}",
+          "message": "The worst accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      }
+    ]
+  },
+  {
+    "feature": "MAX",
+    "properties": {},
+    "rank": 7,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "message": "The best accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      }
+    ]
+  },
+  {
+    "feature": "CURRENT",
+    "properties": {},
+    "rank": 7,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "message": "The current testing accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      }
+    ]
+  },
+  {
+    "feature": "LAST",
+    "properties": {},
+    "rank": 7,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "message": "The current/last testing accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      }
+    ]
+  }
+]

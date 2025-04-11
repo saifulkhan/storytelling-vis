@@ -1,0 +1,100 @@
+[
+  {
+    "feature": "FIRST",
+    "properties": {},
+    "rank": 10,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "title": "${date}",
+          "message": "Region ${name} recorded its first COVID-19 case.",
+          "backgroundColor": "#d3d3d3",
+          "width": 200
+        }
+      }
+    ]
+  },
+
+  {
+    "feature": "PEAK",
+    "properties": {},
+    "rank": 10,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "title": "${date}",
+          "message": "By ${date}, the number of peaks at ${value}.",
+          "backgroundColor": "#d3d3d3",
+          "width": 200
+        }
+      },
+      {
+        "action": "DOT",
+        "properties": {
+          "color": "#FFA500",
+          "size": 5,
+          "opacity": 0.6
+        }
+      },
+      {
+        "action": "CIRCLE",
+        "properties": {
+          "size": 10,
+          "strokeWidth": 2,
+          "opacity": 0.6,
+          "color": "#FFA500"
+        }
+      },
+      {
+        "action": "CONNECTOR",
+        "properties": {
+          "stroke": "black",
+          "opacity": 0.6
+        }
+      }
+    ]
+  },
+  {
+    "feature": "MAX",
+    "properties": {},
+    "rank": 5,
+    "actions": [
+      {
+        "action": "DOT",
+        "properties": {
+          "color": "red",
+          "size": 5,
+          "strokeWidth": 2,
+          "opacity": 0.6
+        }
+      },
+      {
+        "action": "CIRCLE",
+        "properties": {
+          "size": 10,
+          "strokeWidth": 2,
+          "opacity": 0.6,
+          "color": "red"
+        }
+      },
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "title": "${date}",
+          "message": "On ${date}, the number of cases reached maximum, ${value} in region ${name}.",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      },
+      {
+        "action": "CONNECTOR",
+        "properties": {
+          "stroke": "black",
+          "opacity": 0.6
+        }
+      }
+    ]
+  }
+]

@@ -1,14 +1,92 @@
+**Meta-Storyboarding Using Feature-Action Design Pattern**
 
-This repository contains the source code accompanying our research on utilizing Meta Story Board (MSB) Feature-Action Design Patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
-## Prerequisite
+# API User Guide
+
+
+
+```bash
+yarn add storytelling-vis
+```
+
+
+```jsx
+import React from 'react';
+import { LinePlot, Circle } from 'storytelling-vis';
+ const MyComponent = () => {
+  const svgRef = React.useRef(null);
+   React.useEffect(() => {
+    if (svgRef.current) {
+      // Create a line plot with your data
+      const plot = new LinePlot()
+        .setData(myData)
+        .setCanvas(svgRef.current)
+        .show();
+    }
+  }, []);
+
+```
+
+```jsx
+import React from 'react';
+import { LinePlot, Circle, MSBActionFactory } from 'storytelling-vis';
+
+const MyComponent = () => {
+  const svgRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    if (svgRef.current) {
+      const data = [...]; // Your time series data
+      
+      // Create a line plot
+      const plot = new LinePlot()
+        .setData(data)
+        .setName('My Data')
+        .setProps({
+          width: 800,
+          height: 400,
+          margin: { top: 20, right: 20, bottom: 30, left: 50 }
+        })
+        .setCanvas(svgRef.current);
+      
+      // Show the plot
+      plot.show();
+      
+      // Create actions
+      const actionFactory = new MSBActionFactory();
+      const circle = actionFactory.create('CIRCLE', {
+        size: 10,
+        color: 'red'
+      });
+      
+      // Add actions to the plot
+      circle.setCanvas(svgRef.current)
+        .setCoordinate([100, 100])
+        .show();
+    }
+  }, []);
+  
+  return <svg ref={svgRef} width="800" height="400"></svg>;
+};
+
+export default MyComponent;
+```
+
+
+
+<div style="height:3px; background: linear-gradient(to right, transparent, #333, transparent); margin:20px 0;"></div>
+
+
+For more details of available APIs see the documents below.
+
+# API Design & Development
+
+## Getting Started
 
 The following environment and packages are required.
 
 - Node.js v20.11.1
 - yarn or npm
-
-## Getting Started
 
 Clone the repository.
 
@@ -18,21 +96,16 @@ cd storytelling-vis
 
 ```
 
-Install all dependent packages.
+Install all dependent packages and start the development server to view the UI.
 
 ```bash
 yarn install
-```
-
-Start the development server to view the UI:
-
-```bash
 yarn dev
 ```
 
 Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
 
-**Implemented Stories:**
+**Example Stories:**
 
 - [localhost:3000/story-covid19-single](http://localhost:3000/story-covid19-single)
 - [localhost:3000/story-ml-mirorred-bar](http://localhost:3000/story-ml-mirorred-bar)
@@ -51,11 +124,8 @@ Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui
 - [localhost:3000/playground/test-gaussian-nts](http://localhost:3000/playground/test-gaussian-nts)
 - [localhost:3000/playground/test-line-plot](http://localhost:3000/playground/test-line-plot)
 
-
-
-
-
 - [localhost:3000/playground/test-play-pause-loop](http://localhost:3000/playground/test-play-pause-loop)
+
 
 ### Tests
 
@@ -67,7 +137,6 @@ yarn test
 
 Note: unit tests are under development and may not cover all features.
 
-# Documentation
 
 ## Code Structure
 
@@ -361,7 +430,11 @@ new LinePlot()
 
 To add a new table, see `src/services/TableService.ts`
 
-## Using as a Library
+
+<div style="height:3px; background: linear-gradient(to right, transparent, #333, transparent); margin:20px 0;"></div>
+ 
+
+# Using as a Library
 
 This project can be used as a reusable component library in other React applications. Follow these steps to build and use it as a library:
 
@@ -409,52 +482,26 @@ npm install --save storytelling-vis
 # or with yarn
 yarn add storytelling-vis
 ```
+ 
+## Build and Publish
 
-### Usage Example
 
-```jsx
-import React from 'react';
-import { LinePlot, Circle, MSBActionFactory } from 'storytelling-vis';
+```bash
+yarn install
+yarn build 
 
-const MyComponent = () => {
-  const svgRef = React.useRef(null);
-  
-  React.useEffect(() => {
-    if (svgRef.current) {
-      const data = [...]; // Your time series data
-      
-      // Create a line plot
-      const plot = new LinePlot()
-        .setData(data)
-        .setName('My Data')
-        .setProps({
-          width: 800,
-          height: 400,
-          margin: { top: 20, right: 20, bottom: 30, left: 50 }
-        })
-        .setCanvas(svgRef.current);
-      
-      // Show the plot
-      plot.show();
-      
-      // Create actions
-      const actionFactory = new MSBActionFactory();
-      const circle = actionFactory.create('CIRCLE', {
-        size: 10,
-        color: 'red'
-      });
-      
-      // Add actions to the plot
-      circle.setCanvas(svgRef.current)
-        .setCoordinate([100, 100])
-        .show();
-    }
-  }, []);
-  
-  return <svg ref={svgRef} width="800" height="400"></svg>;
-};
+# Build the library
+yarn build:lib
 
-export default MyComponent;
+# Publish to npm
+npm login
+npm publish
+```
+
+
+```bash
+# Local Installation
+yarn add file:/path/to/storytelling-vis
 ```
 
 ## Support
@@ -465,6 +512,7 @@ This code is not production-ready. If you want to use this code and need help pl
 - The previous prototypes contain six stories, however, in this new repository so far we only ported two stories. We will gradually port the remaining four stories and will also add more stories.
 
 ## References
+This repository contains the source code accompanying our research on utilizing Meta Story Board (MSB) Feature-Action Design Patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
 Please cite our paper as follows:
 
@@ -478,3 +526,5 @@ Please cite our paper as follows:
 ```
 
 - Used d3.js[⤴](https://d3js.org/), React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com), and other libraries.
+
+

@@ -24,13 +24,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { getMLData } from "src/services/TimeSeriesDataService";
-import { getTableData } from "src/services/FATableService";
+import { getMLData } from "temp/services/TimeSeriesDataService";
+import { getTableData } from "temp/services/FATableService";
 import { ParallelCoordinatePlot } from "src/components/plots/ParallelCoordinatePlot";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { DateActionArray } from "src/types/FeatureActionTypes";
 import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 
 const MLMVStoryPage = () => {
@@ -89,7 +89,7 @@ const MLMVStoryPage = () => {
     const _data = sortTimeseriesData(data, hyperparam);
 
     const actions: DateActionArray = new MSBFeatureActionFactory()
-      .setProps({ metric: "accuracy", window: 0 })
+      .setFAProps({ metric: "accuracy", window: 0 })
       .setData(_data)
       .setTable(table)
       .create();

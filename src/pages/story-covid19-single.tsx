@@ -25,13 +25,14 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { getCovid19Data } from "src/services/TimeSeriesDataService";
 import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { getTableData } from "src/services/FATableService";
 import { LinePlot } from "src/components/plots/LinePlot";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { DateActionArray } from "src/types/FeatureActionTypes";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
+
+import covid19CasesData from "../../assets/covid19-cases-data.json";
+import covid19NumFATableData from "../../assets/covid-19-numerical-fa-table.json";
 
 const Covid19SLStoryPage = () => {
   const WIDTH = 1200,
@@ -43,55 +44,66 @@ const Covid19SLStoryPage = () => {
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
-  const [regionsData, setRegionsData] = useState<
-    Record<string, TimeSeriesPoint[]>
-  >({});
-  const [tableNFA, setTableNFA] = useState<any>(null);
-  const linePlot = useRef(new LinePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(linePlot);
+  const [casesData, setCasesData] = useState<Record<string, TimeSeriesPoint[]>>(
+    {}
+  );
+  const [numFATableData, setNumFATableData] = useState<any>(null);
+  const plot = useRef(new LinePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
+
+  // Load data and feature-action table
 
   useEffect(() => {
     if (!chartRef.current) return;
-    console.log("Covid19Story1Page: useEffect 1: fetchData");
     setLoading(true);
-
-    const fetchData = async () => {
+    
+    (async () => {
       try {
-        const allData = await getCovid19Data();
-        setRegionsData(allData);
-        setRegions(Object.keys(allData).sort());
-        const table = await getTableData("COVID-19: Single Location");
-        setTableNFA(table);
+        const casesData = Object.fromEntries(
+          Object.entries(covid19CasesData || {}).map(([region, data]) => [
+            region,
+            data.map(({ date, y }: { date: string; y: number }) => ({ date: new Date(date), y: +y })),
+          ])
+        ) as Record<string, TimeSeriesPoint[]>;
 
-        console.log("Covid19Story1Page: useEffect 1: allRegionData: ", allData);
+        const numFATableData = covid19NumFATableData;
+
+        setCasesData(casesData);
+        setNumFATableData(numFATableData);
+        setRegions(Object.keys(casesData).sort());
+
+        console.log("Cases data: ", casesData);
+        console.log("Numerical feature-action table data: ", numFATableData);
+
       } catch (error) {
-        console.error("Covid19Story1Page: Failed to fetch data:", error);
+        console.error("Failed to fetch data; error:", error);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchData();
+    })();
   }, []);
 
+  // Build story
+
   useEffect(() => {
-    if (!region || !regionsData[region] || !chartRef.current) return;
+    if (!region || !casesData[region] || !chartRef.current) return;
 
-    const regionData = regionsData[region];
+    const regionData = casesData[region];
+    console.log("Selected region: ", region);
+    console.log("Selected region data: ", regionData);
 
-    console.log("Covid19Story1Page: useEffect 2: region: ", region);
-    console.log("Covid19Story1Page: useEffect 2: regionData: ", regionData);
-
+    // Create actions
     const actions: DateActionArray = new MSBFeatureActionFactory()
-      .setProps({
-        metric: "",
+      .setFAProps({
+        metric: "Number of cases",
         window: 10,
       })
-      .setTable(tableNFA)
+      .setTable(numFATableData)
       .setData(regionData)
       .create();
 
-    linePlot
+    // Draw the plot
+    plot
       .setData([regionData])
       .setName(region)
       .setPlotProps({
@@ -103,15 +115,14 @@ const Covid19SLStoryPage = () => {
       .setCanvas(chartRef.current)
       .setActions(actions);
 
+    // Pause the animation
     pause();
 
     return () => {};
-  }, [region, regionsData, tableNFA]);
+  }, [region, casesData, numFATableData]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;
-    // prettier-ignore
-    // console.log("Covid19Story1Page:handleSelection: newRegion = ", newRegion);
     if (newRegion) {
       setRegion(newRegion);
     }
@@ -119,7 +130,6 @@ const Covid19SLStoryPage = () => {
 
   const handleChangeSlider = (event: Event, newValue: number | number[]) => {
     const selectedSegment = newValue as number;
-    console.log("Covid19Story1Page: selectedSegment = ", selectedSegment);
     if (selectedSegment !== undefined && selectedSegment !== segment) {
       // setSegment(selectedSegment);
       // segmentData(selectedSegment);
@@ -144,7 +154,6 @@ const Covid19SLStoryPage = () => {
           py: 8,
         }}
       >
-        {/* <Container> */}
         <Card sx={{ minWidth: 1200 }}>
           <CardHeader
             avatar={
@@ -184,7 +193,6 @@ const Covid19SLStoryPage = () => {
                   </InputLabel>
                   <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
                     <Slider
-                      // labelId="segment-slider"
                       disabled={true}
                       aria-label="Segments"
                       defaultValue={3}
@@ -222,7 +230,6 @@ const Covid19SLStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!region}
                       disabled={true}
                       onClick={handleBeginningButton}
                       component="span"
@@ -234,7 +241,6 @@ const Covid19SLStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!region}
                       disabled={true}
                       onClick={handleBackButton}
                       startIcon={<ArrowBackIosIcon />}

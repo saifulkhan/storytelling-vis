@@ -48,7 +48,7 @@ export * from './utils/feature-action/CategoricalFeature';
 export * from './utils/feature-action/Condition';
 export * from './utils/feature-action/Current';
 export * from './utils/feature-action/Fall';
-export * from './utils/feature-action/FeatureActionTypes';
+export * from './types/FeatureActionTypes';
 export * from './utils/feature-action/FeatureSearchProps';
 export * from './utils/feature-action/First';
 export * from './utils/feature-action/Last';

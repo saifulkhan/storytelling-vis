@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { StoryboardColors, LineColor } from "src/components/StoryboardColors";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { findIndexOfDate, getObjectKeysArray } from "src/utils/common";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { DateActionArray } from "src/types/FeatureActionTypes";
 import { Coordinate } from "src/types/coordinate";
 import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";

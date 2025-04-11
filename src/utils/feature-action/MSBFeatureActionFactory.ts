@@ -7,7 +7,7 @@ import {
 } from "src/components/tables/FeatureActionTableRow";
 import { MSBFeatureFactory } from "src/utils/feature-action/MSBFeatureFactory";
 import { MSBAction } from "src/components/actions/MSBAction";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { DateActionArray } from "src/types/FeatureActionTypes";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
@@ -24,7 +24,7 @@ export class MSBFeatureActionFactory {
     this.props = defaultFeatureSearchProps;
   }
 
-  public setProps(props: FeatureSearchProps) {
+  public setFAProps(props: FeatureSearchProps) {
     this.props = { ...defaultFeatureSearchProps, ...props };
     return this;
   }

@@ -3,7 +3,7 @@ import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { Coordinate } from "src/types/coordinate";
 import { TimeSeriesPoint, TimeSeriesData } from "src/types/TimeSeriesPoint";
 import { findDateIdx, findIndexOfDate } from "src/utils/common";
-import { DateActionArray } from "src/utils/feature-action/FeatureActionTypes";
+import { DateActionArray } from "src/types/FeatureActionTypes";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
