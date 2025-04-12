@@ -29,8 +29,9 @@ import { sortTimeseriesData } from "src/utils/common";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import mlTrainingData from "../../assets/ml-training-data.json";
-import mlNumFATable from "../../assets/ml-numerical-fa-table-1.json";
+
+import mlTrainingData from "../../assets/data/ml-training-data.json";
+import mlNumFATable from "../../assets/data/ml-numerical-fa-table-1.json";
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,
