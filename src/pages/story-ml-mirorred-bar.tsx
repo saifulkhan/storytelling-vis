@@ -29,20 +29,21 @@ import { blue } from "@mui/material/colors";
 
 import {
   MirroredBarChart,
-  MirroredBarChartProps,  
+  MirroredBarChartProps,
 } from "src/components/plots/MirroredBarChart";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
 import { TimeSeriesData } from "src/types/TimeSeriesPoint";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
+import { LinePlot } from "src/components/plots/LinePlot";
 
 import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table-1.json";
+import mlNumFATable from "../../assets/data/ml-numerical-fa-table.json";
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,
-    HEIGHT = 800;
+    HEIGHT = 400;
   const HYPERPARAMS = [
     "channels",
     "kernel_size",
@@ -50,17 +51,22 @@ const StoryMLMirroredBar = () => {
     "samples_per_class",
   ];
 
-  const chartRef = useRef<SVGSVGElement>(null);
+  const chartRefLine = useRef<SVGSVGElement>(null);
+  const chartRefMirrored = useRef<SVGSVGElement>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [hyperparam, setHyperparam] = useState<string>("");
   const [mlData, setMLData] = useState<TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
-  const plot = useRef(new MirroredBarChart()).current;
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
+  const linePlot = useRef(new LinePlot()).current;
+  const mirroredBarChart = useRef(new MirroredBarChart()).current;
+
+  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(linePlot);
+  // const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(mirroredBarChart);
 
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!chartRefLine.current) return;
     setLoading(true);
 
     // load ML training data
@@ -83,21 +89,10 @@ const StoryMLMirroredBar = () => {
   useEffect(() => {
     setHyperparam("channels");
 
-    if (!hyperparam || !mlData || !chartRef.current) return;
+    if (!hyperparam || !mlData || !chartRefLine.current) return;
 
     const data = sortTimeseriesData(mlData, hyperparam);
     console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
-
-    // build story based on selected hyperparameter's data and feature-action table
-
-    // convert to MirroredBarChartData which will display mean_test_accuracy & mean_training_accuracy
-    // TODO: may not be required
-    const chartData: MirroredBarChartData[] = data.map((item) => ({
-      date: new Date(item.date),
-      y: (item as any)[hyperparam] as number, // Parameter value using type assertion
-      mean_test_accuracy: item.mean_test_accuracy,
-      mean_training_accuracy: item.mean_training_accuracy,
-    }));
 
     // build story based on selected hyperparameter's data and feature-action table
 
@@ -108,30 +103,29 @@ const StoryMLMirroredBar = () => {
       .setTable(numericalFATable) // <- feature-action table
       .create();
 
+    linePlot
+      .setData([data]) // <- timeseries data
+      .setName(hyperparam) // <- selected hyperparam
+      .setPlotProps({
+        title: `${hyperparam}`,
+        xLabel: "Date",
+        leftAxisLabel: "",
+        showPoints: true,
+      })
+      .setLineProps([])
+      .setCanvas(chartRefLine.current)
+      // .plot() // <- draw the static plot, useful for testing
+      .setActions(timelineMSBActions);
+
     // provide the data, timeline MSB actions, and settings to the PCP
-    plot
+    mirroredBarChart
       .setProps({})
       .setName(hyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
-      .setCanvas(chartRef.current)
-      .setActions(timelineMSBActions);
+      .setCanvas(chartRefMirrored.current)
+      .plot(); // <- draw the static plot, useful for testing
 
-    // new MirroredBarChart()
-    // .selector(selector2, 200, 850, {
-    //   top: 10,
-    //   right: 20,
-    //   bottom: 20,
-    //   left: 50,
-    // })
-    // .data1(selectedData)
-    // .color1(Color.CornflowerBlue)
-    // .color2(Color.DarkGrey)
-    // .title("")
-    // .yLabel1(`accuracy`)
-    // .yLabel2(`${selectedParameter}`)
-    // .ticks(10)
-    // // .plot(); // static plot // debug
-    // .annotations(annotations);
+    //.setActions(timelineMSBActions);
 
     // pause the animation, start when play button is clicked
     pause();
@@ -146,33 +140,9 @@ const StoryMLMirroredBar = () => {
     }
   };
 
-  const handleBeginningButton = () => {
-    // Use the togglePlayPause method which is properly typed
-    if (isPlaying) {
-      pause();
-    }
-    // Reset to beginning if needed
-    if (plot) {
-      // Call any reset or beginning method that might be available
-      console.log("Reset to beginning");
-    }
-  };
+  const handleBeginningButton = () => {};
+  const handleBackButton = () => {};
 
-  const handleBackButton = () => {
-    // Use the togglePlayPause method which is properly typed
-    if (isPlaying) {
-      pause();
-    }
-    // Go back if needed
-    if (plot) {
-      // Call any back method that might be available
-      console.log("Go back");
-    }
-  };
-
-  const handlePlayButton = () => {
-    togglePlayPause();
-  };
 
   return (
     <>
@@ -279,7 +249,15 @@ const StoryMLMirroredBar = () => {
                   </FormControl>
                 </FormGroup>
                 <svg
-                  ref={chartRef}
+                  ref={chartRefLine}
+                  style={{
+                    width: WIDTH,
+                    height: HEIGHT,
+                    border: "0px solid",
+                  }}
+                ></svg>
+                <svg
+                  ref={chartRefMirrored}
                   style={{
                     width: WIDTH,
                     height: HEIGHT,

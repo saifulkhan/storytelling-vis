@@ -27,6 +27,7 @@ export class MirroredBarChart extends Plot {
     yAxisLabelFontSize: "14px",
     yAxisLabelOffset: 10,
     lineColor: Colors.DarkGrey,
+    barColor: Colors.CornflowerBlue,
     barWidth: 3,
     barXAxisGap: 2,
     xLabel: "x axis",
@@ -87,7 +88,7 @@ export class MirroredBarChart extends Plot {
       .append("g")
       .attr("id", ID_AXIS_SELECTION);
 
-    this._drawAxisAndLabels();
+    this._drawAxis();
 
     return this;
   }
@@ -106,11 +107,52 @@ export class MirroredBarChart extends Plot {
   }
 
   /**
+   ** Draw bars and lines (no animation)
+   **/
+  plot() {
+    console.log("plot: data:", this.data);
+    this._drawAxis();
+
+    d3.select(this.svg)
+      .selectAll("bar")
+      .data(this.data)
+      .join("rect")
+      .attr("x", (d) => this.xScale(d.date))
+      .attr(
+        "y",
+        (d) => this.yScale1(d.mean_test_accuracy) - this.props.barXAxisGap
+      )
+      .attr("width", this.props.barWidth)
+      .attr(
+        "height",
+        (d) => this.yScale1(0) - this.yScale1(d.mean_test_accuracy)
+      )
+      .attr("fill", this.props.barColor);
+
+    d3.select(this.svg)
+      .selectAll("bar")
+      .data(this.data)
+      .join("rect")
+      .attr("x", (d) => this.xScale(d.date))
+      .attr(
+        "y",
+        (d) =>
+          (this.height - this.margin.top - this.margin.bottom) / 2 +
+          this.props.barXAxisGap
+      )
+      .attr("width", this.props.barWidth)
+      .attr("height", (d) => -this.yScale2(0) + this.yScale2(d.y))
+      .attr("fill", this.props.barColor);
+
+    return this.svg;
+  }
+
+  /**
    * Create axes and add labels
    **/
-  _drawAxisAndLabels() {
+  _drawAxis() {
     d3.select(this.svg).selectAll("#id-axes-labels").remove(); // TODO
-    console.log("_drawAxisAndLabels: data = ", this.data);
+    console.log("_drawAxis: data = ", this.data);
 
     this.xScale = d3
       .scaleTime()
@@ -133,7 +175,6 @@ export class MirroredBarChart extends Plot {
     this.yScale2 = d3
       .scaleLinear()
       .domain([0, d3.max(this.data, (d: TimeSeriesData) => d.y)])
-      //.domain(d3.extent(data, (d: TimeSeriesData) => d.y))
       .nice()
       .range([
         (this.height - this.margin.bottom - this.margin.top) / 2,
@@ -240,44 +281,6 @@ export class MirroredBarChart extends Plot {
   /**************************************************************************************************************
    * Drawing methods
    **************************************************************************************************************/
-
-  /*
-   * When we don't want to animate- simply add static path derived from the data points.
-   */
-  plot() {
-    console.log("MirroredBarChart: plot:");
-    this._drawAxisAndLabels();
-
-    d3.select(this._svg)
-      .selectAll("bar")
-      .data(this._data)
-      .join("rect")
-      .attr("x", (d) => this._xScale(d.date))
-      .attr("y", (d) => this._yScale1(d.mean_test_accuracy) - BAR_XAXIS_GAP)
-      .attr("width", BAR_WIDTH)
-      .attr(
-        "height",
-        (d) => this._yScale1(0) - this._yScale1(d.mean_test_accuracy)
-      )
-      .attr("fill", this._color1);
-
-    d3.select(this._svg)
-      .selectAll("bar")
-      .data(this._data)
-      .join("rect")
-      .attr("x", (d) => this._xScale(d.date))
-      .attr(
-        "y",
-        (d) =>
-          (this._height - this._margin.top - this._margin.bottom) / 2 +
-          BAR_XAXIS_GAP
-      )
-      .attr("width", BAR_WIDTH)
-      .attr("height", (d) => -this._yScale2(0) + this._yScale2(d.y))
-      .attr("fill", this._color2);
-
-    return this._svg;
-  }
 
   animate(animationType: AnimationType) {
     console.log("MirroredBarChart: animate: animationType = ", animationType);

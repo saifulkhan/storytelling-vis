@@ -111,6 +111,7 @@ const StoryCovid19Single = () => {
       })
       .setLineProps([])
       .setCanvas(chartRef.current)
+      // .plot() // <- draw the static plot, useful for testing
       .setActions(timelineMSBActions);
 
     // pause the animation, start when play button is clicked
