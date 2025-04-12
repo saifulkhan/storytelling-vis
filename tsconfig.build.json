@@ -16,6 +16,7 @@
     "**/*.spec.tsx",
     "**/*.stories.tsx",
     "pages",
-    "public"
+    "public",
+    "src/pages/**/*"
   ]
 }

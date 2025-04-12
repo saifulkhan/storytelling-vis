@@ -128,7 +128,7 @@ const StoryMLMirroredBar = () => {
 
     // provide the data, timeline MSB actions, and settings to the PCP
     mirroredBarChart
-      .setProps({y1Label: y1AxisName, y2Label: y2AxisName})
+      .setPlotProps({y1Label: y1AxisName, y2Label: y2AxisName})
       .setName(selectedHyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRefMirrored.current)

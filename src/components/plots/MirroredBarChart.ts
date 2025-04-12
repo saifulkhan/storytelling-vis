@@ -6,22 +6,22 @@ import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { Coordinate } from "src/types/Coordinate";
 
 export type MirroredBarChartProps = PlotProps & {
-  fontSize?: string;
-  yAxisLabelFontSize?: string;
-  yAxisLabelOffset?: number;
-  bar1Color?: string;
-  bar2Color?: string;
-  barWidth?: number;
+  fontSize: string;
+  yAxisLabelFontSize: string;
+  yAxisLabelOffset: number;
+  bar1Color: string;
+  bar2Color: string;
+  barWidth: number;
   barXAxisGap?: number;
-  xLabel?: string;
-  y1Label?: string;
-  y2Label?: string;
+  xLabel: string;
+  y1Label: string;
+  y2Label: string;
 };
 
 const ID_AXIS_SELECTION = "#id-axes-selection";
 
 export class MirroredBarChart extends Plot {
-  props: MirroredBarChartProps = {
+  protected props: MirroredBarChartProps = {
     ...defaultPlotProps,
     margin: { top: 150, right: 50, bottom: 60, left: 60 },
     fontSize: "12px",
@@ -34,6 +34,7 @@ export class MirroredBarChart extends Plot {
     xLabel: "x axis",
     y1Label: "y1 axis",
     y2Label: "y2 axis",
+    ticks: true,
   };
 
   data: TimeSeriesData = [];
@@ -51,7 +52,7 @@ export class MirroredBarChart extends Plot {
   startDataIdx: number = 0; // index of data for animation
   endDataIdx: number = 0;
 
-  // Animation related properties
+  // animation related
   barElements: any[] = [];
   isPlayingRef: { current: boolean } = { current: false };
   playActionIdx: number = 0;
@@ -62,29 +63,19 @@ export class MirroredBarChart extends Plot {
     super();
   }
 
-  public setPlotProps(props: PlotProps) {
-    // Convert PlotProps to MirroredBarChartProps
-    const convertedProps: Partial<MirroredBarChartProps> = {
-      ...props,
-      // Ensure ticks is properly handled (PlotProps has boolean, MirroredBarChartProps has number)
-      ticks: props.ticks ? (this.props.ticks || 5) : 0
-    };
-    this.props = { ...this.props, ...convertedProps };
+  public setPlotProps(props: PlotProps): this {
+    const mirroredProps: Partial<MirroredBarChartProps> = { ...props };
+    this.props = { ...this.props, ...mirroredProps };
     return this;
   }
 
-  public setProps(props: MirroredBarChartProps) {
-    this.props = { ...this.props, ...props };
-    return this;
-  }
-
-  public setData(data: TimeSeriesData) {
+  public setData(data: TimeSeriesData): this {
     this.data = data;
-    console.log(" dat: ", this.data);
+    console.log("setData: data: ", this.data);
     return this;
   }
 
-  public setName(name: string) {
+  public setName(name: string): this {
     this.name = name;
     return this;
   }
@@ -97,8 +88,7 @@ export class MirroredBarChart extends Plot {
     this.height = bounds.height;
     this.width = bounds.width;
     this.margin = this.props.margin;
-
-    console.log("LinePlot:setCanvas: bounds: ", bounds);
+    console.log("setCanvas: bounds: ", bounds);
 
     this.selector = d3
       .select(this.svg)
@@ -111,9 +101,9 @@ export class MirroredBarChart extends Plot {
   }
 
   /**
-   ** Set the list of actions to be animated
+   ** The list of actions to be animated
    **/
-  public setActions(actions: TimelineMSBActions = []) {
+  public setActions(actions: TimelineMSBActions = []): this {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     this.playActionIdx = 0;
     this.lastAction = null;
@@ -121,14 +111,13 @@ export class MirroredBarChart extends Plot {
     this.endDataIdx = 0;
 
     this._drawBarsAndHide();
-
     return this;
   }
 
   /**
    ** Draw bars and lines (no animation)
    **/
-  plot() {
+  public plot(): void {
     console.log("plot: data:", this.data);
     this._drawAxis();
 
@@ -141,31 +130,36 @@ export class MirroredBarChart extends Plot {
       .attr("x", (d) => this.xScale(d.date))
       .attr(
         "y",
-        (d) => this.yScale1(d[this.props.y1Label]) - this.props.barXAxisGap
+        (d) => {
+          return this.yScale1(d[this.props.y1Label]) - (this.props.barXAxisGap || 0);
+        }
       )
       .attr("width", this.props.barWidth)
       .attr(
         "height",
-        (d) => this.yScale1(0) - this.yScale1(d[this.props.y1Label])
+        (d) => {
+          return this.yScale1(0) - this.yScale1(d[this.props.y1Label]);
+        }
       )
       .attr("fill", this.props.bar1Color);
 
-    // Add bottom bars starting exactly from the middle point
+    // add bottom bars starting exactly from the middle point
     d3.select(this.svg)
       .selectAll(".bar-bottom")
       .data(this.data)
       .join("rect")
       .attr("class", "bar-bottom")
       .attr("x", (d) => this.xScale(d.date))
-      .attr("y", this.height / 2) // Start exactly from the middle point
+      .attr("y", this.height / 2) // start exactly from the middle point
       .attr("width", this.props.barWidth)
       .attr(
         "height",
-        (d) => this.yScale2(d[this.props.y2Label]) - this.yScale2(0)
+        (d) => {
+          return this.yScale2(d[this.props.y2Label]) - this.yScale2(0);
+        }
       )
       .attr("fill", this.props.bar2Color);
 
-    return this.svg;
   }
 
   /**
@@ -213,7 +207,7 @@ export class MirroredBarChart extends Plot {
       ])
       .nice()
       .range([
-        middlePoint, // Top of bottom half is exactly at the middle
+        middlePoint, // top of bottom half is exactly at the middle
         this.height - this.margin.bottom, // bottom of the chart
       ]);
 
@@ -296,7 +290,6 @@ export class MirroredBarChart extends Plot {
     return this;
   }
 
-
   animate() {
     const loop = async () => {
       if (
@@ -311,12 +304,17 @@ export class MirroredBarChart extends Plot {
       // don't hide the previous action, but simulate the time it would take
       // simulate the time action.hide() would take with a delay
       if (this.lastAction) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
-      
+
       // get the current action and its date
       const [date, action] = this.actions[this.playActionIdx];
-      console.log("playActionIdx", this.playActionIdx, "length", this.actions.length);
+      console.log(
+        "playActionIdx",
+        this.playActionIdx,
+        "length",
+        this.actions.length
+      );
 
       // find the index of the data point corresponding to this date
       const dataIdx = this.data.findIndex(
@@ -331,10 +329,10 @@ export class MirroredBarChart extends Plot {
 
       // animate the bars up to this data point
       await this._animateBars(this.startDataIdx, dataIdx);
-      
+
       // don't show the action, but still wait for the same amount of time
       // that action.show() would take to keep animations in sync
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // update state for next animation
       this.lastAction = action;
@@ -351,12 +349,11 @@ export class MirroredBarChart extends Plot {
    * Each bar consists of a top and bottom part
    */
   _drawBarsAndHide() {
-    // Clear any existing bar elements
     d3.select(this.svg).selectAll(".bar-container").remove();
 
-    // Create container for all bars
+    // create container for all bars
     this.barElements = this.data.map((point, index) => {
-      // Create a group for each bar pair (top and bottom)
+      // create a group for each bar pair (top and bottom)
       const barElement = d3
         .select(this.svg)
         .append("g")
@@ -364,40 +361,38 @@ export class MirroredBarChart extends Plot {
         .attr("data-index", index.toString())
         .style("opacity", 0); // Initially hidden
 
-      // Add top bar (if data exists)
-      const y1Value = point[this.props.y1Label as keyof typeof point];
+      // add top bar (if data exists)
+      const y1Label = this.props.y1Label || 'y1Label';
+      const y1Value = point[y1Label as keyof typeof point];
       if (typeof y1Value === "number") {
         barElement
           .append("rect")
           .attr("class", "bar-top")
           .attr("x", this.xScale(point.date))
           .attr("y", this.yScale1(y1Value))
-          .attr("width", this.props.barWidth)
+          .attr("width", this.props.barWidth || 3)
           .attr("height", this.yScale1(0) - this.yScale1(y1Value))
-          .attr("fill", this.props.bar1Color);
+          .attr("fill", this.props.bar1Color || Colors.CornflowerBlue);
       }
 
-      // Add bottom bar (if data exists)
-      const y2Value = point[this.props.y2Label as keyof typeof point];
+      // add bottom bar (if data exists)
+      const y2Label = this.props.y2Label || 'y2Label';
+      const y2Value = point[y2Label as keyof typeof point];
       if (typeof y2Value === "number") {
         barElement
           .append("rect")
           .attr("class", "bar-bottom")
           .attr("x", this.xScale(point.date))
           .attr("y", this.height / 2) // Start from middle
-          .attr("width", this.props.barWidth)
+          .attr("width", this.props.barWidth || 3)
           .attr("height", this.yScale2(y2Value) - this.yScale2(0))
-          .attr("fill", this.props.bar2Color);
+          .attr("fill", this.props.bar2Color || Colors.DarkGrey);
       }
 
       return barElement;
     });
 
-    console.log(
-      "MirroredBarChart: _drawBarsAndHide: Created",
-      this.barElements.length,
-      "bar elements"
-    );
+    console.log("_drawBarsAndHide: Created", this.barElements.length, "bars");
     return this;
   }
 
@@ -407,23 +402,6 @@ export class MirroredBarChart extends Plot {
    * @param stop Ending data index (inclusive)
    * @returns Promise that resolves when animation completes
    */
-  public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
-    // If specific points are provided, use them
-    if (args.length >= 2) {
-      const x = args[0] as number;
-      const y = args[1] as number;
-      return [
-        [x, y],
-        [x, y]
-      ];
-    }
-    
-    // Otherwise return the bounds of the visualization area
-    return [
-      [this.margin.left, this.margin.top],
-      [this.width - this.margin.right, this.height - this.margin.bottom]
-    ];
-  }
 
   private _animateBars(start: number, stop: number) {
     console.log(`_animateBars: animating from ${start} to ${stop}`);
@@ -441,23 +419,25 @@ export class MirroredBarChart extends Plot {
     // animation settings - match with LinePlot timing
     const delay = 1000; // same as LinePlot delay
     const baseDuration = 1000; // base duration for animation
-    
+
     // instead of staggering, animate all bars together with a duration proportional to the number of bars
     // this better matches how the line is drawn in LinePlot
     const duration = Math.max(baseDuration, barsToShow.length * 100);
-    
+
     // create a single promise for the entire bar animation
     return new Promise<number>((resolve) => {
       // animate all bars together
-      barsToShow.forEach((barElement: d3.Selection<SVGGElement, unknown, null, undefined>) => {
-        barElement
-          .transition()
-          .ease(d3.easeLinear) // same easing as LinePlot
-          .delay(delay) // same delay as LinePlot
-          .duration(duration)
-          .style("opacity", 1);
-      });
-      
+      barsToShow.forEach(
+        (barElement: d3.Selection<SVGGElement, unknown, null, undefined>) => {
+          barElement
+            .transition()
+            .ease(d3.easeLinear) // same easing as LinePlot
+            .delay(delay) // same delay as LinePlot
+            .duration(duration)
+            .style("opacity", 1);
+        }
+      );
+
       // use the last bar to trigger the resolution
       if (barsToShow.length > 0) {
         barsToShow[barsToShow.length - 1]
@@ -473,5 +453,23 @@ export class MirroredBarChart extends Plot {
         resolve(0);
       }
     });
+  }
+
+  public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
+    // ff specific points are provided, use them
+    if (args.length >= 2) {
+      const x = args[0] as number;
+      const y = args[1] as number;
+      return [
+        [x, y],
+        [x, y],
+      ];
+    }
+
+    // otherwise return the bounds of the visualization area
+    return [
+      [this.margin.left, this.margin.top],
+      [this.width - this.margin.right, this.height - this.margin.bottom],
+    ];
   }
 }

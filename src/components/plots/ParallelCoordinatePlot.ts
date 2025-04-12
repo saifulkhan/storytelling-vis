@@ -57,9 +57,7 @@ const yScale = (keys: string[], height: number, margin: { top: number, bottom: n
 };
 
 export class ParallelCoordinatePlot extends Plot {
-  public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
-    throw new Error("Method not implemented.");
-  }
+
   data: any[] = [];
   plotProps: PlotProps = { ...defaultPlotProps };
   svg!: SVGSVGElement;
@@ -558,5 +556,9 @@ export class ParallelCoordinatePlot extends Plot {
 
   private topRightCoordinate(): Coordinate {
     return [this.width - this.margin.left - ANNO_X_POS, ANNO_Y_POS];
+  }
+
+  private getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
+    throw new Error("Method not implemented.");
   }
 }

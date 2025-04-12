@@ -35,7 +35,8 @@ export default [
         declaration: true,
         declarationDir: 'dist',
         // Skip type checking to avoid TypeScript errors during build
-        noEmitOnError: false
+        noEmitOnError: false,
+        exclude: ['src/pages/**/*']
       }),
       babel({
         babelHelpers: 'runtime',
@@ -55,7 +56,7 @@ export default [
     external: Object.keys(packageJson.peerDependencies || {})
   },
   {
-    input: 'dist/index.d.ts',
+    input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'esm' }],
     plugins: [dts()],
   },
