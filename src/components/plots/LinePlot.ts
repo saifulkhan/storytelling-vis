@@ -5,6 +5,7 @@ import { TimeSeriesPoint, TimeSeriesData } from "src/types/TimeSeriesPoint";
 import { findDateIdx, findIndexOfDate } from "src/utils/common";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
+import { MSBAction } from "src/components/actions/MSBAction";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
   // TODO: move to props
@@ -76,7 +77,6 @@ export class LinePlot extends Plot {
 
   public setData(data: TimeSeriesData[]) {
     this.data = data;
-    console.log("LinePlot: data = ", this.data);
     return this;
   }
 
@@ -185,15 +185,13 @@ export class LinePlot extends Plot {
       }
 
       const lineNum = 0; // TODO: we can animate first line at the moment
-      let [date, action] = this.actions[this.playActionIdx];
+      let [date, action]: [Date, MSBAction] = this.actions[this.playActionIdx];
       const dataX = this.data[lineNum];
       const dataIdx = findIndexOfDate(dataX, date);
 
       action
         .updateProps({
-          date: date.toLocaleDateString(),
-          name: this.name,
-          value: dataX[dataIdx].y,
+          data: { ...dataX[dataIdx], name: this.name, value: dataX[dataIdx].y },
           horizontalAlign: this.getHorizontalAlign(date),
           verticalAlign: "top" as VerticalAlign,
         })

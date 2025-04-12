@@ -87,8 +87,6 @@ const StoryMLMirroredBar = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedHyperparam("channels");
-
     if (
       !selectedHyperparam ||
       !mlData ||
@@ -141,7 +139,7 @@ const StoryMLMirroredBar = () => {
     pause();
 
     return () => {};
-  }, [selectedHyperparam, mlData, loading]);
+  }, [selectedHyperparam, mlData]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newKey = event.target.value;

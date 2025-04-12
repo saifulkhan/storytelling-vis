@@ -3,6 +3,7 @@ import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { Colors } from "src/components/Colors";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
+import { Coordinate } from "src/types/Coordinate";
 
 export type MirroredBarChartProps = PlotProps & {
   fontSize?: string;
@@ -15,7 +16,6 @@ export type MirroredBarChartProps = PlotProps & {
   xLabel?: string;
   y1Label?: string;
   y2Label?: string;
-  ticks?: number;
 };
 
 const ID_AXIS_SELECTION = "#id-axes-selection";
@@ -34,7 +34,6 @@ export class MirroredBarChart extends Plot {
     xLabel: "x axis",
     y1Label: "y1 axis",
     y2Label: "y2 axis",
-    ticks: 5,
   };
 
   data: TimeSeriesData = [];
@@ -61,6 +60,17 @@ export class MirroredBarChart extends Plot {
 
   constructor() {
     super();
+  }
+
+  public setPlotProps(props: PlotProps) {
+    // Convert PlotProps to MirroredBarChartProps
+    const convertedProps: Partial<MirroredBarChartProps> = {
+      ...props,
+      // Ensure ticks is properly handled (PlotProps has boolean, MirroredBarChartProps has number)
+      ticks: props.ticks ? (this.props.ticks || 5) : 0
+    };
+    this.props = { ...this.props, ...convertedProps };
+    return this;
   }
 
   public setProps(props: MirroredBarChartProps) {
@@ -397,6 +407,24 @@ export class MirroredBarChart extends Plot {
    * @param stop Ending data index (inclusive)
    * @returns Promise that resolves when animation completes
    */
+  public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
+    // If specific points are provided, use them
+    if (args.length >= 2) {
+      const x = args[0] as number;
+      const y = args[1] as number;
+      return [
+        [x, y],
+        [x, y]
+      ];
+    }
+    
+    // Otherwise return the bounds of the visualization area
+    return [
+      [this.margin.left, this.margin.top],
+      [this.width - this.margin.right, this.height - this.margin.bottom]
+    ];
+  }
+
   private _animateBars(start: number, stop: number) {
     console.log(`_animateBars: animating from ${start} to ${stop}`);
 

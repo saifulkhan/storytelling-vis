@@ -65,6 +65,7 @@ export class Circle extends MSBAction {
   public updateProps(properties: any): this {
     return this;
   }
+
   public move(
     coordinate: Coordinate,
     delay?: number | undefined,

@@ -470,11 +470,7 @@ export class ParallelCoordinatePlot extends Plot {
 
       action
         .updateProps({
-          date: date.toLocaleDateString(),
-          mean_test_accuracy: (data["mean_test_accuracy"] * 100)?.toFixed(2),
-          mean_training_accuracy: (
-            data["mean_training_accuracy"] * 100
-          )?.toFixed(2),
+          data: data,
           horizontalAlign: "middle" as HorizontalAlign,
           verticalAlign: "top" as VerticalAlign,
         })

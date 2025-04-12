@@ -3,6 +3,7 @@ import { MSBAction } from "./MSBAction";
 import { Coordinate } from "src/types/Coordinate";
 import { MSBActionName } from "./MSBActionName";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
+import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 
 export type TextBoxProps = {
   title?: string;
@@ -47,14 +48,14 @@ export class TextBox extends MSBAction {
     return this;
   }
 
-  public updateProps(extra: any) {
-    console.log("TextBox:updateProps: extra: ", extra);
-    this.props.message = this.updateStringTemplate(this.props.message!, extra);
-    this.props.title = this.updateStringTemplate(this.props.title!, extra);
+  public updateProps(args: any) {
+    console.log("TextBox:updateProps: args: ", args, "\nthis.props:", this.props);
+    this.props.message = this.updateStringTemplate(this.props.message!, args.data);
+    this.props.title = this.updateStringTemplate(this.props.title!, args.data);
     console.log("TextBox:updateProps: ", this.props.message, this.props.title);
 
-    this.props.horizontalAlign = extra.horizontalAlign;
-    this.props.verticalAlign = extra.verticalAlign;
+    this.props.horizontalAlign = args.horizontalAlign;
+    this.props.verticalAlign = args.verticalAlign;
     return this;
   }
 
@@ -268,6 +269,7 @@ export class TextBox extends MSBAction {
     // const x = dest[0] - width;
     // center aligned
     // const x = dest[0] - width / 2;
+    
     // right align
     const x = this.coordinate1[0];
     const y = this.coordinate1[1] - height;
@@ -318,20 +320,38 @@ export class TextBox extends MSBAction {
    ** Define a function to replace variables in a string template
    **
    ** Example:
-   ** const templateString = "Hello, ${name}! You are ${age} years old.";
+   ** const template = "Hello, ${name}! You are ${age} years old.";
    ** const variables = { name: "John Doe", age: 30 };
    ** const result = updateStringTemplate(templateString, variables);
    ** console.log(result); // Output: "Hello, John Doe! You are 30 years old."
    **/
   private updateStringTemplate(
     template: string,
-    variables: { [key: string]: any }
+    data: TimeSeriesPoint,
   ): string {
-    const variableRegex = /\${(\w+)}/g; // Regex to match variable placeholders
+    // regex to match variable placeholders
+    const variableRegex = /\${(\w+)}/g; 
 
     return template.replace(variableRegex, (match, variableName) => {
-      const value = variables[variableName];
-      return value !== undefined ? value.toString() : match;
+      const value = data[variableName];
+      
+      if (value === undefined) {
+        return match;
+      }
+      
+      // handle date formatting if the value is a Date object
+      if (variableName === 'date' && value instanceof Date) {
+        return value.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+      }
+      
+      // check if this variable is being used with a percentage sign
+      // handle percentage formatting if the template has % after the variable
+      const isFollowedByPercent = template.includes(`${match}%`);
+      if (isFollowedByPercent && typeof value === 'number') {
+        return (value * 100).toFixed(2);
+      }
+      
+      return value.toString();
     });
   }
 }
