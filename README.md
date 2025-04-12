@@ -6,7 +6,10 @@
 
 
 ```bash
+npm install storytelling-vis
+# or
 yarn add storytelling-vis
+
 ```
 
 
@@ -73,13 +76,13 @@ export default MyComponent;
 ```
 
 
+<div style="height:3px; background: linear-gradient(to right, #333, #333, #333); margin:20px 0;"></div>
 
-<div style="height:3px; background: linear-gradient(to right, transparent, #333, transparent); margin:20px 0;"></div>
 
+# API Design & Development
 
 For more details of available APIs see the documents below.
 
-# API Design & Development
 
 ## Getting Started
 
@@ -107,24 +110,24 @@ Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui
 
 **Example Stories:**
 
-- [localhost:3000/story-covid19-single](http://localhost:3000/story-covid19-single)
-- [localhost:3000/story-ml-mirorred-bar](http://localhost:3000/story-ml-mirorred-bar)
-- [localhost:3000/story-ml-pcp](http://localhost:3000/story-ml-pcp)
+- [localhost:3000/story-covid19-single](localhost:3000/story-covid19-single)
+- [localhost:3000/story-ml-mirorred-bar](localhost:3000/story-ml-mirorred-bar)
+- [localhost:3000/story-ml-pcp](localhost:3000/story-ml-pcp)
 
 
 **Playground (testing various components):**
 
-- [localhost:3000/playground/test-action-properties-table](http://localhost:3000/playground/test-action-properties-table)
-- [localhost:3000/playground/test-action-table](http://localhost:3000/playground/test-action-table)
-- [localhost:3000/playground/test-actions](http://localhost:3000/playground/test-actions)
-- [localhost:3000/playground/test-feature-properties-table](http://localhost:3000/playground/test-feature-properties-table)
-- [localhost:3000/playground/test-features](http://localhost:3000/playground/test-features)
-- [localhost:3000/playground/test-gaussian-combined](http://localhost:3000/playground/test-gaussian-combined)
-- [localhost:3000/playground/test-gaussian-cts](http://localhost:3000/playground/test-gaussian-cts)
-- [localhost:3000/playground/test-gaussian-nts](http://localhost:3000/playground/test-gaussian-nts)
-- [localhost:3000/playground/test-line-plot](http://localhost:3000/playground/test-line-plot)
+- [localhost:3000/playground/test-action-properties-table](localhost:3000/playground/test-action-properties-table)
+- [localhost:3000/playground/test-action-table](localhost:3000/playground/test-action-table)
+- [localhost:3000/playground/test-actions](localhost:3000/playground/test-actions)
+- [localhost:3000/playground/test-feature-properties-table](localhost:3000/playground/test-feature-properties-table)
+- [localhost:3000/playground/test-features](localhost:3000/playground/test-features)
+- [localhost:3000/playground/test-gaussian-combined](localhost:3000/playground/test-gaussian-combined)
+- [localhost:3000/playground/test-gaussian-cts](localhost:3000/playground/test-gaussian-cts)
+- [localhost:3000/playground/test-gaussian-nts](localhost:3000/playground/test-gaussian-nts)
+- [localhost:3000/playground/test-line-plot](localhost:3000/playground/test-line-plot)
 
-- [localhost:3000/playground/test-play-pause-loop](http://localhost:3000/playground/test-play-pause-loop)
+- [localhost:3000/playground/test-play-pause-loop](localhost:3000/playground/test-play-pause-loop)
 
 
 ### Tests
@@ -428,93 +431,56 @@ new LinePlot()
 
 ### Feature Action Tables UI
 
-To add a new table, see `src/services/TableService.ts`
+This is incomplete functionality. To add a new table, see `src/services/TableService.ts`
 
 
-<div style="height:3px; background: linear-gradient(to right, transparent, #333, transparent); margin:20px 0;"></div>
- 
-
-# Using as a Library
-
-This project can be used as a reusable component library in other React applications. Follow these steps to build and use it as a library:
-
-### Building the Library
+## Building the Library
 
 ```bash
-# Install dependencies
 yarn install
-
-# Build the library
 yarn build:lib
 ```
 
-This will generate the library in the `dist` directory.
+This will generate the library in the `dist` directory. Using the Library in Another Project
 
-### Using the Library in Another Project
-
-#### Option 1: Local Installation
+***Option 1: Local Installation**
 
 You can install the library locally using:
 
 ```bash
-# From your other project
 npm install --save /path/to/storytelling-vis
-# or with yarn
+# or
 yarn add file:/path/to/storytelling-vis
 ```
 
-#### Option 2: Publishing to npm
+***Option 2: Publishing to npm***
 
-You can publish the library to npm:
+Publish the library to npm:
 
 ```bash
-# Login to npm
 npm login
-
-# Publish the package
 npm publish
 ```
-
-Then install it in your project:
-
-```bash
-npm install --save storytelling-vis
-# or with yarn
-yarn add storytelling-vis
-```
+Then install it in your project (as discussed  at the beginning of this document)
  
-## Build and Publish
 
 
-```bash
-yarn install
-yarn build 
-
-# Build the library
-yarn build:lib
-
-# Publish to npm
-npm login
-npm publish
-```
+<div style="height:3px; background: linear-gradient(to right, #333, #333, #333); margin:20px 0;"></div>
 
 
-```bash
-# Local Installation
-yarn add file:/path/to/storytelling-vis
-```
+# Support
 
-## Support
+If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/storytelling-vis/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
 
-This code is not production-ready. If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/storytelling-vis/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
+---
 
-- The first version of the prototype was done in  Observable notebook and can be found in Observablehq [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js can be found on GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1).
-- The previous prototypes contain six stories, however, in this new repository so far we only ported two stories. We will gradually port the remaining four stories and will also add more stories.
+The first version of the prototype was done in  Observable notebook in [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js in GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). The previous prototypes contain six stories, however, we only ported three stories to this repository.
 
 ## References
-This repository contains the source code accompanying our research on utilizing Meta Story Board (MSB) Feature-Action Design Patterns for creating storytelling visualizations with time series data. Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1).
 
-Please cite our paper as follows:
+This project used d3.js[⤴](https://d3js.org/), React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com), and other libraries.
+
+Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1). Please cite our paper as follows:
 
 ```
 @article{khan2024,
@@ -524,7 +490,5 @@ Please cite our paper as follows:
     year={2024},
 }
 ```
-
-- Used d3.js[⤴](https://d3js.org/), React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com), and other libraries.
 
 
