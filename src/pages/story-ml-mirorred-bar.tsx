@@ -29,11 +29,11 @@ import { blue } from "@mui/material/colors";
 
 import {
   MirroredBarChart,
-  MirroredBarChartData,
+  MirroredBarChartProps,  
 } from "src/components/plots/MirroredBarChart";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
-import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
+import { TimeSeriesData } from "src/types/TimeSeriesPoint";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 
@@ -53,7 +53,7 @@ const StoryMLMirroredBar = () => {
   const chartRef = useRef<SVGSVGElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [hyperparam, setHyperparam] = useState<string>("");
-  const [mlData, setMLData] = useState<TimeSeriesPoint[]>([]);
+  const [mlData, setMLData] = useState<TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
   const plot = useRef(new MirroredBarChart()).current;
@@ -81,6 +81,8 @@ const StoryMLMirroredBar = () => {
   }, []);
 
   useEffect(() => {
+    setHyperparam("channels");
+
     if (!hyperparam || !mlData || !chartRef.current) return;
 
     const data = sortTimeseriesData(mlData, hyperparam);
@@ -107,18 +109,35 @@ const StoryMLMirroredBar = () => {
       .create();
 
     // provide the data, timeline MSB actions, and settings to the PCP
-    // plot
-    //   .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
-    //   .setName(hyperparam) // <- selected hyperparameter
-    //   .setData(data) // <- timeseries data
-    //   .setCanvas(chartRef.current)
-    //   .setActions(timelineMSBActions);
+    plot
+      .setProps({})
+      .setName(hyperparam) // <- selected hyperparameter
+      .setData(data) // <- timeseries data
+      .setCanvas(chartRef.current)
+      .setActions(timelineMSBActions);
+
+    // new MirroredBarChart()
+    // .selector(selector2, 200, 850, {
+    //   top: 10,
+    //   right: 20,
+    //   bottom: 20,
+    //   left: 50,
+    // })
+    // .data1(selectedData)
+    // .color1(Color.CornflowerBlue)
+    // .color2(Color.DarkGrey)
+    // .title("")
+    // .yLabel1(`accuracy`)
+    // .yLabel2(`${selectedParameter}`)
+    // .ticks(10)
+    // // .plot(); // static plot // debug
+    // .annotations(annotations);
 
     // pause the animation, start when play button is clicked
     pause();
 
     return () => {};
-  }, [hyperparam, mlData]);
+  }, [hyperparam, mlData, loading]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newKey = event.target.value;

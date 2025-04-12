@@ -490,3 +490,6 @@ Our work is detailed in the paper titled "Feature-Action Design Patterns for Sto
 ```
 
 
+# TODO NOTES
+
+use -- setProps
