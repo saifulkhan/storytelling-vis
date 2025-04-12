@@ -47,10 +47,11 @@ const StoryCovid19Single = () => {
     {}
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
+  
   const plot = useRef(new LinePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
-  // Load data and feature-action table
+  // load various regions data and feature-action table
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -81,29 +82,29 @@ const StoryCovid19Single = () => {
     })();
   }, []);
 
-  // Build story
 
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
     const data = casesData[region];
-    console.log("Selected region: ", region);
-    console.log("Selected region data: ", data);
+    console.log(`Selected region ${region}'s data: ${data}`);
 
-    // Create actions
-    const actions: TimelineMSBActions = new MSBFeatureActionFactory()
+    // build story based on selected region's data and feature-action table
+
+    // create actions
+    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({
         metric: "Number of cases",
         window: 10,
       })
-      .setTable(numericalFATable)
-      .setData(data)
+      .setTable(numericalFATable) // <- feature-action table
+      .setData(data)              // <- timeseries data
       .create();
 
-    // Draw the plot
+    // provide the data, timeline MSB actions, and settings to the LinePlot
     plot
-      .setData([data])
-      .setName(region)
+      .setData([data])            // <- timeseries data
+      .setName(region)            // <- selected region
       .setPlotProps({
         title: `${region}`,
         xLabel: "Date",
@@ -111,9 +112,9 @@ const StoryCovid19Single = () => {
       })
       .setLineProps([])
       .setCanvas(chartRef.current)
-      .setActions(actions);
+      .setActions(timelineMSBActions);
 
-    // Pause the animation
+    // pause the animation, start when play button is clicked
     pause();
 
     return () => {};

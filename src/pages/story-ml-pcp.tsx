@@ -52,7 +52,8 @@ const StoryMLPCP = () => {
   const plot = useRef(new ParallelCoordinatePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
-  // Load ML data and feature action table data
+  // load ML training data and feature action table
+
   useEffect(() => {
     if (!chartRef.current) return;
     setLoading(true);
@@ -71,25 +72,31 @@ const StoryMLPCP = () => {
     setLoading(false);
   }, []);
 
-  // Once a hyperparameter/key is selected create feature-actions and plot
+  
   useEffect(() => {
     if (!hyperparam || !mlData || !chartRef.current) return;
 
     const data = sortTimeseriesData(mlData, hyperparam);
+    console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
 
-    const actions: TimelineMSBActions = new MSBFeatureActionFactory()
+    // build story based on selected hyperparameter's data and feature-action table
+    
+    // create actions
+    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({ metric: "accuracy", window: 0 })
-      .setData(data)
-      .setTable(numericalFATable)
+      .setData(data)              // <- timeseries data
+      .setTable(numericalFATable) // <- feature-action table
       .create();
 
+    // provide the data, timeline MSB actions, and settings to the PCP
     plot
       .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
-      .setName(hyperparam)
-      .setData(data)
+      .setName(hyperparam)        // <- selected hyperparameter
+      .setData(data)              // <- timeseries data
       .setCanvas(chartRef.current)
-      .setActions(actions);
+      .setActions(timelineMSBActions);
 
+    // pause the animation, start when play button is clicked
     pause();
 
     return () => {};
