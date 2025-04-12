@@ -266,8 +266,9 @@ const StoryMLMirroredBar = () => {
                     ref={chartRefLine}
                     style={{
                       width: WIDTH,
-                      height: HEIGHT * .8,
+                      height: HEIGHT * 0.7,
                       border: "0px solid",
+                      marginBottom: "-50px",
                     }}
                   ></svg>
                   <svg
@@ -276,6 +277,7 @@ const StoryMLMirroredBar = () => {
                       width: WIDTH,
                       height: HEIGHT,
                       border: "0px solid",
+                      marginTop: "-50px",
                     }}
                   ></svg>
                 </div>
