@@ -31,8 +31,8 @@ import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 
-import covid19CasesData from "../../assets/data/covid19-cases-data.json";
-import covid19NumFATable from "../../assets/data/covid-19-numerical-fa-table.json";
+import covid19CasesData from "src/pages/data/covid19-cases-data.json";
+import covid19NumFATable from "src/pages/data/covid-19-numerical-fa-table.json";
 
 const StoryCovid19Single = () => {
   const WIDTH = 1200,

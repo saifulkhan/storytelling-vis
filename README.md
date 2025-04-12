@@ -472,11 +472,3 @@ Our work is detailed in the paper titled "Feature-Action Design Patterns for Sto
     year={2024},
 }
 ```
-
-
-# TODO NOTES
-
-- use -- setProps
-- showdots = true, in line plot is not working?
-
-- code structure in readme

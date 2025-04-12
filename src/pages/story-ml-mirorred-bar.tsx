@@ -35,8 +35,8 @@ import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 import { LinePlot } from "src/components/plots/LinePlot";
 
-import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table-line.json";
+import mlTrainingData from "src/pages/data/ml-training-data.json";
+import mlNumFATable from "src/pages/data/ml-numerical-fa-table-line.json";
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,

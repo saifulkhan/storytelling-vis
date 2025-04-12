@@ -30,8 +30,8 @@ import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActi
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { TimeSeriesData } from "src/types/TimeSeriesPoint";
 
-import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table-pcp.json";
+import mlTrainingData from "src/pages/data/ml-training-data.json";
+import mlNumFATable from "src/pages/data/ml-numerical-fa-table-pcp.json";
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,
