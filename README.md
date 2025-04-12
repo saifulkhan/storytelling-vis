@@ -146,14 +146,14 @@ The project is structured following React and Next.js guidelines and practices.
 ```
 .
 └── src
-    ├── components        /* UI or VIS components */
-    │   ├── actions       /* Various MSB actions */
-    │   ├── plots         /* Various plots */
-    │   └── tables        /* Feature-action tables components (experimental) */
-    ├── hooks             /* Custom hooks for animation control */
+    ├── components          /* UI or VIS components */
+    │   ├── actions         /* Various MSB actions */
+    │   ├── plots           /* Various plots */
+    │   └── tables          /* Feature-action table related (experimental) */
+    ├── hooks               /* Custom hooks for animation control */
     ├── pages
-    │   └── playground    /* React pages for testing components */
-    ├── types             /* TypeScript types */
+    │   └── playground      /* React pages for testing components */
+    ├── types             
     └── utils                     
         ├── data-processing /* Data processing, gaussian */
         └── feature-action  /* MSB feature-action utilities */
