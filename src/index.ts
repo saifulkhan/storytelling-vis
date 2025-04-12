@@ -1,7 +1,7 @@
 // Export components
 
 // Colors
-export * from './components/StoryboardColors';
+export * from './components/Colors';
 
 // Actions
 export * from './components/actions/Circle';

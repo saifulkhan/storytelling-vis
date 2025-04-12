@@ -22,13 +22,14 @@ export const defaultPlotProps: PlotProps = {
 export abstract class Plot {
   protected svg: SVGSVGElement | undefined;
   protected node: any;
-  // play and pause related
+
   protected animationRef: number | null = null;
   protected isPlayingRef: { current: boolean } = { current: false };
   protected lastAction: any = null;
   protected playActionIdx: number = 0;
 
   constructor() {}
+
   public abstract setData(...args: unknown[]): this;
   public abstract setPlotProps(props: PlotProps): this;
   public abstract setName(properties: unknown): this;
@@ -36,13 +37,12 @@ export abstract class Plot {
   public abstract plot(): void;
   public abstract setActions(unknown: unknown): this;
   public abstract getCoordinates(...args: unknown[]): [Coordinate, Coordinate];
+
   protected clean() {
     if (this.svg) {
       d3.select(this.svg).selectAll("*").remove();
     }
   }
-
-  // public abstract animate(start: number): void;
 
   togglePlayPause() {
     this.isPlayingRef.current = !this.isPlayingRef.current;

@@ -14,7 +14,7 @@ import Head from "next/head";
 import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { LinePlot, LineProps } from "src/components/plots/LinePlot";
 import { semanticGaussians } from "src/utils/data-processing/Gaussian";
-import { getSchemeTableau10 } from "src/components/StoryboardColors";
+import { getSchemeTableau10 } from "src/components/Colors";
 import { getCovid19Data } from "src/services/TimeSeriesDataService";
 import { CategoricalFeature } from "src/utils/feature-action/CategoricalFeature";
 

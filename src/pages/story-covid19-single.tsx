@@ -25,7 +25,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
+import { TimeSeriesData } from "src/types/TimeSeriesPoint";
 import { LinePlot } from "src/components/plots/LinePlot";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
@@ -44,7 +44,7 @@ const StoryCovid19Single = () => {
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
-  const [casesData, setCasesData] = useState<Record<string, TimeSeriesPoint[]>>(
+  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
     {}
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
@@ -66,7 +66,7 @@ const StoryCovid19Single = () => {
             y: +y,
           })),
         ])
-      ) as Record<string, TimeSeriesPoint[]>;
+      ) as Record<string, TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
 

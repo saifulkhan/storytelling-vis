@@ -23,7 +23,7 @@ import {
   semanticGaussians,
 } from "src/utils/data-processing/Gaussian";
 import { Dot } from "src/components/actions/Dot";
-import { getSchemeTableau10 } from "src/components/StoryboardColors";
+import { getSchemeTableau10 } from "src/components/Colors";
 import { getCovid19Data } from "src/services/TimeSeriesDataService";
 
 const WIDTH = 1500,

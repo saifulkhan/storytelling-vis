@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { StoryboardColors, LineColor } from "src/components/StoryboardColors";
+import { Colors, LineColor } from "src/components/Colors";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { findIndexOfDate, getObjectKeysArray } from "src/utils/common";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
@@ -18,7 +18,7 @@ const STATIC_LINE_COLOR_MAP = d3.interpolateBrBG,
 
 const LINE_WIDTH = 1.5,
   DOT_RADIUS = 5,
-  SELECTED_AXIS_COLOR = StoryboardColors.Red,
+  SELECTED_AXIS_COLOR = Colors.Red,
   FONT_SIZE = "12px";
 
 const DELAY_SHOW = 0,
@@ -521,7 +521,7 @@ export class ParallelCoordinatePlot extends Plot {
     if (type === MSBFeatureName.MAX || type === MSBFeatureName.MIN) {
       return LineColor[type];
     } else {
-      return StoryboardColors.LightGrey1;
+      return Colors.LightGrey1;
     }
   }
 

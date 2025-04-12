@@ -6,7 +6,9 @@ import { findDateIdx, findIndexOfDate } from "src/utils/common";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
+
 const ID_AXIS_SELECTION = "#id-axes-selection",
+  // TODO: move to props
   MAGIC_NO = 10,
   LINE_STROKE_WIDTH = 2,
   LINE_STROKE = "#2a363b",
@@ -17,17 +19,19 @@ const ID_AXIS_SELECTION = "#id-axes-selection",
   AXIS_FONT_SIZE = "12px",
   YAXIS_LABEL_OFFSET = 12;
 
-export type LineProps = {
+export type LineProps = PlotProps & {
   stroke: string;
   strokeWidth?: number;
   showPoints?: boolean;
-  onRightAxis?: boolean /* This is ... */;
+  onRightAxis?: boolean;
 };
 
 export class LinePlot extends Plot {
   data: TimeSeriesData[] = [];
+  name = "";
   lineProps: LineProps[] = [];
   plotProps: PlotProps = { ...defaultPlotProps };
+  
   svg!: SVGSVGElement;
   selector: any;
   width: number = 0;
@@ -36,10 +40,10 @@ export class LinePlot extends Plot {
   xAxis: any;
   leftAxis: any;
   rightAxis: any;
+
   actions: any = [];
-  name = "";
-  startDataIdx: number = 0; // start index of data for animation
-  endDataIdx: number = 0; // end index of data for animation
+  startDataIdx: number = 0; // index of data for animation
+  endDataIdx: number = 0;
 
   constructor() {
     super();
@@ -265,7 +269,6 @@ export class LinePlot extends Plot {
    ** Draw axes and labels
    **/
   private drawAxis() {
-    // clear existing axes and labels
     d3.select(this.svg).selectAll(ID_AXIS_SELECTION).remove();
 
     // combine the data to create a plot with left and right axes
