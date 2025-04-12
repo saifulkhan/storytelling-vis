@@ -105,28 +105,27 @@ yarn install
 yarn dev
 ```
 
-Open <http://localhost:3000> [⤴]() in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
+Open <http://localhost:3000> in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
 
 **Example Stories:**
 
-- [localhost:3000/story-covid19-single](localhost:3000/story-covid19-single)
-- [localhost:3000/story-ml-mirorred-bar](localhost:3000/story-ml-mirorred-bar)
-- [localhost:3000/story-ml-pcp](localhost:3000/story-ml-pcp)
+- <http://localhost:3000/story-covid19-single>
+- <http://localhost:3000/story-ml-mirorred-bar>
+- <http://localhost:3000/story-ml-pcp>
 
 
 **Playground (testing various components):**
 
-- [localhost:3000/playground/test-action-properties-table](localhost:3000/playground/test-action-properties-table)
-- [localhost:3000/playground/test-action-table](localhost:3000/playground/test-action-table)
-- [localhost:3000/playground/test-actions](localhost:3000/playground/test-actions)
-- [localhost:3000/playground/test-feature-properties-table](localhost:3000/playground/test-feature-properties-table)
-- [localhost:3000/playground/test-features](localhost:3000/playground/test-features)
-- [localhost:3000/playground/test-gaussian-combined](localhost:3000/playground/test-gaussian-combined)
-- [localhost:3000/playground/test-gaussian-cts](localhost:3000/playground/test-gaussian-cts)
-- [localhost:3000/playground/test-gaussian-nts](localhost:3000/playground/test-gaussian-nts)
-- [localhost:3000/playground/test-line-plot](localhost:3000/playground/test-line-plot)
-
-- [localhost:3000/playground/test-play-pause-loop](localhost:3000/playground/test-play-pause-loop)
+- <http://localhost:3000/playground/test-action-properties-table>
+- <http://localhost:3000/playground/test-action-table>
+- <http://localhost:3000/playground/test-actions>
+- <http://localhost:3000/playground/test-feature-properties-table>
+- <http://localhost:3000/playground/test-features>
+- <http://localhost:3000/playground/test-gaussian-combined>
+- <http://localhost:3000/playground/test-gaussian-cts>
+- <http://localhost:3000/playground/test-gaussian-nts>
+- <http://localhost:3000/playground/test-line-plot>
+- <http://localhost:3000/playground/test-play-pause-loop>
 
 
 ### Tests
@@ -146,33 +145,18 @@ The project is structured following React and Next.js guidelines and practices.
 
 ```
 .
-├── src
-│   ├── components          /* UI components */
-│   │   ├── storyboards
-│   │   │   ├── actions
-│   │   │   │   └── ...     /* Various MSB actions */
-│   │   │   ├── plots
-│   │   │   │   └── ...     /* Various plots */
-│   │   │   └── tables
-│   │   │       └── ...     /* Tables' implemented as nested components */
-│   ├── pages
-│   │   └── storyboards     /* Web templates */
-│   │       ├── examples
-│   │       │   └── ...     /* Example or test vis, e.g., actions, features, plots etc. */
-│   │       └── ...         /* Web vis, e.g., stories, tables, etc. */
-│   ├── services
-│   │   └── ...             /* Time series data, table data, etc. */
-│   └── utils
-│      └── storyboards
-│           ├── data-processing
-│           │   └── ...     /* Data processing, e.g., Gaussian */
-│           ├── feature
-│           │   └── ...     /* Feature MSB search functions */
-│           ├── feature-action
-│           │   └── ...     /* MSB feature-action table, feature search, and creating actions */
-│           └── workflow
-│               └── ...     /* Story-specific workflows */
-└── ...                     
+└── src
+    ├── components        /* UI or VIS components */
+    │   ├── actions       /* Various MSB actions */
+    │   ├── plots         /* Various plots */
+    │   └── tables        /* Feature-action tables components (experimental) */
+    ├── hooks             /* Custom hooks for animation control */
+    ├── pages
+    │   └── playground    /* React pages for testing components */
+    ├── types             /* TypeScript types */
+    └── utils                     
+        ├── data-processing /* Data processing, gaussian */
+        └── feature-action  /* MSB feature-action utilities */
 ```
 
 ## Meta-Storyboard (MSB) API
