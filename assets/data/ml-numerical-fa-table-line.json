@@ -1,0 +1,89 @@
+[
+  {
+    "feature": "MIN",
+    "properties": {},
+    "rank": 5,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "title": "${date}",
+          "message": "The worst accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      },
+      {
+        "action": "CONNECTOR",
+        "properties": {
+          "stroke": "black",
+          "opacity": 0.6
+        }
+      }
+    ]
+  },
+  {
+    "feature": "MAX",
+    "properties": {},
+    "rank": 7,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "message": "The best accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      },
+      {
+        "action": "DOT",
+        "properties": {
+          "color": "red",
+          "size": 5,
+          "strokeWidth": 2,
+          "opacity": 0.6
+        }
+      },
+      {
+        "action": "CIRCLE",
+        "properties": {
+          "size": 10,
+          "strokeWidth": 2,
+          "opacity": 0.6,
+          "color": "red"
+        }
+      },
+      {
+        "action": "CONNECTOR",
+        "properties": {
+          "stroke": "black",
+          "opacity": 0.6
+        }
+      }
+    ]
+  },
+  {
+    "feature": "LAST",
+    "properties": {},
+    "rank": 7,
+    "actions": [
+      {
+        "action": "TEXT_BOX",
+        "properties": {
+          "message": "The current/last testing accuracy: ${mean_test_accuracy}% [${mean_training_accuracy}%]",
+          "title": "${date}",
+          "backgroundColor": "#d3d3d3",
+          "width": 300
+        }
+      },
+      {
+        "action": "CONNECTOR",
+        "properties": {
+          "stroke": "black",
+          "opacity": 0.6
+        }
+      }
+    ]
+  }
+]

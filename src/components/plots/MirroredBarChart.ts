@@ -8,13 +8,14 @@ export type MirroredBarChartProps = PlotProps & {
   fontSize?: string;
   yAxisLabelFontSize?: string;
   yAxisLabelOffset?: number;
-  lineColor?: string;
-  barColor?: string;
+  bar1Color?: string;
+  bar2Color?: string;
   barWidth?: number;
   barXAxisGap?: number;
   xLabel?: string;
-  yLabel1?: string;
-  yLabel2?: string;
+  y1Label?: string;
+  y2Label?: string;
+  ticks?: number;
 };
 
 const ID_AXIS_SELECTION = "#id-axes-selection";
@@ -26,13 +27,14 @@ export class MirroredBarChart extends Plot {
     fontSize: "12px",
     yAxisLabelFontSize: "14px",
     yAxisLabelOffset: 10,
-    lineColor: Colors.DarkGrey,
-    barColor: Colors.CornflowerBlue,
+    bar1Color: Colors.CornflowerBlue,
+    bar2Color: Colors.DarkGrey,
     barWidth: 3,
     barXAxisGap: 2,
     xLabel: "x axis",
-    yLabel1: "y1 axis",
-    yLabel2: "y2 axis",
+    y1Label: "y1 axis",
+    y2Label: "y2 axis",
+    ticks: 5,
   };
 
   data: TimeSeriesData = [];
@@ -50,7 +52,12 @@ export class MirroredBarChart extends Plot {
   startDataIdx: number = 0; // index of data for animation
   endDataIdx: number = 0;
 
-  // _barElements = [];
+  // Animation related properties
+  barElements: any[] = [];
+  isPlayingRef: { current: boolean } = { current: false };
+  playActionIdx: number = 0;
+  lastAction: any = null;
+  animationRef: number = 0;
 
   constructor() {
     super();
@@ -103,6 +110,8 @@ export class MirroredBarChart extends Plot {
     this.startDataIdx = 0;
     this.endDataIdx = 0;
 
+    this._drawBarsAndHide();
+
     return this;
   }
 
@@ -113,36 +122,38 @@ export class MirroredBarChart extends Plot {
     console.log("plot: data:", this.data);
     this._drawAxis();
 
+    // Add top bars (commented out for now)
     d3.select(this.svg)
-      .selectAll("bar")
+      .selectAll(".bar-top")
       .data(this.data)
       .join("rect")
+      .attr("class", "bar-top")
       .attr("x", (d) => this.xScale(d.date))
       .attr(
         "y",
-        (d) => this.yScale1(d.mean_test_accuracy) - this.props.barXAxisGap
+        (d) => this.yScale1(d[this.props.y1Label]) - this.props.barXAxisGap
       )
       .attr("width", this.props.barWidth)
       .attr(
         "height",
-        (d) => this.yScale1(0) - this.yScale1(d.mean_test_accuracy)
+        (d) => this.yScale1(0) - this.yScale1(d[this.props.y1Label])
       )
-      .attr("fill", this.props.barColor);
+      .attr("fill", this.props.bar1Color);
 
+    // Add bottom bars starting exactly from the middle point
     d3.select(this.svg)
-      .selectAll("bar")
+      .selectAll(".bar-bottom")
       .data(this.data)
       .join("rect")
+      .attr("class", "bar-bottom")
       .attr("x", (d) => this.xScale(d.date))
-      .attr(
-        "y",
-        (d) =>
-          (this.height - this.margin.top - this.margin.bottom) / 2 +
-          this.props.barXAxisGap
-      )
+      .attr("y", this.height / 2) // Start exactly from the middle point
       .attr("width", this.props.barWidth)
-      .attr("height", (d) => -this.yScale2(0) + this.yScale2(d.y))
-      .attr("fill", this.props.barColor);
+      .attr(
+        "height",
+        (d) => this.yScale2(d[this.props.y2Label]) - this.yScale2(0)
+      )
+      .attr("fill", this.props.bar2Color);
 
     return this.svg;
   }
@@ -154,31 +165,46 @@ export class MirroredBarChart extends Plot {
     d3.select(this.svg).selectAll("#id-axes-labels").remove(); // TODO
     console.log("_drawAxis: data = ", this.data);
 
+    const middlePoint = this.height / 2;
+
     this.xScale = d3
       .scaleTime()
-      .domain(d3.extent(this.data, (d: TimeSeriesPoint) => d.date))
+      .domain(
+        d3.extent(this.data, (d: TimeSeriesPoint) => d.date) as [Date, Date]
+      )
       .nice()
       .range([this.margin.left, this.width - this.margin.right]);
 
+    // adjust yScale1 to use top half of the available space
     this.yScale1 = d3
       .scaleLinear()
       .domain([
         0,
-        d3.max(this.data, (d: TimeSeriesData) => d.mean_test_accuracy),
+        d3.max(this.data, (d: TimeSeriesPoint) => {
+          const value = d[this.props.y1Label as keyof typeof d];
+          return typeof value === "number" ? value : 0;
+        }) || 0,
       ])
       .nice()
       .range([
-        (this.height - this.margin.top - this.margin.bottom) / 2,
-        this.margin.top,
+        middlePoint, // bottom of top half is exactly at the middle
+        this.margin.top, // top of the chart
       ]);
 
+    // adjust yScale2 to use bottom half of the available space
     this.yScale2 = d3
       .scaleLinear()
-      .domain([0, d3.max(this.data, (d: TimeSeriesData) => d.y)])
+      .domain([
+        0,
+        d3.max(this.data, (d: TimeSeriesPoint) => {
+          const value = d[this.props.y2Label as keyof typeof d];
+          return typeof value === "number" ? value : 0;
+        }) || 0,
+      ])
       .nice()
       .range([
-        (this.height - this.margin.bottom - this.margin.top) / 2,
-        this.height - this.margin.bottom,
+        middlePoint, // Top of bottom half is exactly at the middle
+        this.height - this.margin.bottom, // bottom of the chart
       ]);
 
     const selection = d3
@@ -186,17 +212,15 @@ export class MirroredBarChart extends Plot {
       .append("g")
       .attr("id", "id-axes-labels");
 
-    // Create the X-axis in middle
+    // create the X-axis exactly in the middle
     const xAxis = d3.axisBottom(this.xScale);
-    // this.ticks && xAxis.ticks(this.ticks);
+    // TODO this.ticks && xAxis.ticks(this.ticks);
 
     selection
       .append("g")
       .attr(
         "transform",
-        `translate(0, ${
-          (this.height - this.margin.top - this.margin.bottom) / 2
-        })`
+        `translate(0, ${middlePoint})` // Position x-axis exactly at the middle point
       )
       .call(xAxis)
       .style("font-size", this.props.fontSize)
@@ -204,7 +228,7 @@ export class MirroredBarChart extends Plot {
       .attr("class", "x-label")
       .attr("text-anchor", "middle")
       .attr("x", this.width / 2)
-      .attr("y", this.height - 5)
+      .attr("y", 30) // Adjust the position of the x-axis label
       .text(this.props.xLabel);
 
     // Create the top Y-axis
@@ -218,11 +242,11 @@ export class MirroredBarChart extends Plot {
       // label
       .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("x", -this.height / 4)
+      .attr("x", -(middlePoint + this.margin.top) / 2) // center the label in the top half
       .attr("y", -this.margin.left + this.props.yAxisLabelOffset)
       .attr("class", "y label")
       .attr("text-anchor", "middle")
-      .text(this.props.yLabel1)
+      .text(this.props.y1Label)
       .style("font-size", this.props.yAxisLabelFontSize)
       .style("fill", "black");
 
@@ -241,306 +265,185 @@ export class MirroredBarChart extends Plot {
       // label
       .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("x", -this.height / 1.5)
+      .attr("x", -(middlePoint + this.height - this.margin.bottom) / 2) // Center the label in the bottom half
       .attr("y", -this.margin.left + this.props.yAxisLabelOffset)
       .attr("class", "y label")
       .attr("text-anchor", "middle")
-      .text(this.props.yLabel2)
+      .text(this.props.y2Label)
       .style("font-size", this.props.yAxisLabelFontSize)
       .style("fill", "black");
+
+    // Add a horizontal line at the middle to emphasize the split
+    selection
+      .append("line")
+      .attr("x1", this.margin.left)
+      .attr("y1", middlePoint)
+      .attr("x2", this.width - this.margin.right)
+      .attr("y2", middlePoint)
+      .attr("stroke", this.props.bar1Color)
+      .attr("stroke-width", 1);
 
     return this;
   }
 
-  /**************************************************************************************************************
-   * Setters
-   **************************************************************************************************************/
 
-  /**
-   * We pass height, width & margin here to keep it consistent with the svg() method.
-   */
-  // selector(selector, height = HEIGHT, width = WIDTH, margin = MARGIN) {
-  //   this._selector = selector;
-  //   this._height = height;
-  //   this._width = width;
-  //   this._margin = margin;
+  animate() {
+    const loop = async () => {
+      if (
+        !this.isPlayingRef.current ||
+        this.playActionIdx >= this.actions.length
+      ) {
+        return;
+      }
 
-  //   d3.select(this._selector).select("svg").remove();
+      // TODO: this plot in not in sync with the line plot used in ML story
 
-  //   this._svg = d3
-  //     .select(this._selector)
-  //     .append("svg")
-  //     .attr("width", this._width)
-  //     .attr("height", this._height)
-  //     // .style("background-color", "pink") // debug
-  //     .node();
+      // don't hide the previous action, but simulate the time it would take
+      // simulate the time action.hide() would take with a delay
+      if (this.lastAction) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      // get the current action and its date
+      const [date, action] = this.actions[this.playActionIdx];
+      console.log("playActionIdx", this.playActionIdx, "length", this.actions.length);
 
-  //   return this;
-  // }
+      // find the index of the data point corresponding to this date
+      const dataIdx = this.data.findIndex(
+        (d) => d.date.getTime() === date.getTime()
+      );
+      if (dataIdx === -1) {
+        console.error("Could not find data point for date:", date);
+        this.playActionIdx++;
+        this.animationRef = requestAnimationFrame(loop);
+        return;
+      }
 
-  /**************************************************************************************************************
-   * Drawing methods
-   **************************************************************************************************************/
+      // animate the bars up to this data point
+      await this._animateBars(this.startDataIdx, dataIdx);
+      
+      // don't show the action, but still wait for the same amount of time
+      // that action.show() would take to keep animations in sync
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-  animate(animationType: AnimationType) {
-    console.log("MirroredBarChart: animate: animationType = ", animationType);
-    //
-    // At the beginning create a list of d3 paths and annotations
-    //
-    if (this._barElements.length === 0) {
-      this._createBars();
-    }
+      // update state for next animation
+      this.lastAction = action;
+      this.startDataIdx = dataIdx;
+      this.playActionIdx++;
+      this.animationRef = requestAnimationFrame(loop);
+    };
 
-    if (animationType === "back" && this._animationCounter >= 0) {
-      this._animateBack();
-      this._animationCounter -= 1;
-    } else if (animationType === "beginning") {
-      this._animateBeginning();
-      this._animationCounter = -1;
-    } else if (
-      animationType === "play" &&
-      this._animationCounter + 1 < this._lpAnnotations.length
-    ) {
-      this._animateForward();
-      this._animationCounter += 1;
-    }
-
-    // prettier-ignore
-    console.log("TimeSeries1: animate: _animationCounter: ", this._animationCounter)
+    loop();
   }
 
-  /**************************************************************************************************************
-   * Private methods
-   **************************************************************************************************************/
+  /**
+   * Create all bars but keep them hidden initially
+   * Each bar consists of a top and bottom part
+   */
+  _drawBarsAndHide() {
+    // Clear any existing bar elements
+    d3.select(this.svg).selectAll(".bar-container").remove();
 
-  // TODO: We don't want to create excessive number of bars
-  _createBars() {
-    this._barElements = this._lpAnnotations.map((d: TSPAnnotation) => {
-      console.log("MirroredBarChart: _createBars: annotation, d = ", d);
-      const point = this._data[d.end];
+    // Create container for all bars
+    this.barElements = this.data.map((point, index) => {
+      // Create a group for each bar pair (top and bottom)
+      const barElement = d3
+        .select(this.svg)
+        .append("g")
+        .attr("class", "bar-container")
+        .attr("data-index", index.toString())
+        .style("opacity", 0); // Initially hidden
 
-      // Take the first data point of the segment to draw a dot
-      const barElement = d3.select(this._svg).append("g").style("opacity", 0);
+      // Add top bar (if data exists)
+      const y1Value = point[this.props.y1Label as keyof typeof point];
+      if (typeof y1Value === "number") {
+        barElement
+          .append("rect")
+          .attr("class", "bar-top")
+          .attr("x", this.xScale(point.date))
+          .attr("y", this.yScale1(y1Value))
+          .attr("width", this.props.barWidth)
+          .attr("height", this.yScale1(0) - this.yScale1(y1Value))
+          .attr("fill", this.props.bar1Color);
+      }
 
-      barElement
-        .append("rect")
-        .attr("x", (d) => this._xScale(point.date))
-        .attr(
-          "y",
-          (d) => this._yScale1(point.mean_test_accuracy) - BAR_XAXIS_GAP
-        )
-        .attr("width", BAR_WIDTH)
-        .attr(
-          "height",
-          (d) => this._yScale1(0) - this._yScale1(point.mean_test_accuracy)
-        )
-        .attr("fill", this._color1);
-
-      barElement
-        .append("rect")
-        .attr("x", (d) => this._xScale(point.date))
-        .attr(
-          "y",
-          (d) =>
-            (this._height - this._margin.top - this._margin.bottom) / 2 +
-            BAR_XAXIS_GAP
-        )
-        .attr("width", BAR_WIDTH)
-        .attr("height", (d) => -this._yScale2(0) + this._yScale2(point.y))
-        .attr("fill", this._color2);
+      // Add bottom bar (if data exists)
+      const y2Value = point[this.props.y2Label as keyof typeof point];
+      if (typeof y2Value === "number") {
+        barElement
+          .append("rect")
+          .attr("class", "bar-bottom")
+          .attr("x", this.xScale(point.date))
+          .attr("y", this.height / 2) // Start from middle
+          .attr("width", this.props.barWidth)
+          .attr("height", this.yScale2(y2Value) - this.yScale2(0))
+          .attr("fill", this.props.bar2Color);
+      }
 
       return barElement;
     });
 
-    // prettier-ignore
-    console.log("MirroredBarChart: _createBars: _barElements: ", this._barElements);
+    console.log(
+      "MirroredBarChart: _drawBarsAndHide: Created",
+      this.barElements.length,
+      "bar elements"
+    );
+    return this;
   }
 
-  /*
-   * This will remove the current path
-   * Show or hide the path elements to svg based on the animation counter value
+  /**
+   * Animate bars from start index to stop index
+   * @param start Starting data index
+   * @param stop Ending data index (inclusive)
+   * @returns Promise that resolves when animation completes
    */
-  _animateBeginning() {
-    console.log(`MirroredBarChart: _animateBeginning`);
+  private _animateBars(start: number, stop: number) {
+    console.log(`_animateBars: animating from ${start} to ${stop}`);
 
-    // Disappear all
-    this._barElements.forEach((d) => {
-      d.style("opacity", 0);
+    // calculate how many bars to show
+    const barsToShow = this.barElements.slice(start, stop + 1);
+
+    if (barsToShow.length === 0) {
+      console.warn("No bars to animate in the specified range");
+      return Promise.resolve();
+    }
+
+    // TODO: the animation time is not in sync with the line plot used in ML story
+
+    // animation settings - match with LinePlot timing
+    const delay = 1000; // same as LinePlot delay
+    const baseDuration = 1000; // base duration for animation
+    
+    // instead of staggering, animate all bars together with a duration proportional to the number of bars
+    // this better matches how the line is drawn in LinePlot
+    const duration = Math.max(baseDuration, barsToShow.length * 100);
+    
+    // create a single promise for the entire bar animation
+    return new Promise<number>((resolve) => {
+      // animate all bars together
+      barsToShow.forEach((barElement: d3.Selection<SVGGElement, unknown, null, undefined>) => {
+        barElement
+          .transition()
+          .ease(d3.easeLinear) // same easing as LinePlot
+          .delay(delay) // same delay as LinePlot
+          .duration(duration)
+          .style("opacity", 1);
+      });
+      
+      // use the last bar to trigger the resolution
+      if (barsToShow.length > 0) {
+        barsToShow[barsToShow.length - 1]
+          .transition()
+          .ease(d3.easeLinear)
+          .delay(delay)
+          .duration(duration)
+          .on("end", () => {
+            console.log("All bar animations completed");
+            resolve(delay + duration);
+          });
+      } else {
+        resolve(0);
+      }
     });
-
-    return;
   }
-
-  /*
-   * This will remove the current path
-   * Show or hide the path elements to svg based on the animation counter value
-   */
-  _animateBack() {
-    const currentIndex = this._animationCounter;
-    // prettier-ignore
-    console.log(`MirroredBarChart: _animateBack: ${currentIndex} <- ${currentIndex + 1}`);
-
-    const delay = 500;
-    const duration = 500;
-
-    // Hide
-    const barElement = this._barElements[currentIndex];
-    if (barElement) {
-      barElement
-        .transition()
-        .delay(delay)
-        .duration(duration)
-        .style("opacity", 0);
-    }
-  }
-
-  /*
-   * This will show or hide the path elements to svg based on the animation counter value
-   */
-  _animateForward() {
-    // Number of path segments
-    const pathNum = this._lpAnnotations.length;
-    // Use modulus to repeat animation sequence once counter > number of animation segments
-    const currIdx = this._animationCounter % pathNum;
-    const prevIdx = (this._animationCounter - 1) % pathNum;
-    // prettier-ignore
-    console.log(`MirroredBarChart: _animateForward: prevIdx = ${prevIdx}, currIdx = ${currIdx}`);
-
-    const currBarElement = this._barElements[currIdx];
-
-    let delay = 0;
-    let duration = 500;
-
-    // If we have a previous annotation that needs to be faded out do so
-    if (currBarElement) {
-      console.log(`MirroredBarChart: _animateForward: reveal`);
-      currBarElement
-        .transition()
-        .ease(d3.easeLinear)
-        .delay(delay)
-        .duration(duration)
-        .style("opacity", 1);
-    }
-  }
-
-  /**
-   * Select all elements below svg with the selector "svg > *" and remove.
-   * Otherwise it will keep drawing on top of the previous lines / scales.
-   */
-  _clearSvg() {
-    d3.select(this._svg).selectAll("svg > *").remove();
-  }
-
-  /**************************************************************************************************************
-   * Getters
-   **************************************************************************************************************/
-
-  getXScale() {
-    return this._xScale;
-  }
-
-  getYScale() {
-    return this._yScale1;
-  }
-
-  getYScale2() {
-    return this._yScale2;
-  }
-
-  // title(title) {
-  //   this._title = title;
-  //   return this;
-  // }
-
-  // xLabel(xLabel) {
-  //   this._xLabel = xLabel;
-  //   return this;
-  // }
-
-  // yLabel1(yLabel) {
-  //   this._yLabel1 = yLabel;
-  //   return this;
-  // }
-
-  // yLabel2(yLabel) {
-  //   this._yLabel2 = yLabel;
-  //   return this;
-  // }
-
-  // color2(color: string) {
-  //   this._color2 = color;
-  //   return this;
-  // }
-
-  // color1(color: string) {
-  //   this._color1 = color;
-  //   return this;
-  // }
-
-  // ticks(ticks) {
-  //   this._ticks = ticks;
-  //   return this;
-  // }
-
-  // height(height) {
-  //   this._height = height;
-  //   return this;
-  // }
-
-  // width(width) {
-  //   this._width = width;
-  //   return this;
-  // }
-
-  // margin(margin) {
-  //   this._margin = margin;
-  //   return this;
-  // }
-
-  /**
-   * The svg canvas is passed as an argument.
-   */
-  //   svg(svg) {
-  //     this._svg = svg;
-
-  //     const bounds = svg.getBoundingClientRect();
-  //     this.height = bounds.height;
-  //     this.width = bounds.width;
-
-  //     return this;
-  //   }
-
-  //   data1(data: TimeSeriesData) {
-  //     this._data = data;
-  //     return this;
-  //   }
 }
-
-// const xScale = (data: TimeSeriesData, w = WIDTH, m = MARGIN) => {
-//   const xScale = d3
-//     .scaleTime()
-//     .domain(d3.extent(data, (d: TimeSeriesPoint) => d.date))
-//     .nice()
-//     .range([m.left, w - m.right]);
-//   return xScale;
-// };
-
-// const yScale1 = (data: TimeSeriesData, h = HEIGHT, m = MARGIN) => {
-//   const yScale = d3
-//     .scaleLinear()
-//     .domain([0, d3.max(data, (d: TimeSeriesData) => d.mean_test_accuracy)])
-//     // .domain(d3.extent(data, (d: TimeSeriesData) => d.mean_test_accuracy))
-//     .nice()
-//     .range([(h - m.top - m.bottom) / 2, m.top]);
-//   return yScale;
-// };
-
-// const yScale2 = (data: TimeSeriesData, h = HEIGHT, m = MARGIN) => {
-//   const yScale = d3
-//     .scaleLinear()
-//     .domain([0, d3.max(data, (d: TimeSeriesData) => d.y)])
-//     //.domain(d3.extent(data, (d: TimeSeriesData) => d.y))
-//     .nice()
-//     .range([(h - m.bottom - m.top) / 2, h - m.bottom]);
-//   return yScale;
-// };

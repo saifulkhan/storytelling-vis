@@ -1,7 +1,3 @@
-/**
- ** Implements machine learning mirrored bar chart story
- **/
-
 import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
@@ -32,18 +28,19 @@ import {
   MirroredBarChartProps,
 } from "src/components/plots/MirroredBarChart";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
+import useSynchronizedPlots from "src/hooks/useSynchronizedPlots";
 import { sortTimeseriesData } from "src/utils/common";
-import { TimeSeriesData } from "src/types/TimeSeriesPoint";
+import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
 import { LinePlot } from "src/components/plots/LinePlot";
 
 import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table.json";
+import mlNumFATable from "../../assets/data/ml-numerical-fa-table-line.json";
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,
-    HEIGHT = 400;
+    HEIGHT = 600;
   const HYPERPARAMS = [
     "channels",
     "kernel_size",
@@ -55,21 +52,24 @@ const StoryMLMirroredBar = () => {
   const chartRefMirrored = useRef<SVGSVGElement>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [hyperparam, setHyperparam] = useState<string>("");
+  const [selectedHyperparam, setSelectedHyperparam] = useState<string>("");
   const [mlData, setMLData] = useState<TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
   const linePlot = useRef(new LinePlot()).current;
   const mirroredBarChart = useRef(new MirroredBarChart()).current;
 
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(linePlot);
-  // const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(mirroredBarChart);
+  // control both plots together
+  const { isPlaying, togglePlayPause, pause } = useSynchronizedPlots([linePlot, mirroredBarChart]);
 
   useEffect(() => {
-    if (!chartRefLine.current) return;
+    if (
+      !chartRefLine.current || 
+      !chartRefMirrored.current
+    ) return;
     setLoading(true);
 
-    // load ML training data
+    // load data
     setMLData(
       mlTrainingData.map(({ date, ...rest }) => ({
         date: new Date(date),
@@ -87,12 +87,22 @@ const StoryMLMirroredBar = () => {
   }, []);
 
   useEffect(() => {
-    setHyperparam("channels");
+    setSelectedHyperparam("channels");
 
-    if (!hyperparam || !mlData || !chartRefLine.current) return;
+    if (
+      !selectedHyperparam ||
+      !mlData ||
+      !chartRefLine.current ||
+      !chartRefMirrored.current
+    )
+      return;
 
-    const data = sortTimeseriesData(mlData, hyperparam);
-    console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
+    let data = sortTimeseriesData(mlData, selectedHyperparam);
+    const y1AxisName = "mean_test_accuracy";
+    const y2AxisName = selectedHyperparam;
+   
+    console.log(`Selected hyperparameter ${selectedHyperparam}'s data:`, data);
+
 
     // build story based on selected hyperparameter's data and feature-action table
 
@@ -103,46 +113,45 @@ const StoryMLMirroredBar = () => {
       .setTable(numericalFATable) // <- feature-action table
       .create();
 
+ 
     linePlot
-      .setData([data]) // <- timeseries data
-      .setName(hyperparam) // <- selected hyperparam
+      .setData([data.map(d => ({ ...d, y: d[y1AxisName] }))]) // <- timeseries data
+      .setName(selectedHyperparam) // <- selected hyperparam
       .setPlotProps({
-        title: `${hyperparam}`,
+        title: `${selectedHyperparam}`,
         xLabel: "Date",
-        leftAxisLabel: "",
-        showPoints: true,
+        leftAxisLabel: y1AxisName,
       })
       .setLineProps([])
       .setCanvas(chartRefLine.current)
       // .plot() // <- draw the static plot, useful for testing
       .setActions(timelineMSBActions);
+  
 
     // provide the data, timeline MSB actions, and settings to the PCP
     mirroredBarChart
-      .setProps({})
-      .setName(hyperparam) // <- selected hyperparameter
+      .setProps({y1Label: y1AxisName, y2Label: y2AxisName})
+      .setName(selectedHyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRefMirrored.current)
-      .plot(); // <- draw the static plot, useful for testing
-
-    //.setActions(timelineMSBActions);
+      //.plot(); // <- draw the static plot, useful for testing
+      .setActions(timelineMSBActions);
 
     // pause the animation, start when play button is clicked
     pause();
 
     return () => {};
-  }, [hyperparam, mlData, loading]);
+  }, [selectedHyperparam, mlData, loading]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newKey = event.target.value;
     if (newKey) {
-      setHyperparam(newKey);
+      setSelectedHyperparam(newKey);
     }
   };
 
   const handleBeginningButton = () => {};
   const handleBackButton = () => {};
-
 
   return (
     <>
@@ -199,7 +208,7 @@ const StoryMLMirroredBar = () => {
                       id="select-region-label"
                       displayEmpty
                       onChange={handleSelection}
-                      value={hyperparam}
+                      value={selectedHyperparam}
                       input={<OutlinedInput label="Select hyperparameter" />}
                     >
                       {HYPERPARAMS.map((d) => (
@@ -235,7 +244,7 @@ const StoryMLMirroredBar = () => {
 
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
-                      disabled={!hyperparam}
+                      disabled={!selectedHyperparam}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
                       onClick={togglePlayPause}
@@ -248,22 +257,30 @@ const StoryMLMirroredBar = () => {
                     </Button>
                   </FormControl>
                 </FormGroup>
-                <svg
-                  ref={chartRefLine}
+                <div
                   style={{
-                    width: WIDTH,
-                    height: HEIGHT,
-                    border: "0px solid",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "left",
                   }}
-                ></svg>
-                <svg
-                  ref={chartRefMirrored}
-                  style={{
-                    width: WIDTH,
-                    height: HEIGHT,
-                    border: "0px solid",
-                  }}
-                ></svg>
+                >
+                  <svg
+                    ref={chartRefLine}
+                    style={{
+                      width: WIDTH,
+                      height: HEIGHT * .8,
+                      border: "0px solid",
+                    }}
+                  ></svg>
+                  <svg
+                    ref={chartRefMirrored}
+                    style={{
+                      width: WIDTH,
+                      height: HEIGHT,
+                      border: "0px solid",
+                    }}
+                  ></svg>
+                </div>
               </>
             )}
           </CardContent>

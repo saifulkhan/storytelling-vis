@@ -492,4 +492,7 @@ Our work is detailed in the paper titled "Feature-Action Design Patterns for Sto
 
 # TODO NOTES
 
-use -- setProps
+- use -- setProps
+- showdots = true, in line plot is not working?
+
+- code structure in readme

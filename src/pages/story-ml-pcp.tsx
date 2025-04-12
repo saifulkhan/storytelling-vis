@@ -31,7 +31,7 @@ import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { TimeSeriesData } from "src/types/TimeSeriesPoint";
 
 import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table.json";
+import mlNumFATable from "../../assets/data/ml-numerical-fa-table-pcp.json";
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,

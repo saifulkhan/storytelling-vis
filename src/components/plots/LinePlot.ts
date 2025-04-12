@@ -6,7 +6,6 @@ import { findDateIdx, findIndexOfDate } from "src/utils/common";
 import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
-
 const ID_AXIS_SELECTION = "#id-axes-selection",
   // TODO: move to props
   MAGIC_NO = 10,
@@ -31,7 +30,7 @@ export class LinePlot extends Plot {
   name = "";
   lineProps: LineProps[] = [];
   plotProps: PlotProps = { ...defaultPlotProps };
-  
+
   svg!: SVGSVGElement;
   selector: any;
   width: number = 0;
@@ -102,7 +101,7 @@ export class LinePlot extends Plot {
       .append("g")
       .attr("id", ID_AXIS_SELECTION);
 
-    this.drawAxis();
+    this._drawAxis();
 
     return this;
   }
@@ -119,10 +118,10 @@ export class LinePlot extends Plot {
           return xAxis(d.date);
         })
         .y((d: TimeSeriesPoint) => {
-          if (typeof d.y !== "number" || Number.isNaN(d.y)) {
-            console.log(d);
-            d.y = 0;
-          }
+          // if (typeof d.y !== "number" || Number.isNaN(d.y)) {
+          //   console.log(d);
+          //   d.y = 0;
+          // }
           return yAxis(d.y);
         });
     };
@@ -171,10 +170,6 @@ export class LinePlot extends Plot {
 
     return this;
   }
-
-  /**
-   ** Animation related methods
-   **/
 
   animate() {
     const loop = async () => {
@@ -268,7 +263,7 @@ export class LinePlot extends Plot {
   /**
    ** Draw axes and labels
    **/
-  private drawAxis() {
+  private _drawAxis() {
     d3.select(this.svg).selectAll(ID_AXIS_SELECTION).remove();
 
     // combine the data to create a plot with left and right axes
@@ -384,7 +379,12 @@ export class LinePlot extends Plot {
   private xScale(data: TimeSeriesData, w: number, m: any) {
     const xScale = d3
       .scaleTime()
-      .domain(d3.extent(data, (d: TimeSeriesPoint) => d.date) as [Date, Date] || [new Date(), new Date()])
+      .domain(
+        (d3.extent(data, (d: TimeSeriesPoint) => d.date) as [Date, Date]) || [
+          new Date(),
+          new Date(),
+        ]
+      )
       .nice()
       .range([m.left, w - m.right]);
     return xScale;

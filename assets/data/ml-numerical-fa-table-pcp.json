@@ -44,14 +44,6 @@
           "backgroundColor": "#d3d3d3",
           "width": 300
         }
-      },
-      {
-        "action": "DOT",
-        "properties": {
-          "color": "#FFA500",
-          "size": 5,
-          "opacity": 0.6
-        }
       }
     ]
   },
