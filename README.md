@@ -243,7 +243,7 @@ new MSBFeatureActionFactory(...)
 ### MSB Feature API
 
 <div>
-    <img width="350px" src="./public/static/doc/feature-classes.png" alt="" />
+    <img width="350px" src="./assets/doc/feature-classes.png" alt="" />
     <br>
     <small><i>Figure 2: The class diagram of the MSB feature classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
@@ -300,7 +300,7 @@ new MSBFeatureFactory()
 ### MSB Action API
 
 <div>
-    <img width="450px" src="./public/static/doc/action-classes.png" alt="" />
+    <img width="450px" src="./assets/doc/action-classes.png" alt="" />
     <br>
     <small><i>Figure 3: Action classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
@@ -385,7 +385,7 @@ gaussian(<mean>, <std>, ...)
 ### Animated Plots API
 
 <div>
-    <img width="350px" src="./public/static/doc/plot-classes.png" alt="" />
+    <img width="350px" src="./assets/doc/plot-classes.png" alt="" />
     <br>
     <small><i>Figure 4: Plot classes.</i></small>
     <br><br>
@@ -414,7 +414,7 @@ new LinePlot()
 
 <!-- <div align="center">  -->
 <div>
-    <img width="1000px" src="./public/static/doc/sequence-diagram.png" alt="sequence diagram" />
+    <img width="1000px" src="./assets/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
     <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
     <br><br>
