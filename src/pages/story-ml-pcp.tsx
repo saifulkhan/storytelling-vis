@@ -24,16 +24,16 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { getMLData } from "temp/services/TimeSeriesDataService";
-import { getTableData } from "temp/services/FATableService";
 import { ParallelCoordinatePlot } from "src/components/plots/ParallelCoordinatePlot";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
-import { DateActionArray } from "src/types/FeatureActionTypes";
+import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
+import mlTrainingData from "../../assets/ml-training-data.json";
+import mlNumFATable from "../../assets/ml-numerical-fa-table-1.json";
 
-const MLMVStoryPage = () => {
+const StoryMLPCP = () => {
   const WIDTH = 1200,
     HEIGHT = 800;
   const HYPERPARAMS = [
@@ -46,8 +46,8 @@ const MLMVStoryPage = () => {
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [hyperparam, setHyperparam] = useState<string>("");
-  const [data, setData] = useState<TimeSeriesPoint[]>([]);
-  const [table, setTable] = useState<any>({});
+  const [mlData, setMLData] = useState<TimeSeriesPoint[]>([]);
+  const [numericalFATable, setNumericalFATable] = useState<any>({});
 
   const plot = useRef(new ParallelCoordinatePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
@@ -56,50 +56,37 @@ const MLMVStoryPage = () => {
   useEffect(() => {
     if (!chartRef.current) return;
     setLoading(true);
+    (async () => {
+      setMLData(
+        mlTrainingData.map(({ date, ...rest }) => ({
+          date: new Date(date),
+          ...rest,
+        }))
+      );
+      setNumericalFATable(mlNumFATable);
 
-    const fetchData = async () => {
-      try {
-        const _data = await getMLData();
-        setData(_data);
-        const _table = await getTableData("ML: Multivariate");
-        setTable(_table);
-
-        console.log("MLMVStoryPage: useEffect 1: data: ", data);
-        console.log("MLMVStoryPage: useEffect 1: table: ", table);
-      } catch (error) {
-        console.error("MLMVStoryPage: Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    return () => {};
+      console.log("ML data: ", mlData);
+      console.log("Numerical feature-action table data: ", numericalFATable);
+    })();
+    setLoading(false);
   }, []);
 
   // Once a hyperparameter/key is selected create feature-actions and plot
   useEffect(() => {
-    if (!hyperparam || !data || !chartRef.current) return;
+    if (!hyperparam || !mlData || !chartRef.current) return;
 
-    console.log("MLMVStoryPage: useEffect 2: key: ", hyperparam);
-    console.log("MLMVStoryPage: useEffect 2: data: ", data);
+    const data = sortTimeseriesData(mlData, hyperparam);
 
-    // FeatureActionBuilder takes TimeseriesData, so we need to transform it
-    const _data = sortTimeseriesData(data, hyperparam);
-
-    const actions: DateActionArray = new MSBFeatureActionFactory()
+    const actions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({ metric: "accuracy", window: 0 })
-      .setData(_data)
-      .setTable(table)
+      .setData(data)
+      .setTable(numericalFATable)
       .create();
-
-    console.log("MLMVStoryPage: useEffect 2: actions: ", actions);
 
     plot
       .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
       .setName(hyperparam)
-      .setData(_data)
+      .setData(data)
       .setCanvas(chartRef.current)
       .setActions(actions);
 
@@ -116,15 +103,12 @@ const MLMVStoryPage = () => {
   };
 
   const handleBeginningButton = () => {};
-
   const handleBackButton = () => {};
-
-  const handlePlayButton = () => {};
 
   return (
     <>
       <Head>
-        <title>Storyboard | ML Multivariate</title>
+        <title>Story | ML PCP</title>
       </Head>
       <Box
         sx={{
@@ -190,7 +174,6 @@ const MLMVStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!key}
                       disabled={true}
                       onClick={handleBeginningButton}
                       component="span"
@@ -202,7 +185,6 @@ const MLMVStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      // disabled={!key}
                       disabled={true}
                       onClick={handleBackButton}
                       startIcon={<ArrowBackIosIcon />}
@@ -239,10 +221,9 @@ const MLMVStoryPage = () => {
             )}
           </CardContent>
         </Card>
-        {/* </Container> */}
       </Box>
     </>
   );
 };
 
-export default MLMVStoryPage;
+export default StoryMLPCP;

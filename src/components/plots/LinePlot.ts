@@ -1,9 +1,9 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { Coordinate } from "src/types/coordinate";
+import { Coordinate } from "src/types/Coordinate";
 import { TimeSeriesPoint, TimeSeriesData } from "src/types/TimeSeriesPoint";
 import { findDateIdx, findIndexOfDate } from "src/utils/common";
-import { DateActionArray } from "src/types/FeatureActionTypes";
+import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
@@ -158,7 +158,7 @@ export class LinePlot extends Plot {
   /**
    ** Set the list of actions to be animated
    **/
-  public setActions(actions: DateActionArray = []) {
+  public setActions(actions: TimelineMSBActions = []) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     this.playActionIdx = 0;
     this.lastAction = null;

@@ -33,7 +33,7 @@ export * from './hooks/usePlayPauseLoop';
 // Export types
 export * from './types/Align';
 export * from './types/TimeSeriesPoint';
-export * from './types/coordinate';
+export * from './types/Coordinate';
 
 // Export utils
 
@@ -48,7 +48,7 @@ export * from './utils/feature-action/CategoricalFeature';
 export * from './utils/feature-action/Condition';
 export * from './utils/feature-action/Current';
 export * from './utils/feature-action/Fall';
-export * from './types/FeatureActionTypes';
+export * from './types/TimelineMSBActions';
 export * from './utils/feature-action/FeatureSearchProps';
 export * from './utils/feature-action/First';
 export * from './utils/feature-action/Last';

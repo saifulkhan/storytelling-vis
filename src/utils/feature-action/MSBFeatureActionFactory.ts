@@ -7,7 +7,7 @@ import {
 } from "src/components/tables/FeatureActionTableRow";
 import { MSBFeatureFactory } from "src/utils/feature-action/MSBFeatureFactory";
 import { MSBAction } from "src/components/actions/MSBAction";
-import { DateActionArray } from "src/types/FeatureActionTypes";
+import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
@@ -40,7 +40,7 @@ export class MSBFeatureActionFactory {
   }
 
   public create() {
-    const dataActionArray: DateActionArray = [];
+    const dataActionArray: TimelineMSBActions = [];
     const actionFactory = new MSBActionFactory();
     const featureFactory = new MSBFeatureFactory()
       .setProps(this.props)

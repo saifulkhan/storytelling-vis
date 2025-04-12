@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Box } from "@mui/material";
 import * as d3 from "d3";
 
-import { Coordinate } from "src/types/coordinate";
+import { Coordinate } from "src/types/Coordinate";
 import { Dot } from "src/components/actions/Dot";
 import { TextBox } from "src/components/actions/TextBox";
 import { Connector } from "src/components/actions/Connector";

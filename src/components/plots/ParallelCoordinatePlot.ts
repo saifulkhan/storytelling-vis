@@ -2,8 +2,8 @@ import * as d3 from "d3";
 import { StoryboardColors, LineColor } from "src/components/StoryboardColors";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
 import { findIndexOfDate, getObjectKeysArray } from "src/utils/common";
-import { DateActionArray } from "src/types/FeatureActionTypes";
-import { Coordinate } from "src/types/coordinate";
+import { TimelineMSBActions } from "src/types/TimelineMSBActions";
+import { Coordinate } from "src/types/Coordinate";
 import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 import { MSBAction } from "src/components/actions/MSBAction";
@@ -345,7 +345,7 @@ export class ParallelCoordinatePlot extends Plot {
   /**
    ** Actions that will be animated.
    **/
-  public setActions(actions: DateActionArray) {
+  public setActions(actions: TimelineMSBActions) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
 
     this.drawAxis();

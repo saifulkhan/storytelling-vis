@@ -28,13 +28,12 @@ import { blue } from "@mui/material/colors";
 import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { LinePlot } from "src/components/plots/LinePlot";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
-import { DateActionArray } from "src/types/FeatureActionTypes";
+import { TimelineMSBActions } from "src/types/TimelineMSBActions";
 import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
-
 import covid19CasesData from "../../assets/covid19-cases-data.json";
-import covid19NumFATableData from "../../assets/covid-19-numerical-fa-table.json";
+import covid19NumFATable from "../../assets/covid-19-numerical-fa-table.json";
 
-const Covid19SLStoryPage = () => {
+const StoryCovid19Single = () => {
   const WIDTH = 1200,
     HEIGHT = 500;
   const valuetext = (value: number): string => `${value}`; // slider formatted value
@@ -47,7 +46,7 @@ const Covid19SLStoryPage = () => {
   const [casesData, setCasesData] = useState<Record<string, TimeSeriesPoint[]>>(
     {}
   );
-  const [numFATableData, setNumFATableData] = useState<any>(null);
+  const [numericalFATable, setNumericalFATable] = useState<any>(null);
   const plot = useRef(new LinePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
@@ -66,14 +65,13 @@ const Covid19SLStoryPage = () => {
           ])
         ) as Record<string, TimeSeriesPoint[]>;
 
-        const numFATableData = covid19NumFATableData;
 
         setCasesData(casesData);
-        setNumFATableData(numFATableData);
+        setNumericalFATable(covid19NumFATable);
         setRegions(Object.keys(casesData).sort());
 
         console.log("Cases data: ", casesData);
-        console.log("Numerical feature-action table data: ", numFATableData);
+        console.log("Numerical feature-action table data: ", numericalFATable);
 
       } catch (error) {
         console.error("Failed to fetch data; error:", error);
@@ -88,23 +86,23 @@ const Covid19SLStoryPage = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
-    const regionData = casesData[region];
+    const data = casesData[region];
     console.log("Selected region: ", region);
-    console.log("Selected region data: ", regionData);
+    console.log("Selected region data: ", data);
 
     // Create actions
-    const actions: DateActionArray = new MSBFeatureActionFactory()
+    const actions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({
         metric: "Number of cases",
         window: 10,
       })
-      .setTable(numFATableData)
-      .setData(regionData)
+      .setTable(numericalFATable)
+      .setData(data)
       .create();
 
     // Draw the plot
     plot
-      .setData([regionData])
+      .setData([data])
       .setName(region)
       .setPlotProps({
         title: `${region}`,
@@ -119,7 +117,7 @@ const Covid19SLStoryPage = () => {
     pause();
 
     return () => {};
-  }, [region, casesData, numFATableData]);
+  }, [region, casesData, numericalFATable]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;
@@ -139,13 +137,12 @@ const Covid19SLStoryPage = () => {
   };
 
   const handleBeginningButton = () => {};
-
   const handleBackButton = () => {};
 
   return (
     <>
       <Head>
-        <title>Storyboard | COVID-19 Single Location</title>
+        <title>Story | COVID-19 Single Location</title>
       </Head>
       <Box
         sx={{
@@ -283,4 +280,4 @@ const Covid19SLStoryPage = () => {
   );
 };
 
-export default Covid19SLStoryPage;
+export default StoryCovid19Single;

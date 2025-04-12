@@ -1,5 +1,5 @@
 import { MSBAction } from "./MSBAction";
-import { Coordinate } from "src/types/coordinate";
+import { Coordinate } from "src/types/Coordinate";
 import { ActionZOrder } from "./MSBActionName";
 
 export class MSBActionGroup extends MSBAction {

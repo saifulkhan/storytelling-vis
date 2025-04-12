@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { MSBAction } from "./MSBAction";
-import { Coordinate } from "src/types/coordinate";
+import { Coordinate } from "src/types/Coordinate";
 import { MSBActionName } from "./MSBActionName";
 import { HorizontalAlign, VerticalAlign } from "src/types/Align";
 
