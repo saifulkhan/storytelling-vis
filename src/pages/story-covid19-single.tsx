@@ -47,41 +47,39 @@ const StoryCovid19Single = () => {
     {}
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
-  
+
   const plot = useRef(new LinePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
-
-  // load various regions data and feature-action table
 
   useEffect(() => {
     if (!chartRef.current) return;
     setLoading(true);
-    
-    (async () => {
-      try {
-        const casesData = Object.fromEntries(
-          Object.entries(covid19CasesData || {}).map(([region, data]) => [
-            region,
-            data.map(({ date, y }: { date: string; y: number }) => ({ date: new Date(date), y: +y })),
-          ])
-        ) as Record<string, TimeSeriesPoint[]>;
 
+    try {
+      // load various regions data
+      const casesData = Object.fromEntries(
+        Object.entries(covid19CasesData || {}).map(([region, data]) => [
+          region,
+          data.map(({ date, y }: { date: string; y: number }) => ({
+            date: new Date(date),
+            y: +y,
+          })),
+        ])
+      ) as Record<string, TimeSeriesPoint[]>;
+      setCasesData(casesData);
+      setRegions(Object.keys(casesData).sort());
 
-        setCasesData(casesData);
-        setNumericalFATable(covid19NumFATable);
-        setRegions(Object.keys(casesData).sort());
+      // load feature-action table
+      setNumericalFATable(covid19NumFATable);
 
-        console.log("Cases data: ", casesData);
-        console.log("Numerical feature-action table data: ", numericalFATable);
-
-      } catch (error) {
-        console.error("Failed to fetch data; error:", error);
-      } finally {
-        setLoading(false);
-      }
-    })();
+      console.log("Cases data: ", casesData);
+      console.log("Numerical feature-action table data: ", numericalFATable);
+    } catch (error) {
+      console.error("Failed to fetch data; error:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
-
 
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
@@ -91,20 +89,20 @@ const StoryCovid19Single = () => {
 
     // build story based on selected region's data and feature-action table
 
-    // create actions
+    // create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({
         metric: "Number of cases",
         window: 10,
       })
       .setTable(numericalFATable) // <- feature-action table
-      .setData(data)              // <- timeseries data
+      .setData(data) // <- timeseries data
       .create();
 
     // provide the data, timeline MSB actions, and settings to the LinePlot
     plot
-      .setData([data])            // <- timeseries data
-      .setName(region)            // <- selected region
+      .setData([data]) // <- timeseries data
+      .setName(region) // <- selected region
       .setPlotProps({
         title: `${region}`,
         xLabel: "Date",
@@ -159,7 +157,7 @@ const StoryCovid19Single = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="Covid19: Single Location Story"
+            title="Story: Covid19 Single Location"
             subheader="Choose a segment value, a region, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>

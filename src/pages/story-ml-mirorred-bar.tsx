@@ -27,16 +27,20 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { getMLData } from "src/services/TimeSeriesDataService";
-import { getTableData } from "src/services/FATableService";
 import {
   MirroredBarChart,
   MirroredBarChartData,
 } from "src/components/plots/MirroredBarChart";
 import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
 import { sortTimeseriesData } from "src/utils/common";
+import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 
-const MLMirroredBarStoryPage = () => {
+import mlTrainingData from "../../assets/ml-training-data.json";
+import mlNumFATable from "../../assets/ml-numerical-fa-table-1.json";
+import { TimelineMSBActions } from "src/types/TimelineMSBActions";
+import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
+
+const StoryMLMirroredBar = () => {
   const WIDTH = 1200,
     HEIGHT = 800;
   const HYPERPARAMS = [
@@ -49,92 +53,72 @@ const MLMirroredBarStoryPage = () => {
   const chartRef = useRef<SVGSVGElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [hyperparam, setHyperparam] = useState<string>("");
-  const [data, setData] = useState<any>({});
-  const [table, setTable] = useState<any>({});
+  const [mlData, setMLData] = useState<TimeSeriesPoint[]>([]);
+  const [numericalFATable, setNumericalFATable] = useState<any>({});
 
-  // Initialize the plot with useRef to maintain the same instance across renders
-  const plotRef = useRef<MirroredBarChart | null>(null);
-  if (!plotRef.current) {
-    plotRef.current = new MirroredBarChart();
-  }
-  const plot = plotRef.current;
-
-  // Use the plot instance with the usePlayPauseLoop hook
+  const plot = useRef(new MirroredBarChart()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
-  // Load ML data and feature action table data
   useEffect(() => {
     if (!chartRef.current) return;
     setLoading(true);
 
-    const fetchData = async () => {
-      try {
-        const _data = await getMLData();
-        setData(_data);
-        const _table = await getTableData("ML: Multivariate");
-        setTable(_table);
-
-        console.log("MLMirroredBarStoryPage: useEffect 1: data: ", data);
-        console.log("MLMirroredBarStoryPage: useEffect 1: table: ", table);
-      } catch (error) {
-        console.error("MLMirroredBarStoryPage: Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    return () => {};
-  }, []);
-
-  // Once a hyperparameter/key is selected create feature-actions and plot
-  useEffect(() => {
-    if (!hyperparam || !data || !chartRef.current) return;
-
-    console.log("MLMirroredBarStoryPage: useEffect 2: key: ", hyperparam);
-    console.log(
-      "MLMirroredBarStoryPage: useEffect 2: data: ",
-      data[hyperparam]
+    // load ML training data
+    setMLData(
+      mlTrainingData.map(({ date, ...rest }) => ({
+        date: new Date(date),
+        ...rest,
+      }))
     );
 
-    // FeatureActionBuilder takes TimeseriesData, so we need to transform it
-    const _data = sortTimeseriesData(data, hyperparam);
+    // load feature-action table
+    setNumericalFATable(mlNumFATable);
 
-    // Convert TimeSeriesPoint to MirroredBarChartData
-    const chartData: MirroredBarChartData[] = _data.map((item) => ({
+    console.log("ML data: ", mlData);
+    console.log("Numerical feature-action table data: ", numericalFATable);
+
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!hyperparam || !mlData || !chartRef.current) return;
+
+    const data = sortTimeseriesData(mlData, hyperparam);
+    console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
+
+    // build story based on selected hyperparameter's data and feature-action table
+
+    // convert to MirroredBarChartData which will display mean_test_accuracy & mean_training_accuracy
+    // TODO: may not be required
+    const chartData: MirroredBarChartData[] = data.map((item) => ({
       date: new Date(item.date),
       y: (item as any)[hyperparam] as number, // Parameter value using type assertion
       mean_test_accuracy: item.mean_test_accuracy,
       mean_training_accuracy: item.mean_training_accuracy,
     }));
 
-    // Create simplified annotations for the chart
-    const annotations = _data.map((item, index) => ({
-      start: index,
-      end: index,
-      text: `${new Date(
-        item.date
-      ).toLocaleDateString()}: ${item.mean_test_accuracy?.toFixed(2)}`,
-    }));
+    // build story based on selected hyperparameter's data and feature-action table
 
-    plot
-      .svg(chartRef.current)
-      .title(`${hyperparam.toUpperCase()} Parameter Analysis`)
-      .xLabel("Date")
-      .yLabel1("Test Accuracy")
-      .yLabel2("Parameter Value")
-      .color1("steelblue")
-      .color2("darkgreen")
-      .data1(chartData)
-      .margin({ top: 150, right: 50, bottom: 60, left: 60 })
-      .annotations(annotations)
-      .plot();
+    // create timeline actions
+    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
+      .setFAProps({ metric: "accuracy", window: 0 })
+      .setData(data) // <- timeseries data
+      .setTable(numericalFATable) // <- feature-action table
+      .create();
 
+    // provide the data, timeline MSB actions, and settings to the PCP
+    // plot
+    //   .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
+    //   .setName(hyperparam) // <- selected hyperparameter
+    //   .setData(data) // <- timeseries data
+    //   .setCanvas(chartRef.current)
+    //   .setActions(timelineMSBActions);
+
+    // pause the animation, start when play button is clicked
     pause();
 
     return () => {};
-  }, [hyperparam, data]);
+  }, [hyperparam, mlData]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newKey = event.target.value;
@@ -174,7 +158,7 @@ const MLMirroredBarStoryPage = () => {
   return (
     <>
       <Head>
-        <title key="title">Storyboard | ML Provenance</title>
+        <title key="title">Story | ML Provenance</title>
       </Head>
       <Box
         sx={{
@@ -190,7 +174,7 @@ const MLMirroredBarStoryPage = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="Machine Learning: Provenance Story"
+            title="Story: Machine Learning Provenance"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>
@@ -240,7 +224,7 @@ const MLMirroredBarStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      disabled={!hyperparam}
+                      disabled={true}
                       onClick={handleBeginningButton}
                       component="span"
                     >
@@ -251,7 +235,7 @@ const MLMirroredBarStoryPage = () => {
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
                       variant="contained"
-                      disabled={!hyperparam}
+                      disabled={true}
                       onClick={handleBackButton}
                       startIcon={<ArrowBackIosIcon />}
                       component="span"
@@ -265,7 +249,7 @@ const MLMirroredBarStoryPage = () => {
                       disabled={!hyperparam}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
-                      onClick={handlePlayButton}
+                      onClick={togglePlayPause}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }
@@ -292,4 +276,4 @@ const MLMirroredBarStoryPage = () => {
   );
 };
 
-export default MLMirroredBarStoryPage;
+export default StoryMLMirroredBar;

@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Container,
   FormControl,
   FormGroup,
   InputLabel,
@@ -52,27 +51,27 @@ const StoryMLPCP = () => {
   const plot = useRef(new ParallelCoordinatePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
-  // load ML training data and feature action table
-
   useEffect(() => {
     if (!chartRef.current) return;
     setLoading(true);
-    (async () => {
-      setMLData(
-        mlTrainingData.map(({ date, ...rest }) => ({
-          date: new Date(date),
-          ...rest,
-        }))
-      );
-      setNumericalFATable(mlNumFATable);
 
-      console.log("ML data: ", mlData);
-      console.log("Numerical feature-action table data: ", numericalFATable);
-    })();
+    // load ML training data
+    setMLData(
+      mlTrainingData.map(({ date, ...rest }) => ({
+        date: new Date(date),
+        ...rest,
+      }))
+    );
+
+    // load feature-action table
+    setNumericalFATable(mlNumFATable);
+
+    console.log("ML data: ", mlData);
+    console.log("Numerical feature-action table data: ", numericalFATable);
+
     setLoading(false);
   }, []);
 
-  
   useEffect(() => {
     if (!hyperparam || !mlData || !chartRef.current) return;
 
@@ -80,19 +79,19 @@ const StoryMLPCP = () => {
     console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
 
     // build story based on selected hyperparameter's data and feature-action table
-    
-    // create actions
+
+    // create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({ metric: "accuracy", window: 0 })
-      .setData(data)              // <- timeseries data
+      .setData(data) // <- timeseries data
       .setTable(numericalFATable) // <- feature-action table
       .create();
 
     // provide the data, timeline MSB actions, and settings to the PCP
     plot
       .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
-      .setName(hyperparam)        // <- selected hyperparameter
-      .setData(data)              // <- timeseries data
+      .setName(hyperparam) // <- selected hyperparameter
+      .setData(data) // <- timeseries data
       .setCanvas(chartRef.current)
       .setActions(timelineMSBActions);
 
@@ -131,7 +130,7 @@ const StoryMLPCP = () => {
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="Machine Learning: Multivariate Story"
+            title="Story: Machine Learning Multivariate"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>
