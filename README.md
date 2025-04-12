@@ -1,4 +1,4 @@
-**Meta-Storyboarding Using Feature-Action Design Pattern**
+Meta-Storyboarding Using Feature-Action Design Pattern
 
 
 # API User Guide
@@ -75,8 +75,7 @@ const MyComponent = () => {
 export default MyComponent;
 ```
 
-
-<div style="height:3px; background: linear-gradient(to right, #333, #333, #333); margin:20px 0;"></div>
+---
 
 
 # API Design & Development
@@ -443,7 +442,7 @@ yarn build:lib
 
 This will generate the library in the `dist` directory. Using the Library in Another Project
 
-***Option 1: Local Installation**
+**Option 1: Local Installation**
 
 You can install the library locally using:
 
@@ -453,7 +452,7 @@ npm install --save /path/to/storytelling-vis
 yarn add file:/path/to/storytelling-vis
 ```
 
-***Option 2: Publishing to npm***
+**Option 2: Publishing to npm**
 
 Publish the library to npm:
 
@@ -464,15 +463,14 @@ npm publish
 Then install it in your project (as discussed  at the beginning of this document)
  
 
-
-<div style="height:3px; background: linear-gradient(to right, #333, #333, #333); margin:20px 0;"></div>
+---
 
 
 # Support
 
 If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/storytelling-vis/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
 
----
+
 
 The first version of the prototype was done in  Observable notebook in [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js in GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). The previous prototypes contain six stories, however, we only ported three stories to this repository.
 
