@@ -23,15 +23,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import { ParallelCoordinatePlot } from "src/components/plots/ParallelCoordinatePlot";
-import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
-import { sortTimeseriesData } from "src/utils/common";
-import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
-import { TimelineMSBActions } from "src/types/TimelineMSBActions";
-import { TimeSeriesData } from "src/types/TimeSeriesPoint";
+import { ParallelCoordinatePlot } from "../../components";
+import { usePlayPauseLoop } from "../../hooks";
+import { sortTimeseriesData, MSBFeatureActionFactory } from "../../utils";
+import { TimelineMSBActions, TimeSeriesData } from "../../types";
 
-import mlTrainingData from "src/pages/data/ml-training-data.json";
-import mlNumFATable from "src/pages/data/ml-numerical-fa-table-pcp.json";
+import mlTrainingData from "../../assets/data/ml-training-data.json";
+import mlNumFATable from "../../assets/data/ml-numerical-fa-table-pcp.json";
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,

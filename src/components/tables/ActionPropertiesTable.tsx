@@ -5,61 +5,71 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  TextField,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import * as d3 from "d3";
-import { MSBActionFactory } from "../actions/MSBActionFactory";
-import { MSBActionName } from "../actions/MSBActionName";
+import { styled } from "@mui/material/styles";
 
-const useStyles = makeStyles({
-  table: {
-    width: "100%",
-    borderCollapse: "collapse", // remove border collapse
-  },
+import { MSBActionFactory, MSBActionName } from "../actions";
+
+// Define styled components to replace makeStyles
+const StyledTable = styled(Table)({
+  width: "100%",
+  borderCollapse: "collapse",
+});
+
+const StyledTableRow = styled(TableRow)({
+  // No specific styling needed
+});
+
+const StyledTableCell = styled(TableCell)({
+  fontSize: "12px",
+  padding: "2px",
+  border: "none",
+});
+
+// Style constants to use with sx prop
+const styles = {
   keyCell: {
     width: "20%",
     fontSize: "12px",
-    padding: "2px", // reduce padding
-    border: "none", // remove border
-    // borderBottom: "none",
+    padding: "2px",
+    border: "none",
   },
   valueCell: {
     width: "60%",
     fontSize: "12px",
-    padding: "2px", // reduce padding
-    border: "none", // remove border
-    // borderBottom: "none", // remove lines between cells
+    padding: "2px",
+    border: "none",
   },
   valueInput: {
     width: "100%",
     height: "100%",
     fontSize: "12px",
-    padding: "2px", // adjust padding for input
+    padding: "2px",
     "& input": {
-      border: "none", // Remove border
-      outline: "none", // Remove focus outline
-      padding: "1px", // adjust padding for input
+      border: "none",
+      outline: "none",
+      padding: "1px",
     },
   },
   drawingCell: {
     width: "10%",
-    padding: "2px", // reduce padding
-    border: "none", // remove border
+    padding: "2px",
+    border: "none",
   },
-});
+};
 
 interface ActionPropertiesTableProps {
   data: Record<string, any>;
   setData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
 }
 
-const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
+export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   data,
   setData,
 }) => {
   // console.log("ActionPropertiesTable: re-rendered: data = ", data);
-  const classes = useStyles();
+  // No need for useStyles() with the new approach
   const [rows, setRows] = useState({ ...data });
   const chartRef = useRef<SVGSVGElement | null>(null);
 
@@ -114,44 +124,33 @@ const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   }
 
   return (
-    <Table className={classes.table}>
+    <StyledTable>
       <TableBody>
         {entries.map(([key, value], index) => (
-          <TableRow key={key}>
-            <TableCell className={classes.keyCell}>
+          <StyledTableRow key={key}>
+            <StyledTableCell sx={styles.keyCell}>
               <Input
                 disableUnderline
-                className={classes.valueInput}
+                sx={styles.valueInput}
                 type="text"
                 value={key}
                 onChange={(e) => handleInputChange(key, e.target.value)}
               />
-            </TableCell>
-            <TableCell className={classes.valueCell}>
+            </StyledTableCell>
+            <StyledTableCell sx={styles.valueCell}>
               <Input
                 disableUnderline
-                className={classes.valueInput}
+                sx={styles.valueInput}
                 type="text"
                 value={value}
                 onChange={(e) => handleInputChange(key, e.target.value)}
               />
-            </TableCell>
+            </StyledTableCell>
 
-            {/* merged rows */}
-            {/* {index === 0 && (
-              <TableCell
-                className={classes.drawingCell}
-                style={{ verticalAlign: "middle" }}
-                rowSpan={totalRows}
-              >
-                {drawSvgObject(rows)}
-              </TableCell>
-            )} */}
-          </TableRow>
+          </StyledTableRow>
         ))}
       </TableBody>
-    </Table>
+    </StyledTable>
   );
 };
 
-export default ActionPropertiesTable;

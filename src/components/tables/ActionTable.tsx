@@ -1,27 +1,26 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Select,
   MenuItem,
-  TextField,
   IconButton,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/material/styles";
 
-import ActionPropertiesTable from "./ActionPropertiesTable";
+import { ActionPropertiesTable } from "./ActionPropertiesTable";
 import { ActionTableRow } from "./FeatureActionTableRow";
-import { MSBActionName } from "../actions/MSBActionName";
-import { defaultDotProps } from "../actions/Dot";
-import { defaultCircleProps } from "../actions/Circle";
-import { defaultTextBoxProps } from "../actions/TextBox";
-import { defaultConnectorProperties } from "../actions/Connector";
+import {
+  MSBActionName,
+  defaultDotProps,
+  defaultCircleProps,
+  defaultTextBoxProps,
+  defaultConnectorProperties,
+} from "../actions";
 
 const getInitialProperties = (action: MSBActionName) => {
   switch (action) {
@@ -38,32 +37,32 @@ const getInitialProperties = (action: MSBActionName) => {
   }
 };
 
-const useStyles = makeStyles({
-  table: {
-    width: "100%",
-    borderCollapse: "collapse", // remove border collapse
-  },
-  // button: {
-  //   margin: "10px",
-  // },
+// Define styled components to replace makeStyles
+const StyledTable = styled(Table)({
+  width: "100%",
+  borderCollapse: "collapse",
+});
+
+const StyledTableRow = styled(TableRow)({
+  // No specific styling needed
+});
+
+const StyledTableCell = styled(TableCell)({
+  fontSize: "12px",
+});
+
+// Style constants to use with sx prop
+const styles = {
   actionCell: {
     width: "20%",
-    // display: "flex",
-    // alignItems: "center",
     fontSize: "12px",
-    padding: "4px", // reduce padding
-    // border: "none", // remove border
+    padding: "4px",
   },
-
   propertyCell: {
     width: "80%",
     fontSize: "12px",
-    padding: "2px", // reduce padding
-    // border: "none", // remove border
+    padding: "2px",
   },
-  // inputField: {
-  //   height: "28px",
-  // },
   selectField: {
     height: "30px",
   },
@@ -73,17 +72,17 @@ const useStyles = makeStyles({
   addIcon: {
     color: "green",
   },
-});
+};
 
 interface ActionTableProps {
   data: ActionTableRow[];
   setData: React.Dispatch<React.SetStateAction<ActionTableRow[]>>;
 }
 
-const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
+export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   console.log("ActionTable: re-rendered");
 
-  const classes = useStyles();
+  // No need for useStyles() with the new approach
   const [rows, setRows] = useState<ActionTableRow[]>(data);
 
   // this effect will trigger whenever data (input argument) changes
@@ -123,7 +122,7 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
 
   return (
     <div>
-      <Table className={classes.table}>
+      <StyledTable>
         {/* 
         <TableHead>
           <TableRow>
@@ -135,17 +134,17 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
         */}
         <TableBody>
           {rows?.map((row, index) => (
-            <TableRow key={index}>
+            <StyledTableRow key={index}>
               {/* Action */}
-              <TableCell className={classes.actionCell}>
+              <StyledTableCell sx={styles.actionCell}>
                 <IconButton
                   onClick={() => handleRemoveRow(index)}
                   aria-label="delete"
                 >
-                  <RemoveIcon className={classes.removeIcon} />
+                  <RemoveIcon sx={styles.removeIcon} />
                 </IconButton>
                 <Select
-                  className={classes.selectField}
+                  sx={styles.selectField}
                   value={row.action}
                   onChange={(e) =>
                     handleActionChange(index, e.target.value as MSBActionName)
@@ -157,27 +156,26 @@ const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                     </MenuItem>
                   ))}
                 </Select>
-              </TableCell>
+              </StyledTableCell>
 
               {/* Properties */}
-              <TableCell className={classes.propertyCell}>
+              <StyledTableCell sx={styles.propertyCell}>
                 <ActionPropertiesTable
                   key={index} // ensure each instance has a unique key
                   data={{ action: row.action, ...row.properties }}
-                  setData={(updatedProperties) =>
+                  setData={(updatedProperties: any) =>
                     handlePropertyChange(index, updatedProperties)
                   }
                 />
-              </TableCell>
-            </TableRow>
+              </StyledTableCell>
+            </StyledTableRow>
           ))}
         </TableBody>
-      </Table>
+      </StyledTable>
       <IconButton onClick={handleAddRow} aria-label="add">
-        <AddIcon className={classes.addIcon} />
+        <AddIcon sx={styles.addIcon} />
       </IconButton>
     </div>
   );
 };
-
-export default ActionTable;
+ 

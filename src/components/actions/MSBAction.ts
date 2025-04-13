@@ -1,8 +1,7 @@
 import * as d3 from "d3";
 import { MSBActionName } from "./MSBActionName";
-import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
-import { MSBCategoricalFeatureName } from "src/utils/feature-action/CategoricalFeature";
-import { Coordinate } from "src/types/Coordinate";
+import { MSBFeatureName, MSBCategoricalFeatureName } from "../../utils";
+import { Coordinate } from "../../types";
 
 const DELAY = 0,
   DURATION = 1000;

@@ -105,14 +105,15 @@ yarn install
 yarn dev
 ```
 
-Open <http://localhost:3000> in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
+Open <http://localhost:3000> in your browser and access the following list of UIs:
 
 **Example Stories:**
 
-- <http://localhost:3000/story-covid19-single>
-- <http://localhost:3000/story-ml-mirorred-bar>
-- <http://localhost:3000/story-ml-pcp>
+- <http://localhost:3000/example/story-covid19-single>
+- <http://localhost:3000/example/story-ml-mirorred-bar>
+- <http://localhost:3000/example/story-ml-pcp>
 
+- <http://localhost:3000/example/feature-action-tables> : Experimental table to create feature-action tables using a UI 
 
 **Playground (testing various components):**
 

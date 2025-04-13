@@ -1,9 +1,12 @@
 import * as d3 from "d3";
-import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { Colors } from "src/components/Colors";
-import { TimelineMSBActions } from "src/types/TimelineMSBActions";
-import { Coordinate } from "src/types/Coordinate";
+import {
+  TimeSeriesData,
+  TimeSeriesPoint,
+  TimelineMSBActions,
+  Coordinate,
+} from "../../types";
+import { Colors } from "../Colors";
 
 export type MirroredBarChartProps = PlotProps & {
   fontSize: string;
@@ -128,19 +131,15 @@ export class MirroredBarChart extends Plot {
       .join("rect")
       .attr("class", "bar-top")
       .attr("x", (d) => this.xScale(d.date))
-      .attr(
-        "y",
-        (d) => {
-          return this.yScale1(d[this.props.y1Label]) - (this.props.barXAxisGap || 0);
-        }
-      )
+      .attr("y", (d) => {
+        return (
+          this.yScale1(d[this.props.y1Label]) - (this.props.barXAxisGap || 0)
+        );
+      })
       .attr("width", this.props.barWidth)
-      .attr(
-        "height",
-        (d) => {
-          return this.yScale1(0) - this.yScale1(d[this.props.y1Label]);
-        }
-      )
+      .attr("height", (d) => {
+        return this.yScale1(0) - this.yScale1(d[this.props.y1Label]);
+      })
       .attr("fill", this.props.bar1Color);
 
     // add bottom bars starting exactly from the middle point
@@ -152,14 +151,10 @@ export class MirroredBarChart extends Plot {
       .attr("x", (d) => this.xScale(d.date))
       .attr("y", this.height / 2) // start exactly from the middle point
       .attr("width", this.props.barWidth)
-      .attr(
-        "height",
-        (d) => {
-          return this.yScale2(d[this.props.y2Label]) - this.yScale2(0);
-        }
-      )
+      .attr("height", (d) => {
+        return this.yScale2(d[this.props.y2Label]) - this.yScale2(0);
+      })
       .attr("fill", this.props.bar2Color);
-
   }
 
   /**
@@ -257,8 +252,10 @@ export class MirroredBarChart extends Plot {
     // Create the bottom y-axis
     const yAxisBottom = d3.axisLeft(this.yScale2);
     yAxisBottom.ticks(5).tickFormat((d) => {
-      let prefix = d3.formatPrefix(".0", d);
-      return prefix(d);
+      // Cast d to number to fix TypeScript errors
+      const value = d as number;
+      let prefix = d3.formatPrefix(".0", value);
+      return prefix(value);
     });
 
     selection
@@ -362,7 +359,7 @@ export class MirroredBarChart extends Plot {
         .style("opacity", 0); // Initially hidden
 
       // add top bar (if data exists)
-      const y1Label = this.props.y1Label || 'y1Label';
+      const y1Label = this.props.y1Label || "y1Label";
       const y1Value = point[y1Label as keyof typeof point];
       if (typeof y1Value === "number") {
         barElement
@@ -376,7 +373,7 @@ export class MirroredBarChart extends Plot {
       }
 
       // add bottom bar (if data exists)
-      const y2Label = this.props.y2Label || 'y2Label';
+      const y2Label = this.props.y2Label || "y2Label";
       const y2Value = point[y2Label as keyof typeof point];
       if (typeof y2Value === "number") {
         barElement

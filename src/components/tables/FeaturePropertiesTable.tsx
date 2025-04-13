@@ -10,39 +10,50 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 
-const useStyles = makeStyles({
-  table: {
-    width: "100%",
-    borderCollapse: "collapse", // remove border collapse
-  },
+// Define styled components to replace makeStyles
+const StyledTable = styled(Table)({
+  width: "100%",
+  borderCollapse: "collapse",
+});
+
+const StyledTableRow = styled(TableRow)({
+  // No specific styling needed
+});
+
+const StyledTableCell = styled(TableCell)({
+  fontSize: "12px",
+  padding: "2px",
+  border: "none",
+});
+
+// Style constants to use with sx prop
+const styles = {
   keyCell: {
-    display: "flex", // Add this line
-    alignItems: "center", // Center items vertically
+    display: "flex",
+    alignItems: "center",
     width: "50%",
     fontSize: "12px",
-    padding: "2px", // reduce padding
-    border: "none", // remove border
-    // borderBottom: "none",
+    padding: "2px",
+    border: "none",
   },
   valueCell: {
     width: "50%",
     fontSize: "12px",
-    padding: "2px", // reduce padding
-    border: "none", // remove border
-    // borderBottom: "none", // remove lines between cells
+    padding: "2px",
+    border: "none",
   },
   valueInput: {
-    flexGrow: 1, // Allow the input to fill available space
+    flexGrow: 1,
     width: "100%",
     height: "100%",
     fontSize: "12px",
-    padding: "2px", // adjust padding for input
+    padding: "2px",
     "& input": {
-      border: "none", // Remove border
-      outline: "none", // Remove focus outline
-      padding: "1px", // adjust padding for input
+      border: "none",
+      outline: "none",
+      padding: "1px",
     },
   },
   addIcon: {
@@ -53,18 +64,18 @@ const useStyles = makeStyles({
     color: "red",
     fontSize: "small",
   },
-});
+};
 
 interface FeaturePropertiesTableProps {
   data: Record<string, any>;
   setData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
 }
 
-const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
+export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
   data,
   setData,
 }) => {
-  const classes = useStyles();
+  // No need for useStyles() with the new approach
   const [rows, setRows] = useState({ ...data });
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [newKey, setNewKey] = useState("");
@@ -124,16 +135,16 @@ const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
 
   return (
     <>
-      <Table className={classes.table}>
+      <StyledTable>
         <TableBody>
           {Object.entries(rows).map(([key, value]) => (
-            <TableRow key={key}>
-              <TableCell className={classes.keyCell}>
+            <StyledTableRow key={key}>
+              <StyledTableCell sx={styles.keyCell}>
                 <IconButton
                   onClick={() => handleRemoveRow(key)}
                   aria-label="delete"
                 >
-                  <RemoveIcon className={classes.removeIcon} />
+                  <RemoveIcon sx={styles.removeIcon} />
                 </IconButton>
                 {editingKey === key ? (
                   <TextField
@@ -146,25 +157,23 @@ const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
                 ) : (
                   <span onDoubleClick={() => handleEditKey(key)}>{key}</span>
                 )}
-              </TableCell>
-              <TableCell className={classes.valueCell}>
+              </StyledTableCell>
+              <StyledTableCell sx={styles.valueCell}>
                 <Input
                   disableUnderline
-                  className={classes.valueInput}
+                  sx={styles.valueInput}
                   type="text"
                   value={value}
                   onChange={(e) => handleValueChange(key, e.target.value)}
                 />
-              </TableCell>
-            </TableRow>
+              </StyledTableCell>
+            </StyledTableRow>
           ))}
         </TableBody>
-      </Table>
+      </StyledTable>
       <IconButton onClick={handleAddRow} aria-label="add">
-        <AddIcon className={classes.addIcon} />
+        <AddIcon sx={styles.addIcon} />
       </IconButton>
     </>
   );
 };
-
-export default FeaturePropertiesTable;

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Coordinate } from "src/types/Coordinate";
+import { Coordinate } from "../../types";
 
 export type PlotProps = {
   title?: string;

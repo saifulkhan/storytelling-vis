@@ -1,11 +1,15 @@
 import * as d3 from "d3";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { Coordinate } from "src/types/Coordinate";
-import { TimeSeriesPoint, TimeSeriesData } from "src/types/TimeSeriesPoint";
-import { findDateIdx, findIndexOfDate } from "src/utils/common";
-import { TimelineMSBActions } from "src/types/TimelineMSBActions";
-import { HorizontalAlign, VerticalAlign } from "src/types/Align";
-import { MSBAction } from "src/components/actions/MSBAction";
+import {
+  Coordinate,
+  TimeSeriesPoint,
+  TimeSeriesData,
+  TimelineMSBActions,
+  HorizontalAlign,
+  VerticalAlign,
+} from "../../types";
+import { findDateIdx, findIndexOfDate } from "../../utils";
+import { MSBAction } from "../actions";
 
 const ID_AXIS_SELECTION = "#id-axes-selection",
   // TODO: move to props

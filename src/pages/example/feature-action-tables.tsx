@@ -10,18 +10,28 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-import FeatureActionTable from "src/components/tables/FeatureActionTable";
-import { FeatureActionTableRow } from "src/components/tables/FeatureActionTableRow";
-import { getTableData, getTables, type TableName } from "src/services/FATableService";
+import { FeatureActionTable, FeatureActionTableData, FeatureActionTableRow } from "../../components";
+
+import covid19NumFATable from "../../assets/data/covid-19-numerical-fa-table.json";
+import mlNumFATableMirrored from "../../assets/data/ml-numerical-fa-table-line.json";
+import mlNumFATablePCP from "../../assets/data/ml-numerical-fa-table-pcp.json";
+
+type NumericalFATables = "Covid19" | "MLMirrored" | "MLPCP";
+const tableDataMap: { [tableName: string]: FeatureActionTableData } = {
+  "Covid19 Single Location": covid19NumFATable,
+  "ML Provenance": mlNumFATableMirrored,
+  "ML Multivariate": mlNumFATablePCP,
+};
+
 
 const FeatureActionTablesPage = () => {
   const [data, setData] = useState<FeatureActionTableRow[]>([]);
-  const [selectedTable, setSelectedTable] = useState<TableName | "">("");
-  const [tables, setTables] = useState<TableName[]>([]);
+  const [selectedTable, setSelectedTable] = useState<NumericalFATables | "">("");
+  const [tables, setTables] = useState<NumericalFATables[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const _tables = getTables();
+      const _tables = Object.keys(tableDataMap) as NumericalFATables[];
       setTables(_tables);
       setSelectedTable(_tables[0]);
       console.log("tables: ", _tables);
@@ -32,10 +42,10 @@ const FeatureActionTablesPage = () => {
     fetchData();
   }, []);
 
-  const fetchTableData = async (table: TableName) => {
+  const fetchTableData = async (table: NumericalFATables) => {
     try {
       console.log("table: ", table);
-      const tableData = (await getTableData(table)) as FeatureActionTableRow[];
+      const tableData = tableDataMap[table] as FeatureActionTableRow[];
       console.log("tableData: ", tableData);
       setData(tableData);
     } catch (e) {
@@ -43,10 +53,10 @@ const FeatureActionTablesPage = () => {
     }
   };
 
-  const handleTableChange = async (event: SelectChangeEvent<TableName | "">) => {
-    setSelectedTable(event.target.value as TableName | "");
+  const handleTableChange = async (event: SelectChangeEvent<NumericalFATables | "">) => {
+    setSelectedTable(event.target.value as NumericalFATables | "");
     if (event.target.value !== "") {
-      fetchTableData(event.target.value as TableName);
+      fetchTableData(event.target.value as NumericalFATables);
     }
   };
 
@@ -85,7 +95,7 @@ const FeatureActionTablesPage = () => {
                 labelId="table-select-label"
                 value={selectedTable}
                 onChange={handleTableChange}
-                label="Select Table"
+                label="Select a Feature-Action Table"
               >
                 <MenuItem value="">Select a table</MenuItem>
                 {tables.map((table) => (

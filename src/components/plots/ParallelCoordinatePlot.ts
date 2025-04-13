@@ -1,12 +1,19 @@
 import * as d3 from "d3";
-import { Colors, LineColor } from "src/components/Colors";
+
+import { Colors, LineColor } from "../Colors";
+import { MSBAction } from "../actions";
 import { Plot, PlotProps, defaultPlotProps } from "./Plot";
-import { findIndexOfDate, getObjectKeysArray } from "src/utils/common";
-import { TimelineMSBActions } from "src/types/TimelineMSBActions";
-import { Coordinate } from "src/types/Coordinate";
-import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
-import { HorizontalAlign, VerticalAlign } from "src/types/Align";
-import { MSBAction } from "src/components/actions/MSBAction";
+import {
+  TimelineMSBActions,
+  Coordinate,
+  HorizontalAlign,
+  VerticalAlign,
+} from "../../types";
+import {
+  MSBFeatureName,
+  findIndexOfDate,
+  getObjectKeysArray,
+} from "../../utils";
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -29,7 +36,12 @@ const DELAY_SHOW = 0,
 const ANNO_Y_POS = 20,
   ANNO_X_POS = 75;
 
-const xScaleMap = (data: any[], keys: string[], width: number, margin: {left: number, right: number}) => {
+const xScaleMap = (
+  data: any[],
+  keys: string[],
+  width: number,
+  margin: { left: number; right: number }
+) => {
   return new Map(
     Array.from(keys, (key) => {
       // array of all keys, e.g.,  ['date', 'mean_test_accuracy', 'channels', 'kernel_size', 'layers', ...]
@@ -37,13 +49,22 @@ const xScaleMap = (data: any[], keys: string[], width: number, margin: {left: nu
       let scale;
       if (key === "date") {
         // Create scale with proper typing and handle possible undefined values
-        scale = d3.scaleTime()
-          .domain(d3.extent(data, (d) => d[key] as Date) as [Date, Date] || [new Date(), new Date()])
+        scale = d3
+          .scaleTime()
+          .domain(
+            (d3.extent(data, (d) => d[key] as Date) as [Date, Date]) || [
+              new Date(),
+              new Date(),
+            ]
+          )
           .range([margin.left, width - margin.right]);
       } else {
         // Create scale with proper typing and handle possible undefined values
-        scale = d3.scaleLinear()
-          .domain(d3.extent(data, (d) => +d[key]) as [number, number] || [0, 1])
+        scale = d3
+          .scaleLinear()
+          .domain(
+            (d3.extent(data, (d) => +d[key]) as [number, number]) || [0, 1]
+          )
           .range([margin.left, width - margin.right]);
       }
 
@@ -52,12 +73,15 @@ const xScaleMap = (data: any[], keys: string[], width: number, margin: {left: nu
   );
 };
 
-const yScale = (keys: string[], height: number, margin: { top: number, bottom: number }) => {
+const yScale = (
+  keys: string[],
+  height: number,
+  margin: { top: number; bottom: number }
+) => {
   return d3.scalePoint(keys, [margin.top, height - margin.bottom]);
 };
 
 export class ParallelCoordinatePlot extends Plot {
-
   data: any[] = [];
   plotProps: PlotProps = { ...defaultPlotProps };
   svg!: SVGSVGElement;
@@ -280,7 +304,10 @@ export class ParallelCoordinatePlot extends Plot {
     const cross = (d: any) => {
       // given d is a row of the data, e.g., {date: 1677603855000, kernel_size: 11, layers: 13, ...},
       // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
-      return d3.cross(this.AxisNames, [d], (key: string, d: any) => [key, +d[key]]);
+      return d3.cross(this.AxisNames, [d], (key: string, d: any) => [
+        key,
+        +d[key],
+      ]);
     };
 
     //
@@ -558,7 +585,11 @@ export class ParallelCoordinatePlot extends Plot {
     return [this.width - this.margin.left - ANNO_X_POS, ANNO_Y_POS];
   }
 
-  private getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
-    throw new Error("Method not implemented.");
+  public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
+    // Return coordinates based on the plot's dimensions
+    return [
+      [this.margin.left, this.margin.top],
+      [this.width - this.margin.right, this.height - this.margin.bottom],
+    ];
   }
 }

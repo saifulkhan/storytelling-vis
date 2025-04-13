@@ -11,18 +11,19 @@ import {
   TextField,
   IconButton,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { styled } from "@mui/material/styles";
 
-import { defaultDotProps } from "src/components/actions/Dot";
-import { defaultCircleProps } from "src/components/actions/Circle";
-import { defaultTextBoxProps } from "src/components/actions/TextBox";
-import { defaultConnectorProperties } from "src/components/actions/Connector";
-import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
-import ActionTable from "./ActionTable";
-import FeaturePropertiesTable from "./FeaturePropertiesTable";
-import { MSBActionName } from "src/components/actions/MSBActionName";
+import { 
+  defaultDotProps,
+  defaultCircleProps,
+  defaultTextBoxProps,
+  defaultConnectorProperties,
+  MSBActionName 
+} from "../../components/actions";
+import { MSBFeatureName } from "../../utils/feature-action";
+import { ActionTable, FeaturePropertiesTable } from "./index";
 import { FeatureActionTableRow } from "./FeatureActionTableRow";
 
 const getInitialProperties = (action: MSBActionName) => {
@@ -40,76 +41,64 @@ const getInitialProperties = (action: MSBActionName) => {
   }
 };
 
-const useStyles = makeStyles({
-  table: {
-    width: "100%",
-    borderCollapse: "collapse", // remove border collapse
-    borderSpacing: 0, // removes default spacing to control borders effectively
+// Define styled components to replace makeStyles
+const StyledTable = styled(Table)({
+  width: "100%",
+  borderCollapse: "collapse",
+  borderSpacing: 0,
+});
+
+const StyledTableRow = styled(TableRow)({
+  "&:not(:last-child)": {
+    borderBottom: "1.5px solid #808080",
   },
+});
+
+const StyledTableCell = styled(TableCell)({
+  fontSize: "12px",
+});
+
+// Style constants to use with sx prop
+const styles = {
   featureHeadCell: {
-    fontWeight: "bold", // header to be bold
+    fontWeight: "bold",
   },
   propertiesHeadCell: {
-    fontWeight: "bold", // header to be bold
+    fontWeight: "bold",
   },
   rankHeadCell: {
-    fontWeight: "bold", // header to be bold
+    fontWeight: "bold",
   },
   actionHeadCell: {
-    fontWeight: "bold", // header to be bold
-    textAlign: "center", // center align text
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  tableRow: {
-    "&:not(:last-child)": {
-      // Adds horizontal border to all but the last row for a cleaner look
-      borderBottom: "1.5px solid #808080", // Adjust color as needed
-    },
-  },
-  // button: {
-  //   margin: "10px",
-  // },
   featureCell: {
     width: "15%",
-    // display: "flex",
-    // alignItems: "center",
     fontSize: "12px",
-    padding: "4px", // reduce padding
-    // border: "none", // remove border
+    padding: "4px",
   },
-
   propertyCell: {
     width: "15%",
     fontSize: "12px",
-    padding: "2px", // reduce padding
-    // border: "none", // remove border
+    padding: "2px",
   },
   rankCell: {
     width: "10%",
-    // fontSize: "12px",
-    // padding: "2px", // reduce padding
-    // border: "none", // remove border
   },
   actionCell: {
     width: "60%",
-    // fontSize: "12px",
-    // padding: "2px", // reduce padding
-    // border: "none", // remove border
   },
   rankTextField: {
     "& .MuiInputBase-root": {
-      // Target the input field container
-      height: "30px", // Set the height of the input
-      width: "100px", // Set the width of the input
+      height: "30px",
+      width: "100px",
     },
     "& .MuiInputBase-input": {
-      // Target the input element itself
       height: "30px",
-      padding: "0 14px", // Adjust padding as needed
+      padding: "0 14px",
     },
   },
-  // inputField: {
-  //   height: "28px",
-  // },
   selectField: {
     height: "30px",
   },
@@ -119,20 +108,20 @@ const useStyles = makeStyles({
   addIcon: {
     color: "green",
   },
-});
+};
 
 interface FeatureActionTableProps {
   data: FeatureActionTableRow[];
   setData: React.Dispatch<React.SetStateAction<FeatureActionTableRow[]>>;
 }
 
-const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
+export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   data,
   setData,
 }) => {
   console.log("FeatureActionTable: re-rendered");
 
-  const classes = useStyles();
+  // No need for useStyles() with the new approach
   const [rows, setRows] = useState<FeatureActionTableRow[]>(data);
 
   // this effect will trigger whenever data (input argument) changes
@@ -191,32 +180,32 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
 
   return (
     <div>
-      <Table className={classes.table}>
-        <TableHead className={classes.tableRow}>
-          <TableRow className={classes.tableRow}>
-            <TableCell className={classes.featureHeadCell}>Feature</TableCell>
-            <TableCell className={classes.propertiesHeadCell}>
+      <StyledTable>
+        <TableHead>
+          <StyledTableRow>
+            <StyledTableCell sx={styles.featureHeadCell}>Feature</StyledTableCell>
+            <StyledTableCell sx={styles.propertiesHeadCell}>
               Properties
-            </TableCell>
-            <TableCell className={classes.rankHeadCell}>Rank</TableCell>
-            <TableCell className={classes.actionHeadCell}>
+            </StyledTableCell>
+            <StyledTableCell sx={styles.rankHeadCell}>Rank</StyledTableCell>
+            <StyledTableCell sx={styles.actionHeadCell}>
               Action & Properties
-            </TableCell>
-          </TableRow>
+            </StyledTableCell>
+          </StyledTableRow>
         </TableHead>
         <TableBody>
           {rows?.map((row, index) => (
-            <TableRow key={index} className={classes.tableRow}>
+            <StyledTableRow key={index}>
               {/* Feature */}
-              <TableCell className={classes.featureCell}>
+              <StyledTableCell sx={styles.featureCell}>
                 <IconButton
                   onClick={() => handleRemoveRow(index)}
                   aria-label="delete"
                 >
-                  <RemoveIcon className={classes.removeIcon} />
+                  <RemoveIcon sx={styles.removeIcon} />
                 </IconButton>
                 <Select
-                  className={classes.selectField}
+                  sx={styles.selectField}
                   value={row.feature}
                   onChange={(e) =>
                     handleActionChange(index, e.target.value as MSBFeatureName)
@@ -228,23 +217,23 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </TableCell>
+              </StyledTableCell>
 
               {/* Properties */}
-              <TableCell className={classes.propertyCell}>
+              <StyledTableCell sx={styles.propertyCell}>
                 <FeaturePropertiesTable
                   key={index} // ensure each instance has a unique key
                   data={row.properties}
-                  setData={(newProperties) =>
+                  setData={(newProperties: any) =>
                     handlePropertyChange(index, newProperties)
                   }
                 />
-              </TableCell>
+              </StyledTableCell>
 
               {/* Rank */}
-              <TableCell className={classes.rankCell}>
+              <StyledTableCell sx={styles.rankCell}>
                 <TextField
-                  className={classes.rankTextField}
+                  sx={styles.rankTextField}
                   type="number"
                   key={index} // ensure each instance has a unique key
                   value={row.rank}
@@ -252,25 +241,23 @@ const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                     handleRankChange(index, parseInt(e.target.value, 10))
                   }
                 />
-              </TableCell>
+              </StyledTableCell>
 
               {/* Actions */}
-              <TableCell className={classes.actionCell}>
+              <StyledTableCell sx={styles.actionCell}>
                 <ActionTable
                   key={index} // ensure each instance has a unique key
                   data={row.actions}
                   setData={() => {}}
                 />
-              </TableCell>
-            </TableRow>
+              </StyledTableCell>
+            </StyledTableRow>
           ))}
         </TableBody>
-      </Table>
+      </StyledTable>
       <IconButton onClick={handleAddRow} aria-label="add">
-        <AddIcon className={classes.addIcon} />
+        <AddIcon sx={styles.addIcon} />
       </IconButton>
     </div>
   );
 };
-
-export default FeatureActionTable;

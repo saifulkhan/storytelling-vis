@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { MSBFeatureName } from "src/utils/feature-action/MSBFeatureName";
+import { MSBFeatureName } from "../utils";
 
 export enum Colors {
   DarkGreen = "#006400",

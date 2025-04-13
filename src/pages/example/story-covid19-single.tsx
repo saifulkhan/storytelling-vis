@@ -1,12 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
 import {
   Avatar,
   Button,
   Card,
   CardContent,
   CardHeader,
+  Container,
   FormControl,
   FormGroup,
   InputLabel,
@@ -23,128 +25,114 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
 import { blue } from "@mui/material/colors";
 
-import {
-  MirroredBarChart,
-  MirroredBarChartProps,
-} from "src/components/plots/MirroredBarChart";
-import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
-import useSynchronizedPlots from "src/hooks/useSynchronizedPlots";
-import { sortTimeseriesData } from "src/utils/common";
-import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { TimelineMSBActions } from "src/types/TimelineMSBActions";
-import { MSBFeatureActionFactory } from "src/utils/feature-action/MSBFeatureActionFactory";
-import { LinePlot } from "src/components/plots/LinePlot";
+import { TimeSeriesData, TimelineMSBActions } from "../../types";
+import { LinePlot } from "../../components";
+import { usePlayPauseLoop } from "../../hooks";
+import { MSBFeatureActionFactory } from "../../utils";
 
-import mlTrainingData from "src/pages/data/ml-training-data.json";
-import mlNumFATable from "src/pages/data/ml-numerical-fa-table-line.json";
+import covid19CasesData from "../../assets/data/covid19-cases-data.json";
+import covid19NumFATable from "../../assets/data/covid-19-numerical-fa-table.json";
 
-const StoryMLMirroredBar = () => {
+const StoryCovid19Single = () => {
   const WIDTH = 1200,
-    HEIGHT = 600;
-  const HYPERPARAMS = [
-    "channels",
-    "kernel_size",
-    "layers",
-    "samples_per_class",
-  ];
+    HEIGHT = 500;
+  const valuetext = (value: number): string => `${value}`; // slider formatted value
 
-  const chartRefLine = useRef<SVGSVGElement>(null);
-  const chartRefMirrored = useRef<SVGSVGElement>(null);
-
+  const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedHyperparam, setSelectedHyperparam] = useState<string>("");
-  const [mlData, setMLData] = useState<TimeSeriesData>([]);
-  const [numericalFATable, setNumericalFATable] = useState<any>({});
+  const [segment, setSegment] = useState<number>(3);
+  const [regions, setRegions] = useState<string[]>([]);
+  const [region, setRegion] = useState<string>("");
+  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
+    {}
+  );
+  const [numericalFATable, setNumericalFATable] = useState<any>(null);
 
-  const linePlot = useRef(new LinePlot()).current;
-  const mirroredBarChart = useRef(new MirroredBarChart()).current;
-
-  // control both plots together
-  const { isPlaying, togglePlayPause, pause } = useSynchronizedPlots([linePlot, mirroredBarChart]);
+  const plot = useRef(new LinePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
   useEffect(() => {
-    if (
-      !chartRefLine.current || 
-      !chartRefMirrored.current
-    ) return;
+    if (!chartRef.current) return;
     setLoading(true);
 
-    // load data
-    setMLData(
-      mlTrainingData.map(({ date, ...rest }) => ({
-        date: new Date(date),
-        ...rest,
-      }))
-    );
+    try {
+      // load various regions data
+      const casesData = Object.fromEntries(
+        Object.entries(covid19CasesData || {}).map(([region, data]) => [
+          region,
+          data.map(({ date, y }: { date: string; y: number }) => ({
+            date: new Date(date),
+            y: +y,
+          })),
+        ])
+      ) as Record<string, TimeSeriesData>;
+      setCasesData(casesData);
+      setRegions(Object.keys(casesData).sort());
 
-    // load feature-action table
-    setNumericalFATable(mlNumFATable);
+      // load feature-action table
+      setNumericalFATable(covid19NumFATable);
 
-    console.log("ML data: ", mlData);
-    console.log("Numerical feature-action table data: ", numericalFATable);
-
-    setLoading(false);
+      console.log("Cases data: ", casesData);
+      console.log("Numerical feature-action table data: ", numericalFATable);
+    } catch (error) {
+      console.error("Failed to fetch data; error:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
-    if (
-      !selectedHyperparam ||
-      !mlData ||
-      !chartRefLine.current ||
-      !chartRefMirrored.current
-    )
-      return;
+    if (!region || !casesData[region] || !chartRef.current) return;
 
-    let data = sortTimeseriesData(mlData, selectedHyperparam);
-    const y1AxisName = "mean_test_accuracy";
-    const y2AxisName = selectedHyperparam;
-   
-    console.log(`Selected hyperparameter ${selectedHyperparam}'s data:`, data);
+    const data = casesData[region];
+    console.log(`Selected region ${region}'s data: ${data}`);
 
-
-    // build story based on selected hyperparameter's data and feature-action table
+    // build story based on selected region's data and feature-action table
 
     // create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
-      .setFAProps({ metric: "accuracy", window: 0 })
-      .setData(data) // <- timeseries data
+      .setFAProps({
+        metric: "Number of cases",
+        window: 10,
+      })
       .setTable(numericalFATable) // <- feature-action table
+      .setData(data) // <- timeseries data
       .create();
 
- 
-    linePlot
-      .setData([data.map(d => ({ ...d, y: d[y1AxisName] }))]) // <- timeseries data
-      .setName(selectedHyperparam) // <- selected hyperparam
+    // provide the data, timeline MSB actions, and settings to the LinePlot
+    plot
+      .setData([data]) // <- timeseries data
+      .setName(region) // <- selected region
       .setPlotProps({
-        title: `${selectedHyperparam}`,
+        title: `${region}`,
         xLabel: "Date",
-        leftAxisLabel: y1AxisName,
+        leftAxisLabel: "Number of cases",
       })
       .setLineProps([])
-      .setCanvas(chartRefLine.current)
+      .setCanvas(chartRef.current)
       // .plot() // <- draw the static plot, useful for testing
-      .setActions(timelineMSBActions);
-  
-
-    // provide the data, timeline MSB actions, and settings to the PCP
-    mirroredBarChart
-      .setPlotProps({y1Label: y1AxisName, y2Label: y2AxisName})
-      .setName(selectedHyperparam) // <- selected hyperparameter
-      .setData(data) // <- timeseries data
-      .setCanvas(chartRefMirrored.current)
-      //.plot(); // <- draw the static plot, useful for testing
       .setActions(timelineMSBActions);
 
     // pause the animation, start when play button is clicked
     pause();
 
     return () => {};
-  }, [selectedHyperparam, mlData]);
+  }, [region, casesData, numericalFATable]);
 
   const handleSelection = (event: SelectChangeEvent) => {
-    const newKey = event.target.value;
-    if (newKey) {
-      setSelectedHyperparam(newKey);
+    const newRegion = event.target.value;
+    if (newRegion) {
+      setRegion(newRegion);
+    }
+  };
+
+  const handleChangeSlider = (event: Event, newValue: number | number[]) => {
+    const selectedSegment = newValue as number;
+    if (selectedSegment !== undefined && selectedSegment !== segment) {
+      // setSegment(selectedSegment);
+      // segmentData(selectedSegment);
+      setSegment(1);
+      // segmentData(1);
     }
   };
 
@@ -154,7 +142,7 @@ const StoryMLMirroredBar = () => {
   return (
     <>
       <Head>
-        <title key="title">Story | ML Provenance</title>
+        <title>Story | COVID-19 Single Location</title>
       </Head>
       <Box
         sx={{
@@ -163,15 +151,15 @@ const StoryMLMirroredBar = () => {
           py: 8,
         }}
       >
-        <Card sx={{}}>
+        <Card sx={{ minWidth: 1200 }}>
           <CardHeader
             avatar={
               <Avatar style={{ backgroundColor: blue[500] }}>
                 <AutoStoriesIcon />
               </Avatar>
             }
-            title="Story: Machine Learning Provenance"
-            subheader="Choose a hyperparameter, and click play to animate the story"
+            title="Story: Covid19 Single Location"
+            subheader="Choose a segment value, a region, and click play to animate the story"
           />
           <CardContent sx={{ pt: "8px" }}>
             {loading ? (
@@ -197,19 +185,38 @@ const StoryMLMirroredBar = () => {
                     },
                   }}
                 >
+                  <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
+                    Set segment value
+                  </InputLabel>
+                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
+                    <Slider
+                      disabled={true}
+                      aria-label="Segments"
+                      defaultValue={3}
+                      getAriaValueText={valuetext}
+                      step={1}
+                      marks
+                      min={0}
+                      max={5}
+                      value={segment}
+                      valueLabelDisplay="auto"
+                      onChange={handleChangeSlider}
+                    />
+                  </FormControl>
+
                   <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
                     <InputLabel id="select-region-label">
-                      Select hyperparameter
+                      Select region
                     </InputLabel>
                     <Select
                       labelId="select-region-label"
                       id="select-region-label"
                       displayEmpty
                       onChange={handleSelection}
-                      value={selectedHyperparam}
-                      input={<OutlinedInput label="Select hyperparameter" />}
+                      value={region}
+                      input={<OutlinedInput label="Select region" />}
                     >
-                      {HYPERPARAMS.map((d) => (
+                      {regions.map((d) => (
                         <MenuItem key={d} value={d}>
                           {d}
                         </MenuItem>
@@ -242,7 +249,7 @@ const StoryMLMirroredBar = () => {
 
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
-                      disabled={!selectedHyperparam}
+                      disabled={!region}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
                       onClick={togglePlayPause}
@@ -255,39 +262,22 @@ const StoryMLMirroredBar = () => {
                     </Button>
                   </FormControl>
                 </FormGroup>
-                <div
+                <svg
+                  ref={chartRef}
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "left",
+                    width: WIDTH,
+                    height: HEIGHT,
+                    border: "0px solid",
                   }}
-                >
-                  <svg
-                    ref={chartRefLine}
-                    style={{
-                      width: WIDTH,
-                      height: HEIGHT * 0.7,
-                      border: "0px solid",
-                      marginBottom: "-50px",
-                    }}
-                  ></svg>
-                  <svg
-                    ref={chartRefMirrored}
-                    style={{
-                      width: WIDTH,
-                      height: HEIGHT,
-                      border: "0px solid",
-                      marginTop: "-50px",
-                    }}
-                  ></svg>
-                </div>
+                ></svg>
               </>
             )}
           </CardContent>
         </Card>
+        {/* </Container> */}
       </Box>
     </>
   );
 };
 
-export default StoryMLMirroredBar;
+export default StoryCovid19Single;
