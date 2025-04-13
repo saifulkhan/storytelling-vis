@@ -29,7 +29,7 @@ import { sortTimeseriesData, MSBFeatureActionFactory } from "../../utils";
 import { TimeSeriesData, TimelineMSBActions } from "../../types";
  
 import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table-line.json";
+import mlNumFATable from "../../assets/feature-action-table/ml-numerical-fa-table-line.json";
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,

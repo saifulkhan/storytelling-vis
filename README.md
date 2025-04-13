@@ -4,6 +4,8 @@ Meta-Storyboarding Using Feature-Action Design Pattern
 # API User Guide
 
 
+## Installation
+
 ```bash
 npm install meta-storyboard
 # or
@@ -11,10 +13,58 @@ yarn add meta-storyboard
 
 ```
 
+## Story Development
 
-```jsx
-TODO
+Story development is three step process:
+1. Prepare timeseries data. See `src/assets/data` for example COVID-19 and Machine Learning training provenance data.
+
+2. Load feature-action table. See `src/assets/feature-action-table` for example feature-action tables.
+
+3. Creating story, involves three major steps:
+
+   3.1. Create timeline actions using `MSBFeatureActionFactory`.
+
+   3.2. Create story by creating a plot and setting its data, name, plot properties, line properties, canvas reference, and actions.
+
+   3.3. Use play and pause button to animate the story.
+
+Example, template:
+
+```ts
+// 1.
+const data = <time series data>;
+
+// 2.
+const featureActionTable = <numerical feature-action table>;
+
+// 3.1.
+const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
+  .setFAProps(<set some properties>)
+  .setTable(featureActionTable) // <- feature-action table
+  .setData(data) // <- timeseries data
+  .create();
+
+// 3.2.
+const plot = new <plot type()>
+  .setData(data) // <- timeseries data
+  .setName(<name of the plot>) // <- selected region
+  .setPlotProps(<plot properties>)
+  .setLineProps([])
+  .setCanvas(<canvas reference>)
+  .setActions(timelineMSBActions);
+
+// 3.3.
+plot.play();
+
+plot.pause();
 ```
+
+See the following example stories implementation:
+
+- src/pages/example/story-covid19-single.tsx
+- src/pages/example/story-ml-mirorred-bar.tsx
+- src/pages/example/story-ml-pcp.tsx
+
 
 
 ---

@@ -17,9 +17,9 @@ import {
   FeatureActionTableRow,
 } from "../../components";
 
-import covid19NumFATable from "../../assets/data/covid-19-numerical-fa-table.json";
-import mlNumFATableMirrored from "../../assets/data/ml-numerical-fa-table-line.json";
-import mlNumFATablePCP from "../../assets/data/ml-numerical-fa-table-pcp.json";
+import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
+import mlNumFATableMirrored from "../../assets/feature-action-table/ml-numerical-fa-table-line.json";
+import mlNumFATablePCP from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
 
 type NumericalFATables = "Covid19" | "MLMirrored" | "MLPCP";
 const tableDataMap: { [tableName: string]: FeatureActionTableData } = {

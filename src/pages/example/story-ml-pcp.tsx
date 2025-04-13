@@ -29,7 +29,7 @@ import { sortTimeseriesData, MSBFeatureActionFactory } from "../../utils";
 import { TimelineMSBActions, TimeSeriesData } from "../../types";
 
 import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/data/ml-numerical-fa-table-pcp.json";
+import mlNumFATable from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,

@@ -31,7 +31,7 @@ import { usePlayPauseLoop } from "../../hooks";
 import { MSBFeatureActionFactory } from "../../utils";
 
 import covid19CasesData from "../../assets/data/covid19-cases-data.json";
-import covid19NumFATable from "../../assets/data/covid-19-numerical-fa-table.json";
+import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
 
 const StoryCovid19Single = () => {
   const WIDTH = 1200,
@@ -56,7 +56,8 @@ const StoryCovid19Single = () => {
     setLoading(true);
 
     try {
-      // load various regions data
+      
+      // 1. Get timeseries data for all regions.
       const casesData = Object.fromEntries(
         Object.entries(covid19CasesData || {}).map(([region, data]) => [
           region,
@@ -69,7 +70,7 @@ const StoryCovid19Single = () => {
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
 
-      // load feature-action table
+      // 2. Load feature-action table a JSON file.
       setNumericalFATable(covid19NumFATable);
 
       console.log("Cases data: ", casesData);
@@ -84,12 +85,11 @@ const StoryCovid19Single = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
+    // 1. Get timeseries data of a single region.
     const data = casesData[region];
     console.log(`Selected region ${region}'s data: ${data}`);
 
-    // build story based on selected region's data and feature-action table
-
-    // create timeline actions
+    // 3.1. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({
         metric: "Number of cases",
@@ -99,7 +99,7 @@ const StoryCovid19Single = () => {
       .setData(data) // <- timeseries data
       .create();
 
-    // provide the data, timeline MSB actions, and settings to the LinePlot
+    // 3.2. Create story in a line plot
     plot
       .setData([data]) // <- timeseries data
       .setName(region) // <- selected region
@@ -113,7 +113,7 @@ const StoryCovid19Single = () => {
       // .plot() // <- draw the static plot, useful for testing
       .setActions(timelineMSBActions);
 
-    // pause the animation, start when play button is clicked
+    // 3.3. Pause the animation, start when play button is clicked
     pause();
 
     return () => {};
