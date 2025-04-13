@@ -54,8 +54,8 @@ const plot = new <plot type()>
   .setActions(timelineMSBActions);
 
 // 4.
-play();
-pause();
+onClick={togglePlayPause}
+
 ```
 
 See three implemented stories in GitHub repository `src/pages/example/` as example.

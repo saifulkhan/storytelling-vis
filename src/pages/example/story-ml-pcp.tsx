@@ -54,7 +54,7 @@ const StoryMLPCP = () => {
     if (!chartRef.current) return;
     setLoading(true);
 
-    // load ML training data
+    // 1.1 Load ML training data
     setMLData(
       mlTrainingData.map(({ date, ...rest }) => ({
         date: new Date(date),
@@ -62,7 +62,7 @@ const StoryMLPCP = () => {
       }))
     );
 
-    // load feature-action table
+    // 1.2 Load feature-action table
     setNumericalFATable(mlNumFATable);
 
     console.log("ML data: ", mlData);
@@ -79,14 +79,14 @@ const StoryMLPCP = () => {
 
     // build story based on selected hyperparameter's data and feature-action table
 
-    // create timeline actions
+    // 2. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({ metric: "accuracy", window: 0 })
       .setData(data) // <- timeseries data
       .setTable(numericalFATable) // <- feature-action table
       .create();
 
-    // provide the data, timeline MSB actions, and settings to the PCP
+    // 3. Create PCP
     plot
       .setPlotProps({ margin: { top: 150, right: 50, bottom: 60, left: 60 } })
       .setName(hyperparam) // <- selected hyperparameter
@@ -94,7 +94,7 @@ const StoryMLPCP = () => {
       .setCanvas(chartRef.current)
       .setActions(timelineMSBActions);
 
-    // pause the animation, start when play button is clicked
+    // 4. Pause the animation, start when play button is clicked
     pause();
 
     return () => {};
@@ -204,6 +204,7 @@ const StoryMLPCP = () => {
                       disabled={!hyperparam}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
+                      // 4. Play/pause button
                       onClick={togglePlayPause}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />

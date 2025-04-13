@@ -57,7 +57,7 @@ const StoryCovid19Single = () => {
 
     try {
       
-      // 1. Get timeseries data for all regions.
+      // 1.1 Get timeseries data for all regions.
       const casesData = Object.fromEntries(
         Object.entries(covid19CasesData || {}).map(([region, data]) => [
           region,
@@ -70,7 +70,7 @@ const StoryCovid19Single = () => {
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
 
-      // 2. Load feature-action table a JSON file.
+      // 1.2 Load feature-action table a JSON file.
       setNumericalFATable(covid19NumFATable);
 
       console.log("Cases data: ", casesData);
@@ -85,11 +85,11 @@ const StoryCovid19Single = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
-    // 1. Get timeseries data of a single region.
+    // 1.1.a Get timeseries data of a single region.
     const data = casesData[region];
     console.log(`Selected region ${region}'s data: ${data}`);
 
-    // 3.1. Create timeline actions
+    // 2. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({
         metric: "Number of cases",
@@ -99,7 +99,7 @@ const StoryCovid19Single = () => {
       .setData(data) // <- timeseries data
       .create();
 
-    // 3.2. Create story in a line plot
+    // 3. Create story in a line plot
     plot
       .setData([data]) // <- timeseries data
       .setName(region) // <- selected region
@@ -113,7 +113,7 @@ const StoryCovid19Single = () => {
       // .plot() // <- draw the static plot, useful for testing
       .setActions(timelineMSBActions);
 
-    // 3.3. Pause the animation, start when play button is clicked
+    // 4. Pause the animation, start when play button is clicked
     pause();
 
     return () => {};
@@ -252,6 +252,7 @@ const StoryCovid19Single = () => {
                       disabled={!region}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
+                      // 4. Play/pause button
                       onClick={togglePlayPause}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />

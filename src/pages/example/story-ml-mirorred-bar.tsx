@@ -62,7 +62,7 @@ const StoryMLMirroredBar = () => {
     ) return;
     setLoading(true);
 
-    // load data
+    // 1.1 Load data
     setMLData(
       mlTrainingData.map(({ date, ...rest }) => ({
         date: new Date(date),
@@ -70,7 +70,7 @@ const StoryMLMirroredBar = () => {
       }))
     );
 
-    // load feature-action table
+    // 1.2 Load feature-action table
     setNumericalFATable(mlNumFATable);
 
     console.log("ML data: ", mlData);
@@ -97,14 +97,14 @@ const StoryMLMirroredBar = () => {
 
     // build story based on selected hyperparameter's data and feature-action table
 
-    // create timeline actions
+    // 2. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({ metric: "accuracy", window: 0 })
       .setData(data) // <- timeseries data
       .setTable(numericalFATable) // <- feature-action table
       .create();
 
- 
+    // 3. Create line plot
     linePlot
       .setData([data.map(d => ({ ...d, y: d[y1AxisName] }))]) // <- timeseries data
       .setName(selectedHyperparam) // <- selected hyperparam
@@ -119,7 +119,7 @@ const StoryMLMirroredBar = () => {
       .setActions(timelineMSBActions);
   
 
-    // provide the data, timeline MSB actions, and settings to the PCP
+    // 3. Create mirrored bar chart
     mirroredBarChart
       .setPlotProps({y1Label: y1AxisName, y2Label: y2AxisName})
       .setName(selectedHyperparam) // <- selected hyperparameter
@@ -128,7 +128,7 @@ const StoryMLMirroredBar = () => {
       //.plot(); // <- draw the static plot, useful for testing
       .setActions(timelineMSBActions);
 
-    // pause the animation, start when play button is clicked
+    // 4. Pause the animation, start when play button is clicked
     pause();
 
     return () => {};
@@ -238,6 +238,7 @@ const StoryMLMirroredBar = () => {
                       disabled={!selectedHyperparam}
                       variant="contained"
                       color={isPlaying ? "secondary" : "primary"}
+                      // 4. Play/pause button
                       onClick={togglePlayPause}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
