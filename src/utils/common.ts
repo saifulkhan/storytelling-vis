@@ -5,7 +5,10 @@ export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
 }
 
-export function sortTimeseriesData(data: TimeSeriesData, key: keyof TimeSeriesPoint): TimeSeriesData {
+export function sortTimeseriesData(
+  data: TimeSeriesData,
+  key: keyof TimeSeriesPoint
+): TimeSeriesData {
   // sort data by selected key, e.g, "kernel_size"
   return data
     .slice()
@@ -72,6 +75,14 @@ export function findIndexOfDate(data: TimeSeriesData, date: Date): number {
   });
 }
 
+export function getTimeSeriesPointByDate(
+  date: Date,
+  data: TimeSeriesData
+): TimeSeriesPoint | undefined {
+  const idx = findDateIdx(date, data);
+  return data[idx];
+}
+
 /**
  **  Function to find indices of dates in the time series data
  **/
@@ -110,7 +121,9 @@ export function setOrUpdateMap<K, V>(
   }
 }
 
-export function sortObjectKeysInPlace<T extends Record<string, any>>(obj: T): T {
+export function sortObjectKeysInPlace<T extends Record<string, any>>(
+  obj: T
+): T {
   let keys = Object.keys(obj);
   keys.sort();
   let sortedObj: Record<string, any> = {};
@@ -140,7 +153,14 @@ export function getObjectKeysArray(obj: any[]): string[] {
   return keys;
 }
 
-export function maxIndex<T>(values: Iterable<T>, valueof?: (value: T, index: number, array: Iterable<T>) => number | null | undefined): number {
+export function maxIndex<T>(
+  values: Iterable<T>,
+  valueof?: (
+    value: T,
+    index: number,
+    array: Iterable<T>
+  ) => number | null | undefined
+): number {
   let max: number | undefined;
   let maxIndex = -1;
   let index = -1;
@@ -148,10 +168,7 @@ export function maxIndex<T>(values: Iterable<T>, valueof?: (value: T, index: num
     for (const value of values) {
       ++index;
       const numValue = value as unknown as number;
-      if (
-        numValue != null &&
-        (max === undefined || max < numValue)
-      ) {
+      if (numValue != null && (max === undefined || max < numValue)) {
         max = numValue;
         maxIndex = index;
       }
@@ -159,10 +176,7 @@ export function maxIndex<T>(values: Iterable<T>, valueof?: (value: T, index: num
   } else {
     for (const item of values) {
       const value = valueof(item, ++index, values);
-      if (
-        value != null &&
-        (max === undefined || max < value)
-      ) {
+      if (value != null && (max === undefined || max < value)) {
         max = value;
         maxIndex = index;
       }
@@ -171,7 +185,14 @@ export function maxIndex<T>(values: Iterable<T>, valueof?: (value: T, index: num
   return maxIndex;
 }
 
-export function minIndex<T>(values: Iterable<T>, valueof?: (value: T, index: number, array: Iterable<T>) => number | null | undefined): number {
+export function minIndex<T>(
+  values: Iterable<T>,
+  valueof?: (
+    value: T,
+    index: number,
+    array: Iterable<T>
+  ) => number | null | undefined
+): number {
   let min: number | undefined;
   let minIndex = -1;
   let index = -1;
@@ -179,10 +200,7 @@ export function minIndex<T>(values: Iterable<T>, valueof?: (value: T, index: num
     for (const value of values) {
       ++index;
       const numValue = value as unknown as number;
-      if (
-        numValue != null &&
-        (min === undefined || min > numValue)
-      ) {
+      if (numValue != null && (min === undefined || min > numValue)) {
         min = numValue;
         minIndex = index;
       }
@@ -190,10 +208,7 @@ export function minIndex<T>(values: Iterable<T>, valueof?: (value: T, index: num
   } else {
     for (const item of values) {
       const value = valueof(item, ++index, values);
-      if (
-        value != null &&
-        (min === undefined || min > value)
-      ) {
+      if (value != null && (min === undefined || min > value)) {
         min = value;
         minIndex = index;
       }
@@ -216,57 +231,4 @@ export function normalise(data: number[]) {
 
   // normalise y values to be between 0 and 1
   return data.map((d) => (d - min) / (max - min));
-}
-
-/*
- * Linear regression function inspired by the answer found at: https://stackoverflow.com/a/31566791.
- * We remove the need for array x as we assume y data is equally spaced and we only want the gradient.
- */
-
-export function linRegGrad(y: number[]): number {
-  let slope: number = 0;
-  const n = y.length;
-  let sum_x = 0;
-  let sum_y = 0;
-  let sum_xy = 0;
-  let sum_xx = 0;
-
-  for (let i = 0; i < y.length; i++) {
-    sum_x += i;
-    sum_y += y[i];
-    sum_xy += i * y[i];
-    sum_xx += i * i;
-  }
-
-  slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
-  return slope;
-}
-
-export function scaleValue(
-  value: number,
-  minInput: number,
-  maxInput: number,
-  minOutput: number,
-  maxOutput: number
-): number {
-  return (
-    ((value - minInput) / (maxInput - minInput)) * (maxOutput - minOutput) +
-    minOutput
-  );
-}
-
-export function fromMLToTimeSeriesData(
-  data: TimeSeriesData,
-  key: string
-): TimeSeriesData {
-  return data.map((d: TimeSeriesPoint) => {
-    return {
-      date: d.date,
-      y: d[key],
-    };
-  });
-}
-
-export function clean(svg: SVGGElement) {
-  d3.select(svg).selectAll("*").remove();
 }

@@ -1,9 +1,10 @@
-import { TimeSeriesData } from "src/types/TimeSeriesPoint";
+import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
 import { MSBFeature } from "src/utils/feature-action/MSBFeature";
 import { MSBActionFactory } from "src/components/actions/MSBActionFactory";
 import {
   FeatureActionTableRow,
   ActionTableRow,
+  FeatureActionTableData,
 } from "src/components/tables/FeatureActionTableRow";
 import { MSBFeatureFactory } from "src/utils/feature-action/MSBFeatureFactory";
 import { MSBAction } from "src/components/actions/MSBAction";
@@ -12,6 +13,7 @@ import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
 } from "src/utils/feature-action/FeatureSearchProps";
+import { getTimeSeriesPointByDate } from "../common";
 
 export class MSBFeatureActionFactory {
   private data: TimeSeriesData;
@@ -29,7 +31,7 @@ export class MSBFeatureActionFactory {
     return this;
   }
 
-  public setTable(table: FeatureActionTableRow[]) {
+  public setTable(table: FeatureActionTableData) {
     this.table = table;
     return this;
   }
@@ -49,7 +51,6 @@ export class MSBFeatureActionFactory {
     console.log("MSBFeatureActionFactory:create: data: ", this.data);
 
     this.table.forEach((row: FeatureActionTableRow) => {
-      // prettier-ignore
       console.log("MSBFeatureActionFactory:create: row = ", row);
 
       //
@@ -68,13 +69,19 @@ export class MSBFeatureActionFactory {
       // create actions of each features
       //
       features.forEach((feature: MSBFeature) => {
+        const date: Date = feature.getDate();
+        const point: TimeSeriesPoint | undefined = getTimeSeriesPointByDate(
+          date,
+          this.data
+        );
+
         let actions: MSBAction[] = [];
         row.actions.forEach((rowIn: ActionTableRow) => {
           //
           // create action
           //
           const action = actionFactory
-            .create(rowIn.action, rowIn.properties)
+            .create(rowIn.action, rowIn.properties, point)
             ?.setFeatureType(feature?.getType());
           if (action) {
             actions.push(action);
@@ -89,7 +96,8 @@ export class MSBFeatureActionFactory {
         const action: MSBAction = actionFactory
           .group(actions)
           ?.setFeatureType(feature?.getType());
-        dataActionArray.push([feature.getDate(), action]);
+
+        dataActionArray.push([date, action]);
 
         console.log("MSBFeatureActionFactory:create: action = ", action);
       });

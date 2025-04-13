@@ -42,8 +42,13 @@ export class TextBox extends MSBAction {
     this.type = MSBActionName.TEXT_BOX;
   }
 
-  public setProps(props: TextBoxProps = {}) {
+  public setProps(props: TextBoxProps = {}, data?: TimeSeriesPoint) {
     this.props = { ...defaultTextBoxProps, ...props };
+
+    if (data) {
+      this.props.message = this.updateStringTemplate(this.props.message!, data);
+      this.props.title = this.updateStringTemplate(this.props.title!, data);
+    }
     return this;
   }
 
@@ -51,7 +56,7 @@ export class TextBox extends MSBAction {
     console.log("TextBox:updateProps: args: ", args, "\nthis.props:", this.props);
     this.props.message = this.updateStringTemplate(this.props.message!, args.data);
     this.props.title = this.updateStringTemplate(this.props.title!, args.data);
-    console.log("TextBox:updateProps: ", this.props.message, this.props.title);
+    // console.log("TextBox:updateProps: ", this.props.message, this.props.title);
 
     this.props.horizontalAlign = args.horizontalAlign;
     this.props.verticalAlign = args.verticalAlign;
