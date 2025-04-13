@@ -1,5 +1,4 @@
-Meta-Storyboarding Using Feature-Action Design Pattern
-
+Meta-Storyboarding Using Feature-Action Design Pattern. The GitHub code is available at <https://github.com/saifulkhan/meta-storyboard>.
 
 # API User Guide
 
@@ -15,64 +14,60 @@ yarn add meta-storyboard
 
 ## Story Development
 
-Story development is three step process:
-1. Prepare timeseries data. See `src/assets/data` for example COVID-19 and Machine Learning training provenance data.
+Story development is four step process:
 
-2. Load feature-action table. See `src/assets/feature-action-table` for example feature-action tables.
+1. Load data and feature-action table 
 
-3. Creating story, involves three major steps:
+    1.1 Load timeseries data, see some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
 
-   3.1. Create timeline actions using `MSBFeatureActionFactory`.
+    1.2 Load feature-action table, see some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
 
-   3.2. Create story by creating a plot and setting its data, name, plot properties, line properties, canvas reference, and actions.
+2. Create timeline actions using `MSBFeatureActionFactory` class which take the timeseries data and feature-action table as input.
 
-   3.3. Use play and pause button to animate the story.
+3. Create story by creating a plot,  and setting its data and plot properties. Some plots we implemented are, e.g., `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
 
-Example, template:
+4. Use play and pause button to animate the story, see the play-pause hooks in  GitHub repository `src/hooks/`.
+
+The above steps are shown in the following example template:
 
 ```ts
-// 1.
+// 1.1
 const data = <time series data>;
 
-// 2.
+// 1.2
 const featureActionTable = <numerical feature-action table>;
 
-// 3.1.
+// 2.
 const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
   .setFAProps(<set some properties>)
   .setTable(featureActionTable) // <- feature-action table
   .setData(data) // <- timeseries data
   .create();
 
-// 3.2.
+// 3
 const plot = new <plot type()>
   .setData(data) // <- timeseries data
-  .setName(<name of the plot>) // <- selected region
+  .setName(<name of the plot>)
   .setPlotProps(<plot properties>)
   .setLineProps([])
   .setCanvas(<canvas reference>)
   .setActions(timelineMSBActions);
 
-// 3.3.
-plot.play();
-
-plot.pause();
+// 4.
+play();
+pause();
 ```
 
-See the following example stories implementation:
-
-- src/pages/example/story-covid19-single.tsx
-- src/pages/example/story-ml-mirorred-bar.tsx
-- src/pages/example/story-ml-pcp.tsx
+See three implemented stories in GitHub repository `src/pages/example/` as example.
 
 
-
+---
 ---
 
 
 # API Design & Development
 
-For more details of available APIs see the documents below.
+For more details of available APIs or extending the existing APIs, see the documents below.
 
 
 ## Getting Started
@@ -403,28 +398,17 @@ new LinePlot()
 
 **Example:** See COVID-19 story with a single time series and Machine learning multi-variate story in the UI.
 
-## UI
 
 ### Feature Action Tables UI
 
-This is incomplete functionality. To add a new table, see `src/services/TableService.ts`
+This is an experimental feature and incomplete functionality. To add a new table, see `src/services/TableService.ts`
 
 
-## Building the Library
+## Building and Publishing the Library
 
 ```bash
 yarn install
 yarn build:lib
-```
-
-This will generate the library in the `dist` directory. Using the Library in Another Project
-
-Install the library locally using:
-
-```bash
-npm install --save /path/to/meta-storyboard  
-# or
-yarn add file:/path/to/meta-storyboard
 ```
 
 **Publishing to npm**
