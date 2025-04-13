@@ -1,6 +1,6 @@
 {
   "name": "meta-storyboard",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A React Component Library for Meta-Storyboarding Using Feature-Action Design Pattern.",
   "author": "",
   "private": false,
