@@ -4,76 +4,18 @@ Meta-Storyboarding Using Feature-Action Design Pattern
 # API User Guide
 
 
-
 ```bash
-npm install storytelling-vis
+npm install meta-storyboard
 # or
-yarn add storytelling-vis
+yarn add meta-storyboard
 
 ```
 
 
 ```jsx
-import React from 'react';
-import { LinePlot, Circle } from 'storytelling-vis';
- const MyComponent = () => {
-  const svgRef = React.useRef(null);
-   React.useEffect(() => {
-    if (svgRef.current) {
-      // Create a line plot with your data
-      const plot = new LinePlot()
-        .setData(myData)
-        .setCanvas(svgRef.current)
-        .show();
-    }
-  }, []);
-
+TODO
 ```
 
-```jsx
-import React from 'react';
-import { LinePlot, Circle, MSBActionFactory } from 'storytelling-vis';
-
-const MyComponent = () => {
-  const svgRef = React.useRef(null);
-  
-  React.useEffect(() => {
-    if (svgRef.current) {
-      const data = [...]; // Your time series data
-      
-      // Create a line plot
-      const plot = new LinePlot()
-        .setData(data)
-        .setName('My Data')
-        .setProps({
-          width: 800,
-          height: 400,
-          margin: { top: 20, right: 20, bottom: 30, left: 50 }
-        })
-        .setCanvas(svgRef.current);
-      
-      // Show the plot
-      plot.show();
-      
-      // Create actions
-      const actionFactory = new MSBActionFactory();
-      const circle = actionFactory.create('CIRCLE', {
-        size: 10,
-        color: 'red'
-      });
-      
-      // Add actions to the plot
-      circle.setCanvas(svgRef.current)
-        .setCoordinate([100, 100])
-        .show();
-    }
-  }, []);
-  
-  return <svg ref={svgRef} width="800" height="400"></svg>;
-};
-
-export default MyComponent;
-```
 
 ---
 
@@ -93,8 +35,8 @@ The following environment and packages are required.
 Clone the repository.
 
 ```bash
-git clone https://github.com/saifulkhan/storytelling-vis.git
-cd storytelling-vis
+git clone https://github.com/saifulkhan/meta-storyboard.git
+cd meta-storyboard
 
 ```
 
@@ -230,7 +172,7 @@ new MSBFeatureActionFactory(...)
 ### MSB Feature API
 
 <div>
-    <img width="350px" src="./assets/doc/feature-classes.png" alt="" />
+    <img width="350px" src="./doc/feature-classes.png" alt="" />
     <br>
     <small><i>Figure 2: The class diagram of the MSB feature classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
@@ -287,7 +229,7 @@ new MSBFeatureFactory()
 ### MSB Action API
 
 <div>
-    <img width="450px" src="./assets/doc/action-classes.png" alt="" />
+    <img width="450px" src="./doc/action-classes.png" alt="" />
     <br>
     <small><i>Figure 3: Action classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
@@ -372,7 +314,7 @@ gaussian(<mean>, <std>, ...)
 ### Animated Plots API
 
 <div>
-    <img width="350px" src="./assets/doc/plot-classes.png" alt="" />
+    <img width="350px" src="./doc/plot-classes.png" alt="" />
     <br>
     <small><i>Figure 4: Plot classes.</i></small>
     <br><br>
@@ -401,7 +343,7 @@ new LinePlot()
 
 <!-- <div align="center">  -->
 <div>
-    <img width="1000px" src="./assets/doc/sequence-diagram.png" alt="sequence diagram" />
+    <img width="1000px" src="./doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
     <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
     <br><br>
@@ -427,17 +369,15 @@ yarn build:lib
 
 This will generate the library in the `dist` directory. Using the Library in Another Project
 
-**Option 1: Local Installation**
-
-You can install the library locally using:
+Install the library locally using:
 
 ```bash
-npm install --save /path/to/storytelling-vis
+npm install --save /path/to/meta-storyboard  
 # or
-yarn add file:/path/to/storytelling-vis
+yarn add file:/path/to/meta-storyboard
 ```
 
-**Option 2: Publishing to npm**
+**Publishing to npm**
 
 Publish the library to npm:
 
@@ -445,15 +385,16 @@ Publish the library to npm:
 npm login
 npm publish
 ```
-Then install it in your project (as discussed  at the beginning of this document)
- 
+
+Then install it in your project (as discussed earlier).
+
 
 ---
 
 
 # Support
 
-If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/storytelling-vis/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
+If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/meta-storyboard/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
 
 
 

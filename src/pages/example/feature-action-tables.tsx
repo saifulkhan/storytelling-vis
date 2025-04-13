@@ -8,9 +8,14 @@ import {
   FormControl,
   InputLabel,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
 
-import { FeatureActionTable, FeatureActionTableData, FeatureActionTableRow } from "../../components";
+import {
+  FeatureActionTable,
+  FeatureActionTableData,
+  FeatureActionTableRow,
+} from "../../components";
 
 import covid19NumFATable from "../../assets/data/covid-19-numerical-fa-table.json";
 import mlNumFATableMirrored from "../../assets/data/ml-numerical-fa-table-line.json";
@@ -23,10 +28,11 @@ const tableDataMap: { [tableName: string]: FeatureActionTableData } = {
   "ML Multivariate": mlNumFATablePCP,
 };
 
-
 const FeatureActionTablesPage = () => {
   const [data, setData] = useState<FeatureActionTableRow[]>([]);
-  const [selectedTable, setSelectedTable] = useState<NumericalFATables | "">("");
+  const [selectedTable, setSelectedTable] = useState<NumericalFATables | "">(
+    ""
+  );
   const [tables, setTables] = useState<NumericalFATables[]>([]);
 
   useEffect(() => {
@@ -53,7 +59,9 @@ const FeatureActionTablesPage = () => {
     }
   };
 
-  const handleTableChange = async (event: SelectChangeEvent<NumericalFATables | "">) => {
+  const handleTableChange = async (
+    event: SelectChangeEvent<NumericalFATables | "">
+  ) => {
     setSelectedTable(event.target.value as NumericalFATables | "");
     if (event.target.value !== "") {
       fetchTableData(event.target.value as NumericalFATables);
@@ -71,7 +79,7 @@ const FeatureActionTablesPage = () => {
   return (
     <>
       <Head>
-        <title>Feature Action Table</title>
+        <title>Feature-Action Table</title>
       </Head>
       <Box
         sx={{
@@ -80,6 +88,11 @@ const FeatureActionTablesPage = () => {
           py: 8,
         }}
       >
+        <Typography variant="h5" sx={{ mr: 2 }}>
+          Experimental Feature
+        </Typography>
+        <br />
+
         <Box
           sx={{
             display: "flex",

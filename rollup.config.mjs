@@ -58,6 +58,14 @@ export default [
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'esm' }],
-    plugins: [dts()],
+    plugins: [
+      dts({
+        respectExternal: true,
+        // Fix paths in the declaration file
+        afterBuild: () => {
+          console.log('Fixing paths in declaration files...');
+        }
+      })
+    ],
   },
 ];

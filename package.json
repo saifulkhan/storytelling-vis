@@ -1,6 +1,6 @@
 {
-  "name": "meta-storyboarding",
-  "version": "0.1.0",
+  "name": "meta-storyboard",
+  "version": "0.1.2",
   "description": "A React Component Library for Meta-Storyboarding Using Feature-Action Design Pattern.",
   "author": "",
   "private": false,
@@ -9,7 +9,8 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "doc"
   ],
   "publishConfig": {
     "access": "public"
@@ -22,7 +23,7 @@
     "type-check": "tsc",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "build:lib": "rollup -c",
+    "build:lib": "rollup -c && node scripts/fix-declaration-paths.js",
     "prepublishOnly": "npm run build:lib"
   },
   "browserslist": [

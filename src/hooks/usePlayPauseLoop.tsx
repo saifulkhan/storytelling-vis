@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-const usePlayPauseLoop = (obj: any) => {
+export const usePlayPauseLoop = (obj: any) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const togglePlayPause = useCallback(() => {
@@ -32,4 +32,3 @@ const usePlayPauseLoop = (obj: any) => {
   return { isPlaying, togglePlayPause, pause };
 };
 
-export default usePlayPauseLoop;

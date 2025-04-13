@@ -1,9 +1,13 @@
 # Source files
 src/pages
-src/services
+src/assets/data
 public
 .next
 node_modules
+
+# Explicitly include documentation assets
+!src/assets/doc
+!doc
 
 # Config files
 .eslintrc

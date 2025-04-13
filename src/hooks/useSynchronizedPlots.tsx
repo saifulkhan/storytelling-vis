@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-const useSynchronizedPlots = (plots: any[]) => {
+export const useSynchronizedPlots = (plots: any[]) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const togglePlayPause = useCallback(() => {
@@ -52,4 +52,4 @@ const useSynchronizedPlots = (plots: any[]) => {
   return { isPlaying, togglePlayPause, pause };
 };
 
-export default useSynchronizedPlots;
+ 
