@@ -232,3 +232,16 @@ export function normalise(data: number[]) {
   // normalise y values to be between 0 and 1
   return data.map((d) => (d - min) / (max - min));
 }
+
+export function scaleValue(
+  value: number,
+  minInput: number,
+  maxInput: number,
+  minOutput: number,
+  maxOutput: number
+): number {
+  return (
+    ((value - minInput) / (maxInput - minInput)) * (maxOutput - minOutput) +
+    minOutput
+  );
+}

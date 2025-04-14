@@ -41,7 +41,7 @@ export * from './types/Coordinate';
 export * from './utils/common';
 
 // Data processing
-export * from './utils/data-processing/Gaussian';
+export * from './utils/data-processing/gaussian';
 
 // Feature action utilities
 export * from './utils/feature-action/CategoricalFeature';

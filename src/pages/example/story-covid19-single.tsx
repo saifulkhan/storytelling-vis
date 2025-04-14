@@ -1,14 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
 import {
   Avatar,
   Button,
   Card,
   CardContent,
   CardHeader,
-  Container,
   FormControl,
   FormGroup,
   InputLabel,
@@ -36,11 +34,9 @@ import covid19NumFATable from "../../assets/feature-action-table/covid-19-numeri
 const StoryCovid19Single = () => {
   const WIDTH = 1200,
     HEIGHT = 500;
-  const valuetext = (value: number): string => `${value}`; // slider formatted value
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
   const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
@@ -126,16 +122,6 @@ const StoryCovid19Single = () => {
     }
   };
 
-  const handleChangeSlider = (event: Event, newValue: number | number[]) => {
-    const selectedSegment = newValue as number;
-    if (selectedSegment !== undefined && selectedSegment !== segment) {
-      // setSegment(selectedSegment);
-      // segmentData(selectedSegment);
-      setSegment(1);
-      // segmentData(1);
-    }
-  };
-
   const handleBeginningButton = () => {};
   const handleBackButton = () => {};
 
@@ -185,25 +171,6 @@ const StoryCovid19Single = () => {
                     },
                   }}
                 >
-                  <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
-                    Set segment value
-                  </InputLabel>
-                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                    <Slider
-                      disabled={true}
-                      aria-label="Segments"
-                      defaultValue={3}
-                      getAriaValueText={valuetext}
-                      step={1}
-                      marks
-                      min={0}
-                      max={5}
-                      value={segment}
-                      valueLabelDisplay="auto"
-                      onChange={handleChangeSlider}
-                    />
-                  </FormControl>
-
                   <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
                     <InputLabel id="select-region-label">
                       Select region
@@ -275,7 +242,6 @@ const StoryCovid19Single = () => {
             )}
           </CardContent>
         </Card>
-        {/* </Container> */}
       </Box>
     </>
   );

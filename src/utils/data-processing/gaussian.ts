@@ -1,9 +1,11 @@
-import { Peak } from "src/utils/feature-action/Peak";
-import { TimeSeriesPoint, TimeSeriesData } from "src/types/TimeSeriesPoint";
-import { searchPeaks } from "src/utils/feature-action/feature-search";
-import { NumericalFeature } from "src/utils/feature-action/NumericalFeature";
-import { CategoricalFeature } from "src/utils/feature-action/CategoricalFeature";
-import { findDateIdx, scaleValue } from "src/utils/common";
+import { TimeSeriesPoint, TimeSeriesData } from "../../types/";
+import { findDateIdx, scaleValue } from "../common";
+import {
+  Peak,
+  searchPeaks,
+  NumericalFeature,
+  CategoricalFeature,
+} from "../feature-action";
 
 const RANK_MAX = 10; /** or r_max  */
 
@@ -110,24 +112,24 @@ export function toGaussian(
   const featuresGauss: number[][] = features.map(
     (d: NumericalFeature | CategoricalFeature | Peak) => {
       // Make sure we can get a date from the feature
-      if (!d || typeof d.getDate !== 'function') {
-        console.error('Invalid feature object:', d);
+      if (!d || typeof d.getDate !== "function") {
+        console.error("Invalid feature object:", d);
         return Array(data.length).fill(0);
       }
-      
+
       const index = findDateIdx(d.getDate(), data);
-      
+
       // Use type guard to check if getNormHeight exists on the object
       let height: number;
-      if ('getNormHeight' in d && typeof d.getNormHeight === 'function') {
+      if ("getNormHeight" in d && typeof d.getNormHeight === "function") {
         height = d.getNormHeight();
-      } else if ('getRank' in d && typeof d.getRank === 'function') {
+      } else if ("getRank" in d && typeof d.getRank === "function") {
         height = d.getRank();
       } else {
-        console.error('Feature missing required methods:', d);
+        console.error("Feature missing required methods:", d);
         height = 0;
       }
-      
+
       return gaussian(index, height, data.length);
     }
   );
@@ -168,7 +170,6 @@ export function maxBounds(featuresGauss: number[][]): number[] {
   );
   return max;
 }
-
 
 export function semanticGaussians(
   data: TimeSeriesData,
@@ -211,6 +212,7 @@ export function smoothing(
 
   return gaussians;
 }
+
 export const gaussianSmoothTS = (
   data: TimeSeriesData,
   sigma: number,
@@ -270,7 +272,6 @@ export const gaussianSmooth = (data: number[], sigma: number, n: number) => {
   return smoothData;
 };
 
-
 export function semanticBounds(
   data: TimeSeriesData,
   semanticGaussians: Array<{ date: Date; y: number }[]>
@@ -283,7 +284,6 @@ export function semanticBounds(
     return { date: data[i].date, y: d };
   });
 }
-
 
 /**
  ** Combines ranked timeseries by averaging their bounds at each point.
@@ -309,8 +309,8 @@ export function combinedBounds(
 
   // Validate inputs
   if (!data || !data.length || !dataBounds || !semanticBounds) {
-    console.error('Invalid inputs to combinedBounds');
-    return data.map(d => ({ date: d.date, y: 0 }));
+    console.error("Invalid inputs to combinedBounds");
+    return data.map((d) => ({ date: d.date, y: 0 }));
   }
 
   // Extract y values from both bounds arrays
@@ -318,12 +318,12 @@ export function combinedBounds(
     (b: Array<{ date: Date; y: number }>) =>
       b.map((d: { date: Date; y: number }) => d.y)
   );
-  
+
   console.log("bounds:", bounds);
-  
+
   // Combine the bounds
   const comb = combineBounds(bounds);
-  
+
   // Map back to TimeSeriesData format
   return comb.map((d: number, i: number) => {
     return { date: data[i].date, y: d };
