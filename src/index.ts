@@ -29,6 +29,7 @@ export * from './components/tables/FeaturePropertiesTable';
 
 // Export hooks
 export * from './hooks/usePlayPauseLoop';
+export * from './hooks/useSynchronizedPlots';
 
 // Export types
 export * from './types/Align';
