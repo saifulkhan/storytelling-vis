@@ -37,15 +37,15 @@
 
 # Overview
 
-A TypeScript library and application for building interactive, animated data stories with the Feature-Action design pattern. 
+A JavaScript/TypeScript library for building scalable interactive, animated data stories with the meta-storyboard (MSB) and feature-action design pattern.
 
 ## Features
 - 🟢 **Feature Detection**: Built-in peak and event detection utilities.
 - 🟣 **Action Mapping**: Map features to visual actions (dots, circles, connectors, text boxes, etc.).
 - 🔵 **Animated Plots**: Animate transitions and storytelling sequences.
-<!-- - 🟠 **Interactive Tables**: UI for editing feature-action tables. -->
 - 🟡 **Extensible Components**: Easily add new plot or action types.
 - 🟤 **Example Stories and Playground**: Test and explore components in isolation.
+<!-- - 🟠 **Interactive Tables**: UI for editing feature-action tables. -->
 
 ## Installation
 
