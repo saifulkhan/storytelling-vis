@@ -9,6 +9,8 @@ import { findDateIdx, maxIndex, mean, minIndex, normalise } from "../common";
 import { Current } from "./Current";
 import { Last } from "./Last";
 
+const WINDOW = 10;
+
 /**
  ** The function search peaks in a given timeseries.
  ** The steps involve searching for peaks in segments for defined window sizes,
@@ -16,9 +18,9 @@ import { Last } from "./Last";
  **/
 export function searchPeaks(
   data: TimeSeriesData,
-  rank: number,
-  metric: string,
-  window: number
+  rank: number = 0,
+  metric: string = "",
+  window: number = WINDOW
 ): Peak[] {
   const peaks: Peak[] = [];
   const maxes = searchMaxes(data, window);
@@ -31,7 +33,7 @@ export function searchPeaks(
     start = searchPeakStart(idx, norm);
     end = searchPeakEnd(idx, norm);
 
-    console.log("idx:", idx);
+    // console.log("idx:", idx);
 
     const peak = new Peak()
       .setDate(data[idx].date)
@@ -45,7 +47,7 @@ export function searchPeaks(
       .setDataIndex(idx);
 
     peaks.push(peak);
-    console.log("peaks:", peaks);
+    // console.log("peaks:", peaks);
   }
 
   // sort from lowest to highest

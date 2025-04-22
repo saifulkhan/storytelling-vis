@@ -13,73 +13,61 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 
-import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { LinePlot, LineProps } from "src/components/plots/LinePlot";
-import { gmm, smoothing } from "src/utils/data-processing/Gaussian";
-import { getCovid19Data } from "src/services/TimeSeriesDataService";
+import { TimeSeriesData } from "../../types";
+import { LinePlot, LineProps } from "../../components";
+import { generateGaussForPeaks } from "../../utils";
+import covid19CasesData from "../../assets/data/covid19-cases-data.json";
 
 const WIDTH = 1500,
   HEIGHT = 500;
 
-const ExampleGaussianPage = () => {
-  const ntsChartRef = useRef(null);
-  const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
+const TestNFToGaussianPage = () => {
+  const chartRef = useRef(null);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>("");
+  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
+    {}
+  );
+
+  const plot = useRef(new LinePlot()).current;
 
   useEffect(() => {
-    if (!ntsChartRef.current) return;
+    if (!chartRef.current) return;
 
-    const fetchData = async () => {
-      try {
-        const data = await getCovid19Data();
-        setLocData(data);
-        setRegions(Object.keys(data).sort());
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    };
+    try {
+      const casesData = Object.fromEntries(
+        Object.entries(covid19CasesData || {}).map(([region, data]) => [
+          region,
+          data.map(({ date, y }: { date: string; y: number }) => ({
+            date: new Date(date),
+            y: +y,
+          })),
+        ])
+      ) as Record<string, TimeSeriesData>;
+      setCasesData(casesData);
+      const loadedRegions = Object.keys(casesData).sort();
+      setRegions(loadedRegions); 
+      console.log("Cases data: ", casesData);
 
-    fetchData();
-
-    return () => {};
+      setRegion("Bolton");
+    } catch (error) {
+      console.error("Failed to fetch data; error:", error);
+    }
   }, []);
 
   useEffect(() => {
-    if (!region || !locData[region] || !ntsChartRef.current) return;
+    if (!region || !casesData[region] || !chartRef.current) return;
 
-    const data = locData[region];
+    const data: TimeSeriesData = casesData[region];
+    const gauss: TimeSeriesData[] = generateGaussForPeaks(data, "", 10);
+    console.debug("data: ", data);
+    console.debug("gauss: ", gauss);
+   
+    // Add the original timeseries data as the first curve
+    gauss.unshift(data);
 
-    //
-    // Numerical Features
-    //
-    smoothing(data);
-
-    const gaussian = gmm(data, "", 10);
-    console.log("gaussian = ", gaussian);
-    const gaussTS = gaussian.map((d, i) => {
-      return d.map((d1, i1) => {
-        return { date: data[i1].date, y: d1 || 0 };
-      });
-    });
-    console.log("gaussTS = ", gaussTS);
-
-    // const peaksData = peaks.map((peak) =>
-    //   sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
-    // );
-    gaussTS.unshift(data.map((d) => ({ date: d.date, y: 0 })));
-
-    // console.log("TestFeatures: peaksData = ", peaksData);
-
-    d3.select(ntsChartRef.current)
-      .append("svg")
-      .attr("width", WIDTH)
-      .attr("height", HEIGHT)
-      .append("g")
-      .node();
-
-    const plot = new LinePlot()
-      .setData(gaussTS)
+    new LinePlot()
+      .setData(gauss)
       .setPlotProps({
         xLabel: "Date",
         title: `${region}`,
@@ -87,7 +75,7 @@ const ExampleGaussianPage = () => {
         rightAxisLabel: "Ranks",
       })
       .setLineProps(
-        gaussTS.map((d, i) => {
+        gauss.map((d, i) => {
           if (i === 0) {
             return {
               stroke: "#D3D3D3",
@@ -102,7 +90,7 @@ const ExampleGaussianPage = () => {
           }
         })
       )
-      .setCanvas(ntsChartRef.current)
+      .setCanvas(chartRef.current)
       .plot();
   }, [region]);
 
@@ -121,7 +109,6 @@ const ExampleGaussianPage = () => {
 
       <Box
         sx={{
-          // backgroundColor: "background.default",
           minHeight: "100%",
           py: 8,
         }}
@@ -129,6 +116,8 @@ const ExampleGaussianPage = () => {
         <Typography variant="h6">
           Show Gaussian of Numerical Timeseries
         </Typography>
+
+        <br />
 
         <FormControl component="fieldset" variant="standard">
           <InputLabel sx={{ m: 1, width: 300, mt: 0 }} id="select-region-label">
@@ -150,7 +139,7 @@ const ExampleGaussianPage = () => {
           </Select>
 
           <svg
-            ref={ntsChartRef}
+            ref={chartRef}
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
@@ -163,4 +152,4 @@ const ExampleGaussianPage = () => {
   );
 };
 
-export default ExampleGaussianPage;
+export default TestNFToGaussianPage;

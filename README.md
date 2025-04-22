@@ -110,8 +110,8 @@ Open <http://localhost:3000> in your browser and access the following list of UI
 - <http://localhost:3000/playground/test-feature-properties-table>
 - <http://localhost:3000/playground/test-features>
 - <http://localhost:3000/playground/test-gaussian-combined>
-- <http://localhost:3000/playground/test-gaussian-cts>
-- <http://localhost:3000/playground/test-gaussian-nts>
+- <http://localhost:3000/playground/test-categorical-features-to-gaussian>
+- <http://localhost:3000/playground/test-numerical-features-to-gaussian>
 - <http://localhost:3000/playground/test-line-plot>
 - <http://localhost:3000/playground/test-play-pause-loop>
 
