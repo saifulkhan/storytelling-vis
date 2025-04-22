@@ -6,42 +6,38 @@
 [![GitHub](https://img.shields.io/badge/GitHub-meta--storyboard-181717.svg?style=flat&logo=github)](https://github.com/saifulkhan/meta-storyboard)
 <!-- [![Build Status](https://github.com/saifulkhan/meta-storyboard/actions/workflows/ci.yml/badge.svg)](https://github.com/saifulkhan/meta-storyboard/actions) -->
 
-A TypeScript library and application for building interactive, animated data stories using the Feature-Action design pattern. Visualize time series and multivariate data through reusable charts, plots, and storyboarding components. Built with TypeScript and D3.js.
-
 ---
 
 ## Table of Contents
 - [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Examples](#examples)
-  - [Stories](#stories)
-  - [Playground (Component Testing)](#playground-component-testing)
-- [Project Structure](#project-structure)
-- [Meta-Storyboard (MSB) API](#meta-storyboard-msb-api)
-  - [Feature Action Table Data Structures](#feature-action-table-data-structures)
-  - [MSB Action API](#msb-action-api)
-  - [Animated Plots API](#animated-plots-api)
-  - [Creating Story](#creating-story)
-  - [Feature Action Tables UI](#feature-action-tables-ui)
-- [Build & Release](#build--release)
-- [Contribution](#contribution)
-- [License](#license)
-- [Support](#support)
-- [References](#references)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Steps & Template](#steps--template)
+
+- [API Design & Development](#api-design--development)
+  - [Development Setup](#development-setup)
+  - [Examples](#examples)
+    - [Stories](#stories)
+    - [Playground (Component Testing)](#playground-component-testing)
+  - [Project Structure](#project-structure)
+  - [Meta-Storyboard (MSB) API](#meta-storyboard-msb-api)
+    - [Feature Action Table Data Structures](#feature-action-table-data-structures)
+    - [MSB Action API](#msb-action-api)
+    - [Animated Plots API](#animated-plots-api)
+    - [Creating Story](#creating-story)
+    - [Feature Action Tables UI](#feature-action-tables-ui)
+  - [Additional Information](#additional-information)
+    - [Build & Release](#build--release)
+    - [Contribution](#contribution)
+    - [License](#license)
+    - [Support](#support)
+    - [References](#references)
 
 ---
 
-## Overview
-Meta-Storyboard enables rapid creation of interactive data stories by combining feature detection, action annotation, and animated visualizations. It is designed for researchers, data scientists, and developers who want to craft compelling narratives from complex time series or machine learning data.
+# Overview
 
-- **Feature-Action Pattern**: Annotate features (e.g., peaks, anomalies) and map them to visual actions (e.g., highlight, connect, animate).
-- **Rich Visualizations**: Includes line plots, mirrored bar charts, parallel coordinates, and more.
-- **Composable & Extensible**: Modular components for custom UIs and stories.
-- **TypeScript & MUI**: Type-safe, modern design.
-
----
+A TypeScript library and application for building interactive, animated data stories with the Feature-Action design pattern. 
 
 ## Features
 - 🟢 **Feature Detection**: Built-in peak and event detection utilities.
@@ -51,8 +47,6 @@ Meta-Storyboard enables rapid creation of interactive data stories by combining 
 - 🟡 **Extensible Components**: Easily add new plot or action types.
 - 🟤 **Example Stories and Playground**: Test and explore components in isolation.
 
----
-
 ## Installation
 
 ```bash
@@ -61,9 +55,7 @@ npm install meta-storyboard
 yarn add meta-storyboard
 ```
 
----
-
-## Quick Start
+## Steps & Template
 
 
 Story development is a four-step process:
@@ -117,7 +109,7 @@ See more complete examples in [`src/pages/example/`](src/pages/example/) and the
 
 For more details of available APIs or extending the existing APIs, see the documents below.
 
-## Getting Started
+## Development Setup
 
 The following environment and packages are required.
 
@@ -450,7 +442,10 @@ new LinePlot()
 
 This is an experimental feature and incomplete functionality. To add a new table, see `src/services/TableService.ts`
 
-## Build & Release
+
+## Additional Information
+
+### Build & Release
 
 To build the library:
 ```bash
@@ -464,29 +459,22 @@ npm login
 npm publish
 ```
 
----
-
-## Contribution
+### Contribution
 
 Contributions are welcome! Please open issues or pull requests on [GitHub](https://github.com/saifulkhan/meta-storyboard). For major changes, please discuss them via issue first.
 
----
+### License
 
-## License
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details. (TODO)
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
-## Support
+### Support
 
 If you need help, open a [GitHub issue](https://github.com/saifulkhan/meta-storyboard/issues). For additional plots and early prototypes, see:
 - [Observable notebook prototype](https://observablehq.com/d/0a6e9c35a809660e)
 - [First React.js prototype](https://github.com/saifulkhan/storytelling-vis-v.0.1)
 
----
 
-## References
+### References
 
 - [d3.js](https://d3js.org/)
 - [React.js](https://react.dev)
