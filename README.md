@@ -257,7 +257,7 @@ new MSBFeatureActionFactory(...)
 ### MSB Feature API
 
 <div>
-    <img width="350px" src="./doc/feature-classes.png" alt="" />
+    <img width="350px" src="https://github.com/saifulkhan/meta-storyboard/raw/main/doc/feature-classes.png" alt="Feature Classes" />
     <br>
     <small><i>Figure 2: The class diagram of the MSB feature classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
@@ -314,7 +314,7 @@ new MSBFeatureFactory()
 ### MSB Action API
 
 <div>
-    <img width="450px" src="./doc/action-classes.png" alt="" />
+    <img width="450px" src="https://github.com/saifulkhan/meta-storyboard/raw/main/doc/action-classes.png" alt="Action Classes" />
     <br>
     <small><i>Figure 3: Action classes. Please see the source code for all classes, their methods and attributes. </i></small>
     <br><br>
@@ -399,7 +399,7 @@ gaussian(<mean>, <std>, ...)
 ### Animated Plots API
 
 <div>
-    <img width="350px" src="./doc/plot-classes.png" alt="" />
+    <img width="350px" src="https://github.com/saifulkhan/meta-storyboard/raw/main/doc/plot-classes.png" alt="Plot Classes" />
     <br>
     <small><i>Figure 4: Plot classes.</i></small>
     <br><br>
@@ -428,7 +428,7 @@ new LinePlot()
 
 <!-- <div align="center">  -->
 <div>
-    <img width="1000px" src="./doc/sequence-diagram.png" alt="sequence diagram" />
+    <img width="1000px" src="https://github.com/saifulkhan/meta-storyboard/raw/main/doc/sequence-diagram.png" alt="sequence diagram" />
     <br>
     <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
     <br><br>
