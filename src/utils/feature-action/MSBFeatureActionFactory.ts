@@ -1,19 +1,19 @@
-import { TimeSeriesData, TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { MSBFeature } from "src/utils/feature-action/MSBFeature";
-import { MSBActionFactory } from "src/components/actions/MSBActionFactory";
+import { TimeSeriesData, TimeSeriesPoint } from 'src/types/TimeSeriesPoint';
+import { MSBFeature } from 'src/utils/feature-action/MSBFeature';
+import { MSBActionFactory } from 'src/components/actions/MSBActionFactory';
 import {
   FeatureActionTableRow,
   ActionTableRow,
   FeatureActionTableData,
-} from "src/components/tables/FeatureActionTableRow";
-import { MSBFeatureFactory } from "src/utils/feature-action/MSBFeatureFactory";
-import { MSBAction } from "src/components/actions/MSBAction";
-import { TimelineMSBActions } from "src/types/TimelineMSBActions";
+} from 'src/components/tables/FeatureActionTableRow';
+import { MSBFeatureFactory } from 'src/utils/feature-action/MSBFeatureFactory';
+import { MSBAction } from 'src/components/actions/MSBAction';
+import { TimelineMSBActions } from 'src/types/TimelineMSBActions';
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
-} from "src/utils/feature-action/FeatureSearchProps";
-import { getTimeSeriesPointByDate } from "../common";
+} from 'src/utils/feature-action/FeatureSearchProps';
+import { getTimeSeriesPointByDate } from '../common';
 
 export class MSBFeatureActionFactory {
   private data: TimeSeriesData;
@@ -48,10 +48,10 @@ export class MSBFeatureActionFactory {
       .setProps(this.props)
       .setData(this.data);
 
-    console.log("MSBFeatureActionFactory:create: data: ", this.data);
+    console.log('MSBFeatureActionFactory:create: data: ', this.data);
 
     this.table.forEach((row: FeatureActionTableRow) => {
-      console.log("MSBFeatureActionFactory:create: row = ", row);
+      console.log('MSBFeatureActionFactory:create: row = ', row);
 
       //
       // search features
@@ -59,7 +59,7 @@ export class MSBFeatureActionFactory {
       const searchResult = featureFactory.search(
         row.feature,
         row.properties,
-        row.rank
+        row.rank,
       );
       const features: MSBFeature[] = searchResult || [];
       // prettier-ignore
@@ -72,7 +72,7 @@ export class MSBFeatureActionFactory {
         const date: Date = feature.getDate();
         const point: TimeSeriesPoint | undefined = getTimeSeriesPointByDate(
           date,
-          this.data
+          this.data,
         );
 
         let actions: MSBAction[] = [];
@@ -99,7 +99,7 @@ export class MSBFeatureActionFactory {
 
         dataActionArray.push([date, action]);
 
-        console.log("MSBFeatureActionFactory:create: action = ", action);
+        console.log('MSBFeatureActionFactory:create: action = ', action);
       });
     });
 

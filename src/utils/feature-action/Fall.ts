@@ -1,5 +1,5 @@
-import { NumericalFeature } from "./NumericalFeature";
-import { MSBFeatureName } from "./MSBFeatureName";
+import { NumericalFeature } from './NumericalFeature';
+import { MSBFeatureName } from './MSBFeatureName';
 
 export class Fall extends NumericalFeature {
   protected grad: number = 0;
@@ -11,7 +11,7 @@ export class Fall extends NumericalFeature {
     rank?: number,
     metric?: string,
     start?: Date,
-    end?: Date
+    end?: Date,
   ) {
     super();
     this.type = MSBFeatureName.FALL;
@@ -30,10 +30,10 @@ export class Fall extends NumericalFeature {
 
   getGrad() {
     if (!this.grad) {
-      throw "You must set Fall grad using setGrad().";
+      throw 'You must set Fall grad using setGrad().';
     }
     // TODO: check
-    return this.grad > 5 ? "steep" : this.grad > 2 ? "steady" : "slow";
+    return this.grad > 5 ? 'steep' : this.grad > 2 ? 'steady' : 'slow';
   }
 
   setNormGrad(normGrad: number) {

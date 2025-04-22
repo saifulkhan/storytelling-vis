@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Button, Box, Typography } from "@mui/material";
-import usePlayPauseLoop from "src/hooks/usePlayPauseLoop";
+import React, { useRef, useState, useEffect } from 'react';
+import { Button, Box, Typography } from '@mui/material';
+import usePlayPauseLoop from 'src/hooks/usePlayPauseLoop';
 
 class Loop {
   private frameCount: number;
@@ -70,14 +70,14 @@ const PlayPauseLoopComponent: React.FC = () => {
   // Update frameCount state regularly when playing
   useEffect(() => {
     if (!isPlaying) return;
-    
+
     const updateFrameCount = () => {
       setFrameCount(loop.getFrameCount());
       requestId.current = requestAnimationFrame(updateFrameCount);
     };
-    
+
     requestId.current = requestAnimationFrame(updateFrameCount);
-    
+
     return () => {
       if (requestId.current) {
         cancelAnimationFrame(requestId.current);
@@ -95,11 +95,11 @@ const PlayPauseLoopComponent: React.FC = () => {
     >
       <Button
         variant="contained"
-        color={isPlaying ? "secondary" : "primary"}
+        color={isPlaying ? 'secondary' : 'primary'}
         onClick={togglePlayPause}
         sx={{ width: 120 }}
       >
-        {isPlaying ? "Pause" : "Play"}
+        {isPlaying ? 'Pause' : 'Play'}
       </Button>
       <Typography variant="body1">Frame Count: {frameCount}</Typography>
     </Box>

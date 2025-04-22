@@ -1,5 +1,5 @@
-import { NumericalFeature } from "./NumericalFeature";
-import { MSBFeatureName } from "./MSBFeatureName";
+import { NumericalFeature } from './NumericalFeature';
+import { MSBFeatureName } from './MSBFeatureName';
 
 export class Rise extends NumericalFeature {
   protected grad: number = 0;
@@ -17,7 +17,7 @@ export class Rise extends NumericalFeature {
 
   getGrad() {
     // TODO: check
-    return this.grad > 5 ? "steep" : this.grad > 2 ? "steady" : "slow";
+    return this.grad > 5 ? 'steep' : this.grad > 2 ? 'steady' : 'slow';
   }
 
   setNormGrad(normGrad: number) {

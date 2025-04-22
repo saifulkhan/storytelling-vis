@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
-import Head from "next/head";
-import Box from "@mui/material/Box";
+import { useEffect, useState, useRef } from 'react';
+import Head from 'next/head';
+import Box from '@mui/material/Box';
 import {
   Avatar,
   Button,
@@ -16,34 +16,34 @@ import {
   Select,
   SelectChangeEvent,
   Fade,
-} from "@mui/material";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import PauseIcon from "@mui/icons-material/Pause";
-import { blue } from "@mui/material/colors";
+} from '@mui/material';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PauseIcon from '@mui/icons-material/Pause';
+import { blue } from '@mui/material/colors';
 
-import { ParallelCoordinatePlot } from "../../components";
-import { usePlayPauseLoop } from "../../hooks";
-import { sortTimeseriesData, MSBFeatureActionFactory } from "../../utils";
-import { TimelineMSBActions, TimeSeriesData } from "../../types";
+import { ParallelCoordinatePlot } from '../../components';
+import { usePlayPauseLoop } from '../../hooks';
+import { sortTimeseriesData, MSBFeatureActionFactory } from '../../utils';
+import { TimelineMSBActions, TimeSeriesData } from '../../types';
 
-import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
+import mlTrainingData from '../../assets/data/ml-training-data.json';
+import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,
     HEIGHT = 800;
   const HYPERPARAMS = [
-    "channels",
-    "kernel_size",
-    "layers",
-    "samples_per_class",
+    'channels',
+    'kernel_size',
+    'layers',
+    'samples_per_class',
   ];
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hyperparam, setHyperparam] = useState<string>("");
+  const [hyperparam, setHyperparam] = useState<string>('');
   const [mlData, setMLData] = useState<TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
@@ -59,14 +59,14 @@ const StoryMLPCP = () => {
       mlTrainingData.map(({ date, ...rest }) => ({
         date: new Date(date),
         ...rest,
-      }))
+      })),
     );
 
     // 1.2 Load feature-action table
     setNumericalFATable(mlNumFATable);
 
-    console.log("ML data: ", mlData);
-    console.log("Numerical feature-action table data: ", numericalFATable);
+    console.log('ML data: ', mlData);
+    console.log('Numerical feature-action table data: ', numericalFATable);
 
     setLoading(false);
   }, []);
@@ -81,7 +81,7 @@ const StoryMLPCP = () => {
 
     // 2. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
-      .setFAProps({ metric: "accuracy", window: 0 })
+      .setFAProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
       .setTable(numericalFATable) // <- feature-action table
       .create();
@@ -117,8 +117,8 @@ const StoryMLPCP = () => {
       </Head>
       <Box
         sx={{
-          backgroundColor: "background.default",
-          minHeight: "100%",
+          backgroundColor: 'background.default',
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -132,13 +132,13 @@ const StoryMLPCP = () => {
             title="Story: Machine Learning Multivariate"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
-          <CardContent sx={{ pt: "8px" }}>
+          <CardContent sx={{ pt: '8px' }}>
             {loading ? (
               <Box sx={{ height: 40 }}>
                 <Fade
                   in={loading}
                   style={{
-                    transitionDelay: loading ? "800ms" : "0ms",
+                    transitionDelay: loading ? '800ms' : '0ms',
                   }}
                   unmountOnExit
                 >
@@ -150,9 +150,9 @@ const StoryMLPCP = () => {
                 <FormGroup
                   sx={{
                     flexDirection: {
-                      xs: "column",
-                      sm: "row",
-                      alignItems: "center",
+                      xs: 'column',
+                      sm: 'row',
+                      alignItems: 'center',
                     },
                   }}
                 >
@@ -203,7 +203,7 @@ const StoryMLPCP = () => {
                     <Button
                       disabled={!hyperparam}
                       variant="contained"
-                      color={isPlaying ? "secondary" : "primary"}
+                      color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
                       onClick={togglePlayPause}
                       endIcon={
@@ -211,7 +211,7 @@ const StoryMLPCP = () => {
                       }
                       sx={{ width: 120 }}
                     >
-                      {isPlaying ? "Pause" : "Play"}
+                      {isPlaying ? 'Pause' : 'Play'}
                     </Button>
                   </FormControl>
                 </FormGroup>
@@ -220,7 +220,7 @@ const StoryMLPCP = () => {
                   style={{
                     width: WIDTH,
                     height: HEIGHT,
-                    border: "0px solid",
+                    border: '0px solid',
                   }}
                 ></svg>
               </>

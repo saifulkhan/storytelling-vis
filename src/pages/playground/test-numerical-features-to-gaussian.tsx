@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import * as d3 from "d3";
-import { schemeCategory10 } from "d3-scale-chromatic";
+import { useEffect, useRef, useState } from 'react';
+import * as d3 from 'd3';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import {
   Box,
   FormControl,
@@ -10,13 +10,13 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
-} from "@mui/material";
-import Head from "next/head";
+} from '@mui/material';
+import Head from 'next/head';
 
-import { TimeSeriesData } from "../../types";
-import { LinePlot, LineProps } from "../../components";
-import { generateGaussForPeaks } from "../../utils";
-import covid19CasesData from "../../assets/data/covid19-cases-data.json";
+import { TimeSeriesData } from '../../types';
+import { LinePlot, LineProps } from '../../components';
+import { generateGaussForPeaks } from '../../utils';
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -24,9 +24,9 @@ const WIDTH = 1500,
 const TestNFToGaussianPage = () => {
   const chartRef = useRef(null);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
-    {}
+    {},
   );
 
   const plot = useRef(new LinePlot()).current;
@@ -42,16 +42,16 @@ const TestNFToGaussianPage = () => {
             date: new Date(date),
             y: +y,
           })),
-        ])
+        ]),
       ) as Record<string, TimeSeriesData>;
       setCasesData(casesData);
       const loadedRegions = Object.keys(casesData).sort();
-      setRegions(loadedRegions); 
-      console.log("Cases data: ", casesData);
+      setRegions(loadedRegions);
+      console.log('Cases data: ', casesData);
 
-      setRegion("Bolton");
+      setRegion('Bolton');
     } catch (error) {
-      console.error("Failed to fetch data; error:", error);
+      console.error('Failed to fetch data; error:', error);
     }
   }, []);
 
@@ -59,26 +59,26 @@ const TestNFToGaussianPage = () => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
     const data: TimeSeriesData = casesData[region];
-    const gauss: TimeSeriesData[] = generateGaussForPeaks(data, "", 10);
-    console.debug("data: ", data);
-    console.debug("gauss: ", gauss);
-   
+    const gauss: TimeSeriesData[] = generateGaussForPeaks(data, '', 10);
+    console.debug('data: ', data);
+    console.debug('gauss: ', gauss);
+
     // Add the original timeseries data as the first curve
     gauss.unshift(data);
 
     new LinePlot()
       .setData(gauss)
       .setPlotProps({
-        xLabel: "Date",
+        xLabel: 'Date',
         title: `${region}`,
-        leftAxisLabel: "Number of cases",
-        rightAxisLabel: "Ranks",
+        leftAxisLabel: 'Number of cases',
+        rightAxisLabel: 'Ranks',
       })
       .setLineProps(
         gauss.map((d, i) => {
           if (i === 0) {
             return {
-              stroke: "#D3D3D3",
+              stroke: '#D3D3D3',
               strokeWidth: 1,
             } as LineProps;
           } else {
@@ -88,7 +88,7 @@ const TestNFToGaussianPage = () => {
               onRightAxis: true,
             } as LineProps;
           }
-        })
+        }),
       )
       .setCanvas(chartRef.current)
       .plot();
@@ -109,7 +109,7 @@ const TestNFToGaussianPage = () => {
 
       <Box
         sx={{
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -143,7 +143,7 @@ const TestNFToGaussianPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: "1px solid",
+              border: '1px solid',
             }}
           ></svg>
         </FormControl>

@@ -1,1 +1,1 @@
-export type AnimationType = "beginning" | "back" | "play";
+export type AnimationType = 'beginning' | 'back' | 'play';

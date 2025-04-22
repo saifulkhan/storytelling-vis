@@ -1,7 +1,7 @@
-import * as d3 from "d3";
-import { MSBActionName } from "./MSBActionName";
-import { MSBFeatureName, MSBCategoricalFeatureName } from "../../utils";
-import { Coordinate } from "../../types";
+import * as d3 from 'd3';
+import { MSBActionName } from './MSBActionName';
+import { MSBFeatureName, MSBCategoricalFeatureName } from '../../utils';
+import { Coordinate } from '../../types';
 
 const DELAY = 0,
   DURATION = 1000;
@@ -39,11 +39,11 @@ export abstract class MSBAction {
         .delay(0)
         // duration of the opacity transition
         .duration(duration)
-        .style("opacity", 1)
+        .style('opacity', 1)
         .transition()
         // delay after the opacity transition ends
         .delay(delay)
-        .on("end", () => {
+        .on('end', () => {
           resolve(delay + duration);
         });
     });
@@ -55,8 +55,8 @@ export abstract class MSBAction {
         .transition()
         .delay(0)
         .duration(duration)
-        .style("opacity", 0)
-        .on("end", () => {
+        .style('opacity', 0)
+        .on('end', () => {
           resolve(delay + duration);
         });
     });
@@ -68,20 +68,20 @@ export abstract class MSBAction {
   public abstract move(
     coordinate: Coordinate,
     delay: number,
-    duration: number
+    duration: number,
   ): Promise<any>;
 
   public remove() {
-    d3.select(this.node).select("svg").remove();
+    d3.select(this.node).select('svg').remove();
     return this;
   }
 
   public abstract draw(): void;
   protected canvas(): void {
     this.node = d3
-      .create("svg")
-      .append("g")
-      .style("opacity", 0)
+      .create('svg')
+      .append('g')
+      .style('opacity', 0)
       // another way to hide this object
       // .attr("display", "none")
       .node();
@@ -89,7 +89,9 @@ export abstract class MSBAction {
     d3.select(this.svg).append(() => this.node);
   }
 
-  public setFeatureType(featureType: MSBFeatureName | MSBCategoricalFeatureName) {
+  public setFeatureType(
+    featureType: MSBFeatureName | MSBCategoricalFeatureName,
+  ) {
     this.featureType = featureType;
     return this;
   }

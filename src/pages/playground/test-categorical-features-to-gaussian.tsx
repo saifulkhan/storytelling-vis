@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
   Box,
   FormControl,
@@ -8,14 +8,14 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
-} from "@mui/material";
-import Head from "next/head";
+} from '@mui/material';
+import Head from 'next/head';
 
-import { generateGaussForCatFeatures, CategoricalFeature } from "../../utils";
-import { TimeSeriesData } from "../../types";
-import { LinePlot, LineProps, getSchemeTableau10 } from "../../components";
-import covid19CasesData from "../../assets/data/covid19-cases-data.json";
-import covid19CategoricalData from "../../assets/feature-action-table/covid-19-categorical-table-1.json";
+import { generateGaussForCatFeatures, CategoricalFeature } from '../../utils';
+import { TimeSeriesData } from '../../types';
+import { LinePlot, LineProps, getSchemeTableau10 } from '../../components';
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -23,9 +23,9 @@ const WIDTH = 1500,
 const TestCFToGaussianPage = () => {
   const chartRef = useRef(null);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
-    {}
+    {},
   );
   const [categoricalFeatures, setCategoricalFeatures] = useState<
     CategoricalFeature[]
@@ -44,11 +44,14 @@ const TestCFToGaussianPage = () => {
             date: new Date(date),
             y: +y,
           })),
-        ])
+        ]),
       ) as Record<string, TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
-      console.log(`${Object.keys(casesData).length} regions' data: `, casesData);
+      console.log(
+        `${Object.keys(casesData).length} regions' data: `,
+        casesData,
+      );
 
       // 2. Get categorical features
       setCategoricalFeatures(
@@ -56,15 +59,14 @@ const TestCFToGaussianPage = () => {
           new CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
-            .setDescription(d.event)
-        )
+            .setDescription(d.event),
+        ),
       );
-      console.log("Categorical features: ", categoricalFeatures);
+      console.log('Categorical features: ', categoricalFeatures);
 
-      setRegion("Bolton");
-
+      setRegion('Bolton');
     } catch (error) {
-      console.error("Failed to fetch data; error:", error);
+      console.error('Failed to fetch data; error:', error);
     }
   }, []);
 
@@ -74,27 +76,27 @@ const TestCFToGaussianPage = () => {
     const data = casesData[region];
     const categoricalGauss: TimeSeriesData[] = generateGaussForCatFeatures(
       data,
-      categoricalFeatures
+      categoricalFeatures,
     );
 
-    console.debug("Categorical features: ", categoricalFeatures);
-    console.debug("categoricalGauss:", categoricalGauss);
+    console.debug('Categorical features: ', categoricalFeatures);
+    console.debug('categoricalGauss:', categoricalGauss);
     // Add the original timeseries data as the first curve
     categoricalGauss.unshift(data);
 
     new LinePlot()
       .setData(categoricalGauss)
       .setPlotProps({
-        xLabel: "Date",
+        xLabel: 'Date',
         title: `${region}`,
-        leftAxisLabel: "Number of cases",
-        rightAxisLabel: "Rank",
+        leftAxisLabel: 'Number of cases',
+        rightAxisLabel: 'Rank',
       })
       .setLineProps(
         data.map((d, i) => {
           if (i === 0) {
             return {
-              stroke: "#D3D3D3",
+              stroke: '#D3D3D3',
               strokeWidth: 1,
             } as LineProps;
           } else {
@@ -104,7 +106,7 @@ const TestCFToGaussianPage = () => {
               onRightAxis: true,
             } as LineProps;
           }
-        })
+        }),
       )
       .setCanvas(chartRef.current)
       .plot();
@@ -126,7 +128,7 @@ const TestCFToGaussianPage = () => {
       <Box
         sx={{
           // backgroundColor: "background.default",
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -157,7 +159,7 @@ const TestCFToGaussianPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: "1px solid",
+              border: '1px solid',
             }}
           ></svg>
         </FormControl>

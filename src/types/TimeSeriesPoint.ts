@@ -3,5 +3,5 @@ export interface TimeSeriesPoint {
   y?: number;
   [key: string]: any;
 }
- 
+
 export type TimeSeriesData = TimeSeriesPoint[];

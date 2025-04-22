@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
-import * as d3 from "d3";
-import Head from "next/head";
-import { Box } from "@mui/material";
+import { useEffect, useRef } from 'react';
+import * as d3 from 'd3';
+import Head from 'next/head';
+import { Box } from '@mui/material';
 
-import { LinePlot } from "src/components/plots/LinePlot";
-import { getCovid19Data } from "src/services/TimeSeriesDataService";
+import { LinePlot } from 'src/components/plots/LinePlot';
+import { getCovid19Data } from 'src/services/TimeSeriesDataService';
 
 const TestLinePlotPage = () => {
   const chartRef = useRef<SVGSVGElement | null>(null);
@@ -14,43 +14,43 @@ const TestLinePlotPage = () => {
 
   useEffect(() => {
     if (!chartRef.current) return;
-    console.log("useEffect triggered");
+    console.log('useEffect triggered');
 
     d3.select(chartRef.current)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .append('g')
       .node();
 
     getCovid19Data().then((d) => {
       console.log(d);
-      const data = [d["Aberdeenshire"], d["Angus"], d["Barnet"]];
+      const data = [d['Aberdeenshire'], d['Angus'], d['Barnet']];
 
       if (!chartRef.current) return;
 
       new LinePlot()
         .setData(data)
-        .setName("Regions")
+        .setName('Regions')
         .setPlotProps({
-          title: "Example line plot",
+          title: 'Example line plot',
           margin: { top: 50, right: 60, bottom: 50, left: 60 },
         })
         .setLineProps([
           {
-            stroke: "#355c7d",
+            stroke: '#355c7d',
             strokeWidth: 1,
             showPoints: false,
             onRightAxis: false,
           },
           {
-            stroke: "#99b898",
+            stroke: '#99b898',
             strokeWidth: 2,
             showPoints: false,
             onRightAxis: false,
           },
           {
-            stroke: "#E1999C",
+            stroke: '#E1999C',
             strokeWidth: 1,
             showPoints: true,
             onRightAxis: true,
@@ -72,7 +72,7 @@ const TestLinePlotPage = () => {
       <Box
         sx={{
           // backgroundColor: "background.default",
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -81,7 +81,7 @@ const TestLinePlotPage = () => {
           style={{
             width: `${width}px`,
             height: `${height}px`,
-            border: "1px solid",
+            border: '1px solid',
           }}
         ></svg>
       </Box>

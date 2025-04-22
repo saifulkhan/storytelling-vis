@@ -1,7 +1,7 @@
-import * as d3 from "d3";
-import { MSBActionName } from "./MSBActionName";
-import { MSBAction } from "./MSBAction";
-import { Coordinate } from "../../types";
+import * as d3 from 'd3';
+import { MSBActionName } from './MSBActionName';
+import { MSBAction } from './MSBAction';
+import { Coordinate } from '../../types';
 
 export type ConnectorProps = {
   stroke?: string;
@@ -9,7 +9,7 @@ export type ConnectorProps = {
 };
 
 export const defaultConnectorProperties: ConnectorProps = {
-  stroke: "#000000",
+  stroke: '#000000',
   opacity: 1,
 };
 
@@ -36,11 +36,11 @@ export class Connector extends MSBAction {
 
   public draw() {
     this.connectorNode = d3
-      .create("svg")
-      .append("line")
-      .attr("stroke", this.props.stroke!)
-      .attr("opacity", this.props.opacity!)
-      .style("stroke-dasharray", "5,5")
+      .create('svg')
+      .append('line')
+      .attr('stroke', this.props.stroke!)
+      .attr('opacity', this.props.opacity!)
+      .style('stroke-dasharray', '5,5')
       .node();
     this.node.appendChild(this.connectorNode);
 
@@ -52,10 +52,10 @@ export class Connector extends MSBAction {
     this.coordinate1 = coordinate[1];
 
     d3.select(this.connectorNode)
-      .attr("x1", this.coordinate0[0])
-      .attr("y1", this.coordinate0[1])
-      .attr("x2", this.coordinate1[0])
-      .attr("y2", this.coordinate1[1]);
+      .attr('x1', this.coordinate0[0])
+      .attr('y1', this.coordinate0[1])
+      .attr('x2', this.coordinate1[0])
+      .attr('y2', this.coordinate1[1]);
 
     return this;
   }
@@ -66,8 +66,8 @@ export class Connector extends MSBAction {
   public move(
     coordinate: Coordinate,
     delay?: number | undefined,
-    duration?: number | undefined
+    duration?: number | undefined,
   ): Promise<any> {
-    throw new Error("Connector: move() not implemented!");
+    throw new Error('Connector: move() not implemented!');
   }
 }

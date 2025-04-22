@@ -22,14 +22,14 @@ const WINDOW_SIZE = 10;
 export function generateGaussForPeaks(
   data: TimeSeriesData,
   metric: string = '',
-  window: number = WINDOW_SIZE
+  window: number = WINDOW_SIZE,
 ): TimeSeriesData[] {
   const peaks = searchPeaks(data, 0, metric, window);
   rankPeaksByNormHeight(peaks); // or rankPeaksByHeight
 
   console.log(
     'generateGaussForPeaks: peaks:',
-    peaks.map((d) => d.getNormHeight())
+    peaks.map((d) => d.getNormHeight()),
   );
 
   const gaussTSData: TimeSeriesData[] = peaks.map((d: Peak) => {
@@ -56,7 +56,7 @@ export function generateGaussForPeaks(
  */
 export function generateGaussForCatFeatures(
   data: TimeSeriesData,
-  categoricalFeatures: CategoricalFeature[]
+  categoricalFeatures: CategoricalFeature[],
 ): TimeSeriesData[] {
   const gaussTSData: TimeSeriesData[] = categoricalFeatures.map(
     (feature: CategoricalFeature) => {
@@ -64,7 +64,7 @@ export function generateGaussForCatFeatures(
       const height = feature.getRank();
       const gauss: number[] = gaussian(index, height, data.length);
       return mapGaussToTimeSeries(gauss, data);
-    }
+    },
   );
 
   return gaussTSData;
@@ -78,7 +78,7 @@ export function generateGaussForCatFeatures(
  */
 function mapGaussToTimeSeries(
   gauss: number[],
-  reference: TimeSeriesData
+  reference: TimeSeriesData,
 ): TimeSeriesData {
   return gauss.map((y, i) => ({ date: reference[i].date, y }));
 }

@@ -2,7 +2,6 @@ Meta-Storyboarding Using Feature-Action Design Pattern. The GitHub code is avail
 
 # API User Guide
 
-
 ## Installation
 
 ```bash
@@ -16,17 +15,17 @@ yarn add meta-storyboard
 
 Story development is four step process:
 
-1. Load data and feature-action table 
+1. Load data and feature-action table
 
-    1.1 Load timeseries data, see some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
+   1.1 Load timeseries data, see some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
 
-    1.2 Load feature-action table, see some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
+   1.2 Load feature-action table, see some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
 
 2. Create timeline actions using `MSBFeatureActionFactory` class which take the timeseries data and feature-action table as input.
 
-3. Create story by creating a plot,  and setting its data and plot properties. Some plots we implemented are, e.g., `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
+3. Create story by creating a plot, and setting its data and plot properties. Some plots we implemented are, e.g., `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
 
-4. Use play and pause button to animate the story, see the play-pause hooks in  GitHub repository `src/hooks/`.
+4. Use play and pause button to animate the story, see the play-pause hooks in GitHub repository `src/hooks/`.
 
 The above steps are shown in the following example template:
 
@@ -60,15 +59,13 @@ onClick={togglePlayPause}
 
 See three implemented stories in GitHub repository `src/pages/example/` as example.
 
-
----
 ---
 
+---
 
 # API Design & Development
 
 For more details of available APIs or extending the existing APIs, see the documents below.
-
 
 ## Getting Started
 
@@ -100,7 +97,7 @@ Open <http://localhost:3000> in your browser and access the following list of UI
 - <http://localhost:3000/example/story-ml-mirorred-bar>
 - <http://localhost:3000/example/story-ml-pcp>
 
-- <http://localhost:3000/example/feature-action-tables> : Experimental table to create feature-action tables using a UI 
+- <http://localhost:3000/example/feature-action-tables> : Experimental table to create feature-action tables using a UI
 
 **Playground (testing various components):**
 
@@ -115,7 +112,6 @@ Open <http://localhost:3000> in your browser and access the following list of UI
 - <http://localhost:3000/playground/test-line-plot>
 - <http://localhost:3000/playground/test-play-pause-loop>
 
-
 ### Tests
 
 Execute unit tests:
@@ -125,7 +121,6 @@ yarn test
 ```
 
 Note: unit tests are under development and may not cover all features.
-
 
 ## Code Structure
 
@@ -199,7 +194,7 @@ We implemented a user interface for meta-story authors for creating and updating
   },
 ```
 
- TODO: Refactor the key / variable name in the code!
+TODO: Refactor the key / variable name in the code!
 
 **MSB Feature Action Factory:** The `MSBFeatureActionFactory` translates the meta-stories defined as feature action tables to MSB feature objects and MSB action objects. It internally uses the `MSBFeatureFactory` and `MSBActionFactory` classes, which will be discussed later, to do so. Instantiate this class as follows:
 
@@ -212,7 +207,7 @@ new MSBFeatureActionFactory(...)
     .create();
 ```
 
-**Code:**  See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
+**Code:** See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
 
 **Example:** See the examples/tests in the UI.
 
@@ -317,7 +312,7 @@ new TextBox()
     .move(<coordinates>, ...);
 ```
 
-**Group MSB Actions:**  The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
+**Group MSB Actions:** The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
 
 ```ts
 new MSBActionGroup()
@@ -400,11 +395,9 @@ new LinePlot()
 
 **Example:** See COVID-19 story with a single time series and Machine learning multi-variate story in the UI.
 
-
 ### Feature Action Tables UI
 
 This is an experimental feature and incomplete functionality. To add a new table, see `src/services/TableService.ts`
-
 
 ## Building and Publishing the Library
 
@@ -424,18 +417,15 @@ npm publish
 
 Then install it in your project (as discussed earlier).
 
-
----
 ---
 
+---
 
 # Support
 
-If you want to use this code and need help please reach out to me via GitHub issues  [⤴](<https://github.com/saifulkhan/meta-storyboard/issues>). Also, please refer to the previous code and notebooks for additional plots and early prototypes.  
+If you want to use this code and need help please reach out to me via GitHub issues [⤴](https://github.com/saifulkhan/meta-storyboard/issues). Also, please refer to the previous code and notebooks for additional plots and early prototypes.
 
-
-
-The first version of the prototype was done in  Observable notebook in [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js in GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). The previous prototypes contain six stories, however, we only ported three stories to this repository.
+The first version of the prototype was done in Observable notebook in [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js in GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). The previous prototypes contain six stories, however, we only ported three stories to this repository.
 
 ## References
 
@@ -445,7 +435,7 @@ Our work is detailed in the paper titled "Feature-Action Design Patterns for Sto
 
 ```
 @article{khan2024,
-    title={Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data}, 
+    title={Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data},
     author={S. Khan and S. Jones and B. Bach and J. Cha and M. Chen and J. Meikle and J. C. Roberts and J. Thiyagalingam and J. Wood and P. D. Ritsos},
     journal={arXiv preprint arXiv:2402.03116},
     year={2024},

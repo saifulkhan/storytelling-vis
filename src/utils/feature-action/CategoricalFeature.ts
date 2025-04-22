@@ -1,9 +1,9 @@
-import { MSBFeature } from "./MSBFeature";
+import { MSBFeature } from './MSBFeature';
 
 export enum MSBCategoricalFeatureName {
-  LOCKDOWN = "LOCKDOWN",
-  LOCKDOWN_START = "LOCKDOWN_START",
-  LOCKDOWN_END = "LOCKDOWN_END",
+  LOCKDOWN = 'LOCKDOWN',
+  LOCKDOWN_START = 'LOCKDOWN_START',
+  LOCKDOWN_END = 'LOCKDOWN_END',
 }
 
 export class CategoricalFeature extends MSBFeature {

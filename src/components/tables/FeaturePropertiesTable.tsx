@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   IconButton,
   Input,
@@ -7,15 +7,15 @@ import {
   TableCell,
   TableRow,
   TextField, // Import TextField for editing keys
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import { styled } from "@mui/material/styles";
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { styled } from '@mui/material/styles';
 
 // Define styled components to replace makeStyles
 const StyledTable = styled(Table)({
-  width: "100%",
-  borderCollapse: "collapse",
+  width: '100%',
+  borderCollapse: 'collapse',
 });
 
 const StyledTableRow = styled(TableRow)({
@@ -23,46 +23,46 @@ const StyledTableRow = styled(TableRow)({
 });
 
 const StyledTableCell = styled(TableCell)({
-  fontSize: "12px",
-  padding: "2px",
-  border: "none",
+  fontSize: '12px',
+  padding: '2px',
+  border: 'none',
 });
 
 // Style constants to use with sx prop
 const styles = {
   keyCell: {
-    display: "flex",
-    alignItems: "center",
-    width: "50%",
-    fontSize: "12px",
-    padding: "2px",
-    border: "none",
+    display: 'flex',
+    alignItems: 'center',
+    width: '50%',
+    fontSize: '12px',
+    padding: '2px',
+    border: 'none',
   },
   valueCell: {
-    width: "50%",
-    fontSize: "12px",
-    padding: "2px",
-    border: "none",
+    width: '50%',
+    fontSize: '12px',
+    padding: '2px',
+    border: 'none',
   },
   valueInput: {
     flexGrow: 1,
-    width: "100%",
-    height: "100%",
-    fontSize: "12px",
-    padding: "2px",
-    "& input": {
-      border: "none",
-      outline: "none",
-      padding: "1px",
+    width: '100%',
+    height: '100%',
+    fontSize: '12px',
+    padding: '2px',
+    '& input': {
+      border: 'none',
+      outline: 'none',
+      padding: '1px',
     },
   },
   addIcon: {
-    color: "green",
-    fontSize: "small",
+    color: 'green',
+    fontSize: 'small',
   },
   removeIcon: {
-    color: "red",
-    fontSize: "small",
+    color: 'red',
+    fontSize: 'small',
   },
 };
 
@@ -78,7 +78,7 @@ export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
   // No need for useStyles() with the new approach
   const [rows, setRows] = useState({ ...data });
   const [editingKey, setEditingKey] = useState<string | null>(null);
-  const [newKey, setNewKey] = useState("");
+  const [newKey, setNewKey] = useState('');
 
   useEffect(() => {
     setRows({ ...data });
@@ -95,7 +95,7 @@ export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
     if (!newKey.trim() || rows.hasOwnProperty(newKey) || newKey === oldKey) {
       // Reset without change if newKey is invalid or already exists
       setEditingKey(null);
-      setNewKey("");
+      setNewKey('');
       return;
     }
 
@@ -104,7 +104,7 @@ export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
     setRows(updatedData);
     setData(updatedData);
     setEditingKey(null);
-    setNewKey("");
+    setNewKey('');
   };
 
   const handleEditKey = (key: string) => {
@@ -117,9 +117,9 @@ export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
     let newKey = `newKey${Object.keys(rows).length + 1}`;
     while (rows.hasOwnProperty(newKey)) {
       // simple way to ensure uniqueness
-      newKey += "1";
+      newKey += '1';
     }
-    const newRows = { ...rows, [newKey]: "newValue" };
+    const newRows = { ...rows, [newKey]: 'newValue' };
     setRows(newRows);
     setData(newRows);
   };

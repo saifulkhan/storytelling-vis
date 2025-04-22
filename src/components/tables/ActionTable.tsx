@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -7,20 +7,20 @@ import {
   Select,
   MenuItem,
   IconButton,
-} from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import { styled } from "@mui/material/styles";
+} from '@mui/material';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
 
-import { ActionPropertiesTable } from "./ActionPropertiesTable";
-import { ActionTableRow } from "./FeatureActionTableRow";
+import { ActionPropertiesTable } from './ActionPropertiesTable';
+import { ActionTableRow } from './FeatureActionTableRow';
 import {
   MSBActionName,
   defaultDotProps,
   defaultCircleProps,
   defaultTextBoxProps,
   defaultConnectorProperties,
-} from "../actions";
+} from '../actions';
 
 const getInitialProperties = (action: MSBActionName) => {
   switch (action) {
@@ -39,8 +39,8 @@ const getInitialProperties = (action: MSBActionName) => {
 
 // Define styled components to replace makeStyles
 const StyledTable = styled(Table)({
-  width: "100%",
-  borderCollapse: "collapse",
+  width: '100%',
+  borderCollapse: 'collapse',
 });
 
 const StyledTableRow = styled(TableRow)({
@@ -48,29 +48,29 @@ const StyledTableRow = styled(TableRow)({
 });
 
 const StyledTableCell = styled(TableCell)({
-  fontSize: "12px",
+  fontSize: '12px',
 });
 
 // Style constants to use with sx prop
 const styles = {
   actionCell: {
-    width: "20%",
-    fontSize: "12px",
-    padding: "4px",
+    width: '20%',
+    fontSize: '12px',
+    padding: '4px',
   },
   propertyCell: {
-    width: "80%",
-    fontSize: "12px",
-    padding: "2px",
+    width: '80%',
+    fontSize: '12px',
+    padding: '2px',
   },
   selectField: {
-    height: "30px",
+    height: '30px',
   },
   removeIcon: {
-    color: "red",
+    color: 'red',
   },
   addIcon: {
-    color: "green",
+    color: 'green',
   },
 };
 
@@ -80,7 +80,7 @@ interface ActionTableProps {
 }
 
 export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
-  console.log("ActionTable: re-rendered");
+  console.log('ActionTable: re-rendered');
 
   // No need for useStyles() with the new approach
   const [rows, setRows] = useState<ActionTableRow[]>(data);
@@ -104,7 +104,7 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   };
 
   const handleActionChange = (index: number, action: MSBActionName) => {
-    console.log("ActionTable: index = ", index, ", action = ", action);
+    console.log('ActionTable: index = ', index, ', action = ', action);
 
     const newRows = [...rows];
     newRows[index].action = action; // create a new object for the row;
@@ -113,7 +113,7 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   };
 
   const handlePropertyChange = (index: number, properties: any) => {
-    console.log("ActionTable: index = ", index, ", properties = ", properties);
+    console.log('ActionTable: index = ', index, ', properties = ', properties);
 
     const newRows = [...rows];
     newRows[index].properties = properties;
@@ -178,4 +178,3 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
     </div>
   );
 };
- 

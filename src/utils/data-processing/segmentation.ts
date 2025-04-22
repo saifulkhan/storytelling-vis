@@ -14,7 +14,7 @@ import { rankPeaksByNormHeight } from './ranking';
  */
 export function maxAcrossSeries(
   referenceData: TimeSeriesData,
-  inputSeries: TimeSeriesData[]
+  inputSeries: TimeSeriesData[],
 ): TimeSeriesData {
   const featuresGauss = inputSeries.map((g) => g.map((d) => d.y ?? 0));
   // console.log('featuresGauss: ', featuresGauss);
@@ -27,8 +27,8 @@ export function maxAcrossSeries(
       (d, i) =>
         typeof d === 'number' &&
         !isNaN(d) &&
-        (maxValues[i] = Math.max(maxValues[i], d))
-    )
+        (maxValues[i] = Math.max(maxValues[i], d)),
+    ),
   );
 
   // console.log('maxValues: ', maxValues);
@@ -58,7 +58,7 @@ export function maxAcrossSeries(
  */
 export function combineSeries(
   referenceData: TimeSeriesData,
-  inputSeries: TimeSeriesData[]
+  inputSeries: TimeSeriesData[],
 ): TimeSeriesData {
   if (
     !referenceData ||
@@ -71,7 +71,7 @@ export function combineSeries(
   }
 
   const numericData: number[][] = inputSeries.map((series: TimeSeriesData) =>
-    series.map((point: TimeSeriesPoint) => point.y ?? 0)
+    series.map((point: TimeSeriesPoint) => point.y ?? 0),
   );
 
   let result: number[];
@@ -85,7 +85,7 @@ export function combineSeries(
       if (typeof value === 'number' && !isNaN(value)) {
         result[i] += value / numSeries;
       }
-    })
+    }),
   );
 
   // map back to TimeSeriesData format
@@ -94,7 +94,6 @@ export function combineSeries(
     y: value,
   }));
 }
-
 
 /**
  * Segments a time series by identifying important peaks.
@@ -113,7 +112,7 @@ export function combineSeries(
 export function segmentByImportantPeaks(
   data: TimeSeriesData,
   deltaMax = 0.1, // default minimum gap of 10% of the data length
-  ignoreHeight = false
+  ignoreHeight = false,
 ): [Peak[], { idx: number; h: number }[]] {
   // Find and rank all peaks in the data
   let peaks: Peak[] = searchPeaks(data);
@@ -121,18 +120,16 @@ export function segmentByImportantPeaks(
   const dataLength = data.length;
 
   // Create a simplified representation of peaks with just index and height
-  const peakIndices: { idx: number; h: number }[] = peaks.map(
-    (d: Peak) => ({
-      idx: d.getDataIndex(),
-      h: d.getNormHeight()
-    })
-  );
-  
+  const peakIndices: { idx: number; h: number }[] = peaks.map((d: Peak) => ({
+    idx: d.getDataIndex(),
+    h: d.getNormHeight(),
+  }));
+
   // Sort peaks by height (highest first) for better peak selection
   const sortedPeaks = [...peakIndices].sort((a, b) => b.h - a.h);
   console.log('segmentByImportantPeaks: peakIndices: ', peakIndices);
   console.log('segmentByImportantPeaks: sortedPeaks: ', sortedPeaks);
-  
+
   // Convert deltaMax from a fraction to actual indices
   const minGapIndices = Math.floor(deltaMax * dataLength);
 
@@ -142,7 +139,7 @@ export function segmentByImportantPeaks(
   // First, add the highest peak to start
   if (sortedPeaks.length > 0) {
     const highestPeakIndex = peakIndices.findIndex(
-      (p) => p.idx === sortedPeaks[0].idx && p.h === sortedPeaks[0].h
+      (p) => p.idx === sortedPeaks[0].idx && p.h === sortedPeaks[0].h,
     );
     if (highestPeakIndex !== -1) {
       ordering.push(peakIndices[highestPeakIndex]);
@@ -166,13 +163,13 @@ export function segmentByImportantPeaks(
       const minDistToSelected = ordering.reduce(
         (closest, selected) =>
           Math.min(closest, Math.abs(candidate.idx - selected.idx)),
-        dataLength // Initialize with max possible distance
+        dataLength, // Initialize with max possible distance
       );
 
       // Calculate distance to boundaries as well
       const distToBoundaries = Math.min(
         candidate.idx,
-        dataLength - candidate.idx
+        dataLength - candidate.idx,
       );
 
       // The effective minimum gap is the smaller of the two distances
@@ -214,7 +211,7 @@ export function segmentByImportantPeaks(
  * Segments time series data by finding important peaks with a minimum distance constraint.
  * This function directly analyzes the time series data to find peaks, without requiring
  * pre-processing through the Peak class.
- * 
+ *
  * @param data - The time series data to segment
  * @param k - Number of segments to create (k-1 peaks)
  * @param deltaMax - Minimum distance between peaks as a fraction (0-1) of total data length
@@ -223,7 +220,7 @@ export function segmentByImportantPeaks(
 export function segmentTimeSeries(
   data: TimeSeriesData,
   k: number,
-  deltaMax = 0.1
+  deltaMax = 0.1,
 ): number[] {
   if (k <= 1 || data.length === 0) {
     return [];
@@ -231,15 +228,15 @@ export function segmentTimeSeries(
 
   // Calculate the actual minimum distance in data points
   const minDistance = Math.ceil(deltaMax * data.length);
-  
+
   // Calculate the prominence of each point (how much it stands out)
   const prominences: { index: number; value: number }[] = [];
-  
+
   for (let i = 1; i < data.length - 1; i++) {
     const current = data[i].y ?? 0;
     const prev = data[i - 1].y ?? 0;
     const next = data[i + 1].y ?? 0;
-    
+
     // A point is a peak if it's higher than its neighbors
     if (current > prev && current > next) {
       // Calculate prominence (how much the peak stands out)
@@ -248,29 +245,29 @@ export function segmentTimeSeries(
       prominences.push({ index: i, value: prominence });
     }
   }
-  
+
   // Sort peaks by prominence (highest first)
   prominences.sort((a, b) => b.value - a.value);
-  
+
   // Select peaks with the distance constraint
   const selectedPeaks: number[] = [];
-  
+
   for (const peak of prominences) {
     // Check if this peak is far enough from already selected peaks
     const isFarEnough = selectedPeaks.every(
-      selectedIndex => Math.abs(peak.index - selectedIndex) >= minDistance
+      (selectedIndex) => Math.abs(peak.index - selectedIndex) >= minDistance,
     );
-    
+
     if (isFarEnough) {
       selectedPeaks.push(peak.index);
-      
+
       // Break once we have k-1 peaks
       if (selectedPeaks.length === k - 1) {
         break;
       }
     }
   }
-  
+
   // Sort peaks by their position in the time series
   return selectedPeaks.sort((a, b) => a - b);
 }

@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
-import Head from "next/head";
-import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
+import { useEffect, useState, useRef } from 'react';
+import Head from 'next/head';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 import {
   Avatar,
   Button,
@@ -17,20 +17,20 @@ import {
   Select,
   SelectChangeEvent,
   Fade,
-} from "@mui/material";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import PauseIcon from "@mui/icons-material/Pause";
-import { blue } from "@mui/material/colors";
+} from '@mui/material';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PauseIcon from '@mui/icons-material/Pause';
+import { blue } from '@mui/material/colors';
 
-import { TimeSeriesData, TimelineMSBActions } from "../../types";
-import { LinePlot } from "../../components";
-import { usePlayPauseLoop } from "../../hooks";
-import { MSBFeatureActionFactory } from "../../utils";
+import { TimeSeriesData, TimelineMSBActions } from '../../types';
+import { LinePlot } from '../../components';
+import { usePlayPauseLoop } from '../../hooks';
+import { MSBFeatureActionFactory } from '../../utils';
 
-import covid19CasesData from "../../assets/data/covid19-cases-data.json";
-import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 
 const StoryCovid19SingleGaussian = () => {
   const WIDTH = 1200,
@@ -41,9 +41,9 @@ const StoryCovid19SingleGaussian = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
-    {}
+    {},
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
 
@@ -55,7 +55,6 @@ const StoryCovid19SingleGaussian = () => {
     setLoading(true);
 
     try {
-      
       // 1.1 Get timeseries data for all regions.
       const casesData = Object.fromEntries(
         Object.entries(covid19CasesData || {}).map(([region, data]) => [
@@ -64,7 +63,7 @@ const StoryCovid19SingleGaussian = () => {
             date: new Date(date),
             y: +y,
           })),
-        ])
+        ]),
       ) as Record<string, TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
@@ -72,10 +71,10 @@ const StoryCovid19SingleGaussian = () => {
       // 1.2 Load feature-action table a JSON file.
       setNumericalFATable(covid19NumFATable);
 
-      console.log("Cases data: ", casesData);
-      console.log("Numerical feature-action table data: ", numericalFATable);
+      console.log('Cases data: ', casesData);
+      console.log('Numerical feature-action table data: ', numericalFATable);
     } catch (error) {
-      console.error("Failed to fetch data; error:", error);
+      console.error('Failed to fetch data; error:', error);
     } finally {
       setLoading(false);
     }
@@ -91,7 +90,7 @@ const StoryCovid19SingleGaussian = () => {
     // 2. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
       .setFAProps({
-        metric: "Number of cases",
+        metric: 'Number of cases',
         window: 10,
       })
       .setTable(numericalFATable) // <- feature-action table
@@ -104,8 +103,8 @@ const StoryCovid19SingleGaussian = () => {
       .setName(region) // <- selected region
       .setPlotProps({
         title: `${region}`,
-        xLabel: "Date",
-        leftAxisLabel: "Number of cases",
+        xLabel: 'Date',
+        leftAxisLabel: 'Number of cases',
       })
       .setLineProps([])
       .setCanvas(chartRef.current)
@@ -145,8 +144,8 @@ const StoryCovid19SingleGaussian = () => {
       </Head>
       <Box
         sx={{
-          backgroundColor: "background.default",
-          minHeight: "100%",
+          backgroundColor: 'background.default',
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -160,13 +159,13 @@ const StoryCovid19SingleGaussian = () => {
             title="Story: Covid19 Single Location"
             subheader="Choose a segment value, a region, and click play to animate the story"
           />
-          <CardContent sx={{ pt: "8px" }}>
+          <CardContent sx={{ pt: '8px' }}>
             {loading ? (
               <Box sx={{ height: 40 }}>
                 <Fade
                   in={loading}
                   style={{
-                    transitionDelay: loading ? "800ms" : "0ms",
+                    transitionDelay: loading ? '800ms' : '0ms',
                   }}
                   unmountOnExit
                 >
@@ -178,9 +177,9 @@ const StoryCovid19SingleGaussian = () => {
                 <FormGroup
                   sx={{
                     flexDirection: {
-                      xs: "column",
-                      sm: "row",
-                      alignItems: "center",
+                      xs: 'column',
+                      sm: 'row',
+                      alignItems: 'center',
                     },
                   }}
                 >
@@ -250,7 +249,7 @@ const StoryCovid19SingleGaussian = () => {
                     <Button
                       disabled={!region}
                       variant="contained"
-                      color={isPlaying ? "secondary" : "primary"}
+                      color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
                       onClick={togglePlayPause}
                       endIcon={
@@ -258,7 +257,7 @@ const StoryCovid19SingleGaussian = () => {
                       }
                       sx={{ width: 120 }}
                     >
-                      {isPlaying ? "Pause" : "Play"}
+                      {isPlaying ? 'Pause' : 'Play'}
                     </Button>
                   </FormControl>
                 </FormGroup>
@@ -267,7 +266,7 @@ const StoryCovid19SingleGaussian = () => {
                   style={{
                     width: WIDTH,
                     height: HEIGHT,
-                    border: "0px solid",
+                    border: '0px solid',
                   }}
                 ></svg>
               </>

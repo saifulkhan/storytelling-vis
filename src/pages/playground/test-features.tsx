@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import * as d3 from "d3";
-import { schemeTableau10 } from "d3-scale-chromatic";
+import React, { useEffect, useRef, useState } from 'react';
+import * as d3 from 'd3';
+import { schemeTableau10 } from 'd3-scale-chromatic';
 import {
   Box,
   FormControl,
@@ -10,16 +10,16 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
-} from "@mui/material";
-import Head from "next/head";
+} from '@mui/material';
+import Head from 'next/head';
 
-import { TimeSeriesPoint } from "src/types/TimeSeriesPoint";
-import { searchPeaks } from "src/utils/feature-action/feature-search";
-import { Peak } from "src/utils/feature-action/Peak";
-import { sliceTimeseriesByDate } from "src/utils/common";
-import { LinePlot, LineProps } from "src/components/plots/LinePlot";
-import { Dot } from "src/components/actions/Dot";
-import { getCovid19Data } from "src/services/TimeSeriesDataService";
+import { TimeSeriesPoint } from 'src/types/TimeSeriesPoint';
+import { searchPeaks } from 'src/utils/feature-action/feature-search';
+import { Peak } from 'src/utils/feature-action/Peak';
+import { sliceTimeseriesByDate } from 'src/utils/common';
+import { LinePlot, LineProps } from 'src/components/plots/LinePlot';
+import { Dot } from 'src/components/actions/Dot';
+import { getCovid19Data } from 'src/services/TimeSeriesDataService';
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -30,7 +30,7 @@ const FeaturesPage = () => {
   const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
   const [data, setData] = useState<TimeSeriesPoint[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>('');
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -42,7 +42,7 @@ const FeaturesPage = () => {
         setRegions(Object.keys(data).sort());
         // setRegion("Aberdeenshire");
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error('Failed to fetch data:', error);
       }
     };
 
@@ -54,23 +54,23 @@ const FeaturesPage = () => {
   useEffect(() => {
     if (!region || !locData[region] || !chartRef.current) return;
 
-    const peaks: Peak[] = searchPeaks(data, 1, "cases", 10);
+    const peaks: Peak[] = searchPeaks(data, 1, 'cases', 10);
 
-    console.log("TestFeatures: data = ", data);
-    console.log("FeaturesPage: peaks = ", peaks);
+    console.log('TestFeatures: data = ', data);
+    console.log('FeaturesPage: peaks = ', peaks);
 
     const peaksStartEnd = peaks.map((peak) =>
-      sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
+      sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd()),
     );
     peaksStartEnd.unshift(data);
 
-    console.log("TestFeatures: peaksData = ", peaksStartEnd);
+    console.log('TestFeatures: peaksData = ', peaksStartEnd);
 
     d3.select(chartRef.current)
-      .append("svg")
-      .attr("width", WIDTH)
-      .attr("height", HEIGHT)
-      .append("g")
+      .append('svg')
+      .attr('width', WIDTH)
+      .attr('height', HEIGHT)
+      .append('g')
       .node();
 
     // Make sure chartRef.current is not null before using it
@@ -78,9 +78,9 @@ const FeaturesPage = () => {
       const plot = new LinePlot()
         .setData(peaksStartEnd)
         .setPlotProps({
-          xLabel: "Date",
+          xLabel: 'Date',
           title: `${region}`,
-          leftAxisLabel: "Number of cases",
+          leftAxisLabel: 'Number of cases',
         })
         .setLineProps(
           peaksStartEnd.map((d, i) => {
@@ -88,7 +88,7 @@ const FeaturesPage = () => {
               stroke: schemeTableau10[i],
               strokeWidth: 1.5,
             } as LineProps;
-          })
+          }),
         )
         .setCanvas(chartRef.current)
         .plot();
@@ -98,7 +98,7 @@ const FeaturesPage = () => {
         // Add null check for chartRef.current
         if (chartRef.current) {
           new Dot()
-            .setProps({ color: "#FF5349" })
+            .setProps({ color: '#FF5349' })
             .setCanvas(chartRef.current)
             .setCoordinate(plot.getCoordinates(peak.getDate()))
             .show();
@@ -123,7 +123,7 @@ const FeaturesPage = () => {
 
       <Box
         sx={{
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -153,7 +153,7 @@ const FeaturesPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: "1px solid",
+              border: '1px solid',
             }}
           ></svg>
         </FormControl>

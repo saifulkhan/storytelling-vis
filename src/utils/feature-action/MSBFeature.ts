@@ -1,4 +1,4 @@
-import { MSBFeatureName } from "./MSBFeatureName";
+import { MSBFeatureName } from './MSBFeatureName';
 
 export abstract class MSBFeature {
   protected date: Date;
@@ -15,7 +15,7 @@ export abstract class MSBFeature {
     this.end = new Date();
     this.rank = 0;
     this.type = MSBFeatureName.UNKNOWN;
-    this.metric = "";
+    this.metric = '';
     this.dataIndex = 0;
   }
 

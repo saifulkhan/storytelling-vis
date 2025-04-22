@@ -1,11 +1,11 @@
-import { MSBAction } from "./MSBAction";
-import { MSBActionName } from "./MSBActionName";
-import { Circle, CircleProps } from "./Circle";
-import { MSBActionGroup } from "./MSBActionGroup";
-import { Connector, ConnectorProps } from "./Connector";
-import { Dot, DotProps } from "./Dot";
-import { TextBox, TextBoxProps } from "./TextBox";
-import { TimeSeriesPoint } from "../../types/TimeSeriesPoint";
+import { MSBAction } from './MSBAction';
+import { MSBActionName } from './MSBActionName';
+import { Circle, CircleProps } from './Circle';
+import { MSBActionGroup } from './MSBActionGroup';
+import { Connector, ConnectorProps } from './Connector';
+import { Dot, DotProps } from './Dot';
+import { TextBox, TextBoxProps } from './TextBox';
+import { TimeSeriesPoint } from '../../types/TimeSeriesPoint';
 
 export class MSBActionFactory {
   constructor() {}
@@ -13,7 +13,7 @@ export class MSBActionFactory {
   public create(
     action: MSBActionName,
     props: CircleProps | ConnectorProps | DotProps | TextBoxProps,
-    data?: TimeSeriesPoint
+    data?: TimeSeriesPoint,
   ): MSBAction | undefined {
     // prettier-ignore
     // console.log("MSBActionFactory:create: action = ", action, ", properties = ", properties);

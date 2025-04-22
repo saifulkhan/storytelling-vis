@@ -1,7 +1,7 @@
-import * as d3 from "d3";
-import { MSBActionName } from "./MSBActionName";
-import { MSBAction } from "./MSBAction";
-import { Coordinate } from "../../types";
+import * as d3 from 'd3';
+import { MSBActionName } from './MSBActionName';
+import { MSBAction } from './MSBAction';
+import { Coordinate } from '../../types';
 
 export type DotProps = {
   size?: number;
@@ -11,7 +11,7 @@ export type DotProps = {
 
 export const defaultDotProps: DotProps = {
   size: 5,
-  color: "#000000",
+  color: '#000000',
   opacity: 1,
 };
 
@@ -37,11 +37,11 @@ export class Dot extends MSBAction {
 
   public draw() {
     this.dotNode = d3
-      .create("svg")
-      .append("circle")
-      .attr("r", this.props.size!)
-      .attr("fill", this.props.color!)
-      .attr("opacity", this.props.opacity!)
+      .create('svg')
+      .append('circle')
+      .attr('r', this.props.size!)
+      .attr('fill', this.props.color!)
+      .attr('opacity', this.props.opacity!)
       .node();
 
     this.node.appendChild(this.dotNode);
@@ -54,8 +54,8 @@ export class Dot extends MSBAction {
     this.coordinate1 = coordinate[1];
 
     d3.select(this.dotNode)
-      .attr("cx", this.coordinate1[0])
-      .attr("cy", this.coordinate1[1]);
+      .attr('cx', this.coordinate1[0])
+      .attr('cy', this.coordinate1[1]);
 
     return this;
   }
@@ -66,8 +66,8 @@ export class Dot extends MSBAction {
   public move(
     coordinate: Coordinate,
     delay?: number | undefined,
-    duration?: number | undefined
+    duration?: number | undefined,
   ): Promise<any> {
-    throw new Error("Dot: move() not implemented!");
+    throw new Error('Dot: move() not implemented!');
   }
 }

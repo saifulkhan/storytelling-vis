@@ -39,7 +39,7 @@ const TestCombinedGaussianPage = () => {
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
-    {}
+    {},
   );
   const [categoricalFeatures, setCategoricalFeatures] = useState<
     CategoricalFeature[]
@@ -60,13 +60,13 @@ const TestCombinedGaussianPage = () => {
             date: new Date(date),
             y: +y,
           })),
-        ])
+        ]),
       ) as Record<string, TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
       console.log(
         `${Object.keys(casesData).length} regions' data: `,
-        casesData
+        casesData,
       );
 
       // 2. Get categorical features
@@ -75,8 +75,8 @@ const TestCombinedGaussianPage = () => {
           new CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
-            .setDescription(d.event)
-        )
+            .setDescription(d.event),
+        ),
       );
       console.log('Categorical features: ', categoricalFeatures);
 
@@ -94,7 +94,7 @@ const TestCombinedGaussianPage = () => {
     const ntsGauss: TimeSeriesData[] = generateGaussForPeaks(data);
     const ctsGauss: TimeSeriesData[] = generateGaussForCatFeatures(
       data,
-      categoricalFeatures
+      categoricalFeatures,
     );
     const ntsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ntsGauss);
     const ctsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ctsGauss);
@@ -129,7 +129,7 @@ const TestCombinedGaussianPage = () => {
               showPoints: false,
             } as LineProps;
           }
-        })
+        }),
       )
       .setCanvas(chartRef.current)
       .plot();
@@ -143,7 +143,6 @@ const TestCombinedGaussianPage = () => {
 
     const peaksIndices = segmentTimeSeries(combined, segment, 0.15);
     console.log('peaksIndices:', peaksIndices);
-
 
     peaks.forEach((d: Peak, i: number) => {
       if (!chartRef.current) return;
@@ -160,14 +159,13 @@ const TestCombinedGaussianPage = () => {
         .show();
     });
 
-
     peaksIndices.forEach((d: number) => {
       if (!chartRef.current) return;
       new Dot()
         .setProps({
           size: 10,
           color: 'red',
-          opacity: .5,
+          opacity: 0.5,
         })
         .setCanvas(chartRef.current)
         .setCoordinate(plot.getCoordinates(data[d].date, 3))
@@ -186,7 +184,7 @@ const TestCombinedGaussianPage = () => {
 
   const handleChangeSlider = (
     _event: React.SyntheticEvent | Event,
-    value: number | number[]
+    value: number | number[],
   ) => {
     const selectedSegment = typeof value === 'number' ? value : value[0];
     console.log('segment = ', selectedSegment);

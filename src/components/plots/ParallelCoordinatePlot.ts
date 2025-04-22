@@ -1,19 +1,19 @@
-import * as d3 from "d3";
+import * as d3 from 'd3';
 
-import { Colors, LineColor } from "../Colors";
-import { MSBAction } from "../actions";
-import { Plot, PlotProps, defaultPlotProps } from "./Plot";
+import { Colors, LineColor } from '../Colors';
+import { MSBAction } from '../actions';
+import { Plot, PlotProps, defaultPlotProps } from './Plot';
 import {
   TimelineMSBActions,
   Coordinate,
   HorizontalAlign,
   VerticalAlign,
-} from "../../types";
+} from '../../types';
 import {
   MSBFeatureName,
   findIndexOfDate,
   getObjectKeysArray,
-} from "../../utils";
+} from '../../utils';
 
 export type ParallelCoordinatePlotProperties = {};
 
@@ -26,7 +26,7 @@ const STATIC_LINE_COLOR_MAP = d3.interpolateBrBG,
 const LINE_WIDTH = 1.5,
   DOT_RADIUS = 5,
   SELECTED_AXIS_COLOR = Colors.Red,
-  FONT_SIZE = "12px";
+  FONT_SIZE = '12px';
 
 const DELAY_SHOW = 0,
   DELAY_HIDE = 500,
@@ -40,14 +40,14 @@ const xScaleMap = (
   data: any[],
   keys: string[],
   width: number,
-  margin: { left: number; right: number }
+  margin: { left: number; right: number },
 ) => {
   return new Map(
     Array.from(keys, (key) => {
       // array of all keys, e.g.,  ['date', 'mean_test_accuracy', 'channels', 'kernel_size', 'layers', ...]
       // key is one of teh key, e.g., 'date'
       let scale;
-      if (key === "date") {
+      if (key === 'date') {
         // Create scale with proper typing and handle possible undefined values
         scale = d3
           .scaleTime()
@@ -55,7 +55,7 @@ const xScaleMap = (
             (d3.extent(data, (d) => d[key] as Date) as [Date, Date]) || [
               new Date(),
               new Date(),
-            ]
+            ],
           )
           .range([margin.left, width - margin.right]);
       } else {
@@ -63,20 +63,20 @@ const xScaleMap = (
         scale = d3
           .scaleLinear()
           .domain(
-            (d3.extent(data, (d) => +d[key]) as [number, number]) || [0, 1]
+            (d3.extent(data, (d) => +d[key]) as [number, number]) || [0, 1],
           )
           .range([margin.left, width - margin.right]);
       }
 
       return [key, scale];
-    })
+    }),
   );
 };
 
 const yScale = (
   keys: string[],
   height: number,
-  margin: { top: number; bottom: number }
+  margin: { top: number; bottom: number },
 ) => {
   return d3.scalePoint(keys, [margin.top, height - margin.bottom]);
 };
@@ -85,7 +85,7 @@ export class ParallelCoordinatePlot extends Plot {
   data: any[] = [];
   plotProps: PlotProps = { ...defaultPlotProps };
   svg!: SVGSVGElement;
-  name: string = "";
+  name: string = '';
   actions: any[] = [];
 
   width: number = 0;
@@ -93,7 +93,7 @@ export class ParallelCoordinatePlot extends Plot {
   margin = MARGIN;
 
   AxisNames: string[] = [];
-  selectedAxis: string = "";
+  selectedAxis: string = '';
   xScaleMap: any;
   yScale: any;
   staticLineColorMap: any;
@@ -108,12 +108,12 @@ export class ParallelCoordinatePlot extends Plot {
   public setPlotProps(props: PlotProps) {
     this.plotProps = { ...defaultPlotProps, ...props };
     this.margin = this.plotProps.margin || MARGIN;
-    console.log("margin:", this.margin);
+    console.log('margin:', this.margin);
     return this;
   }
 
   public plotProperties(properties: unknown) {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
     return this;
   }
 
@@ -122,11 +122,11 @@ export class ParallelCoordinatePlot extends Plot {
     this.data = data
       .slice()
       .sort((a, b) => d3.ascending(a[this.name], b[this.name]))
-      .sort((a, b) => d3.ascending(a["date"], b["date"]));
+      .sort((a, b) => d3.ascending(a['date'], b['date']));
 
     this.AxisNames = getObjectKeysArray(data);
-    console.log("PCP:data = ", this.data);
-    console.log("PCP:data: _AxisNames = ", this.AxisNames);
+    console.log('PCP:data = ', this.data);
+    console.log('PCP:data: _AxisNames = ', this.AxisNames);
 
     return this;
   }
@@ -162,20 +162,20 @@ export class ParallelCoordinatePlot extends Plot {
 
   private drawAxis() {
     // Clear existing axis and labels
-    d3.select(this.svg).selectAll("svg > *").remove();
+    d3.select(this.svg).selectAll('svg > *').remove();
 
     this.xScaleMap = xScaleMap(
       this.data,
       this.AxisNames,
       this.width,
-      this.margin
+      this.margin,
     );
 
     this.yScale = yScale(this.AxisNames, this.height, this.margin);
 
     this.staticLineColorMap = d3.scaleSequential(
       this.xScaleMap.get(this.selectedAxis).domain().reverse(),
-      STATIC_LINE_COLOR_MAP
+      STATIC_LINE_COLOR_MAP,
     );
 
     // prettier-ignore
@@ -186,18 +186,18 @@ export class ParallelCoordinatePlot extends Plot {
     //
     const that = this;
     d3.select(this.svg)
-      .append("g")
-      .selectAll("g")
+      .append('g')
+      .selectAll('g')
       .data(this.AxisNames)
-      .join("g")
-      .attr("transform", (d) => `translate(0,${this.yScale(d)})`)
-      .style("font-size", FONT_SIZE)
+      .join('g')
+      .attr('transform', (d) => `translate(0,${this.yScale(d)})`)
+      .style('font-size', FONT_SIZE)
       .each(function (d) {
         // draw axis for d = date, layers, kernel_size, ... etc.
         // change color of the selected axis for d = keyz
         if (d === that.selectedAxis) {
           d3.select(this)
-            .attr("color", SELECTED_AXIS_COLOR)
+            .attr('color', SELECTED_AXIS_COLOR)
             .call(d3.axisBottom(that.xScaleMap.get(d)) as any);
         } else {
           d3.select(this).call(d3.axisBottom(that.xScaleMap.get(d)) as any);
@@ -206,15 +206,15 @@ export class ParallelCoordinatePlot extends Plot {
       // Label axis
       .call((g) =>
         g
-          .append("text")
-          .attr("x", this.margin.left)
-          .attr("y", -6)
-          .attr("text-anchor", "start")
-          .attr("fill", (d) =>
+          .append('text')
+          .attr('x', this.margin.left)
+          .attr('y', -6)
+          .attr('text-anchor', 'start')
+          .attr('fill', (d) =>
             // change color of the selected axis label for d = keyz
-            d === this.selectedAxis ? SELECTED_AXIS_COLOR : "currentColor"
+            d === this.selectedAxis ? SELECTED_AXIS_COLOR : 'currentColor',
           )
-          .text((d) => d)
+          .text((d) => d),
       );
 
     return this;
@@ -241,15 +241,15 @@ export class ParallelCoordinatePlot extends Plot {
     // Draw lines
     //
     d3.select(this.svg)
-      .append("g")
-      .attr("fill", "none")
-      .attr("stroke-width", LINE_WIDTH)
-      .attr("stroke-opacity", STATIC_LINE_OPACITY)
-      .selectAll("path")
+      .append('g')
+      .attr('fill', 'none')
+      .attr('stroke-width', LINE_WIDTH)
+      .attr('stroke-opacity', STATIC_LINE_OPACITY)
+      .selectAll('path')
       .data(this.data)
-      .join("path")
-      .attr("stroke", (d) => this.staticLineColorMap(d[this.selectedAxis]))
-      .attr("d", (d) => {
+      .join('path')
+      .attr('stroke', (d) => this.staticLineColorMap(d[this.selectedAxis]))
+      .attr('d', (d) => {
         // d is a row of the data, e.g., {kernel_size: 11, layers: 13, ...}
         // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
         const a = cross(d);
@@ -257,34 +257,34 @@ export class ParallelCoordinatePlot extends Plot {
         const l = line(a as any);
         return l;
       })
-      .attr("id", (d) => `id-line-${d.date}`);
+      .attr('id', (d) => `id-line-${d.date}`);
 
     //
     // Append circles to the line
     //
     d3.select(this.svg)
-      .append("g")
-      .selectAll("g")
+      .append('g')
+      .selectAll('g')
       .data(this.data)
       .enter()
-      .append("g")
-      .attr("id", (d) => {
+      .append('g')
+      .attr('id', (d) => {
         // d is a row of the data, e.g., {kernel_size: 11, layers: 13, ...}
         return `id-dot-${d.date}`;
       })
-      .selectAll("circle")
+      .selectAll('circle')
       .data((d) => cross(d))
       .enter()
-      .append("circle")
-      .attr("r", DOT_RADIUS)
-      .attr("cx", ([key, value]) => {
+      .append('circle')
+      .attr('r', DOT_RADIUS)
+      .attr('cx', ([key, value]) => {
         // parameter and its value, e.g., kernel_size:11, layers:13, etc
         return this.xScaleMap.get(key)(value);
       })
-      .attr("cy", ([key]) => this.yScale(key))
+      .attr('cy', ([key]) => this.yScale(key))
       // .style("fill", (d) => this.staticLineColorMap(d[this.selectedAxis]))
-      .style("fill", "Gray")
-      .style("opacity", STATIC_DOT_OPACITY);
+      .style('fill', 'Gray')
+      .style('opacity', STATIC_DOT_OPACITY);
   }
 
   /**
@@ -314,12 +314,12 @@ export class ParallelCoordinatePlot extends Plot {
     // Draw lines
     //
     d3.select(this.svg)
-      .append("g")
-      .selectAll("path")
+      .append('g')
+      .selectAll('path')
       .data(this.data)
-      .join("path")
-      .attr("stroke", (d) => "grey") // TODO
-      .attr("d", (d) => {
+      .join('path')
+      .attr('stroke', (d) => 'grey') // TODO
+      .attr('d', (d) => {
         // d.data is a data point, e.g., {kernel_size: 11, layers: 13, ...}
         // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
         const a = cross(d);
@@ -327,44 +327,44 @@ export class ParallelCoordinatePlot extends Plot {
         const l = line(a as any);
         return l;
       })
-      .attr("fill", "none")
-      .attr("stroke-width", LINE_WIDTH)
-      .attr("stroke-opacity", 0) // TODO
-      .attr("id", (d) => this.getLineId(d.date));
+      .attr('fill', 'none')
+      .attr('stroke-width', LINE_WIDTH)
+      .attr('stroke-opacity', 0) // TODO
+      .attr('id', (d) => this.getLineId(d.date));
 
     //
     // Append dots to the line
     //
     const that = this;
     d3.select(this.svg)
-      .append("g")
-      .selectAll("g")
+      .append('g')
+      .selectAll('g')
       .data(this.data)
       .enter()
-      .append("g")
-      .attr("id", (d) => {
+      .append('g')
+      .attr('id', (d) => {
         // d is a row of the data, e.g., {kernel_size: 11, layers: 13, ...}
         return this.getDotId(d.date);
       })
-      .selectAll("circle")
+      .selectAll('circle')
       .data((d) => cross(d))
       .enter()
-      .append("circle")
-      .attr("r", DOT_RADIUS)
-      .attr("cx", ([key, value]) => {
+      .append('circle')
+      .attr('r', DOT_RADIUS)
+      .attr('cx', ([key, value]) => {
         // parameter and its value, e.g., key/value: kernel_size/11, layers/13, etc
         const xScale = this.xScaleMap.get(key);
         return xScale(value);
       })
-      .attr("cy", ([key]) => this.yScale(key))
-      .style("fill", function (d) {
+      .attr('cy', ([key]) => this.yScale(key))
+      .style('fill', function (d) {
         // get the parent node data
         // const parent = d3.select(this.parentNode).datum();
         // return parent?.dotColor;
         // TODO
-        return "grey";
+        return 'grey';
       })
-      .style("opacity", 0); // TODO
+      .style('opacity', 0); // TODO
   }
 
   /**
@@ -392,7 +392,7 @@ export class ParallelCoordinatePlot extends Plot {
         return;
       }
 
-      console.log("PCP:runLoop: ", this.playActionIdx, this.playDate);
+      console.log('PCP:runLoop: ', this.playActionIdx, this.playDate);
       if (this.playDate && this.playFeatureType) {
         await Promise.all([
           this.hideDots(this.playDate, this.playFeatureType),
@@ -427,9 +427,9 @@ export class ParallelCoordinatePlot extends Plot {
         .delay(DELAY_SHOW)
         // duration of the opacity transition
         .duration(DURATION_SHOW)
-        .style("stroke-opacity", 1)
-        .style("stroke", this.colorOnShow(type))
-        .on("end", () => {
+        .style('stroke-opacity', 1)
+        .style('stroke', this.colorOnShow(type))
+        .on('end', () => {
           resolve(DELAY_SHOW + DURATION_SHOW);
         });
     });
@@ -443,9 +443,9 @@ export class ParallelCoordinatePlot extends Plot {
         .ease(d3.easeLinear)
         .delay(DELAY_HIDE)
         .duration(DURATION_HIDE)
-        .style("stroke-opacity", this.opacityOnHideLine(type))
-        .style("stroke", this.colorOnHideLine(type))
-        .on("end", () => {
+        .style('stroke-opacity', this.opacityOnHideLine(type))
+        .style('stroke', this.colorOnHideLine(type))
+        .on('end', () => {
           resolve(DELAY_HIDE + DURATION_HIDE);
         });
     });
@@ -455,15 +455,15 @@ export class ParallelCoordinatePlot extends Plot {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // return group
-        .selectAll("circle")
+        .selectAll('circle')
         .transition()
         // delay before transition
         .delay(DELAY_SHOW)
         // duration of the opacity transition
         .duration(DURATION_SHOW)
-        .style("opacity", 1)
-        .style("fill", this.colorOnShow(type))
-        .on("end", () => {
+        .style('opacity', 1)
+        .style('fill', this.colorOnShow(type))
+        .on('end', () => {
           resolve(DELAY_SHOW + DURATION_SHOW);
         });
     });
@@ -473,13 +473,13 @@ export class ParallelCoordinatePlot extends Plot {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // returns group
-        .selectAll("circle")
+        .selectAll('circle')
         .transition()
         .ease(d3.easeLinear)
         .delay(DELAY_HIDE)
         .duration(DURATION_HIDE)
-        .style("opacity", 0)
-        .on("end", () => {
+        .style('opacity', 0)
+        .on('end', () => {
           resolve(DELAY_HIDE + DURATION_HIDE);
         });
     });
@@ -488,7 +488,7 @@ export class ParallelCoordinatePlot extends Plot {
   private showAction(
     date: Date,
     type: MSBFeatureName,
-    action: MSBAction
+    action: MSBAction,
   ): Promise<number> {
     return new Promise<number>((resolve, reject) => {
       const data = this.data[findIndexOfDate(this.data, date)];
@@ -496,14 +496,14 @@ export class ParallelCoordinatePlot extends Plot {
       action
         .updateProps({
           data: data,
-          horizontalAlign: "middle" as HorizontalAlign,
-          verticalAlign: "top" as VerticalAlign,
+          horizontalAlign: 'middle' as HorizontalAlign,
+          verticalAlign: 'top' as VerticalAlign,
         })
         .setCanvas(this.svg)
         // .setCoordinate([[0, 0], this.topMidCoordinate()]);
         .setCoordinate([[0, 0], this.coordinateOnAxis(date)]);
 
-      console.log("PCP:showAction: action:", this.topMidCoordinate());
+      console.log('PCP:showAction: action:', this.topMidCoordinate());
 
       return Promise.all([
         action.show(),
@@ -555,7 +555,7 @@ export class ParallelCoordinatePlot extends Plot {
   }
 
   private midXCoordinate(): number {
-    const dateScale = this.xScaleMap.get("date");
+    const dateScale = this.xScaleMap.get('date');
     const mid =
       (dateScale(this.data[this.data.length - 1].date) +
         dateScale(this.data[0].date)) *
@@ -566,7 +566,7 @@ export class ParallelCoordinatePlot extends Plot {
 
   private coordinateOnAxis(date: Date): Coordinate {
     const data = this.data[findIndexOfDate(this.data, date)];
-    console.log("data: ", data);
+    console.log('data: ', data);
     const xScale = this.xScaleMap.get(this.selectedAxis);
     const x = xScale(data[this.selectedAxis]);
     const y = this.yScale(this.selectedAxis);

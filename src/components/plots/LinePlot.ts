@@ -1,5 +1,5 @@
-import * as d3 from "d3";
-import { Plot, PlotProps, defaultPlotProps } from "./Plot";
+import * as d3 from 'd3';
+import { Plot, PlotProps, defaultPlotProps } from './Plot';
 import {
   Coordinate,
   TimeSeriesPoint,
@@ -7,20 +7,20 @@ import {
   TimelineMSBActions,
   HorizontalAlign,
   VerticalAlign,
-} from "../../types";
-import { findDateIdx, findIndexOfDate } from "../../utils";
-import { MSBAction } from "../actions";
+} from '../../types';
+import { findDateIdx, findIndexOfDate } from '../../utils';
+import { MSBAction } from '../actions';
 
-const ID_AXIS_SELECTION = "#id-axes-selection",
+const ID_AXIS_SELECTION = '#id-axes-selection',
   // TODO: move to props
   MAGIC_NO = 10,
   LINE_STROKE_WIDTH = 2,
-  LINE_STROKE = "#2a363b",
+  LINE_STROKE = '#2a363b',
   DOT_SIZE = 2,
-  TITLE_FONT_FAMILY = "Arial Narrow",
-  TITLE_FONT_SIZE = "14px",
-  AXIS_FONT_FAMILY = "Arial Narrow",
-  AXIS_FONT_SIZE = "12px",
+  TITLE_FONT_FAMILY = 'Arial Narrow',
+  TITLE_FONT_SIZE = '14px',
+  AXIS_FONT_FAMILY = 'Arial Narrow',
+  AXIS_FONT_SIZE = '12px',
   YAXIS_LABEL_OFFSET = 12;
 
 export type LineProps = PlotProps & {
@@ -32,7 +32,7 @@ export type LineProps = PlotProps & {
 
 export class LinePlot extends Plot {
   data: TimeSeriesData[] = [];
-  name = "";
+  name = '';
   lineProps: LineProps[] = [];
   plotProps: PlotProps = { ...defaultPlotProps };
 
@@ -60,7 +60,7 @@ export class LinePlot extends Plot {
 
   public setLineProps(p: LineProps[] = []) {
     if (!this.data) {
-      throw new Error("LinePlot: Can not set line properties before data!");
+      throw new Error('LinePlot: Can not set line properties before data!');
     }
 
     this.data.forEach((_, i: number) => {
@@ -74,7 +74,7 @@ export class LinePlot extends Plot {
       });
     });
 
-    console.log("LinePlot: lineProps = ", this.lineProps);
+    console.log('LinePlot: lineProps = ', this.lineProps);
 
     return this;
   }
@@ -98,12 +98,12 @@ export class LinePlot extends Plot {
     this.width = bounds.width;
     this.margin = this.plotProps.margin;
 
-    console.log("LinePlot:setCanvas: bounds: ", bounds);
+    console.log('LinePlot:setCanvas: bounds: ', bounds);
 
     this.selector = d3
       .select(this.svg)
-      .append("g")
-      .attr("id", ID_AXIS_SELECTION);
+      .append('g')
+      .attr('id', ID_AXIS_SELECTION);
 
     this._drawAxis();
 
@@ -114,7 +114,7 @@ export class LinePlot extends Plot {
    ** Draw all lines (no animation)
    **/
   public plot() {
-    console.log("LinePlot:_draw: _data: ", this.data);
+    console.log('LinePlot:_draw: _data: ', this.data);
     const line = (xAxis: any, yAxis: any) => {
       return d3
         .line<TimeSeriesPoint>()
@@ -135,27 +135,27 @@ export class LinePlot extends Plot {
       const p = this.lineProps[i];
       const yAxis = this.leftOrRightAxis(i);
 
-      console.log("LinePlot:_draw: data:", dataX);
+      console.log('LinePlot:_draw: data:', dataX);
       // draw line
       this.selector
-        .append("path")
-        .attr("stroke", p.stroke)
-        .attr("stroke-width", p.strokeWidth)
-        .attr("fill", "none")
-        .attr("d", line(this.xAxis, yAxis)(dataX));
+        .append('path')
+        .attr('stroke', p.stroke)
+        .attr('stroke-width', p.strokeWidth)
+        .attr('fill', 'none')
+        .attr('d', line(this.xAxis, yAxis)(dataX));
 
       if (p.showPoints) {
         // draw dots
         this.selector
-          .append("g")
-          .selectAll("circle")
+          .append('g')
+          .selectAll('circle')
           .data(dataX.map(Object.values))
-          .join("circle")
-          .attr("r", DOT_SIZE)
-          .attr("cx", (d: any) => this.xAxis(d[0]))
-          .attr("cy", (d: any) => yAxis(d[1]))
-          .style("fill", p.stroke)
-          .attr("opacity", 0.5);
+          .join('circle')
+          .attr('r', DOT_SIZE)
+          .attr('cx', (d: any) => this.xAxis(d[0]))
+          .attr('cy', (d: any) => yAxis(d[1]))
+          .style('fill', p.stroke)
+          .attr('opacity', 0.5);
       }
     });
 
@@ -197,7 +197,7 @@ export class LinePlot extends Plot {
         .updateProps({
           data: { ...dataX[dataIdx], name: this.name, value: dataX[dataIdx].y },
           horizontalAlign: this.getHorizontalAlign(date),
-          verticalAlign: "top" as VerticalAlign,
+          verticalAlign: 'top' as VerticalAlign,
         })
         .setCanvas(this.svg)
         .setCoordinate(this.getCoordinates(date, lineNum));
@@ -232,19 +232,19 @@ export class LinePlot extends Plot {
 
     // create a path with the data
     const path = this.selector
-      .append("path")
-      .attr("stroke", p.stroke)
-      .attr("stroke-width", p.strokeWidth)
-      .attr("fill", "none")
-      .attr("d", line(this.xAxis, yAxis)(dataX));
+      .append('path')
+      .attr('stroke', p.stroke)
+      .attr('stroke-width', p.strokeWidth)
+      .attr('fill', 'none')
+      .attr('d', line(this.xAxis, yAxis)(dataX));
 
     const length = path.node().getTotalLength();
     const duration = length * 4 || 1000;
 
     // Hide the path initially
     path
-      .attr("stroke-dasharray", `${length} ${length}`)
-      .attr("stroke-dashoffset", length);
+      .attr('stroke-dasharray', `${length} ${length}`)
+      .attr('stroke-dashoffset', length);
 
     const delay = 1000;
 
@@ -255,8 +255,8 @@ export class LinePlot extends Plot {
         .ease(d3.easeLinear)
         .delay(1000)
         .duration(duration)
-        .attr("stroke-dashoffset", 0)
-        .on("end", () => {
+        .attr('stroke-dashoffset', 0)
+        .on('end', () => {
           resolve(delay + duration);
         });
     });
@@ -280,42 +280,42 @@ export class LinePlot extends Plot {
       }
     });
 
-    console.log("LinePlot: dataOnLeft = ", dataOnLeft);
-    console.log("LinePlot: dataOnRight = ", dataOnRight);
+    console.log('LinePlot: dataOnLeft = ', dataOnLeft);
+    console.log('LinePlot: dataOnRight = ', dataOnRight);
 
     this.xAxis = this.xScale(
       dataOnLeft.concat(dataOnRight),
       this.width,
-      this.margin
+      this.margin,
     );
     this.leftAxis = this.yScale(dataOnLeft, this.height, this.margin);
     this.rightAxis = this.yScale(dataOnRight, this.height, this.margin);
 
     // draw x axis on bottom
     this.selector
-      .append("g")
-      .attr("transform", `translate(0, ${this.height - this.margin.bottom})`)
+      .append('g')
+      .attr('transform', `translate(0, ${this.height - this.margin.bottom})`)
       .call(d3.axisBottom(this.xAxis).ticks(5));
 
     // draw x axis label on bottom
     this.selector
-      .append("text")
-      .attr("fill", "currentColor")
-      .attr("text-anchor", "start")
-      .attr("x", this.width / 2)
-      .attr("y", this.height - 5)
-      .style("font-size", AXIS_FONT_SIZE)
-      .style("font-family", AXIS_FONT_FAMILY)
+      .append('text')
+      .attr('fill', 'currentColor')
+      .attr('text-anchor', 'start')
+      .attr('x', this.width / 2)
+      .attr('y', this.height - 5)
+      .style('font-size', AXIS_FONT_SIZE)
+      .style('font-family', AXIS_FONT_FAMILY)
 
       .text(`${this.plotProps.xLabel}→`);
 
     // draw left axis and label
     if (dataOnLeft.length) {
       this.selector
-        .append("g")
-        .attr("transform", `translate(${this.margin.left}, 0)`)
+        .append('g')
+        .attr('transform', `translate(${this.margin.left}, 0)`)
         .call(
-          d3.axisLeft(this.leftAxis)
+          d3.axisLeft(this.leftAxis),
           // .tickFormat((d) => {
           //   let prefix = d3.formatPrefix(".00", d);
           //   return prefix(d);
@@ -323,24 +323,24 @@ export class LinePlot extends Plot {
         );
 
       this.selector
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("fill", "currentColor")
-        .attr("text-anchor", "start")
-        .attr("x", -this.height / 2)
-        .attr("y", YAXIS_LABEL_OFFSET)
-        .style("font-size", AXIS_FONT_SIZE)
-        .style("font-family", AXIS_FONT_FAMILY)
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'start')
+        .attr('x', -this.height / 2)
+        .attr('y', YAXIS_LABEL_OFFSET)
+        .style('font-size', AXIS_FONT_SIZE)
+        .style('font-family', AXIS_FONT_FAMILY)
         .text(`${this.plotProps.leftAxisLabel}→`);
     }
 
     // draw right axis and label
     if (dataOnRight.length) {
       this.selector
-        .append("g")
-        .attr("transform", `translate(${this.width - this.margin.right},0)`)
+        .append('g')
+        .attr('transform', `translate(${this.width - this.margin.right},0)`)
         .call(
-          d3.axisRight(this.rightAxis)
+          d3.axisRight(this.rightAxis),
           // .tickFormat((d) => {
           //   let prefix = d3.formatPrefix(".0", d);
           //   return prefix(d);
@@ -348,28 +348,28 @@ export class LinePlot extends Plot {
         );
 
       this.selector
-        .append("text")
-        .attr("transform", "rotate(90)")
-        .attr("x", this.height / 2)
-        .attr("y", -this.width + YAXIS_LABEL_OFFSET)
-        .attr("fill", "currentColor")
-        .attr("text-anchor", "start")
-        .style("font-size", AXIS_FONT_SIZE)
-        .style("font-family", AXIS_FONT_FAMILY)
+        .append('text')
+        .attr('transform', 'rotate(90)')
+        .attr('x', this.height / 2)
+        .attr('y', -this.width + YAXIS_LABEL_OFFSET)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'start')
+        .style('font-size', AXIS_FONT_SIZE)
+        .style('font-family', AXIS_FONT_FAMILY)
         .text(`←${this.plotProps.rightAxisLabel}`);
     }
 
     // draw plot title
     this.selector
-      .append("text")
-      .attr("fill", "currentColor")
-      .style("fill", "#696969")
-      .attr("text-anchor", "start")
-      .attr("font-weight", "bold")
-      .style("font-size", TITLE_FONT_SIZE)
-      .style("font-family", TITLE_FONT_FAMILY)
-      .attr("x", this.width / 2)
-      .attr("y", this.margin.top + MAGIC_NO)
+      .append('text')
+      .attr('fill', 'currentColor')
+      .style('fill', '#696969')
+      .attr('text-anchor', 'start')
+      .attr('font-weight', 'bold')
+      .style('font-size', TITLE_FONT_SIZE)
+      .style('font-family', TITLE_FONT_FAMILY)
+      .attr('x', this.width / 2)
+      .attr('y', this.margin.top + MAGIC_NO)
       .text(this.plotProps.title);
 
     return this;
@@ -385,7 +385,7 @@ export class LinePlot extends Plot {
         (d3.extent(data, (d: TimeSeriesPoint) => d.date) as [Date, Date]) || [
           new Date(),
           new Date(),
-        ]
+        ],
       )
       .nice()
       .range([m.left, w - m.right]);
@@ -407,7 +407,7 @@ export class LinePlot extends Plot {
    */
   public getCoordinates(
     date: Date,
-    lineIndex: number = 0
+    lineIndex: number = 0,
   ): [Coordinate, Coordinate] {
     const dataX = this.data[lineIndex];
     const index = findDateIdx(date, dataX);
@@ -427,6 +427,6 @@ export class LinePlot extends Plot {
   private getHorizontalAlign(date: Date): HorizontalAlign {
     const x = this.xAxis(date);
     const xMid = (this.xAxis.range()[0] + this.xAxis.range()[1]) / 2;
-    return x >= xMid ? "left" : "right";
+    return x >= xMid ? 'left' : 'right';
   }
 }

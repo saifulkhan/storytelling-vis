@@ -5,7 +5,7 @@ export type FeatureSearchProps = {
 };
 
 export const defaultFeatureSearchProps: FeatureSearchProps = {
-  metric: "",
+  metric: '',
   window: 10,
   smoothing: 10,
 };

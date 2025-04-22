@@ -29,14 +29,14 @@ export default [
       external(),
       resolve(),
       commonjs(),
-      typescript({ 
+      typescript({
         tsconfig: './tsconfig.build.json',
         sourceMap: true,
         declaration: true,
         declarationDir: 'dist',
         // Skip type checking to avoid TypeScript errors during build
         noEmitOnError: false,
-        exclude: ['src/pages/**/*']
+        exclude: ['src/pages/**/*'],
       }),
       babel({
         babelHelpers: 'runtime',
@@ -45,15 +45,13 @@ export default [
         presets: [
           '@babel/preset-env',
           '@babel/preset-react',
-          '@babel/preset-typescript'
+          '@babel/preset-typescript',
         ],
-        plugins: [
-          ['@babel/plugin-transform-runtime', { regenerator: true }]
-        ]
+        plugins: [['@babel/plugin-transform-runtime', { regenerator: true }]],
       }),
       terser(),
     ],
-    external: Object.keys(packageJson.peerDependencies || {})
+    external: Object.keys(packageJson.peerDependencies || {}),
   },
   {
     input: 'src/index.ts',
@@ -64,8 +62,8 @@ export default [
         // Fix paths in the declaration file
         afterBuild: () => {
           console.log('Fixing paths in declaration files...');
-        }
-      })
+        },
+      }),
     ],
   },
 ];

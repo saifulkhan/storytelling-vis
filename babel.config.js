@@ -3,7 +3,7 @@ module.exports = (api) => {
 
   api.cache.using(() => JSON.stringify({ target }));
 
-  const presets = ["next/babel"];
+  const presets = ['next/babel'];
   const plugins = [];
 
   return { presets, plugins };

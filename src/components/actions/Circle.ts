@@ -1,7 +1,7 @@
-import * as d3 from "d3";
-import { MSBActionName } from "./MSBActionName";
-import { MSBAction } from "./MSBAction";
-import { Coordinate } from "../../types";
+import * as d3 from 'd3';
+import { MSBActionName } from './MSBActionName';
+import { MSBAction } from './MSBAction';
+import { Coordinate } from '../../types';
 
 export type CircleProps = {
   size?: number;
@@ -13,7 +13,7 @@ export type CircleProps = {
 export const defaultCircleProps: CircleProps = {
   size: 10,
   strokeWidth: 2,
-  color: "#000000",
+  color: '#000000',
   opacity: 1,
 };
 
@@ -40,13 +40,13 @@ export class Circle extends MSBAction {
 
   public draw() {
     this.circleNode = d3
-      .create("svg")
-      .append("circle")
-      .attr("fill", "none")
-      .attr("r", this.props.size!)
-      .attr("stroke-width", this.props.strokeWidth!)
-      .attr("stroke", this.props.color!)
-      .attr("opacity", this.props.opacity!)
+      .create('svg')
+      .append('circle')
+      .attr('fill', 'none')
+      .attr('r', this.props.size!)
+      .attr('stroke-width', this.props.strokeWidth!)
+      .attr('stroke', this.props.color!)
+      .attr('opacity', this.props.opacity!)
       .node();
     this.node.appendChild(this.circleNode);
   }
@@ -56,8 +56,8 @@ export class Circle extends MSBAction {
     this.coordinate1 = coordinate[1];
 
     d3.select(this.circleNode)
-      .attr("cx", this.coordinate1[0])
-      .attr("cy", this.coordinate1[1]);
+      .attr('cx', this.coordinate1[0])
+      .attr('cy', this.coordinate1[1]);
 
     return this;
   }
@@ -69,8 +69,8 @@ export class Circle extends MSBAction {
   public move(
     coordinate: Coordinate,
     delay?: number | undefined,
-    duration?: number | undefined
+    duration?: number | undefined,
   ): Promise<any> {
-    throw new Error("Circle: move() not implemented!");
+    throw new Error('Circle: move() not implemented!');
   }
 }

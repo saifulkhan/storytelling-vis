@@ -1,5 +1,5 @@
-import * as d3 from "d3";
-import { Coordinate } from "../../types";
+import * as d3 from 'd3';
+import { Coordinate } from '../../types';
 
 export type PlotProps = {
   title?: string;
@@ -11,11 +11,11 @@ export type PlotProps = {
 };
 
 export const defaultPlotProps: PlotProps = {
-  title: "title...",
+  title: 'title...',
   ticks: true,
-  xLabel: "x axis label...",
-  rightAxisLabel: "right axis label...",
-  leftAxisLabel: "left axis label...",
+  xLabel: 'x axis label...',
+  rightAxisLabel: 'right axis label...',
+  leftAxisLabel: 'left axis label...',
   margin: { top: 50, right: 50, bottom: 60, left: 60 },
 };
 
@@ -40,7 +40,7 @@ export abstract class Plot {
 
   protected clean() {
     if (this.svg) {
-      d3.select(this.svg).selectAll("*").remove();
+      d3.select(this.svg).selectAll('*').remove();
     }
   }
 

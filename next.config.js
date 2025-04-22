@@ -1,6 +1,4 @@
-const withTM = require("next-transpile-modules")([
-  "@babel/preset-react",
-]);
+const withTM = require('next-transpile-modules')(['@babel/preset-react']);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -8,17 +6,21 @@ const nextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      use: [{
-        loader: "@svgr/webpack",
-        options: {
-          svgoConfig: {
-            plugins: [{
-              name: "removeViewBox",
-              active: false,
-            }],
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            svgoConfig: {
+              plugins: [
+                {
+                  name: 'removeViewBox',
+                  active: false,
+                },
+              ],
+            },
           },
         },
-      }],
+      ],
     });
 
     return config;

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import Head from "next/head";
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
 import {
   Button,
   Box,
@@ -9,29 +9,29 @@ import {
   InputLabel,
   SelectChangeEvent,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 
 import {
   FeatureActionTable,
   FeatureActionTableData,
   FeatureActionTableRow,
-} from "../../components";
+} from '../../components';
 
-import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
-import mlNumFATableMirrored from "../../assets/feature-action-table/ml-numerical-fa-table-line.json";
-import mlNumFATablePCP from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import mlNumFATableMirrored from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
+import mlNumFATablePCP from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
-type NumericalFATables = "Covid19" | "MLMirrored" | "MLPCP";
+type NumericalFATables = 'Covid19' | 'MLMirrored' | 'MLPCP';
 const tableDataMap: { [tableName: string]: FeatureActionTableData } = {
-  "Covid19 Single Location": covid19NumFATable,
-  "ML Provenance": mlNumFATableMirrored,
-  "ML Multivariate": mlNumFATablePCP,
+  'Covid19 Single Location': covid19NumFATable,
+  'ML Provenance': mlNumFATableMirrored,
+  'ML Multivariate': mlNumFATablePCP,
 };
 
 const FeatureActionTablesPage = () => {
   const [data, setData] = useState<FeatureActionTableRow[]>([]);
-  const [selectedTable, setSelectedTable] = useState<NumericalFATables | "">(
-    ""
+  const [selectedTable, setSelectedTable] = useState<NumericalFATables | ''>(
+    '',
   );
   const [tables, setTables] = useState<NumericalFATables[]>([]);
 
@@ -40,7 +40,7 @@ const FeatureActionTablesPage = () => {
       const _tables = Object.keys(tableDataMap) as NumericalFATables[];
       setTables(_tables);
       setSelectedTable(_tables[0]);
-      console.log("tables: ", _tables);
+      console.log('tables: ', _tables);
 
       await fetchTableData(_tables[0]);
     };
@@ -50,20 +50,20 @@ const FeatureActionTablesPage = () => {
 
   const fetchTableData = async (table: NumericalFATables) => {
     try {
-      console.log("table: ", table);
+      console.log('table: ', table);
       const tableData = tableDataMap[table] as FeatureActionTableRow[];
-      console.log("tableData: ", tableData);
+      console.log('tableData: ', tableData);
       setData(tableData);
     } catch (e) {
-      console.error("Failed to fetch table data:", e);
+      console.error('Failed to fetch table data:', e);
     }
   };
 
   const handleTableChange = async (
-    event: SelectChangeEvent<NumericalFATables | "">
+    event: SelectChangeEvent<NumericalFATables | ''>,
   ) => {
-    setSelectedTable(event.target.value as NumericalFATables | "");
-    if (event.target.value !== "") {
+    setSelectedTable(event.target.value as NumericalFATables | '');
+    if (event.target.value !== '') {
       fetchTableData(event.target.value as NumericalFATables);
     }
   };
@@ -84,7 +84,7 @@ const FeatureActionTablesPage = () => {
       <Box
         sx={{
           // backgroundColor: "background.default",
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -95,13 +95,13 @@ const FeatureActionTablesPage = () => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             mb: 4,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControl sx={{ width: 200 }}>
               <InputLabel id="table-select-label">Select Table</InputLabel>
               <Select
@@ -120,7 +120,7 @@ const FeatureActionTablesPage = () => {
             </FormControl>
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button variant="contained" disabled onClick={handleCreateTable}>
               New
             </Button>

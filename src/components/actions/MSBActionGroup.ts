@@ -1,6 +1,6 @@
-import { MSBAction } from "./MSBAction";
-import { ActionZOrder } from "./MSBActionName";
-import { Coordinate } from "../../types";
+import { MSBAction } from './MSBAction';
+import { ActionZOrder } from './MSBActionName';
+import { Coordinate } from '../../types';
 
 export class MSBActionGroup extends MSBAction {
   private actions: MSBAction[] = [];
@@ -26,7 +26,7 @@ export class MSBActionGroup extends MSBAction {
   public setCanvas(svg: SVGGElement) {
     this.actions.sort(
       (a: MSBAction, b: MSBAction) =>
-        ActionZOrder[b.getType()] - ActionZOrder[a.getType()]
+        ActionZOrder[b.getType()] - ActionZOrder[a.getType()],
     );
     // console.log("ActionGroup:setCanvas: ordered actions: ", this.actions);
     this.actions.map((d: MSBAction) => d.setCanvas(svg));
@@ -39,16 +39,20 @@ export class MSBActionGroup extends MSBAction {
   }
 
   public show(delay = 0, duration = 1000): Promise<number> {
-    const promises = this.actions.map((d: MSBAction) => d.show(delay, duration));
-    return Promise.all(promises).then(results => {
+    const promises = this.actions.map((d: MSBAction) =>
+      d.show(delay, duration),
+    );
+    return Promise.all(promises).then((results) => {
       // Return the maximum delay + duration value from all actions
       return Math.max(...results);
     });
   }
 
   public hide(delay = 0, duration = 1000): Promise<number> {
-    const promises = this.actions.map((d: MSBAction) => d.hide(delay, duration));
-    return Promise.all(promises).then(results => {
+    const promises = this.actions.map((d: MSBAction) =>
+      d.hide(delay, duration),
+    );
+    return Promise.all(promises).then((results) => {
       // Return the maximum delay + duration value from all actions
       return Math.max(...results);
     });
@@ -57,10 +61,10 @@ export class MSBActionGroup extends MSBAction {
   public move(
     coordinate: Coordinate,
     delay: number = 0,
-    duration: number = 1000
+    duration: number = 1000,
   ): Promise<any> {
     const promises = this.actions.map((d: MSBAction) =>
-      d.move(coordinate, delay, duration)
+      d.move(coordinate, delay, duration),
     );
     return Promise.all(promises);
   }

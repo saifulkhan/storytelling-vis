@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-import type { NextPage } from "next";
-import type { AppProps } from "next/app";
+import type { ReactNode } from 'react';
+import type { NextPage } from 'next';
+import type { AppProps } from 'next/app';
 
 type GetLayout = (page: ReactNode) => ReactNode;
 

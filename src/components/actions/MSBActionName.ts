@@ -1,8 +1,8 @@
 export enum MSBActionName {
-  DOT = "DOT",
-  CIRCLE = "CIRCLE",
-  TEXT_BOX = "TEXT_BOX",
-  CONNECTOR = "CONNECTOR",
+  DOT = 'DOT',
+  CIRCLE = 'CIRCLE',
+  TEXT_BOX = 'TEXT_BOX',
+  CONNECTOR = 'CONNECTOR',
 }
 
 export const ActionZOrder: Record<MSBActionName, number> = {

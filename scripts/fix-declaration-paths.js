@@ -8,7 +8,7 @@ const declarationFilePath = path.resolve(__dirname, '../dist/index.d.ts');
 let content = fs.readFileSync(declarationFilePath, 'utf8');
 
 // Replace all occurrences of 'src/' in import statements
-content = content.replace(/from ['"]src\//g, 'from \'./');
+content = content.replace(/from ['"]src\//g, "from './");
 
 // Write the modified content back to the file
 fs.writeFileSync(declarationFilePath, content, 'utf8');

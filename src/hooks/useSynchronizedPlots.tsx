@@ -2,14 +2,14 @@
  * Custom hook for synchronizing multiple plots in animation
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 export const useSynchronizedPlots = (plots: any[]) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const togglePlayPause = useCallback(() => {
     setIsPlaying((prev) => !prev);
-    plots.forEach(plot => {
+    plots.forEach((plot) => {
       if (plot && typeof plot.togglePlayPause === 'function') {
         plot.togglePlayPause();
       }
@@ -18,7 +18,7 @@ export const useSynchronizedPlots = (plots: any[]) => {
 
   const pause = useCallback(() => {
     setIsPlaying(false);
-    plots.forEach(plot => {
+    plots.forEach((plot) => {
       if (plot && typeof plot.pause === 'function') {
         plot.pause();
       }
@@ -27,13 +27,13 @@ export const useSynchronizedPlots = (plots: any[]) => {
 
   useEffect(() => {
     if (isPlaying) {
-      plots.forEach(plot => {
+      plots.forEach((plot) => {
         if (plot && typeof plot.play === 'function') {
           plot.play();
         }
       });
     } else {
-      plots.forEach(plot => {
+      plots.forEach((plot) => {
         if (plot && typeof plot.pause === 'function') {
           plot.pause();
         }
@@ -41,7 +41,7 @@ export const useSynchronizedPlots = (plots: any[]) => {
     }
 
     return () => {
-      plots.forEach(plot => {
+      plots.forEach((plot) => {
         if (plot && typeof plot.pause === 'function') {
           plot.pause();
         }
@@ -51,5 +51,3 @@ export const useSynchronizedPlots = (plots: any[]) => {
 
   return { isPlaying, togglePlayPause, pause };
 };
-
- 

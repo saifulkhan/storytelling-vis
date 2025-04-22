@@ -2,7 +2,7 @@
  * Custom hook for managing play/pause loop
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 export const usePlayPauseLoop = (obj: any) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -31,4 +31,3 @@ export const usePlayPauseLoop = (obj: any) => {
 
   return { isPlaying, togglePlayPause, pause };
 };
-

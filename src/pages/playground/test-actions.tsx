@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import Head from "next/head";
-import { Box } from "@mui/material";
-import * as d3 from "d3";
+import React, { useEffect, useRef, useState } from 'react';
+import Head from 'next/head';
+import { Box } from '@mui/material';
+import * as d3 from 'd3';
 
-import { Coordinate } from "src/types/Coordinate";
-import { Dot } from "src/components/actions/Dot";
-import { TextBox } from "src/components/actions/TextBox";
-import { Connector } from "src/components/actions/Connector";
-import { Circle } from "src/components/actions/Circle";
-import { MSBActionGroup } from "src/components/actions/MSBActionGroup";
+import { Coordinate } from 'src/types/Coordinate';
+import { Dot } from 'src/components/actions/Dot';
+import { TextBox } from 'src/components/actions/TextBox';
+import { Connector } from 'src/components/actions/Connector';
+import { Circle } from 'src/components/actions/Circle';
+import { MSBActionGroup } from 'src/components/actions/MSBActionGroup';
 
 const TestActionsPage = () => {
   const chartRef = useRef(null);
@@ -34,7 +34,7 @@ const TestActionsPage = () => {
       const dot = new Dot()
         .setProps({
           size: 5,
-          color: "#FF0000",
+          color: '#FF0000',
           opacity: 0.5,
         })
         .setCanvas(chartRef.current)
@@ -44,7 +44,7 @@ const TestActionsPage = () => {
       const circle = new Circle()
         .setProps({
           size: 10,
-          color: "green",
+          color: 'green',
           opacity: 1,
         })
         .setCanvas(chartRef.current)
@@ -53,12 +53,12 @@ const TestActionsPage = () => {
 
       const textBox1 = new TextBox()
         .setProps({
-          title: "17-02-2024",
+          title: '17-02-2024',
           message:
-            "By 17-02-2024, the number of cases continued to climb higher in Oxford.",
-          horizontalAlign: "right",
-          verticalAlign: "top",
-          backgroundColor: "lightgrey",
+            'By 17-02-2024, the number of cases continued to climb higher in Oxford.',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          backgroundColor: 'lightgrey',
         })
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst1])
@@ -75,9 +75,9 @@ const TestActionsPage = () => {
       //
 
       const textbox2 = new TextBox().setProps({
-        horizontalAlign: "right",
-        verticalAlign: "top",
-        backgroundColor: "lightgrey",
+        horizontalAlign: 'right',
+        verticalAlign: 'top',
+        backgroundColor: 'lightgrey',
         width: 100,
       });
       const actions = [new Dot().setProps(), new Circle().setProps(), textbox2];
@@ -111,13 +111,13 @@ const TestActionsPage = () => {
       <Box
         sx={{
           // backgroundColor: "background.default",
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
         <svg
           ref={chartRef}
-          style={{ width: width, height: height, border: "1px solid" }}
+          style={{ width: width, height: height, border: '1px solid' }}
         ></svg>
       </Box>
     </>

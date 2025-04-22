@@ -1,5 +1,5 @@
-import * as d3 from "d3";
-import { TimeSeriesPoint, TimeSeriesData } from "../types/TimeSeriesPoint";
+import * as d3 from 'd3';
+import { TimeSeriesPoint, TimeSeriesData } from '../types/TimeSeriesPoint';
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
@@ -7,7 +7,7 @@ export function mean(data: number[]): number {
 
 export function sortTimeseriesData(
   data: TimeSeriesData,
-  key: keyof TimeSeriesPoint
+  key: keyof TimeSeriesPoint,
 ): TimeSeriesData {
   // sort data by selected key, e.g, "kernel_size"
   return data
@@ -21,13 +21,13 @@ export function sortTimeseriesData(
       return item;
     })
     .sort((a, b) => d3.ascending(a[key], b[key]))
-    .sort((a, b) => d3.ascending(a["date"], b["date"]));
+    .sort((a, b) => d3.ascending(a['date'], b['date']));
 }
 
 export function sliceTimeseriesByDate(
   data: TimeSeriesData,
   start: Date,
-  end: Date
+  end: Date,
 ): TimeSeriesData {
   return data.filter((item) => item.date >= start && item.date <= end);
 }
@@ -37,17 +37,17 @@ interface FilterCondition {
 }
 
 export function createPredicate(
-  predicateString: string
+  predicateString: string,
 ): FilterCondition | null {
   try {
     // wrapping the predicateString in a function and returning the predicate function
     const predicateFunction = new Function(
-      "obj",
-      `return ${predicateString};`
+      'obj',
+      `return ${predicateString};`,
     ) as FilterCondition;
     return predicateFunction;
   } catch (error) {
-    console.error("Error creating predicate function:", error);
+    console.error('Error creating predicate function:', error);
     return null;
   }
 }
@@ -77,7 +77,7 @@ export function findIndexOfDate(data: TimeSeriesData, date: Date): number {
 
 export function getTimeSeriesPointByDate(
   date: Date,
-  data: TimeSeriesData
+  data: TimeSeriesData,
 ): TimeSeriesPoint | undefined {
   const idx = findDateIdx(date, data);
   return data[idx];
@@ -88,7 +88,7 @@ export function getTimeSeriesPointByDate(
  **/
 export function findIndicesOfDates(
   data: TimeSeriesData,
-  dates: Date[]
+  dates: Date[],
 ): number[] {
   const indices: number[] = [];
 
@@ -108,7 +108,7 @@ export function findIndicesOfDates(
 export function setOrUpdateMap<K, V>(
   map: Map<K, V[] | Array<V>>,
   key: K,
-  value: V
+  value: V,
 ): void {
   if (map.has(key)) {
     const existingValue = map.get(key);
@@ -122,7 +122,7 @@ export function setOrUpdateMap<K, V>(
 }
 
 export function sortObjectKeysInPlace<T extends Record<string, any>>(
-  obj: T
+  obj: T,
 ): T {
   let keys = Object.keys(obj);
   keys.sort();
@@ -140,7 +140,7 @@ export function sortObjectKeysInPlace<T extends Record<string, any>>(
 export function getObjectKeysArray(obj: any[]): string[] {
   // function to check if a value is an object
   const isObject = (value: unknown): boolean => {
-    return value !== null && typeof value === "object" && !Array.isArray(value);
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
   };
 
   // ensure the array is not empty and contains objects
@@ -158,8 +158,8 @@ export function maxIndex<T>(
   valueof?: (
     value: T,
     index: number,
-    array: Iterable<T>
-  ) => number | null | undefined
+    array: Iterable<T>,
+  ) => number | null | undefined,
 ): number {
   let max: number | undefined;
   let maxIndex = -1;
@@ -190,8 +190,8 @@ export function minIndex<T>(
   valueof?: (
     value: T,
     index: number,
-    array: Iterable<T>
-  ) => number | null | undefined
+    array: Iterable<T>,
+  ) => number | null | undefined,
 ): number {
   let min: number | undefined;
   let minIndex = -1;
@@ -226,7 +226,7 @@ export function normalise(data: number[]) {
     .slice(1)
     .reduce(
       (res, d) => [Math.min(d, res[0]), Math.max(d, res[1])],
-      [data[0], data[0]]
+      [data[0], data[0]],
     );
 
   // normalise y values to be between 0 and 1
@@ -238,7 +238,7 @@ export function scaleValue(
   minInput: number,
   maxInput: number,
   minOutput: number,
-  maxOutput: number
+  maxOutput: number,
 ): number {
   return (
     ((value - minInput) / (maxInput - minInput)) * (maxOutput - minOutput) +
