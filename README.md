@@ -1,6 +1,57 @@
-Meta-Storyboarding Using Feature-Action Design Pattern. The GitHub code is available at <https://github.com/saifulkhan/meta-storyboard>.
+# Meta-Storyboard
 
-# API User Guide
+
+[![npm version](https://img.shields.io/npm/v/meta-storyboard.svg)](https://www.npmjs.com/package/meta-storyboard)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-meta--storyboard-181717.svg?style=flat&logo=github)](https://github.com/saifulkhan/meta-storyboard)
+<!-- [![Build Status](https://github.com/saifulkhan/meta-storyboard/actions/workflows/ci.yml/badge.svg)](https://github.com/saifulkhan/meta-storyboard/actions) -->
+
+A TypeScript library and application for building interactive, animated data stories using the Feature-Action design pattern. Visualize time series and multivariate data through reusable charts, plots, and storyboarding components. Built with TypeScript and D3.js.
+
+---
+
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Examples](#examples)
+  - [Stories](#stories)
+  - [Playground (Component Testing)](#playground-component-testing)
+- [Project Structure](#project-structure)
+- [Meta-Storyboard (MSB) API](#meta-storyboard-msb-api)
+  - [Feature Action Table Data Structures](#feature-action-table-data-structures)
+  - [MSB Action API](#msb-action-api)
+  - [Animated Plots API](#animated-plots-api)
+  - [Creating Story](#creating-story)
+  - [Feature Action Tables UI](#feature-action-tables-ui)
+- [Build & Release](#build--release)
+- [Contribution](#contribution)
+- [License](#license)
+- [Support](#support)
+- [References](#references)
+
+---
+
+## Overview
+Meta-Storyboard enables rapid creation of interactive data stories by combining feature detection, action annotation, and animated visualizations. It is designed for researchers, data scientists, and developers who want to craft compelling narratives from complex time series or machine learning data.
+
+- **Feature-Action Pattern**: Annotate features (e.g., peaks, anomalies) and map them to visual actions (e.g., highlight, connect, animate).
+- **Rich Visualizations**: Includes line plots, mirrored bar charts, parallel coordinates, and more.
+- **Composable & Extensible**: Modular components for custom UIs and stories.
+- **TypeScript & MUI**: Type-safe, modern design.
+
+---
+
+## Features
+- 🟢 **Feature Detection**: Built-in peak and event detection utilities.
+- 🟣 **Action Mapping**: Map features to visual actions (dots, circles, connectors, text boxes, etc.).
+- 🔵 **Animated Plots**: Animate transitions and storytelling sequences.
+<!-- - 🟠 **Interactive Tables**: UI for editing feature-action tables. -->
+- 🟡 **Extensible Components**: Easily add new plot or action types.
+- 🟤 **Example Stories and Playground**: Test and explore components in isolation.
+
+---
 
 ## Installation
 
@@ -8,58 +59,57 @@ Meta-Storyboarding Using Feature-Action Design Pattern. The GitHub code is avail
 npm install meta-storyboard
 # or
 yarn add meta-storyboard
-
 ```
-
-## Story Development
-
-Story development is four step process:
-
-1. Load data and feature-action table
-
-   1.1 Load timeseries data, see some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
-
-   1.2 Load feature-action table, see some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
-
-2. Create timeline actions using `MSBFeatureActionFactory` class which take the timeseries data and feature-action table as input.
-
-3. Create story by creating a plot, and setting its data and plot properties. Some plots we implemented are, e.g., `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
-
-4. Use play and pause button to animate the story, see the play-pause hooks in GitHub repository `src/hooks/`.
-
-The above steps are shown in the following example template:
-
-```ts
-// 1.1
-const data = <time series data>;
-
-// 1.2
-const featureActionTable = <numerical feature-action table>;
-
-// 2.
-const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
-  .setFAProps(<set some properties>)
-  .setTable(featureActionTable) // <- feature-action table
-  .setData(data) // <- timeseries data
-  .create();
-
-// 3
-const plot = new <plot type()>
-  .setData(data) // <- timeseries data
-  .setName(<name of the plot>)
-  .setPlotProps(<plot properties>)
-  .setLineProps([])
-  .setCanvas(<canvas reference>)
-  .setActions(timelineMSBActions);
-
-// 4.
-onClick={togglePlayPause}
-
-```
-
-See three implemented stories in GitHub repository `src/pages/example/` as example.
 
 ---
+
+## Quick Start
+
+
+Story development is a four-step process:
+
+1. **Load data and feature-action table**:
+
+   1.1 **Load timeseries data**: See some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
+
+   1.2 **Load feature-action table**: See some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
+
+2. **Create timeline actions**: Use the `MSBFeatureActionFactory` class to create timeline actions from the timeseries data and feature-action table.
+
+3. **Create story**: Create a plot and set its data and plot properties. We provide some example plots such as `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
+
+4. **Animate the story**: Use play and pause button to animate the story. See example hooks in GitHub repository `src/hooks/`.
+
+For example,
+
+```tsx
+import { LinePlot, MSBFeatureActionFactory } from 'meta-storyboard';
+
+// 1. Load your data and feature-action table
+const data = ...; // time series data
+const featureActionTable = ...; // feature-action table
+
+// 2. Create timeline actions
+const timelineMSBActions = new MSBFeatureActionFactory()
+  .setFAProps({ /* properties */ })
+  .setTable(featureActionTable)
+  .setData(data)
+  .create();
+
+// 3. Create a plot and set its data/properties
+const plot = new LinePlot()
+  .setData(data)
+  .setName('My Plot')
+  .setPlotProps({ /* plot properties */ })
+  .setCanvas(svgRef)
+  .setActions(timelineMSBActions);
+
+// 4. Animate
+onClick={togglePlayPause};
+```
+
+See more complete examples in [`src/pages/example/`](src/pages/example/) and the [Playground](#usage-examples).
+
 
 ---
 
@@ -89,60 +139,61 @@ yarn install
 yarn dev
 ```
 
-Open <http://localhost:3000> in your browser and access the following list of UIs:
+Open <http://localhost:3000> in your browser and access the following examples stories:
 
-**Example Stories:**
+## Examples
 
-- <http://localhost:3000/example/story-covid19-single>
-- <http://localhost:3000/example/story-ml-mirorred-bar>
-- <http://localhost:3000/example/story-ml-pcp>
+### Stories
+- [COVID-19 Case Story](http://localhost:3000/example/story-covid19-single)
+- [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-single-gaussian)
+- [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
+- [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
+- [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
 
-- <http://localhost:3000/example/feature-action-tables> : Experimental table to create feature-action tables using a UI
+### Playground (Component Testing)
+- [Test Actions](http://localhost:3000/playground/test-actions)
+- [Test Features](http://localhost:3000/playground/test-features)
+- [Test Line Plot](http://localhost:3000/playground/test-line-plot)
+- [Test Play/Pause Loop](http://localhost:3000/playground/test-play-pause-loop)
+- [Test Categorical Features to Gaussian](http://localhost:3000/playground/test-categorical-features-to-gaussian)
+- [Test Numerical Features to Gaussian](http://localhost:3000/playground/test-numerical-features-to-gaussian)
+- [Test Gaussian Combined](http://localhost:3000/playground/test-gaussian-combined)
+- [Test Action Properties Table](http://localhost:3000/playground/test-action-properties-table)
+- [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
 
-**Playground (testing various components):**
+---
 
-- <http://localhost:3000/playground/test-action-properties-table>
-- <http://localhost:3000/playground/test-action-table>
-- <http://localhost:3000/playground/test-actions>
-- <http://localhost:3000/playground/test-feature-properties-table>
-- <http://localhost:3000/playground/test-features>
-- <http://localhost:3000/playground/test-gaussian-combined>
-- <http://localhost:3000/playground/test-categorical-features-to-gaussian>
-- <http://localhost:3000/playground/test-numerical-features-to-gaussian>
-- <http://localhost:3000/playground/test-line-plot>
-- <http://localhost:3000/playground/test-play-pause-loop>
+## Testing
 
-### Tests
-
-Execute unit tests:
-
-```sh
+Run unit tests:
+```bash
 yarn test
 ```
+_Note: Unit tests are under development and may not cover all features._
 
-Note: unit tests are under development and may not cover all features.
+---
 
-## Code Structure
-
-The project is structured following React and Next.js guidelines and practices.
+## Project Structure
 
 ```
-.
+meta-storyboard/
 ├── doc
-└── src
-    ├── components              /* UI or VIS components */
-    │   ├── actions             /* MSB actions */
-    │   ├── plots               /* Story plots */
-    │   └── tables              /* Feature-action table (experimental) */
-    ├── hooks                   /* Custom hooks for animation control */
-    ├── pages
-    │   ├── example             /* Example stories */
-    │   └── playground          /* Pages for testing components */
-    ├── types                   /* TypeScript types */
-    └── utils
-        ├── data-processing     /* Data processing, gaussian */
-        └── feature-action      /* Feature-action utilities */
+├── src
+│   ├── components
+│   │   ├── actions      # Visualization action components (Circle, Connector, Dot, etc.)
+│   │   ├── plots        # Plot components (LinePlot, MirroredBarChart, etc.)
+│   │   └── tables       # Tables for features/actions
+│   ├── hooks            # Custom React hooks (e.g., play-pause)
+│   ├── pages            # Next.js pages (examples, playground, etc.)
+│   └── utils
+│       ├── data-processing   # Data processing utilities (Gaussian, etc.)
+│       └── feature-action    # Feature/action utilities
+├── public
+├── package.json
+└── README.md
 ```
+
+
 
 ## Meta-Storyboard (MSB) API
 
@@ -399,41 +450,55 @@ new LinePlot()
 
 This is an experimental feature and incomplete functionality. To add a new table, see `src/services/TableService.ts`
 
-## Building and Publishing the Library
+## Build & Release
 
+To build the library:
 ```bash
 yarn install
 yarn build:lib
 ```
 
-**Publishing to npm**
-
-Publish the library to npm:
-
+To publish to npm:
 ```bash
 npm login
 npm publish
 ```
 
-Then install it in your project (as discussed earlier).
+---
+
+## Contribution
+
+Contributions are welcome! Please open issues or pull requests on [GitHub](https://github.com/saifulkhan/meta-storyboard). For major changes, please discuss them via issue first.
 
 ---
 
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
 ---
 
-# Support
+## Support
 
-If you want to use this code and need help please reach out to me via GitHub issues [⤴](https://github.com/saifulkhan/meta-storyboard/issues). Also, please refer to the previous code and notebooks for additional plots and early prototypes.
+If you need help, open a [GitHub issue](https://github.com/saifulkhan/meta-storyboard/issues). For additional plots and early prototypes, see:
+- [Observable notebook prototype](https://observablehq.com/d/0a6e9c35a809660e)
+- [First React.js prototype](https://github.com/saifulkhan/storytelling-vis-v.0.1)
 
-The first version of the prototype was done in Observable notebook in [⤴](https://observablehq.com/d/0a6e9c35a809660e). The second version of the prototype ported from Observable Notebook to React.js in GitHub[⤴](https://github.com/saifulkhan/storytelling-vis-v.0.1). The previous prototypes contain six stories, however, we only ported three stories to this repository.
+---
 
 ## References
 
-This project used d3.js[⤴](https://d3js.org/), React.js[⤴](https://react.dev), Next.js[⤴](https://github.com/vercel/next.js), Material UI[⤴](https://mui.com), and other libraries.
+- [d3.js](https://d3js.org/)
+- [React.js](https://react.dev)
+- [Next.js](https://github.com/vercel/next.js)
+- [Material UI](https://mui.com)
 
-Our work is detailed in the paper titled "Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data"[⤴](https://arxiv.org/abs/2402.03116v1). Please cite our paper as follows:
+Our work is described in:
+> Khan, S., Jones, S., Bach, B., Cha, J., Chen, M., Meikle, J., Roberts, J. C., Thiyagalingam, J., Wood, J., & Ritsos, P. D. (2024). Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data. _arXiv preprint arXiv:2402.03116_.
 
-```
+Please cite our paper as follows:
+
+```bibtex
 @article{khan2024,
     title={Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data},
     author={S. Khan and S. Jones and B. Bach and J. Cha and M. Chen and J. Meikle and J. C. Roberts and J. Thiyagalingam and J. Wood and P. D. Ritsos},
