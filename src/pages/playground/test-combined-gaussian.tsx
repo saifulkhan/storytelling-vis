@@ -15,20 +15,28 @@ import { TimeSeriesData } from '../../types';
 import {
   CategoricalFeature,
   generateGaussForPeaks,
-  Peak,
   searchPeaks,
-  segmentTimeSeries,
-} from '../../utils';
-import {
+  segmentByImportantPeaks1,
   combineSeries,
   segmentByImportantPeaks,
   maxAcrossSeries,
   generateGaussForCatFeatures,
+  gmm,
+  Peak,
+  findCategoricalFeatureByDate,
+  findClosestCategoricalFeature,
 } from '../../utils';
-import { Dot, getSchemeTableau10, LinePlot, LineProps } from '../../components';
+import {
+  Circle,
+  Dot,
+  getSchemeTableau10,
+  LinePlot,
+  LineProps,
+} from '../../components';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
+import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -44,6 +52,7 @@ const TestCombinedGaussianPage = () => {
   const [categoricalFeatures, setCategoricalFeatures] = useState<
     CategoricalFeature[]
   >([]);
+  const [numericalFATable, setNumericalFATable] = useState<any>(null);
 
   // slider formatted value
   const valuetext = (value: number) => `${value}`;
@@ -52,7 +61,7 @@ const TestCombinedGaussianPage = () => {
     if (!chartRef.current) return;
 
     try {
-      // 1. Get timeseries data for all regions.
+      // 1.1 Get timeseries data for all regions.
       const casesData = Object.fromEntries(
         Object.entries(covid19CasesData || {}).map(([region, data]) => [
           region,
@@ -69,9 +78,9 @@ const TestCombinedGaussianPage = () => {
         casesData,
       );
 
-      // 2. Get categorical features
+      // 1.2 Get categorical features
       setCategoricalFeatures(
-        covid19CategoricalData.map((d) =>
+        covid19CategoricalFATable.map((d) =>
           new CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
@@ -79,6 +88,10 @@ const TestCombinedGaussianPage = () => {
         ),
       );
       console.log('Categorical features: ', categoricalFeatures);
+
+      // 1.3 Get numerical feature-action table
+      setNumericalFATable(covid19NumFATable);
+      console.log('Numerical feature-action table: ', numericalFATable);
 
       setRegion('Bolton');
     } catch (error) {
@@ -91,20 +104,84 @@ const TestCombinedGaussianPage = () => {
 
     const data = casesData[region];
 
+    //
+    // --- Test individual Gaussian generation functions ---
+    //
+
+    // Generate Gaussian time series for numerical peaks
     const ntsGauss: TimeSeriesData[] = generateGaussForPeaks(data);
+    // Generate Gaussian time series for categorical features
     const ctsGauss: TimeSeriesData[] = generateGaussForCatFeatures(
       data,
       categoricalFeatures,
     );
+    // Compute the maximum value across all numerical and categorical Gaussian series
     const ntsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ntsGauss);
     const ctsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ctsGauss);
-
     console.log('ntsBoundGauss:', ntsBoundGauss);
     console.log('ctsBoundGauss:', ctsBoundGauss);
-
-    const combined = combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
+    // Combine the bounded Gaussian series into a single time series
+    let combined = combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
     console.log('combined:', combined);
 
+    //
+    // --- Test the all-in-one GMM function ---
+    //
+
+    // Use the gmm function to generate and combine Gaussian series in one step
+    combined = gmm(data, categoricalFeatures);
+    console.log('combined:', combined);
+
+    //
+    // --- Test segmentation - we have two functions implemented slightly differently ---
+    //
+
+    // Option-1: Using segmentByImportantPeaks with k=4 segments
+    const segmentPoints1 = segmentByImportantPeaks(combined, segment, 0.15);
+    console.log('Segmentation points (method 1):', segmentPoints1);
+
+    // Option-2: Using segmentByImportantPeaks1 with user-defined segment count
+    const segmentPoints2 = segmentByImportantPeaks1(combined, segment, 0.15);
+    console.log('Segmentation points (method 2):', segmentPoints2);
+
+    // Find categorical features at segmentation points
+    const featuresAtSegmentPoints1 = segmentPoints1.map((point) => {
+      const feature = findClosestCategoricalFeature(
+        categoricalFeatures,
+        point.date,
+      );
+      return {
+        segmentIndex: point.idx,
+        date: point.date,
+        feature: feature ? feature.getDescription() : 'No feature found',
+      };
+    });
+    console.log(
+      'Categorical features at segmentation points (method 1):',
+      featuresAtSegmentPoints1,
+    );
+
+    const featuresAtSegmentPoints2 = segmentPoints2.map((point) => {
+      const feature = findClosestCategoricalFeature(
+        categoricalFeatures,
+        point.date,
+      );
+      return {
+        segmentIndex: point.idx,
+        date: point.date,
+        feature: feature ? feature.getDescription() : 'No feature found',
+      };
+    });
+    console.log(
+      'Categorical features at segmentation points (method 2):',
+      featuresAtSegmentPoints2,
+    );
+
+    //
+    // --- Draw everything ---
+    //
+
+    // show original timeseries, gaussians, and combined
     const plot = new LinePlot()
       .setData([data, ntsBoundGauss, ctsBoundGauss, combined])
       .setPlotProps({
@@ -134,42 +211,83 @@ const TestCombinedGaussianPage = () => {
       .setCanvas(chartRef.current)
       .plot();
 
-    // Use deltaMax = 0.15 (15% of data length) as the minimum gap between peaks
-    const [peaks, ordering]: [Peak[], { idx: number; h: number }[]] =
-      segmentByImportantPeaks(combined, 0.15);
-
-    console.log('peaks:', peaks);
-    console.log('ordering:', ordering);
-
-    const peaksIndices = segmentTimeSeries(combined, segment, 0.15);
-    console.log('peaksIndices:', peaksIndices);
-
+    // show peaks for debugging purpose
+    const peaks: Peak[] = searchPeaks(data);
     peaks.forEach((d: Peak, i: number) => {
       if (!chartRef.current) return;
 
-      console.log('i:', i);
       new Dot()
         .setProps({
-          size: 8,
+          size: 4,
           color: 'blue',
-          opacity: i < segment - 1 ? 1 : 0.2,
+          opacity: 0.5,
         })
         .setCanvas(chartRef.current)
         .setCoordinate(plot.getCoordinates(d.getDate(), 3))
         .show();
     });
 
-    peaksIndices.forEach((d: number) => {
+    // Visualize segmentation points from method 1
+    segmentPoints1.forEach((point) => {
       if (!chartRef.current) return;
-      new Dot()
+      new Circle()
         .setProps({
-          size: 10,
-          color: 'red',
-          opacity: 0.5,
+          size: 8,
+          color: 'blue',
+          opacity: 1,
         })
         .setCanvas(chartRef.current)
-        .setCoordinate(plot.getCoordinates(data[d].date, 3))
+        .setCoordinate(plot.getCoordinates(point.date, 3))
         .show();
+
+      // If there's a categorical feature at this point, add a label or different visualization
+      const feature = findClosestCategoricalFeature(
+        categoricalFeatures,
+        point.date,
+      );
+      if (feature) {
+        new Circle()
+          .setProps({
+            size: 12,
+            color: 'green',
+            opacity: 1,
+          })
+          .setCanvas(chartRef.current)
+          .setCoordinate(plot.getCoordinates(point.date, 3))
+          .show();
+      }
+    });
+
+    // Visualize segmentation points from method 2
+    segmentPoints2.forEach((point) => {
+      if (!chartRef.current) return;
+
+      new Circle()
+        .setProps({
+          size: 16,
+          color: 'red',
+          opacity: 1,
+        })
+        .setCanvas(chartRef.current)
+        .setCoordinate(plot.getCoordinates(point.date, 3))
+        .show();
+
+      // If there's a categorical feature at this point, add a label or different visualization
+      const feature = findClosestCategoricalFeature(
+        categoricalFeatures,
+        point.date,
+      );
+      if (feature) {
+        new Circle()
+          .setProps({
+            size: 20,
+            color: 'orange',
+            opacity: 1,
+          })
+          .setCanvas(chartRef.current)
+          .setCoordinate(plot.getCoordinates(point.date, 3))
+          .show();
+      }
     });
 
     return () => {};

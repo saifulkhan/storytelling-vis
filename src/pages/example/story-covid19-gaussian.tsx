@@ -27,10 +27,11 @@ import { blue } from '@mui/material/colors';
 import { TimeSeriesData, TimelineMSBActions } from '../../types';
 import { LinePlot } from '../../components';
 import { usePlayPauseLoop } from '../../hooks';
-import { MSBFeatureActionFactory } from '../../utils';
+import { CategoricalFeature, combineSeries, generateGaussForCatFeatures, generateGaussForPeaks, maxAcrossSeries, MSBFeatureActionFactory } from '../../utils';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
 
 const StoryCovid19Gaussian = () => {
   const WIDTH = 1200,
@@ -46,7 +47,10 @@ const StoryCovid19Gaussian = () => {
     {},
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
-
+  const [categoricalFeatures, setCategoricalFeatures] = useState<
+    CategoricalFeature[]
+  >([]);
+  
   const plot = useRef(new LinePlot()).current;
   const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
 
@@ -55,7 +59,7 @@ const StoryCovid19Gaussian = () => {
     setLoading(true);
 
     try {
-      // 1.1 Get timeseries data for all regions.
+      // 1.1 Load timeseries data for all regions.
       const casesData = Object.fromEntries(
         Object.entries(covid19CasesData || {}).map(([region, data]) => [
           region,
@@ -68,8 +72,18 @@ const StoryCovid19Gaussian = () => {
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
 
-      // 1.2 Load feature-action table a JSON file.
+      // 1.2 Load numerical feature-action table
       setNumericalFATable(covid19NumFATable);
+
+      // 1.3 Load categorical feature table
+      setCategoricalFeatures(
+        covid19CategoricalData.map((d) =>
+          new CategoricalFeature()
+            .setDate(new Date(d.date))
+            .setRank(d.rank)
+            .setDescription(d.event),
+        ),
+      );
 
       console.log('Cases data: ', casesData);
       console.log('Numerical feature-action table data: ', numericalFATable);
@@ -83,9 +97,12 @@ const StoryCovid19Gaussian = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
-    // 1.1.a Get timeseries data of a single region.
+    // 1.1 Get timeseries data of a single region.
     const data = casesData[region];
     console.log(`Selected region ${region}'s data: ${data}`);
+
+    const combined = gmm(data, categoricalFeatures);
+      
 
     // 2. Create timeline actions
     const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
@@ -279,3 +296,7 @@ const StoryCovid19Gaussian = () => {
 };
 
 export default StoryCovid19Gaussian;
+function gmm(data: TimeSeriesData, categoricalFeatures: CategoricalFeature[]) {
+  throw new Error('Function not implemented.');
+}
+

@@ -53,7 +53,7 @@ const TestCFToGaussianPage = () => {
         casesData,
       );
 
-      // 2. Get categorical features
+      // 2. Load categorical features
       setCategoricalFeatures(
         covid19CategoricalData.map((d) =>
           new CategoricalFeature()

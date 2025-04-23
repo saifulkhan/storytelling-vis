@@ -1,10 +1,42 @@
-import { TimeSeriesData } from '../../types/';
+import { TimeSeriesData, TimeSeriesPoint } from '../../types/';
 import { findDateIdx } from '../common';
 import { Peak, searchPeaks, CategoricalFeature } from '../feature-action';
 import { rankPeaksByNormHeight } from './ranking';
 
 // TODO: These magic numbers should be defined better way
 const WINDOW_SIZE = 10;
+
+/**
+ * Generates a combined Gaussian Mixture Model (GMM) time series from numerical and categorical features.
+ *
+ * This function creates Gaussian curves for both numerical peaks and categorical features in the input time series data.
+ * It then computes the maximum value across all generated Gaussian series for each type (numerical and categorical),
+ * and finally combines these into a single time series using the provided combineSeries utility.
+ *
+ * @param {TimeSeriesData} data - The input time series data to process.
+ * @param {CategoricalFeature[]} categoricalFeatures - The categorical features to include in Gaussian generation.
+ * @returns {TimeSeriesData} The combined time series data representing the GMM.
+ */
+export function gmm(
+  data: TimeSeriesData,
+  categoricalFeatures: CategoricalFeature[],
+): TimeSeriesData {
+  const ntsGauss: TimeSeriesData[] = generateGaussForPeaks(data);
+  const ctsGauss: TimeSeriesData[] = generateGaussForCatFeatures(
+    data,
+    categoricalFeatures,
+  );
+  const ntsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ntsGauss);
+  const ctsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ctsGauss);
+
+  console.log('gmm: ntsBoundGauss:', ntsBoundGauss);
+  console.log('gmm: ctsBoundGauss:', ctsBoundGauss);
+
+  const combined = combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
+  console.log('gmm: combined:', combined);
+
+  return combined;
+}
 
 /**
  * Generates Gaussian time series curves for each detected peak in the input data.
@@ -113,4 +145,97 @@ function gaussian(μ: number, h: number, len: number, w?: number): number[] {
     gauss[i] = h * Math.exp(-((i - μ) ** 2) / (2 * σ ** 2));
   }
   return gauss;
+}
+
+/**
+ * Computes the upper envelope (maximum y-value at each time point) across multiple gaussian timeseries.
+ *
+ * Given an array of time series (e.g., Gaussian curves), this function finds, for each time index,
+ * the maximum y-value across all series and constructs a new time series with these maxima.
+ *
+ * @param referenceData - The reference time series providing the date values for the output.
+ * @param inputSeries - An array of time series (arrays of {date, y}) to compare.
+ * @returns A new time series where each point contains the date from the reference series and the maximum y-value across all input series at that index.
+ */
+export function maxAcrossSeries(
+  referenceData: TimeSeriesData,
+  inputSeries: TimeSeriesData[],
+): TimeSeriesData {
+  const featuresGauss = inputSeries.map((g) => g.map((d) => d.y ?? 0));
+  // console.log('featuresGauss: ', featuresGauss);
+
+  const len = featuresGauss[0].length;
+  const maxValues = Array(len).fill(Number.NEGATIVE_INFINITY);
+
+  featuresGauss.forEach((g) =>
+    g.forEach(
+      (d, i) =>
+        typeof d === 'number' &&
+        !isNaN(d) &&
+        (maxValues[i] = Math.max(maxValues[i], d)),
+    ),
+  );
+
+  // console.log('maxValues: ', maxValues);
+
+  return maxValues.map((d, i) => ({
+    date: referenceData[i].date,
+    y: d,
+  }));
+}
+
+/**
+ * Combines multiple time series into a single representative timeseries.
+ *
+ * This versatile function can:
+ * 1. Compute the average (mean) of multiple time series
+ * 2. Create a new timeseries with values derived from multiple input series
+ *
+ * It handles both raw numeric arrays and TimeSeriesData objects, extracting y-values
+ * when needed and mapping the result back to the original date format.
+ *
+ * @param referenceData - The reference timeseries providing the date values for the output.
+ * @param inputSeries - Array of timeseries to combine. Can be either:
+ *                     - An array of TimeSeriesData objects
+ *                     - An array of numeric arrays (already extracted y-values)
+ * @returns A new timeseries where each point contains the date from the reference timeseries
+ *          and the combined y-value across all input timeseries at that index.
+ */
+export function combineSeries(
+  referenceData: TimeSeriesData,
+  inputSeries: TimeSeriesData[],
+): TimeSeriesData {
+  if (
+    !referenceData ||
+    !referenceData.length ||
+    !inputSeries ||
+    !inputSeries.length
+  ) {
+    console.error('Invalid inputs to combineSeries');
+    return [];
+  }
+
+  const numericData: number[][] = inputSeries.map((series: TimeSeriesData) =>
+    series.map((point: TimeSeriesPoint) => point.y ?? 0),
+  );
+
+  let result: number[];
+
+  const len = numericData[0].length;
+  const numSeries = numericData.length;
+  result = Array(len).fill(0);
+
+  numericData.forEach((series) =>
+    series.forEach((value, i) => {
+      if (typeof value === 'number' && !isNaN(value)) {
+        result[i] += value / numSeries;
+      }
+    }),
+  );
+
+  // map back to TimeSeriesData format
+  return result.map((value, i) => ({
+    date: referenceData[i].date,
+    y: value,
+  }));
 }

@@ -8,6 +8,7 @@ import { TimeSeriesData } from 'src/types/TimeSeriesPoint';
 import { findDateIdx, maxIndex, mean, minIndex, normalise } from '../common';
 import { Current } from './Current';
 import { Last } from './Last';
+import { CategoricalFeature } from './CategoricalFeature';
 
 const WINDOW = 10;
 
@@ -579,4 +580,63 @@ export function searchLast(
       .setMetric(metric)
       .setDataIndex(findDateIdx(dataX.date, data)),
   ];
+}
+
+/**
+ * Finds the categorical feature for a given date from a list of categorical features.
+ * @param features - Array of CategoricalFeature objects
+ * @param date - The date to search for (Date object)
+ * @returns The CategoricalFeature for the given date, or undefined if not found
+ */
+export function findCategoricalFeatureByDate(
+  features: CategoricalFeature[],
+  date: Date,
+): CategoricalFeature | undefined {
+  return features.find((feature) => {
+    // Compare dates ignoring time
+    return feature.getDate().toDateString() === date.toDateString();
+  });
+}
+
+/**
+ * Finds the categorical feature closest to a given date from a list of categorical features.
+ * If an exact match is found, it returns that feature. Otherwise, it returns the feature
+ * with the closest date within a specified maximum difference (in days).
+ * 
+ * @param features - Array of CategoricalFeature objects
+ * @param date - The date to search for (Date object)
+ * @param maxDaysDifference - Maximum allowed difference in days (default: 3)
+ * @returns The closest CategoricalFeature, or undefined if none found within the allowed range
+ */
+export function findClosestCategoricalFeature(
+  features: CategoricalFeature[],
+  date: Date,
+  maxDaysDifference: number = 3
+): CategoricalFeature | undefined {
+  // First try to find an exact match
+  const exactMatch = features.find((feature) => 
+    feature.getDate().toDateString() === date.toDateString()
+  );
+  
+  if (exactMatch) {
+    return exactMatch;
+  }
+  
+  // If no exact match, find the closest one within maxDaysDifference
+  const targetTime = date.getTime();
+  let closestFeature: CategoricalFeature | undefined;
+  let minDifference = Number.MAX_SAFE_INTEGER;
+  
+  for (const feature of features) {
+    const featureTime = feature.getDate().getTime();
+    const timeDifference = Math.abs(featureTime - targetTime);
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+    
+    if (daysDifference <= maxDaysDifference && daysDifference < minDifference) {
+      minDifference = daysDifference;
+      closestFeature = feature;
+    }
+  }
+  
+  return closestFeature;
 }
