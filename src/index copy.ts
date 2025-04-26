@@ -7,10 +7,10 @@ export * from './components/Colors';
 export * from './components/actions/Circle';
 export * from './components/actions/Connector';
 export * from './components/actions/Dot';
-export * from './components/actions/MSBAction';
-export * from './components/actions/MSBActionFactory';
-export * from './components/actions/MSBActionGroup';
-export * from './components/actions/MSBActionName';
+export * from './components/actions/Action';
+export * from './components/actions/ActionFactory';
+export * from './components/actions/ActionGroup';
+export * from './components/actions/ActionName';
 export * from './components/actions/TextBox';
 
 // Plots
@@ -42,21 +42,21 @@ export * from './types/Coordinate';
 export * from './utils/common';
 
 // Data processing
-export * from './utils/data-processing/gaussian';
+export * from './utils/gaussian/gaussian';
 
 // Feature action utilities
 export * from './utils/feature-action/CategoricalFeature';
 export * from './utils/feature-action/Condition';
 export * from './utils/feature-action/Current';
 export * from './utils/feature-action/Fall';
-export * from './types/TimelineMSBActions';
+export * from './types/TimelineActions';
 export * from './utils/feature-action/FeatureSearchProps';
 export * from './utils/feature-action/First';
 export * from './utils/feature-action/Last';
-export * from './utils/feature-action/MSBFeature';
-export * from './utils/feature-action/MSBFeatureActionFactory';
-export * from './utils/feature-action/MSBFeatureFactory';
-export * from './utils/feature-action/MSBFeatureName';
+export * from './utils/feature-action/Feature';
+export * from './utils/feature-action/FeatureActionFactory';
+export * from './utils/feature-action/FeatureFactory';
+export * from './utils/feature-action/FeatureName';
 export * from './utils/feature-action/Max';
 export * from './utils/feature-action/Min';
 export * from './utils/feature-action/NumericalFeature';

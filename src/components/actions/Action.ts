@@ -1,26 +1,26 @@
 import * as d3 from 'd3';
-import { MSBActionName } from './MSBActionName';
-import { MSBFeatureName, MSBCategoricalFeatureName } from '../../utils';
+import { ActionName } from './ActionName';
+import { FeatureName, CategoricalFeatureName } from '../../utils';
 import { Coordinate } from '../../types';
 
 const DELAY = 0,
   DURATION = 1000;
 
-export abstract class MSBAction {
-  protected type!: MSBActionName;
+export abstract class Action {
+  protected type!: ActionName;
   protected props: any = {};
   protected svg!: SVGGElement;
   protected node: any = null;
   protected coordinate0!: Coordinate;
   protected coordinate1!: Coordinate;
-  protected featureType?: MSBFeatureName | MSBCategoricalFeatureName;
+  protected featureType?: FeatureName | CategoricalFeatureName;
 
   constructor() {}
 
   public abstract setProps(properties: unknown): this;
   public abstract updateProps(properties: any): this;
 
-  public getType(): MSBActionName {
+  public getType(): ActionName {
     return this.type;
   }
 
@@ -90,7 +90,7 @@ export abstract class MSBAction {
   }
 
   public setFeatureType(
-    featureType: MSBFeatureName | MSBCategoricalFeatureName,
+    featureType: FeatureName | CategoricalFeatureName,
   ) {
     this.featureType = featureType;
     return this;

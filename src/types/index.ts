@@ -2,4 +2,4 @@
 export * from './Align';
 export * from './Coordinate';
 export * from './TimeSeriesPoint';
-export * from './TimelineMSBActions';
+export * from './TimelineActions';

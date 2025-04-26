@@ -1,19 +1,19 @@
-import { Condition, MSBFeatureName } from '../../utils/feature-action';
+import { Condition, FeatureName } from '../../utils/feature-action';
 import {
   CircleProps,
   DotProps,
   ConnectorProps,
   TextBoxProps,
-  MSBActionName,
+  ActionName,
 } from '../actions';
 
 export type ActionTableRow = {
-  action: MSBActionName;
+  action: ActionName;
   properties: CircleProps | ConnectorProps | DotProps | TextBoxProps;
 };
 
 export type FeatureActionTableRow = {
-  feature: MSBFeatureName;
+  feature: FeatureName;
   properties: Condition;
   rank: number;
   actions: ActionTableRow[];

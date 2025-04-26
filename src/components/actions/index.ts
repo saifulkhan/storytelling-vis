@@ -2,8 +2,9 @@
 export * from './Circle';
 export * from './Connector';
 export * from './Dot';
-export * from './MSBAction';
-export * from './MSBActionFactory';
-export * from './MSBActionGroup';
-export * from './MSBActionName';
+export * from './Action';
+export * from './ActionFactory';
+export * from './ActionGroup';
+export * from './ActionName';
 export * from './TextBox';
+ 

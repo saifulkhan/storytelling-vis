@@ -1,6 +1,6 @@
-import { TimeSeriesData, TimeSeriesPoint } from '../../types';
+import { TimeSeriesData } from '../../types';
 import { Peak, searchPeaks } from '../feature-action';
-import { rankPeaksByNormHeight } from './ranking';
+import { rankPeaksByNormHeight } from '../feature-action/ranking';
 
 
 /**

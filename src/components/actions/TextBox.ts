@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { MSBActionName } from './MSBActionName';
-import { MSBAction } from './MSBAction';
+import { ActionName } from './ActionName';
+import { Action } from './Action';
 import {
   HorizontalAlign,
   VerticalAlign,
@@ -32,7 +32,7 @@ const PADDING = 3;
 const FONT_FAMILY = 'Arial Narrow';
 const FONT_SIZE = '12px';
 
-export class TextBox extends MSBAction {
+export class TextBox extends Action {
   protected props: TextBoxProps = defaultTextBoxProps;
   protected rectNode: any;
   protected titleNode: any;
@@ -43,7 +43,7 @@ export class TextBox extends MSBAction {
 
   constructor() {
     super();
-    this.type = MSBActionName.TEXT_BOX;
+    this.type = ActionName.TEXT_BOX;
   }
 
   public setProps(props: TextBoxProps = {}, data?: TimeSeriesPoint) {

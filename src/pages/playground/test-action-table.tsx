@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { ActionTableRow } from 'src/components/tables/FeatureActionTableRow';
-import ActionTable from 'src/components/tables/ActionTable';
-import { MSBActionName } from 'src/components/actions/MSBActionName';
 
-const mockData: ActionTableRow[] = [
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
+
+
+const mockData: msb.ActionTableRow[] = [
   {
-    action: MSBActionName.DOT,
+    action: msb.ActionName.DOT,
     properties: {
       size: 5,
       color: '#FF0000',
@@ -13,7 +16,7 @@ const mockData: ActionTableRow[] = [
     },
   },
   {
-    action: MSBActionName.CIRCLE,
+    action: msb.ActionName.CIRCLE,
     properties: {
       size: 10,
       strokeWidth: 2,
@@ -22,7 +25,7 @@ const mockData: ActionTableRow[] = [
     },
   },
   {
-    action: MSBActionName.TEXT_BOX,
+    action: msb.ActionName.TEXT_BOX,
     properties: {
       title: 'Example Text',
       message: 'Lorem ipsum dolor sit amet',
@@ -31,7 +34,7 @@ const mockData: ActionTableRow[] = [
     },
   },
   {
-    action: MSBActionName.CONNECTOR,
+    action: msb.ActionName.CONNECTOR,
     properties: {
       stroke: '#FFFF00',
       opacity: 0.8,
@@ -44,7 +47,7 @@ const TestActionTable = () => {
 
   return (
     <div>
-      <ActionTable data={data} setData={setData} />
+      <msb.ActionTable data={data} setData={setData} />
     </div>
   );
 };

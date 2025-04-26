@@ -23,10 +23,10 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
-import { TimeSeriesData, TimelineMSBActions } from '../../types';
-import { LinePlot } from '../../components';
-import { usePlayPauseLoop } from '../../hooks';
-import { MSBFeatureActionFactory } from '../../utils';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
@@ -39,13 +39,13 @@ const StoryCovid19Single = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
+  const [casesData, setCasesData] = useState<Record<string, msb.TimeSeriesData>>(
     {},
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
 
-  const plot = useRef(new LinePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
+  const plot = useRef(new msb.LinePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -61,7 +61,7 @@ const StoryCovid19Single = () => {
             y: +y,
           })),
         ]),
-      ) as Record<string, TimeSeriesData>;
+      ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
 
@@ -70,6 +70,8 @@ const StoryCovid19Single = () => {
 
       console.log('Cases data: ', casesData);
       console.log('Numerical feature-action table data: ', numericalFATable);
+
+      setRegion('Bolton');
     } catch (error) {
       console.error('Failed to fetch data; error:', error);
     } finally {
@@ -85,7 +87,7 @@ const StoryCovid19Single = () => {
     console.log(`Selected region ${region}'s data: ${data}`);
 
     // 2. Create timeline actions
-    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
+    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
       .setFAProps({
         metric: 'Number of cases',
         window: 10,
@@ -106,7 +108,7 @@ const StoryCovid19Single = () => {
       .setLineProps([])
       .setCanvas(chartRef.current)
       // .plot() // <- draw the static plot, useful for testing
-      .setActions(timelineMSBActions);
+      .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
     pause();

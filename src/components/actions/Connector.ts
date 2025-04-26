@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { MSBActionName } from './MSBActionName';
-import { MSBAction } from './MSBAction';
+import { ActionName } from './ActionName';
+import { Action } from './Action';
 import { Coordinate } from '../../types';
 
 export type ConnectorProps = {
@@ -13,13 +13,13 @@ export const defaultConnectorProperties: ConnectorProps = {
   opacity: 1,
 };
 
-export class Connector extends MSBAction {
+export class Connector extends Action {
   protected props: ConnectorProps = defaultConnectorProperties;
   protected connectorNode: any;
 
   constructor() {
     super();
-    this.type = MSBActionName.CONNECTOR;
+    this.type = ActionName.CONNECTOR;
   }
 
   public setProps(properties: ConnectorProps = {}) {

@@ -1,11 +1,11 @@
-import { MSBFeatureName } from './MSBFeatureName';
+import { FeatureName } from './FeatureName';
 
-export abstract class MSBFeature {
+export abstract class Feature {
   protected date: Date;
   protected start: Date;
   protected end: Date;
   protected rank: number;
-  protected type: MSBFeatureName;
+  protected type: FeatureName;
   protected metric: string;
   protected dataIndex: number;
 
@@ -14,7 +14,7 @@ export abstract class MSBFeature {
     this.start = new Date();
     this.end = new Date();
     this.rank = 0;
-    this.type = MSBFeatureName.UNKNOWN;
+    this.type = FeatureName.UNKNOWN;
     this.metric = '';
     this.dataIndex = 0;
   }
@@ -28,7 +28,7 @@ export abstract class MSBFeature {
     return this.date;
   }
 
-  setType(type: MSBFeatureName) {
+  setType(type: FeatureName) {
     this.type = type;
     return this;
   }

@@ -1,3 +1,3 @@
 export * from './common';
-export * from './data-processing';
+export * from './gaussian';
 export * from './feature-action';

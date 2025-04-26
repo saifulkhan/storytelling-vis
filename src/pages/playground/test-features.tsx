@@ -13,13 +13,13 @@ import {
 } from '@mui/material';
 import Head from 'next/head';
 
-import { TimeSeriesPoint } from 'src/types/TimeSeriesPoint';
-import { searchPeaks } from 'src/utils/feature-action/feature-search';
-import { Peak } from 'src/utils/feature-action/Peak';
-import { sliceTimeseriesByDate } from 'src/utils/common';
-import { LinePlot, LineProps } from 'src/components/plots/LinePlot';
-import { Dot } from 'src/components/actions/Dot';
-import { getCovid19Data } from 'src/services/TimeSeriesDataService';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
+
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -27,40 +27,48 @@ const WIDTH = 1500,
 const FeaturesPage = () => {
   const chartRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const [locData, setLocData] = useState<Record<string, TimeSeriesPoint[]>>({});
-  const [data, setData] = useState<TimeSeriesPoint[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
+  const [casesData, setCasesData] = useState<Record<string, msb.TimeSeriesData>>(
+    {},
+  );
 
   useEffect(() => {
     if (!chartRef.current) return;
+    setLoading(true);
 
-    const fetchData = async () => {
-      try {
-        const data = await getCovid19Data();
-        setLocData(data);
-        setRegions(Object.keys(data).sort());
-        // setRegion("Aberdeenshire");
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
-    };
-
-    fetchData();
-
-    return () => {};
+    try {
+      // 1.1 Get timeseries data for all regions.
+      const casesData = Object.fromEntries(
+        Object.entries(covid19CasesData || {}).map(([region, data]) => [
+          region,
+          data.map(({ date, y }: { date: string; y: number }) => ({
+            date: new Date(date),
+            y: +y,
+          })),
+        ]),
+      ) as Record<string, msb.TimeSeriesData>;
+      setCasesData(casesData);
+      setRegions(Object.keys(casesData).sort());
+      console.log('Cases data: ', casesData);
+      setRegion('Bolton');
+    } catch (error) {
+      console.error('Failed to fetch data; error:', error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  
   useEffect(() => {
-    if (!region || !locData[region] || !chartRef.current) return;
-
-    const peaks: Peak[] = searchPeaks(data, 1, 'cases', 10);
-
+    if (!region || !casesData[region] || !chartRef.current) return;
+    const data = casesData[region];
+    const peaks: msb.Peak[] = msb.searchPeaks(data, 1, 'cases', 10);
     console.log('TestFeatures: data = ', data);
     console.log('FeaturesPage: peaks = ', peaks);
 
     const peaksStartEnd = peaks.map((peak) =>
-      sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd()),
+      msb.sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd()),
     );
     peaksStartEnd.unshift(data);
 
@@ -75,7 +83,7 @@ const FeaturesPage = () => {
 
     // Make sure chartRef.current is not null before using it
     if (chartRef.current) {
-      const plot = new LinePlot()
+      const plot = new msb.LinePlot()
         .setData(peaksStartEnd)
         .setPlotProps({
           xLabel: 'Date',
@@ -87,7 +95,7 @@ const FeaturesPage = () => {
             return {
               stroke: schemeTableau10[i],
               strokeWidth: 1.5,
-            } as LineProps;
+            };
           }),
         )
         .setCanvas(chartRef.current)
@@ -97,7 +105,7 @@ const FeaturesPage = () => {
         console.log(plot.getCoordinates(peak.getDate()));
         // Add null check for chartRef.current
         if (chartRef.current) {
-          new Dot()
+          new msb.Dot()
             .setProps({ color: '#FF5349' })
             .setCanvas(chartRef.current)
             .setCoordinate(plot.getCoordinates(peak.getDate()))
@@ -105,13 +113,12 @@ const FeaturesPage = () => {
         }
       });
     }
-  }, [data, region]);
+  }, [region, casesData]);
 
   const handleSelectRegion = (event: SelectChangeEvent) => {
     const region = event.target.value;
     if (region) {
       setRegion(region);
-      setData(locData[region]);
     }
   };
 

@@ -23,10 +23,10 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
-import { ParallelCoordinatePlot } from '../../components';
-import { usePlayPauseLoop } from '../../hooks';
-import { sortTimeseriesData, MSBFeatureActionFactory } from '../../utils';
-import { TimelineMSBActions, TimeSeriesData } from '../../types';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 import mlTrainingData from '../../assets/data/ml-training-data.json';
 import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
@@ -44,11 +44,11 @@ const StoryMLPCP = () => {
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [hyperparam, setHyperparam] = useState<string>('');
-  const [mlData, setMLData] = useState<TimeSeriesData>([]);
+  const [mlData, setMLData] = useState<msb.TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
-  const plot = useRef(new ParallelCoordinatePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
+  const plot = useRef(new msb.ParallelCoordinatePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -74,17 +74,17 @@ const StoryMLPCP = () => {
   useEffect(() => {
     if (!hyperparam || !mlData || !chartRef.current) return;
 
-    const data = sortTimeseriesData(mlData, hyperparam);
+    const data = msb.sortTimeseriesData(mlData, hyperparam);
     console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
 
     // build story based on selected hyperparameter's data and feature-action table
 
     // 2. Create timeline actions
-    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
+    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
       .setFAProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
       .setTable(numericalFATable) // <- feature-action table
-      .create();
+      .create();  
 
     // 3. Create PCP
     plot
@@ -92,7 +92,7 @@ const StoryMLPCP = () => {
       .setName(hyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRef.current)
-      .setActions(timelineMSBActions);
+      .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
     pause();

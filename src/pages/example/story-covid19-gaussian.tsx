@@ -24,10 +24,10 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
-import { TimeSeriesData, TimelineMSBActions } from '../../types';
-import { LinePlot } from '../../components';
-import { usePlayPauseLoop } from '../../hooks';
-import { CategoricalFeature, combineSeries, generateGaussForCatFeatures, generateGaussForPeaks, maxAcrossSeries, MSBFeatureActionFactory } from '../../utils';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
@@ -40,19 +40,19 @@ const StoryCovid19Gaussian = () => {
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [segment, setSegment] = useState<number>(3);
+  const [numSegment, setNumSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
+  const [casesData, setCasesData] = useState<Record<string, msb.TimeSeriesData>>(
     {},
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
   const [categoricalFeatures, setCategoricalFeatures] = useState<
-    CategoricalFeature[]
+    msb.CategoricalFeature[]
   >([]);
   
-  const plot = useRef(new LinePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = usePlayPauseLoop(plot);
+  const plot = useRef(new msb.LinePlot()).current;
+  const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -68,7 +68,7 @@ const StoryCovid19Gaussian = () => {
             y: +y,
           })),
         ]),
-      ) as Record<string, TimeSeriesData>;
+      ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
 
@@ -78,7 +78,7 @@ const StoryCovid19Gaussian = () => {
       // 1.3 Load categorical feature table
       setCategoricalFeatures(
         covid19CategoricalData.map((d) =>
-          new CategoricalFeature()
+          new msb.CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
             .setDescription(d.event),
@@ -101,11 +101,11 @@ const StoryCovid19Gaussian = () => {
     const data = casesData[region];
     console.log(`Selected region ${region}'s data: ${data}`);
 
-    const combined = gmm(data, categoricalFeatures);
-      
+    const gaussian = msb.gmm(data, categoricalFeatures);
+    const segments = msb.segmentByImportantPeaks(gaussian, numSegment);  
 
     // 2. Create timeline actions
-    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
+    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
       .setFAProps({
         metric: 'Number of cases',
         window: 10,
@@ -126,7 +126,7 @@ const StoryCovid19Gaussian = () => {
       .setLineProps([])
       .setCanvas(chartRef.current)
       // .plot() // <- draw the static plot, useful for testing
-      .setActions(timelineMSBActions);
+      .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
     pause();
@@ -143,10 +143,10 @@ const StoryCovid19Gaussian = () => {
 
   const handleChangeSlider = (event: Event, newValue: number | number[]) => {
     const selectedSegment = newValue as number;
-    if (selectedSegment !== undefined && selectedSegment !== segment) {
+    if (selectedSegment !== undefined && selectedSegment !== numSegment) {
       // setSegment(selectedSegment);
       // segmentData(selectedSegment);
-      setSegment(1);
+      setNumSegment(1);
       // segmentData(1);
     }
   };
@@ -213,7 +213,7 @@ const StoryCovid19Gaussian = () => {
                       marks
                       min={0}
                       max={5}
-                      value={segment}
+                      value={numSegment}
                       valueLabelDisplay="auto"
                       onChange={handleChangeSlider}
                     />
@@ -296,7 +296,4 @@ const StoryCovid19Gaussian = () => {
 };
 
 export default StoryCovid19Gaussian;
-function gmm(data: TimeSeriesData, categoricalFeatures: CategoricalFeature[]) {
-  throw new Error('Function not implemented.');
-}
-
+ 

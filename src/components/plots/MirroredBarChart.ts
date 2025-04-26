@@ -3,7 +3,7 @@ import { Plot, PlotProps, defaultPlotProps } from './Plot';
 import {
   TimeSeriesData,
   TimeSeriesPoint,
-  TimelineMSBActions,
+  TimelineActions,
   Coordinate,
 } from '../../types';
 import { Colors } from '../Colors';
@@ -106,7 +106,7 @@ export class MirroredBarChart extends Plot {
   /**
    ** The list of actions to be animated
    **/
-  public setActions(actions: TimelineMSBActions = []): this {
+  public setActions(actions: TimelineActions = []): this {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     this.playActionIdx = 0;
     this.lastAction = null;

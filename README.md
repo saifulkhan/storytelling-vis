@@ -66,7 +66,7 @@ Story development is a four-step process:
 
    1.2 **Load feature-action table**: See some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
 
-2. **Create timeline actions**: Use the `MSBFeatureActionFactory` class to create timeline actions from the timeseries data and feature-action table.
+2. **Create timeline actions**: Use the `FeatureActionFactory` class to create timeline actions from the timeseries data and feature-action table.
 
 3. **Create story**: Create a plot and set its data and plot properties. We provide some example plots such as `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
 
@@ -75,33 +75,68 @@ Story development is a four-step process:
 For example,
 
 ```tsx
-import { LinePlot, MSBFeatureActionFactory } from 'meta-storyboard';
+import * as msb from 'meta-storyboard';
 
 // 1. Load your data and feature-action table
 const data = ...; // time series data
 const featureActionTable = ...; // feature-action table
 
 // 2. Create timeline actions
-const timelineMSBActions = new MSBFeatureActionFactory()
+const timelineActions = new msb.FeatureActionFactory()
   .setFAProps({ /* properties */ })
   .setTable(featureActionTable)
   .setData(data)
   .create();
 
 // 3. Create a plot and set its data/properties
-const plot = new LinePlot()
+const plot = new msb.LinePlot()
   .setData(data)
   .setName('My Plot')
   .setPlotProps({ /* plot properties */ })
   .setCanvas(svgRef)
-  .setActions(timelineMSBActions);
+  .setActions(timelineActions);
 
 // 4. Animate
+const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
 onClick={togglePlayPause};
 ```
 
-See more complete examples in [`src/pages/example/`](src/pages/example/) and the [Playground](#usage-examples).
+Template using gaussian mixture model for segmenting timeseries based on importance.
 
+
+```tsx
+import * as msb from 'meta-storyboard';
+
+// 1. Load your data and feature-action table
+const data = ...; // time series data
+const numericalFeatures = ...; // numerical feature-action table
+const categoricalFeatures = ...; // categorical features table
+
+// Gaussian Mixture Model (TODO: add more details)
+const gaussian = msb.gmm(data, categoricalFeatures);
+const segments = msb.segmentByImportantPeaks(gaussian, numSegment);  
+
+// 2. Create timeline actions
+const timelineActions = new msb.FeatureActionFactory()
+  .setFAProps({ /* properties */ })
+  .setTable(numericalFeatures)
+  .setData(data)
+  .create();
+
+// 3. Create a plot and set its data/properties
+const plot = new msb.LinePlot()
+  .setData(data)
+  .setName('My Plot')
+  .setPlotProps({ /* plot properties */ })
+  .setCanvas(svgRef)
+  .setActions(timelineActions);
+
+// 4. Animate
+const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
+onClick={togglePlayPause};
+```
+
+See more complete [examples](#examples) and their implementation in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages).
 
 ---
 
@@ -136,22 +171,31 @@ Open <http://localhost:3000> in your browser and access the following examples s
 ## Examples
 
 ### Stories
+
+The implementation of the example stories is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example) and links:
+
 - [COVID-19 Case Story](http://localhost:3000/example/story-covid19-single)
-- [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-single-gaussian)
+- [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
 - [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
 
 ### Playground (Component Testing)
-- [Test Actions](http://localhost:3000/playground/test-actions)
-- [Test Features](http://localhost:3000/playground/test-features)
-- [Test Line Plot](http://localhost:3000/playground/test-line-plot)
+
+The implementation of the playground pages is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground) and links:
+
 - [Test Play/Pause Loop](http://localhost:3000/playground/test-play-pause-loop)
+- [Test Actions](http://localhost:3000/playground/test-actions)
+- [Test Line Plot](http://localhost:3000/playground/test-line-plot)
+- [Test Features](http://localhost:3000/playground/test-features)
+
 - [Test Categorical Features to Gaussian](http://localhost:3000/playground/test-categorical-features-to-gaussian)
 - [Test Numerical Features to Gaussian](http://localhost:3000/playground/test-numerical-features-to-gaussian)
-- [Test Gaussian Combined](http://localhost:3000/playground/test-gaussian-combined)
+- [Test Gaussian Combined](localhost:3000/playground/test-combined-gaussian)
+
 - [Test Action Properties Table](http://localhost:3000/playground/test-action-properties-table)
 - [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
+- [Test Action Table](http://localhost:3000/playground/test-action-table)
 
 ---
 
@@ -320,12 +364,12 @@ new MSBFeatureFactory()
     <br><br>
 </div>
 
-The `MSBAction` abstract class serves as a blueprint for defining atomic actions, e.g., circles, dots, etc. represented by `Circle` and `Dot` classes respectively.
+The `Action` abstract class serves as a blueprint for defining atomic actions, e.g., circles, dots, etc. represented by `Circle` and `Dot` classes respectively.
 
 **MSB Action Names:** Various actions are defined as enumerators, e.g.,
 
 ```ts
-export enum MSBActionName {
+export enum ActionName {
   DOT = "DOT",
   CIRCLE = "CIRCLE",
   TEXT_BOX = "TEXT_BOX",
@@ -358,7 +402,7 @@ new TextBox()
 **Group MSB Actions:** The `ActionGroup` class employs a composite design pattern to group multiple actions representing a feature, as shown in an example below:
 
 ```ts
-new MSBActionGroup()
+new ActionGroup()
     .group(<actions>)
     .setCanvas(...)
     .setCoordinate(...)
@@ -368,7 +412,7 @@ new MSBActionGroup()
 **MSB Action Factory:** The `ActionFactory` utilizes a factory design pattern to simplify the creation of action objects, making it more efficient to generate actions from feature action tables.
 
 ```js
-new MSBActionFactory()
+new ActionFactory()
     .create(<action name>, <action properties>)
 ```
 

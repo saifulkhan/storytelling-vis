@@ -11,9 +11,11 @@ import {
 } from '@mui/material';
 import Head from 'next/head';
 
-import { generateGaussForCatFeatures, CategoricalFeature } from '../../utils';
-import { TimeSeriesData } from '../../types';
-import { LinePlot, LineProps, getSchemeTableau10 } from '../../components';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
+
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
 
@@ -24,14 +26,14 @@ const TestCFToGaussianPage = () => {
   const chartRef = useRef(null);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
+  const [casesData, setCasesData] = useState<Record<string, msb.TimeSeriesData>>(
     {},
   );
   const [categoricalFeatures, setCategoricalFeatures] = useState<
-    CategoricalFeature[]
+    msb.CategoricalFeature[]
   >([]);
 
-  const plot = useRef(new LinePlot()).current;
+  const plot = useRef(new msb.LinePlot()).current;
   useEffect(() => {
     if (!chartRef.current) return;
 
@@ -45,7 +47,7 @@ const TestCFToGaussianPage = () => {
             y: +y,
           })),
         ]),
-      ) as Record<string, TimeSeriesData>;
+      ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
       console.log(
@@ -56,7 +58,7 @@ const TestCFToGaussianPage = () => {
       // 2. Load categorical features
       setCategoricalFeatures(
         covid19CategoricalData.map((d) =>
-          new CategoricalFeature()
+          new msb.CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
             .setDescription(d.event),
@@ -74,7 +76,7 @@ const TestCFToGaussianPage = () => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
     const data = casesData[region];
-    const categoricalGauss: TimeSeriesData[] = generateGaussForCatFeatures(
+    const categoricalGauss: msb.TimeSeriesData[] = msb.generateGaussForCatFeatures(
       data,
       categoricalFeatures,
     );
@@ -84,7 +86,7 @@ const TestCFToGaussianPage = () => {
     // Add the original timeseries data as the first curve
     categoricalGauss.unshift(data);
 
-    new LinePlot()
+    new msb.LinePlot()
       .setData(categoricalGauss)
       .setPlotProps({
         xLabel: 'Date',
@@ -98,13 +100,13 @@ const TestCFToGaussianPage = () => {
             return {
               stroke: '#D3D3D3',
               strokeWidth: 1,
-            } as LineProps;
+            } as msb.LineProps;
           } else {
             return {
-              stroke: getSchemeTableau10(i - 1),
+              stroke: msb.getSchemeTableau10(i - 1),
               strokeWidth: 2,
               onRightAxis: true,
-            } as LineProps;
+            } as msb.LineProps;
           }
         }),
       )

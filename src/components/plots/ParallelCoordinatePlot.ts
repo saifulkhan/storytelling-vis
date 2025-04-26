@@ -1,16 +1,16 @@
 import * as d3 from 'd3';
 
 import { Colors, LineColor } from '../Colors';
-import { MSBAction } from '../actions';
+import { Action } from '../actions';
 import { Plot, PlotProps, defaultPlotProps } from './Plot';
 import {
-  TimelineMSBActions,
+  TimelineActions,
   Coordinate,
   HorizontalAlign,
   VerticalAlign,
 } from '../../types';
 import {
-  MSBFeatureName,
+  FeatureName,
   findIndexOfDate,
   getObjectKeysArray,
 } from '../../utils';
@@ -370,7 +370,7 @@ export class ParallelCoordinatePlot extends Plot {
   /**
    ** Actions that will be animated.
    **/
-  public setActions(actions: TimelineMSBActions) {
+  public setActions(actions: TimelineActions) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
 
     this.drawAxis();
@@ -418,7 +418,7 @@ export class ParallelCoordinatePlot extends Plot {
     loop();
   }
 
-  private showLine(date: Date, type: MSBFeatureName) {
+  private showLine(date: Date, type: FeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -435,7 +435,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideLine(date: Date, type: MSBFeatureName) {
+  private hideLine(date: Date, type: FeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -451,7 +451,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private showDots(date: Date, type: MSBFeatureName) {
+  private showDots(date: Date, type: FeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // return group
@@ -469,7 +469,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideDots(date: Date, type: MSBFeatureName) {
+  private hideDots(date: Date, type: FeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // returns group
@@ -487,8 +487,8 @@ export class ParallelCoordinatePlot extends Plot {
 
   private showAction(
     date: Date,
-    type: MSBFeatureName,
-    action: MSBAction,
+    type: FeatureName,
+    action: Action,
   ): Promise<number> {
     return new Promise<number>((resolve, reject) => {
       const data = this.data[findIndexOfDate(this.data, date)];
@@ -520,7 +520,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideAction(date: Date, type: MSBFeatureName, action: MSBAction) {
+  private hideAction(date: Date, type: FeatureName, action: Action) {
     return new Promise<number>((resolve, reject) => {
       return action.hide();
     });
@@ -534,20 +534,20 @@ export class ParallelCoordinatePlot extends Plot {
     return `id-dot-${date.getTime()}`;
   }
 
-  private colorOnShow(type: MSBFeatureName): string {
+  private colorOnShow(type: FeatureName): string {
     return LineColor[type];
   }
 
-  private colorOnHideLine(type: MSBFeatureName) {
-    if (type === MSBFeatureName.MAX || type === MSBFeatureName.MIN) {
+  private colorOnHideLine(type: FeatureName) {
+    if (type === FeatureName.MAX || type === FeatureName.MIN) {
       return LineColor[type];
     } else {
       return Colors.LightGrey1;
     }
   }
 
-  private opacityOnHideLine(type: MSBFeatureName) {
-    if (type === MSBFeatureName.MAX || type === MSBFeatureName.MIN) {
+  private opacityOnHideLine(type: FeatureName) {
+    if (type === FeatureName.MAX || type === FeatureName.MIN) {
       return 1;
     } else {
       return 0.3;

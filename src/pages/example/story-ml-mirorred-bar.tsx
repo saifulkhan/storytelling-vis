@@ -23,10 +23,10 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
-import { MirroredBarChart, LinePlot } from '../../components';
-import { usePlayPauseLoop, useSynchronizedPlots } from '../../hooks';
-import { sortTimeseriesData, MSBFeatureActionFactory } from '../../utils';
-import { TimeSeriesData, TimelineMSBActions } from '../../types';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 import mlTrainingData from '../../assets/data/ml-training-data.json';
 import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
@@ -46,14 +46,14 @@ const StoryMLMirroredBar = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedHyperparam, setSelectedHyperparam] = useState<string>('');
-  const [mlData, setMLData] = useState<TimeSeriesData>([]);
+  const [mlData, setMLData] = useState<msb.TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
-  const linePlot = useRef(new LinePlot()).current;
-  const mirroredBarChart = useRef(new MirroredBarChart()).current;
+  const linePlot = useRef(new msb.LinePlot()).current;
+  const mirroredBarChart = useRef(new msb.MirroredBarChart()).current;
 
   // control both plots together
-  const { isPlaying, togglePlayPause, pause } = useSynchronizedPlots([
+  const { isPlaying, togglePlayPause, pause } = msb.useSynchronizedPlots([
     linePlot,
     mirroredBarChart,
   ]);
@@ -88,7 +88,7 @@ const StoryMLMirroredBar = () => {
     )
       return;
 
-    let data = sortTimeseriesData(mlData, selectedHyperparam);
+    let data = msb.sortTimeseriesData(mlData, selectedHyperparam);
     const y1AxisName = 'mean_test_accuracy';
     const y2AxisName = selectedHyperparam;
 
@@ -97,7 +97,7 @@ const StoryMLMirroredBar = () => {
     // build story based on selected hyperparameter's data and feature-action table
 
     // 2. Create timeline actions
-    const timelineMSBActions: TimelineMSBActions = new MSBFeatureActionFactory()
+    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
       .setFAProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
       .setTable(numericalFATable) // <- feature-action table
@@ -115,7 +115,7 @@ const StoryMLMirroredBar = () => {
       .setLineProps([])
       .setCanvas(chartRefLine.current)
       // .plot() // <- draw the static plot, useful for testing
-      .setActions(timelineMSBActions);
+      .setActions(timelineActions);
 
     // 3. Create mirrored bar chart
     mirroredBarChart
@@ -124,7 +124,7 @@ const StoryMLMirroredBar = () => {
       .setData(data) // <- timeseries data
       .setCanvas(chartRefMirrored.current)
       //.plot(); // <- draw the static plot, useful for testing
-      .setActions(timelineMSBActions);
+      .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
     pause();
@@ -162,7 +162,7 @@ const StoryMLMirroredBar = () => {
               </Avatar>
             }
             title="Story: Machine Learning Provenance"
-            subheader="Choose a hyperparameter, and click play to animate the story"
+            subheader="Choose a hyperparameter, and click play to animate the story. ()"
           />
           <CardContent sx={{ pt: '8px' }}>
             {loading ? (

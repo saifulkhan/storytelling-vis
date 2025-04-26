@@ -1,4 +1,4 @@
-export enum MSBFeatureName {
+export enum FeatureName {
   FIRST = 'FIRST',
   CURRENT = 'CURRENT',
   LAST = 'LAST',

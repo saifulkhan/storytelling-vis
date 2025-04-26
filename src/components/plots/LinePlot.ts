@@ -4,12 +4,12 @@ import {
   Coordinate,
   TimeSeriesPoint,
   TimeSeriesData,
-  TimelineMSBActions,
+  TimelineActions,
   HorizontalAlign,
   VerticalAlign,
 } from '../../types';
 import { findDateIdx, findIndexOfDate } from '../../utils';
-import { MSBAction } from '../actions';
+import { Action } from '../actions';
 
 const ID_AXIS_SELECTION = '#id-axes-selection',
   // TODO: move to props
@@ -165,7 +165,7 @@ export class LinePlot extends Plot {
   /**
    ** Set the list of actions to be animated
    **/
-  public setActions(actions: TimelineMSBActions = []) {
+  public setActions(actions: TimelineActions = []) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     this.playActionIdx = 0;
     this.lastAction = null;
@@ -189,7 +189,7 @@ export class LinePlot extends Plot {
       }
 
       const lineNum = 0; // TODO: we can animate first line at the moment
-      let [date, action]: [Date, MSBAction] = this.actions[this.playActionIdx];
+      let [date, action]: [Date, Action] = this.actions[this.playActionIdx];
       const dataX = this.data[lineNum];
       const dataIdx = findIndexOfDate(dataX, date);
 

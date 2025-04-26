@@ -20,21 +20,21 @@ import {
   defaultCircleProps,
   defaultTextBoxProps,
   defaultConnectorProperties,
-  MSBActionName,
-} from '../../components/actions';
-import { MSBFeatureName } from '../../utils/feature-action';
+  ActionName,
+} from '../actions';
+import { FeatureName } from '../../utils/feature-action';
 import { ActionTable, FeaturePropertiesTable } from './index';
 import { FeatureActionTableRow } from './FeatureActionTableRow';
 
-const getInitialProperties = (action: MSBActionName) => {
+const getInitialProperties = (action: ActionName) => {
   switch (action) {
-    case MSBActionName.DOT:
+    case ActionName.DOT:
       return defaultDotProps;
-    case MSBActionName.CIRCLE:
+    case ActionName.CIRCLE:
       return defaultCircleProps;
-    case MSBActionName.TEXT_BOX:
+    case ActionName.TEXT_BOX:
       return defaultTextBoxProps;
-    case MSBActionName.CONNECTOR:
+    case ActionName.CONNECTOR:
       return defaultConnectorProperties;
     default:
       return {};
@@ -133,10 +133,10 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     setRows([
       ...rows,
       {
-        feature: MSBFeatureName.MAX, // Default feature
+        feature: FeatureName.MAX, // Default feature
         properties: {}, // Empty condition
         rank: rows.length + 1, // Default rank
-        actions: [{ action: MSBActionName.DOT, properties: defaultDotProps }], // Default action
+        actions: [{ action: ActionName.DOT, properties: defaultDotProps }], // Default action
       },
     ]);
   };
@@ -147,7 +147,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, feature: MSBFeatureName) => {
+  const handleActionChange = (index: number, feature: FeatureName) => {
     console.log('FeatureActionTable: index = ', index, ', action = ', feature);
 
     /*
@@ -210,10 +210,10 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   sx={styles.selectField}
                   value={row.feature}
                   onChange={(e) =>
-                    handleActionChange(index, e.target.value as MSBFeatureName)
+                    handleActionChange(index, e.target.value as FeatureName)
                   }
                 >
-                  {Object.values(MSBFeatureName).map((feature) => (
+                  {Object.values(FeatureName).map((feature) => (
                     <MenuItem key={feature} value={feature}>
                       {feature}
                     </MenuItem>

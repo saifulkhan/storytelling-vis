@@ -8,11 +8,7 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta
             name="description"
-            content="A visualization component library for data storytelling"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-            rel="stylesheet"
+            content="Meta-Storyboard (MSB) testing pages"
           />
         </Head>
         <body>

@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import ActionPropertiesTable from 'src/components/tables/ActionPropertiesTable';
+
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 const TestActionPropertiesTablePage = () => {
   const [data, setData] = useState<Record<string, any>>({
@@ -11,7 +15,7 @@ const TestActionPropertiesTablePage = () => {
 
   return (
     <div>
-      <ActionPropertiesTable data={data} setData={setData} />
+      <msb.ActionPropertiesTable data={data} setData={setData} />
     </div>
   );
 };

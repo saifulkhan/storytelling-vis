@@ -1,14 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Box } from '@mui/material';
-import * as d3 from 'd3';
 
-import { Coordinate } from 'src/types/Coordinate';
-import { Dot } from 'src/components/actions/Dot';
-import { TextBox } from 'src/components/actions/TextBox';
-import { Connector } from 'src/components/actions/Connector';
-import { Circle } from 'src/components/actions/Circle';
-import { MSBActionGroup } from 'src/components/actions/MSBActionGroup';
+import * as msb from '../../msb';
 
 const TestActionsPage = () => {
   const chartRef = useRef(null);
@@ -22,16 +16,16 @@ const TestActionsPage = () => {
     let ignore = false;
 
     if (!ignore) {
-      const src: Coordinate = [400, 300];
-      const dst: Coordinate = [400, 200];
-      const dst1: Coordinate = [400, 150];
-      const dst2: Coordinate = [100, 100];
-      const dst3: Coordinate = [100, 300];
+      const src: msb.Coordinate = [400, 300];
+      const dst: msb.Coordinate = [400, 200];
+      const dst1: msb.Coordinate = [400, 150];
+      const dst2: msb.Coordinate = [100, 100];
+      const dst3: msb.Coordinate = [100, 300];
 
       //
       // Test example action objects
       //
-      const dot = new Dot()
+      const dot = new msb.Dot()
         .setProps({
           size: 5,
           color: '#FF0000',
@@ -41,7 +35,7 @@ const TestActionsPage = () => {
         .setCoordinate([src, dst])
         .show();
 
-      const circle = new Circle()
+      const circle = new msb.Circle()
         .setProps({
           size: 10,
           color: 'green',
@@ -51,7 +45,7 @@ const TestActionsPage = () => {
         .setCoordinate([src, dst])
         .show();
 
-      const textBox1 = new TextBox()
+      const textBox1 = new msb.TextBox()
         .setProps({
           title: '17-02-2024',
           message:
@@ -64,7 +58,7 @@ const TestActionsPage = () => {
         .setCoordinate([src, dst1])
         .show();
 
-      const connector = new Connector()
+      const connector = new msb.Connector()
         .setProps({})
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst])
@@ -74,15 +68,15 @@ const TestActionsPage = () => {
       // Test example action group
       //
 
-      const textbox2 = new TextBox().setProps({
+      const textbox2 = new msb.TextBox().setProps({
         horizontalAlign: 'right',
         verticalAlign: 'top',
         backgroundColor: 'lightgrey',
         width: 100,
       });
-      const actions = [new Dot().setProps(), new Circle().setProps(), textbox2];
+      const actions = [new msb.Dot().setProps(), new msb.Circle().setProps(), textbox2];
 
-      const group = new MSBActionGroup()
+      const group = new msb.ActionGroup()
         .group(actions)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst2])

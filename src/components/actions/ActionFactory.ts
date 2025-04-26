@@ -1,39 +1,39 @@
-import { MSBAction } from './MSBAction';
-import { MSBActionName } from './MSBActionName';
+import { Action } from './Action';
+import { ActionName } from './ActionName';
 import { Circle, CircleProps } from './Circle';
-import { MSBActionGroup } from './MSBActionGroup';
+import { ActionGroup } from './ActionGroup';
 import { Connector, ConnectorProps } from './Connector';
 import { Dot, DotProps } from './Dot';
 import { TextBox, TextBoxProps } from './TextBox';
 import { TimeSeriesPoint } from '../../types/TimeSeriesPoint';
 
-export class MSBActionFactory {
+export class ActionFactory {
   constructor() {}
 
   public create(
-    action: MSBActionName,
+    action: ActionName,
     props: CircleProps | ConnectorProps | DotProps | TextBoxProps,
     data?: TimeSeriesPoint,
-  ): MSBAction | undefined {
+  ): Action | undefined {
     // prettier-ignore
-    // console.log("MSBActionFactory:create: action = ", action, ", properties = ", properties);
+    // console.log("ActionFactory:create: action = ", action, ", properties = ", properties);
 
     switch (action) {
-      case MSBActionName.DOT:
+      case ActionName.DOT:
         return new Dot().setProps(props as DotProps);
-      case MSBActionName.TEXT_BOX:
+      case ActionName.TEXT_BOX:
         return new TextBox().setProps(props as TextBoxProps, data);
-      case MSBActionName.CIRCLE:
+      case ActionName.CIRCLE:
         return new Circle().setProps(props as CircleProps);
-      case MSBActionName.CONNECTOR:
+      case ActionName.CONNECTOR:
         return new Connector().setProps(props as ConnectorProps);
       default:
         console.error(`Action ${action} is not implemented!`);
     }
   }
 
-  public group(actions: MSBAction[]): MSBActionGroup {
-    const action = new MSBActionGroup();
+  public group(actions: Action[]): ActionGroup {
+    const action = new ActionGroup();
     return action.group(actions);
   }
 }

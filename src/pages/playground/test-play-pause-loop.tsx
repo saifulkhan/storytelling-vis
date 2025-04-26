@@ -1,6 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
-import usePlayPauseLoop from 'src/hooks/usePlayPauseLoop';
+
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 class Loop {
   private frameCount: number;
@@ -65,7 +69,7 @@ const PlayPauseLoopComponent: React.FC = () => {
   // Reference for animation frame request ID
   const requestId = useRef<number | undefined>(undefined);
 
-  const { isPlaying, togglePlayPause } = usePlayPauseLoop(loop);
+  const { isPlaying, togglePlayPause } = msb.usePlayPauseLoop(loop);
 
   // Update frameCount state regularly when playing
   useEffect(() => {

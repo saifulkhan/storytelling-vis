@@ -15,22 +15,22 @@ import { styled } from '@mui/material/styles';
 import { ActionPropertiesTable } from './ActionPropertiesTable';
 import { ActionTableRow } from './FeatureActionTableRow';
 import {
-  MSBActionName,
+  ActionName,
   defaultDotProps,
   defaultCircleProps,
   defaultTextBoxProps,
   defaultConnectorProperties,
 } from '../actions';
 
-const getInitialProperties = (action: MSBActionName) => {
+const getInitialProperties = (action: ActionName) => {
   switch (action) {
-    case MSBActionName.DOT:
+    case ActionName.DOT:
       return defaultDotProps;
-    case MSBActionName.CIRCLE:
+    case ActionName.CIRCLE:
       return defaultCircleProps;
-    case MSBActionName.TEXT_BOX:
+    case ActionName.TEXT_BOX:
       return defaultTextBoxProps;
-    case MSBActionName.CONNECTOR:
+    case ActionName.CONNECTOR:
       return defaultConnectorProperties;
     default:
       return {};
@@ -93,7 +93,7 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   const handleAddRow = () => {
     setRows([
       ...rows,
-      { action: MSBActionName.DOT, properties: defaultDotProps },
+      { action: ActionName.DOT, properties: defaultDotProps },
     ]);
   };
 
@@ -103,7 +103,7 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, action: MSBActionName) => {
+  const handleActionChange = (index: number, action: ActionName) => {
     console.log('ActionTable: index = ', index, ', action = ', action);
 
     const newRows = [...rows];
@@ -147,10 +147,10 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                   sx={styles.selectField}
                   value={row.action}
                   onChange={(e) =>
-                    handleActionChange(index, e.target.value as MSBActionName)
+                    handleActionChange(index, e.target.value as ActionName)
                   }
                 >
-                  {Object.values(MSBActionName).map((action) => (
+                  {Object.values(ActionName).map((action) => (
                     <MenuItem key={action} value={action}>
                       {action}
                     </MenuItem>

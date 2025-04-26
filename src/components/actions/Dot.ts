@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { MSBActionName } from './MSBActionName';
-import { MSBAction } from './MSBAction';
+import { ActionName } from './ActionName';
+import { Action } from './Action';
 import { Coordinate } from '../../types';
 
 export type DotProps = {
@@ -15,13 +15,13 @@ export const defaultDotProps: DotProps = {
   opacity: 1,
 };
 
-export class Dot extends MSBAction {
+export class Dot extends Action {
   protected props: DotProps = defaultDotProps;
   protected dotNode: any;
 
   constructor() {
     super();
-    this.type = MSBActionName.DOT;
+    this.type = ActionName.DOT;
   }
 
   public setProps(props: DotProps = {}) {

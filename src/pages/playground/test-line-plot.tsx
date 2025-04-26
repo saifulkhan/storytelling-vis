@@ -1,14 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import Head from 'next/head';
 import { Box } from '@mui/material';
 
-import { LinePlot } from 'src/components/plots/LinePlot';
-import { getCovid19Data } from 'src/services/TimeSeriesDataService';
+// local import
+import * as msb from '../../msb';
+// import from npm library
+// import * as msb from 'meta-storyboard';
+
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 
 const TestLinePlotPage = () => {
   const chartRef = useRef<SVGSVGElement | null>(null);
-
+ 
   const height = 550;
   const width = 1500;
 
@@ -23,15 +27,24 @@ const TestLinePlotPage = () => {
       .append('g')
       .node();
 
-    getCovid19Data().then((d) => {
-      console.log(d);
-      const data = [d['Aberdeenshire'], d['Angus'], d['Barnet']];
+      const casesData = Object.fromEntries(
+        Object.entries(covid19CasesData || {}).map(([region, data]) => [
+          region,
+          data.map(({ date, y }: { date: string; y: number }) => ({
+            date: new Date(date),
+            y: +y,
+          })),
+        ]),
+      ) as Record<string, msb.TimeSeriesData>;
+      
+      const data = casesData['Bolton'];
+      
 
       if (!chartRef.current) return;
 
-      new LinePlot()
-        .setData(data)
-        .setName('Regions')
+      new msb.LinePlot()
+        .setData([data])
+        .setName('Bolton')
         .setPlotProps({
           title: 'Example line plot',
           margin: { top: 50, right: 60, bottom: 50, left: 60 },
@@ -60,7 +73,8 @@ const TestLinePlotPage = () => {
         .plot();
 
       // lineChart.animate(2, 20, 400);
-    });
+
+ 
   }, []);
 
   return (
