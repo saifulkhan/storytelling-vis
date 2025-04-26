@@ -28,8 +28,9 @@ import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
-import mlTrainingData from '../../assets/data/ml-training-data.json';
-import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
+import { useControllerWithState } from '../useControllerWithState';
+import mlTrainingData from '../assets/data/ml-training-data.json';
+import mlNumFATable from '../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,
@@ -48,7 +49,7 @@ const StoryMLPCP = () => {
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
   const plot = useRef(new msb.ParallelCoordinatePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
+  const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -95,7 +96,7 @@ const StoryMLPCP = () => {
       .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
-    pause();
+    controller.pause();
 
     return () => {};
   }, [hyperparam]);
@@ -205,7 +206,7 @@ const StoryMLPCP = () => {
                       variant="contained"
                       color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
-                      onClick={togglePlayPause}
+                      onClick={() => controller.togglePlayPause()}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }

@@ -1,12 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 
-// local import
-import * as msb from '../..';
-// import from npm library
-// import * as msb from 'meta-storyboard';
+import { useControllerWithState } from '../useControllerWithState';
 
 class Loop {
+  public onFrame?: () => void;
   private frameCount: number;
   private animationRef: number | null;
   private isPlayingRef: { current: boolean };
@@ -32,10 +30,8 @@ class Loop {
       }
 
       this.frameCount++;
-      console.log(`Iteration ${this.frameCount}`);
-
+      if (this.onFrame) this.onFrame();
       this.animationRef = requestAnimationFrame(loop);
-
       this.count++;
     };
 
@@ -60,32 +56,66 @@ class Loop {
   };
 }
 
-// Main component
-const PlayPauseLoopComponent: React.FC = () => {
-  // Create an instance of the Loop class
+// Controller for two loops in sync
+class SynchronizedLoopsController {
+  private loops: Loop[];
+  constructor(loops: Loop[]) {
+    this.loops = loops;
+  }
+  togglePlayPause = () => {
+    if (this.getIsPlaying()) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  };
+  play = () => {
+    this.loops.forEach(loop => loop.play());
+  };
+  pause = () => {
+    this.loops.forEach(loop => loop.pause());
+  };
+  getIsPlaying = () => this.loops.some(loop => (loop as any).isPlayingRef?.current);
+}
+
+// Minimal PlayPauseController for Loop
+class LoopController {
+  private loop: Loop;
+  private isPlaying: boolean = false;
+  constructor(loop: Loop) {
+    this.loop = loop;
+    this.loop.onFrame = () => {};
+  }
+  togglePlayPause = () => {
+    if (this.isPlaying) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  };
+  play = () => {
+    this.isPlaying = true;
+    this.loop.onFrame = () => {};
+    this.loop.play();
+  };
+  pause = () => {
+    this.isPlaying = false;
+    this.loop.pause();
+  };
+  getIsPlaying = () => this.isPlaying;
+}
+
+// Single loop demo
+const SingleLoopComponent: React.FC = () => {
   const loop = useRef(new Loop()).current;
-  // Add state to track frame count
   const [frameCount, setFrameCount] = useState(0);
-  // Reference for animation frame request ID
-  const requestId = useRef<number | undefined>(undefined);
+  const [controller, isPlaying] = useControllerWithState(LoopController, [loop]);
 
-  const { isPlaying, togglePlayPause } = msb.usePlayPauseLoop(loop);
-
-  // Update frameCount state regularly when playing
   useEffect(() => {
-    if (!isPlaying) return;
-
-    const updateFrameCount = () => {
-      setFrameCount(loop.getFrameCount());
-      requestId.current = requestAnimationFrame(updateFrameCount);
-    };
-
-    requestId.current = requestAnimationFrame(updateFrameCount);
-
+    loop.onFrame = () => setFrameCount(loop.getFrameCount());
+    if (!isPlaying) setFrameCount(loop.getFrameCount());
     return () => {
-      if (requestId.current) {
-        cancelAnimationFrame(requestId.current);
-      }
+      loop.onFrame = undefined;
     };
   }, [isPlaying, loop]);
 
@@ -96,16 +126,68 @@ const PlayPauseLoopComponent: React.FC = () => {
       alignItems="center"
       gap={2}
       p={2}
+      mb={4}
+      border={1}
+      borderColor="grey.400"
+      borderRadius={2}
     >
+      <Typography variant="h6">Single Loop Demo</Typography>
       <Button
         variant="contained"
         color={isPlaying ? 'secondary' : 'primary'}
-        onClick={togglePlayPause}
+        onClick={controller.togglePlayPause}
         sx={{ width: 120 }}
       >
         {isPlaying ? 'Pause' : 'Play'}
       </Button>
-      <Typography variant="body1">Frame Count: {frameCount}</Typography>
+      <Typography variant="body1">Counter: {frameCount}</Typography>
+    </Box>
+  );
+};
+
+// Synchronized two-loop demo
+const SynchronizedLoopsComponent: React.FC = () => {
+  const loopA = useRef(new Loop()).current;
+  const loopB = useRef(new Loop()).current;
+  const [frameCountA, setFrameCountA] = useState(0);
+  const [frameCountB, setFrameCountB] = useState(0);
+  const [controller, isPlaying] = useControllerWithState(SynchronizedLoopsController, [[loopA, loopB]]);
+
+  useEffect(() => {
+    loopA.onFrame = () => setFrameCountA(loopA.getFrameCount());
+    loopB.onFrame = () => setFrameCountB(loopB.getFrameCount());
+    if (!isPlaying) {
+      setFrameCountA(loopA.getFrameCount());
+      setFrameCountB(loopB.getFrameCount());
+    }
+    return () => {
+      loopA.onFrame = undefined;
+      loopB.onFrame = undefined;
+    };
+  }, [isPlaying, loopA, loopB]);
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      gap={2}
+      p={2}
+      border={1}
+      borderColor="grey.400"
+      borderRadius={2}
+    >
+      <Typography variant="h6">Synchronized Two-Loop Demo</Typography>
+      <Button
+        variant="contained"
+        color={isPlaying ? 'secondary' : 'primary'}
+        onClick={controller.togglePlayPause}
+        sx={{ width: 120 }}
+      >
+        {isPlaying ? 'Pause' : 'Play'}
+      </Button>
+      <Typography variant="body1">Counter A: {frameCountA}</Typography>
+      <Typography variant="body1">Counter B: {frameCountB}</Typography>
     </Box>
   );
 };
@@ -113,7 +195,8 @@ const PlayPauseLoopComponent: React.FC = () => {
 function App() {
   return (
     <div className="App">
-      <PlayPauseLoopComponent />
+      <SingleLoopComponent />
+      <SynchronizedLoopsComponent />
     </div>
   );
 }

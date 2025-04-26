@@ -17,6 +17,7 @@
     "**/*.stories.tsx",
     "pages",
     "public",
-    "src/pages/**/*"
+    "src/pages/**/*",
+    "doc"
   ]
 }

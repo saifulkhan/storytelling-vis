@@ -16,9 +16,9 @@ import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
-import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
-import mlNumFATableMirrored from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
-import mlNumFATablePCP from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
+import covid19NumFATable from '../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import mlNumFATableMirrored from '../assets/feature-action-table/ml-numerical-fa-table-line.json';
+import mlNumFATablePCP from '../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const tableDataMap: { [tableName: string]: msb.FeatureActionTableData[] } = {
   'Covid19 Single Location': covid19NumFATable,

@@ -29,9 +29,10 @@ import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
-import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
-import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
+import { useControllerWithState } from '../useControllerWithState';
+import covid19CasesData from '../assets/data/covid19-cases-data.json';
+import covid19NumFATable from '../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import covid19CategoricalData from '../assets/feature-action-table/covid-19-categorical-table-1.json';
 
 const StoryCovid19Gaussian = () => {
   const WIDTH = 1200,
@@ -52,7 +53,7 @@ const StoryCovid19Gaussian = () => {
   >([]);
   
   const plot = useRef(new msb.LinePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
+  const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -129,7 +130,7 @@ const StoryCovid19Gaussian = () => {
       .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
-    pause();
+    controller.pause();
 
     return () => {};
   }, [region, casesData, numericalFATable]);
@@ -268,7 +269,7 @@ const StoryCovid19Gaussian = () => {
                       variant="contained"
                       color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
-                      onClick={togglePlayPause}
+                      onClick={() => controller.togglePlayPause()}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }

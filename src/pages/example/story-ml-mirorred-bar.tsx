@@ -28,8 +28,9 @@ import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
-import mlTrainingData from '../../assets/data/ml-training-data.json';
-import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
+import { useControllerWithState } from '../useControllerWithState';
+import mlTrainingData from '../assets/data/ml-training-data.json';
+import mlNumFATable from '../assets/feature-action-table/ml-numerical-fa-table-line.json';
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,
@@ -51,11 +52,9 @@ const StoryMLMirroredBar = () => {
 
   const linePlot = useRef(new msb.LinePlot()).current;
   const mirroredBarChart = useRef(new msb.MirroredBarChart()).current;
-
   // control both plots together
-  const { isPlaying, togglePlayPause, pause } = msb.useSynchronizedPlots([
-    linePlot,
-    mirroredBarChart,
+  const [controller, isPlaying] = useControllerWithState(msb.SynchronizedPlotsController, [
+    [linePlot, mirroredBarChart],
   ]);
 
   useEffect(() => {
@@ -127,7 +126,7 @@ const StoryMLMirroredBar = () => {
       .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
-    pause();
+    controller.pause();
 
     return () => {};
   }, [selectedHyperparam, mlData]);
@@ -237,7 +236,7 @@ const StoryMLMirroredBar = () => {
                       variant="contained"
                       color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
-                      onClick={togglePlayPause}
+                      onClick={() => controller.togglePlayPause()}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }

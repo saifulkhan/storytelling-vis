@@ -57,7 +57,6 @@ yarn add meta-storyboard
 
 ## Steps & Template
 
-
 Story development is a four-step process:
 
 1. **Load data and feature-action table**:
@@ -70,9 +69,9 @@ Story development is a four-step process:
 
 3. **Create story**: Create a plot and set its data and plot properties. We provide some example plots such as `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
 
-4. **Animate the story**: Use play and pause button to animate the story. See example hooks in GitHub repository `src/hooks/`.
+4. **Animate the story**: Use play and pause button to animate the story. See the animation controllers in GitHub repository `src/animation-controller`.
 
-For example,
+For example (using React but you can use any other framework):
 
 ```tsx
 import * as msb from 'meta-storyboard';
@@ -88,8 +87,11 @@ const timelineActions = new msb.FeatureActionFactory()
   .setData(data)
   .create();
 
-// 3. Create a plot and set its data/properties
-const plot = new msb.LinePlot()
+// 3. Initialize a plot and animation controller
+const plot = useRef(new msb.LinePlot()).current;
+const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
+
+plot
   .setData(data)
   .setName('My Plot')
   .setPlotProps({ /* plot properties */ })
@@ -97,8 +99,7 @@ const plot = new msb.LinePlot()
   .setActions(timelineActions);
 
 // 4. Animate
-const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
-onClick={togglePlayPause};
+onClick={controller.togglePlayPause};
 ```
 
 Template using gaussian mixture model for segmenting timeseries based on importance.
@@ -123,8 +124,11 @@ const timelineActions = new msb.FeatureActionFactory()
   .setData(data)
   .create();
 
-// 3. Create a plot and set its data/properties
-const plot = new msb.LinePlot()
+// 3. Initialize a plot and animation controller
+const plot = useRef(new msb.LinePlot()).current;
+const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
+
+plot
   .setData(data)
   .setName('My Plot')
   .setPlotProps({ /* plot properties */ })
@@ -132,8 +136,7 @@ const plot = new msb.LinePlot()
   .setActions(timelineActions);
 
 // 4. Animate
-const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
-onClick={togglePlayPause};
+onClick={controller.togglePlayPause};
 ```
 
 See more complete [examples](#examples) and their implementation in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages).
@@ -168,9 +171,7 @@ yarn dev
 
 Open <http://localhost:3000> in your browser and access the following examples stories:
 
-## Examples
-
-### Stories
+### Example Stories
 
 The implementation of the example stories is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example) and links:
 
@@ -180,7 +181,7 @@ The implementation of the example stories is in [GitHub](https://github.com/saif
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
 - [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
 
-### Playground (Component Testing)
+### Playground (For Component Testing & Development)
 
 The implementation of the playground pages is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground) and links:
 
@@ -205,31 +206,28 @@ Run unit tests:
 ```bash
 yarn test
 ```
-_Note: Unit tests are under development and may not cover all features._
+_Note: Unit tests are under development._
 
 ---
 
 ## Project Structure
 
 ```
-meta-storyboard/
-├── doc
-├── src
-│   ├── components
-│   │   ├── actions      # Visualization action components (Circle, Connector, Dot, etc.)
-│   │   ├── plots        # Plot components (LinePlot, MirroredBarChart, etc.)
-│   │   └── tables       # Tables for features/actions
-│   ├── hooks            # Custom React.js hooks (e.g., play-pause)
-│   ├── pages            # Next.js pages (examples, playground, etc.)
-│   └── utils
-│       ├── data-processing   # Data processing utilities (Gaussian, etc.)
-│       └── feature-action    # Feature/action utilities
-├── public
-├── package.json
-└── README.md
+.
+└── src
+    ├── animation-controller # Animation controllers
+    ├── components
+    │   ├── actions          # VIS action components, e.g., Circle, Dot, etc.
+    │   ├── plots            # Plots, e.g., LinePlot, etc.
+    │   └── tables           # Tables for features/actions
+    ├── pages
+    │   ├── example          # Example stories
+    │   └── playground       # Playground pages
+    ├── types                # TypeScript types
+    └── utils
+        ├── feature-action 
+        └── gaussian
 ```
-
-
 
 ## Meta-Storyboard (MSB) API
 

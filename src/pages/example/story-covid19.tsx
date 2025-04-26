@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
 import {
@@ -28,8 +28,9 @@ import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
-import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import { useControllerWithState } from '../useControllerWithState';
+import covid19CasesData from '../assets/data/covid19-cases-data.json';
+import covid19NumFATable from '../assets/feature-action-table/covid-19-numerical-fa-table.json';
 
 const StoryCovid19Single = () => {
   const WIDTH = 1200,
@@ -45,7 +46,7 @@ const StoryCovid19Single = () => {
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
 
   const plot = useRef(new msb.LinePlot()).current;
-  const { isPlaying, togglePlayPause, pause } = msb.usePlayPauseLoop(plot);
+  const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -111,7 +112,7 @@ const StoryCovid19Single = () => {
       .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
-    pause();
+    controller.pause();
 
     return () => {};
   }, [region, casesData, numericalFATable]);
@@ -221,7 +222,7 @@ const StoryCovid19Single = () => {
                       variant="contained"
                       color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
-                      onClick={togglePlayPause}
+                      onClick={() => controller.togglePlayPause()}
                       endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }
