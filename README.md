@@ -219,7 +219,7 @@ meta-storyboard/
 │   │   ├── actions      # Visualization action components (Circle, Connector, Dot, etc.)
 │   │   ├── plots        # Plot components (LinePlot, MirroredBarChart, etc.)
 │   │   └── tables       # Tables for features/actions
-│   ├── hooks            # Custom React hooks (e.g., play-pause)
+│   ├── hooks            # Custom React.js hooks (e.g., play-pause)
 │   ├── pages            # Next.js pages (examples, playground, etc.)
 │   └── utils
 │       ├── data-processing   # Data processing utilities (Gaussian, etc.)
@@ -509,7 +509,7 @@ Contributions are welcome! Please open issues or pull requests on [GitHub](https
 
 ### License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details. (TODO)
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ### Support
 
