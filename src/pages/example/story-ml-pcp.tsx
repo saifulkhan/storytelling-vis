@@ -24,7 +24,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-import * as msb from '../../msb';
+import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 

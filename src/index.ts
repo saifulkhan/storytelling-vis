@@ -47,4 +47,4 @@ export {
   segmentByImportantPeaks,
 } from './utils';
 
-export { usePlayPauseLoop, useSynchronizedPlots } from './hooks/';
+export { usePlayPauseLoop, useSynchronizedPlots } from './hooks';

@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { Box } from '@mui/material';
 
 // local import
-import * as msb from '../../msb';
+import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
