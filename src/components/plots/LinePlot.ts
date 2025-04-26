@@ -429,4 +429,12 @@ export class LinePlot extends Plot {
     const xMid = (this.xAxis.range()[0] + this.xAxis.range()[1]) / 2;
     return x >= xMid ? 'left' : 'right';
   }
+
+  togglePlayPause() {
+    if (this.isPlayingRef.current) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
 }

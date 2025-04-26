@@ -469,4 +469,12 @@ export class MirroredBarChart extends Plot {
       [this.width - this.margin.right, this.height - this.margin.bottom],
     ];
   }
+
+  togglePlayPause() {
+    if (this.isPlayingRef.current) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
 }

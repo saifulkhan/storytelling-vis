@@ -25,14 +25,14 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-import * as msb from '../..';
+// import * as msb from '../..';
 // import from npm library
-// import * as msb from 'meta-storyboard';
+import * as msb from 'meta-storyboard';
 
 import { useControllerWithState } from '../useControllerWithState';
-import covid19CasesData from '../assets/data/covid19-cases-data.json';
-import covid19NumFATable from '../assets/feature-action-table/covid-19-numerical-fa-table.json';
-import covid19CategoricalData from '../assets/feature-action-table/covid-19-categorical-table-1.json';
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
 
 const StoryCovid19Gaussian = () => {
   const WIDTH = 1200,

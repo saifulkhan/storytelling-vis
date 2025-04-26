@@ -7,8 +7,6 @@ export type {
   TimelineActions,
 } from './types';
 
-export { Colors, getSchemeTableau10 } from './components/Colors';
-
 export type {
   ActionTableRow,
   FeatureActionTableRow,
@@ -17,37 +15,7 @@ export type {
   LineProps,
 } from './components';
 
-export {
-  Circle,
-  Connector,
-  Dot,
-  ActionGroup,
-  TextBox,
-  ActionName,
-  ActionPropertiesTable,
-  FeaturePropertiesTable,
-  ActionTable,
-  LinePlot,
-  MirroredBarChart,
-  ParallelCoordinatePlot,
-} from './components';
-
-export {
-  FeatureActionFactory,
-  CategoricalFeature,
-  sortTimeseriesData,
-  searchPeaks,
-  Peak,
-  sliceTimeseriesByDate,
-  generateGaussForPeaks,
-  generateGaussForCatFeatures,
-  maxAcrossSeries,
-  combineSeries,
-  gmm,
-  segmentByImportantPeaks,
-} from './utils';
-
-export {
-  PlayPauseController,
-  SynchronizedPlotsController,
-} from './animation-controller';
+export * from './components/Colors';
+export * from './components';
+export * from './utils';
+export * from './animation-controller';

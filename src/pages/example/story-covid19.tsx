@@ -24,13 +24,13 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-import * as msb from '../..';
+// import * as msb from '../..';
 // import from npm library
-// import * as msb from 'meta-storyboard';
+import * as msb from 'meta-storyboard';
 
 import { useControllerWithState } from '../useControllerWithState';
-import covid19CasesData from '../assets/data/covid19-cases-data.json';
-import covid19NumFATable from '../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 
 const StoryCovid19Single = () => {
   const WIDTH = 1200,
@@ -44,7 +44,6 @@ const StoryCovid19Single = () => {
     {},
   );
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
-
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
 

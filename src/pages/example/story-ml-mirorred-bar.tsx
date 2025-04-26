@@ -24,13 +24,13 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-import * as msb from '../..';
+// import * as msb from '../..';
 // import from npm library
-// import * as msb from 'meta-storyboard';
+import * as msb from 'meta-storyboard';
 
 import { useControllerWithState } from '../useControllerWithState';
-import mlTrainingData from '../assets/data/ml-training-data.json';
-import mlNumFATable from '../assets/feature-action-table/ml-numerical-fa-table-line.json';
+import mlTrainingData from '../../assets/data/ml-training-data.json';
+import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,
@@ -56,6 +56,9 @@ const StoryMLMirroredBar = () => {
   const [controller, isPlaying] = useControllerWithState(msb.SynchronizedPlotsController, [
     [linePlot, mirroredBarChart],
   ]);
+  // control each plot separately
+  // const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [mirroredBarChart]);
+
 
   useEffect(() => {
     if (!chartRefLine.current || !chartRefMirrored.current) return;
@@ -122,7 +125,7 @@ const StoryMLMirroredBar = () => {
       .setName(selectedHyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRefMirrored.current)
-      //.plot(); // <- draw the static plot, useful for testing
+      // .plot(); // <- draw the static plot, useful for testing
       .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
