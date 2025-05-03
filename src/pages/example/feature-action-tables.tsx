@@ -7,20 +7,19 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 
 // local import
-// import * as msb from '../..';
+import * as msb from '../..';
 // import from npm library
-import * as msb from 'meta-storyboard';
+// import * as msb from 'meta-storyboard';
 
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 import mlNumFATableMirrored from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
 import mlNumFATablePCP from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
-const tableDataMap: { [tableName: string]: msb.FeatureActionTableData[] } = {
+const tableDataMap: any = {
   'Covid19 Single Location': covid19NumFATable,
   'ML Provenance': mlNumFATableMirrored,
   'ML Multivariate': mlNumFATablePCP,
@@ -55,9 +54,7 @@ const FeatureActionTablesPage = () => {
     }
   };
 
-  const handleTableChange = async (
-    event: SelectChangeEvent<string>,
-  ) => {
+  const handleTableChange = async (event: any) => {
     setSelectedTable(event.target.value as string);
     if (event.target.value !== '') {
       fetchTableData(event.target.value as string);

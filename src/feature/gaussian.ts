@@ -1,7 +1,7 @@
-import { TimeSeriesData, TimeSeriesPoint } from '../../types';
+import { TimeSeriesData, TimeSeriesPoint } from '../types';
 import { findDateIdx } from '../common';
-import { Peak, searchPeaks, CategoricalFeature } from '../feature-action';
-import { rankPeaksByNormHeight } from '../feature-action/ranking';
+import { Peak, searchPeaks, CategoricalFeature } from '.';
+import { rankPeaksByNormHeight } from './ranking';
 
 // TODO: These magic numbers should be defined better way
 const WINDOW_SIZE = 10;

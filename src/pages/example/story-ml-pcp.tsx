@@ -24,9 +24,9 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-// import * as msb from '../..';
+import * as msb from '../..';
 // import from npm library
-import * as msb from 'meta-storyboard';
+// import * as msb from 'meta-storyboard';
 
 import { useControllerWithState } from '../useControllerWithState';
 import mlTrainingData from '../../assets/data/ml-training-data.json';
@@ -34,7 +34,7 @@ import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-tabl
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,
-    HEIGHT = 800;
+    HEIGHT = 1000;
   const HYPERPARAMS = [
     'channels',
     'kernel_size',
@@ -49,7 +49,10 @@ const StoryMLPCP = () => {
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
   const plot = useRef(new msb.ParallelCoordinatePlot()).current;
-  const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
+  const [controller, isPlaying] = useControllerWithState(
+    msb.PlayPauseController,
+    [plot],
+  );
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -82,10 +85,10 @@ const StoryMLPCP = () => {
 
     // 2. Create timeline actions
     const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
-      .setFAProps({ metric: 'accuracy', window: 0 })
+      .setProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
-      .setTable(numericalFATable) // <- feature-action table
-      .create();  
+      .setNumericalFeatures(numericalFATable) // <- feature-action table
+      .create();
 
     // 3. Create PCP
     plot
@@ -93,7 +96,8 @@ const StoryMLPCP = () => {
       .setName(hyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRef.current)
-      .setActions(timelineActions);
+      .plot();
+    //.setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
     controller.pause();

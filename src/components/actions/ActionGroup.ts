@@ -39,9 +39,7 @@ export class ActionGroup extends Action {
   }
 
   public show(delay = 0, duration = 1000): Promise<number> {
-    const promises = this.actions.map((d: Action) =>
-      d.show(delay, duration),
-    );
+    const promises = this.actions.map((d: Action) => d.show(delay, duration));
     return Promise.all(promises).then((results) => {
       // Return the maximum delay + duration value from all actions
       return Math.max(...results);
@@ -49,9 +47,7 @@ export class ActionGroup extends Action {
   }
 
   public hide(delay = 0, duration = 1000): Promise<number> {
-    const promises = this.actions.map((d: Action) =>
-      d.hide(delay, duration),
-    );
+    const promises = this.actions.map((d: Action) => d.hide(delay, duration));
     return Promise.all(promises).then((results) => {
       // Return the maximum delay + duration value from all actions
       return Math.max(...results);

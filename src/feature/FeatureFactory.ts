@@ -7,7 +7,7 @@ import {
   searchPeaks,
   searchSlopes,
 } from './feature-search';
-import { FeatureName } from './FeatureName';
+import { FeatureName } from '../types/FeatureName';
 import { TimeSeriesData } from 'src/types/TimeSeriesPoint';
 import {
   FeatureSearchProps,
@@ -16,7 +16,7 @@ import {
 
 import { Feature } from './Feature';
 import { createPredicate } from '../common';
-import { Condition } from './Condition';
+import { Condition } from '../types/Condition';
 
 export class FeatureFactory {
   private data: TimeSeriesData;

@@ -22,7 +22,7 @@ import {
   defaultConnectorProperties,
   ActionName,
 } from '../actions';
-import { FeatureName } from '../../utils/feature-action';
+import { FeatureName } from '../../feature';
 import { ActionTable, FeaturePropertiesTable } from './index';
 import { FeatureActionTableRow } from './FeatureActionTableRow';
 

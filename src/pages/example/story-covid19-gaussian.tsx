@@ -25,9 +25,9 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-// import * as msb from '../..';
+import * as msb from '../..';
 // import from npm library
-import * as msb from 'meta-storyboard';
+// import * as msb from 'meta-storyboard';
 
 import { useControllerWithState } from '../useControllerWithState';
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
@@ -44,16 +44,19 @@ const StoryCovid19Gaussian = () => {
   const [numSegment, setNumSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, msb.TimeSeriesData>>(
-    {},
-  );
+  const [casesData, setCasesData] = useState<
+    Record<string, msb.TimeSeriesData>
+  >({});
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
   const [categoricalFeatures, setCategoricalFeatures] = useState<
     msb.CategoricalFeature[]
   >([]);
-  
+
   const plot = useRef(new msb.LinePlot()).current;
-  const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
+  const [controller, isPlaying] = useControllerWithState(
+    msb.PlayPauseController,
+    [plot],
+  );
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -88,6 +91,8 @@ const StoryCovid19Gaussian = () => {
 
       console.log('Cases data: ', casesData);
       console.log('Numerical feature-action table data: ', numericalFATable);
+
+      setRegion('Bolton');
     } catch (error) {
       console.error('Failed to fetch data; error:', error);
     } finally {
@@ -103,15 +108,15 @@ const StoryCovid19Gaussian = () => {
     console.log(`Selected region ${region}'s data: ${data}`);
 
     const gaussian = msb.gmm(data, categoricalFeatures);
-    const segments = msb.segmentByImportantPeaks(gaussian, numSegment);  
+    const segments = msb.segmentByImportantPeaks(gaussian, numSegment);
 
     // 2. Create timeline actions
     const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
-      .setFAProps({
+      .setProps({
         metric: 'Number of cases',
         window: 10,
       })
-      .setTable(numericalFATable) // <- feature-action table
+      .setNumericalFeatures(numericalFATable) // <- feature-action table
       .setData(data) // <- timeseries data
       .create();
 
@@ -158,7 +163,7 @@ const StoryCovid19Gaussian = () => {
   return (
     <>
       <Head>
-        <title>Story | COVID-19 Cases (Gaussian)</title>
+        <title>Story | COVID-19 (Gaussian)</title>
       </Head>
       <Box
         sx={{
@@ -297,4 +302,3 @@ const StoryCovid19Gaussian = () => {
 };
 
 export default StoryCovid19Gaussian;
- 

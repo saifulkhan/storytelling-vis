@@ -1,11 +1,5 @@
 import { Feature } from './Feature';
 
-export enum CategoricalFeatureName {
-  LOCKDOWN = 'LOCKDOWN',
-  LOCKDOWN_START = 'LOCKDOWN_START',
-  LOCKDOWN_END = 'LOCKDOWN_END',
-}
-
 export class CategoricalFeature extends Feature {
   protected description: string = '';
 

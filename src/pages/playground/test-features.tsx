@@ -8,7 +8,6 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 import Head from 'next/head';
@@ -20,7 +19,6 @@ import * as msb from '../..';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 
-
 const WIDTH = 1500,
   HEIGHT = 500;
 
@@ -29,9 +27,9 @@ const FeaturesPage = () => {
   const [loading, setLoading] = useState(true);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, msb.TimeSeriesData>>(
-    {},
-  );
+  const [casesData, setCasesData] = useState<
+    Record<string, msb.TimeSeriesData>
+  >({});
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -59,7 +57,6 @@ const FeaturesPage = () => {
     }
   }, []);
 
-  
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
     const data = casesData[region];
@@ -115,7 +112,7 @@ const FeaturesPage = () => {
     }
   }, [region, casesData]);
 
-  const handleSelectRegion = (event: SelectChangeEvent) => {
+  const handleSelectRegion = (event: any) => {
     const region = event.target.value;
     if (region) {
       setRegion(region);

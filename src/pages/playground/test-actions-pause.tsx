@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 import * as msb from '../..';
 
-const TestActionsPage = () => {
+const TestActionsPause = () => {
   const chartRef = useRef(null);
 
   const margin = { top: 20, right: 30, bottom: 40, left: 50 };
@@ -21,48 +21,6 @@ const TestActionsPage = () => {
       const dst1: msb.Coordinate = [400, 150];
       const dst2: msb.Coordinate = [100, 100];
       const dst3: msb.Coordinate = [100, 300];
-
-      //
-      // Test example action objects
-      //
-      const dot = new msb.Dot()
-        .setProps({
-          size: 5,
-          color: '#FF0000',
-          opacity: 0.5,
-        })
-        .setCanvas(chartRef.current)
-        .setCoordinate([src, dst])
-        .show();
-
-      const circle = new msb.Circle()
-        .setProps({
-          size: 10,
-          color: 'green',
-          opacity: 1,
-        })
-        .setCanvas(chartRef.current)
-        .setCoordinate([src, dst])
-        .show();
-
-      const textBox1 = new msb.TextBox()
-        .setProps({
-          title: '17-02-2024',
-          message:
-            'By 17-02-2024, the number of cases continued to climb higher in Oxford.',
-          horizontalAlign: 'right',
-          verticalAlign: 'top',
-          backgroundColor: 'lightgrey',
-        })
-        .setCanvas(chartRef.current)
-        .setCoordinate([src, dst1])
-        .show();
-
-      const connector = new msb.Connector()
-        .setProps({})
-        .setCanvas(chartRef.current)
-        .setCoordinate([src, dst])
-        .show();
 
       //
       // Test example action group
@@ -108,7 +66,6 @@ const TestActionsPage = () => {
 
       <Box
         sx={{
-          // backgroundColor: "background.default",
           minHeight: '100%',
           py: 8,
         }}
@@ -122,4 +79,4 @@ const TestActionsPage = () => {
   );
 };
 
-export default TestActionsPage;
+export default TestActionsPause;

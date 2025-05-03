@@ -1,7 +1,34 @@
-import { TimeSeriesData } from '../../types';
-import { Peak, searchPeaks } from '../feature-action';
-import { rankPeaksByNormHeight } from '../feature-action/ranking';
+import { TimeSeriesData } from '../types';
+import { Peak } from './Peak';
+import { rankPeaksByNormHeight } from './ranking';
+import { Segment } from '../types';
+import { searchPeaks } from './feature-search';
 
+/**
+ * Segments by the k most important peaks.
+ *
+ * Returns an array of objects containing the index and the corresponding date of each segmentation point.
+ *
+ * @param data - The time series data to segment
+ * @param k - Number of segments (number of peaks to select)
+ * @returns Array of objects: { idx: number, date: Date }
+ */
+export function segmentByPeaks(data: TimeSeriesData, k: number): Segment[] {
+  let peaks: Peak[] = searchPeaks(data);
+  rankPeaksByNormHeight(peaks);
+
+  // create peaks with just index and height
+  const peakIndices: { idx: number; h: number }[] = peaks.map((d: Peak) => ({
+    idx: d.getDataIndex(),
+    h: d.getNormHeight(),
+  }));
+
+  peakIndices.sort((a, b) => b.h - a.h);
+
+  return peakIndices
+    .slice(0, k - 1)
+    .map((d) => ({ idx: d.idx, date: data[d.idx]?.date }));
+}
 
 /**
  * Segments a time series by identifying the k most important peaks with a minimum gap.
@@ -17,7 +44,7 @@ export function segmentByImportantPeaks(
   data: TimeSeriesData,
   k: number,
   deltaMax = 0.1,
-): { idx: number; date: Date }[] {
+): Segment[] {
   // Find and rank all peaks in the data
   let peaks: Peak[] = searchPeaks(data);
   rankPeaksByNormHeight(peaks);
@@ -32,12 +59,14 @@ export function segmentByImportantPeaks(
   const ordering: { idx: number; h: number }[] = [];
 
   while (peakIndices.length) {
-    let bestPeak: { valley: { idx: number; h: number }; idx: number; score: number } | undefined;
+    let bestPeak:
+      | { valley: { idx: number; h: number }; idx: number; score: number }
+      | undefined;
 
     peakIndices.forEach((v1, i) => {
       let closestDist = ordering.reduce(
         (closest, v2) => Math.min(closest, Math.abs(v1.idx - v2.idx)),
-        Math.min(v1.idx, dataLength - v1.idx)
+        Math.min(v1.idx, dataLength - v1.idx),
       );
       let score = (closestDist / dataLength) * (v1.h / 2);
       bestPeak =
@@ -49,9 +78,10 @@ export function segmentByImportantPeaks(
     ordering.push(bestPeak!.valley);
   }
 
-  return ordering.slice(0, k-1).map((d) => ({ idx: d.idx, date: data[d.idx]?.date }));
+  return ordering
+    .slice(0, k - 1)
+    .map((d) => ({ idx: d.idx, date: data[d.idx]?.date }));
 }
-
 
 /**
  * Segments time series data by finding important peaks with a minimum distance constraint.
@@ -67,7 +97,7 @@ export function segmentByImportantPeaks1(
   data: TimeSeriesData,
   k: number,
   deltaMax = 0.1,
-): { idx: number; date: Date }[] {
+): Segment[] {
   if (k <= 1 || data.length === 0) {
     return [];
   }

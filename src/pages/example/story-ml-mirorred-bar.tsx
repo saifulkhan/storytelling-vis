@@ -24,9 +24,9 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
 // local import
-// import * as msb from '../..';
+import * as msb from '../..';
 // import from npm library
-import * as msb from 'meta-storyboard';
+// import * as msb from 'meta-storyboard';
 
 import { useControllerWithState } from '../useControllerWithState';
 import mlTrainingData from '../../assets/data/ml-training-data.json';
@@ -53,12 +53,12 @@ const StoryMLMirroredBar = () => {
   const linePlot = useRef(new msb.LinePlot()).current;
   const mirroredBarChart = useRef(new msb.MirroredBarChart()).current;
   // control both plots together
-  const [controller, isPlaying] = useControllerWithState(msb.SynchronizedPlotsController, [
-    [linePlot, mirroredBarChart],
-  ]);
+  const [controller, isPlaying] = useControllerWithState(
+    msb.SynchronizedPlotsController,
+    [[linePlot, mirroredBarChart]],
+  );
   // control each plot separately
   // const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [mirroredBarChart]);
-
 
   useEffect(() => {
     if (!chartRefLine.current || !chartRefMirrored.current) return;
@@ -100,9 +100,9 @@ const StoryMLMirroredBar = () => {
 
     // 2. Create timeline actions
     const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
-      .setFAProps({ metric: 'accuracy', window: 0 })
+      .setProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
-      .setTable(numericalFATable) // <- feature-action table
+      .setNumericalFeatures(numericalFATable) // <- feature-action table
       .create();
 
     // 3. Create line plot
@@ -121,11 +121,13 @@ const StoryMLMirroredBar = () => {
 
     // 3. Create mirrored bar chart
     mirroredBarChart
-      .setPlotProps({ y1Label: y1AxisName, y2Label: y2AxisName })
-      .setName(selectedHyperparam) // <- selected hyperparameter
-      .setData(data) // <- timeseries data
+      .setPlotProps({
+        y1Label: y1AxisName,
+        y2Label: y2AxisName,
+      } as any)
+      .setName(selectedHyperparam)
+      .setData(data)
       .setCanvas(chartRefMirrored.current)
-      // .plot(); // <- draw the static plot, useful for testing
       .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked

@@ -14,9 +14,9 @@ const TestActionPropertiesTablePage = () => {
   });
 
   return (
-    <div>
+    <>
       <msb.ActionPropertiesTable data={data} setData={setData} />
-    </div>
+    </>
   );
 };
 

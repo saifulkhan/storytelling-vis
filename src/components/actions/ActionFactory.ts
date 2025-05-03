@@ -5,7 +5,7 @@ import { ActionGroup } from './ActionGroup';
 import { Connector, ConnectorProps } from './Connector';
 import { Dot, DotProps } from './Dot';
 import { TextBox, TextBoxProps } from './TextBox';
-import { TimeSeriesPoint } from '../../types/TimeSeriesPoint';
+import { TimeSeriesPoint } from '../../types';
 
 export class ActionFactory {
   constructor() {}

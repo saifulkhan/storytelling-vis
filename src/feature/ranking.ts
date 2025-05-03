@@ -1,5 +1,5 @@
 import { scaleValue } from '../common';
-import { Peak } from '../feature-action';
+import { Peak } from './Peak';
 
 /* Rank used between 0 and MAX_RANK */
 const MAX_RANK = 10;

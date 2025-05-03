@@ -15,7 +15,8 @@ export type {
   LineProps,
 } from './components';
 
-export * from './components/Colors';
 export * from './components';
-export * from './utils';
-export * from './animation-controller';
+export type { MirroredBarChartProps } from './components/plots/MirroredBarChart';
+export * from './components/animation-controller';
+export * from './feature';
+export * from './common';

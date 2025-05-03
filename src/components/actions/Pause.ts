@@ -32,4 +32,3 @@ export class Pause extends TextBox {
   }
   // All rendering and animation logic is inherited from TextBox
 }
-

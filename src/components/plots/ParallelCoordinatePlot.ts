@@ -1,19 +1,15 @@
 import * as d3 from 'd3';
-
-import { Colors, LineColor } from '../Colors';
-import { Action } from '../actions';
-import { Plot, PlotProps, defaultPlotProps } from './Plot';
+import { findIndexOfDate, getObjectKeysArray } from '../../common';
 import {
   TimelineActions,
   Coordinate,
   HorizontalAlign,
   VerticalAlign,
-} from '../../types';
-import {
   FeatureName,
-  findIndexOfDate,
-  getObjectKeysArray,
-} from '../../utils';
+} from '../../types';
+import { Colors, LineColor } from '../Colors';
+import { Action } from '../actions';
+import { Plot, PlotProps, defaultPlotProps } from './Plot';
 
 export type ParallelCoordinatePlotProperties = {};
 

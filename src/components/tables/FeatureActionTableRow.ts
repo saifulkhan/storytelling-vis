@@ -1,4 +1,4 @@
-import { Condition, FeatureName } from '../../utils/feature-action';
+import { Condition, FeatureName } from '../../feature';
 import {
   CircleProps,
   DotProps,

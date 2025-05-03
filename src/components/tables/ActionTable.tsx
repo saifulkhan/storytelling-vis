@@ -91,10 +91,7 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   }, [data]); // trigger effect when data changes
 
   const handleAddRow = () => {
-    setRows([
-      ...rows,
-      { action: ActionName.DOT, properties: defaultDotProps },
-    ]);
+    setRows([...rows, { action: ActionName.DOT, properties: defaultDotProps }]);
   };
 
   const handleRemoveRow = (index: number) => {

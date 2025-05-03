@@ -1,4 +1,4 @@
-import { FeatureName } from './FeatureName';
+import { FeatureName } from '../types';
 
 export abstract class Feature {
   protected date: Date;

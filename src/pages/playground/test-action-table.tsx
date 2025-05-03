@@ -5,7 +5,6 @@ import * as msb from '../..';
 // import from npm library
 // import * as msb from 'meta-storyboard';
 
-
 const mockData: msb.ActionTableRow[] = [
   {
     action: msb.ActionName.DOT,
@@ -46,9 +45,9 @@ const TestActionTable = () => {
   const [data, setData] = useState(mockData);
 
   return (
-    <div>
+    <>
       <msb.ActionTable data={data} setData={setData} />
-    </div>
+    </>
   );
 };
 

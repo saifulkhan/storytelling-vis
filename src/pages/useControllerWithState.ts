@@ -7,14 +7,16 @@ import { useMemo, useState } from 'react';
  * @param controllerArgs - Arguments to instantiate the controller
  * @returns [controllerInstance, isPlaying] tuple
  */
-export function useControllerWithState<T extends {
-  togglePlayPause: () => void;
-  pause: () => void;
-  play: () => void;
-  getIsPlaying: () => boolean;
-}>(
+export function useControllerWithState<
+  T extends {
+    togglePlayPause: () => void;
+    pause: () => void;
+    play: () => void;
+    getIsPlaying: () => boolean;
+  },
+>(
   ControllerClass: new (...args: any[]) => T,
-  controllerArgs: any[]
+  controllerArgs: any[],
 ): [T, boolean] {
   const [isPlaying, setIsPlaying] = useState(false);
 

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import {
   Box,
@@ -8,14 +7,15 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 import Head from 'next/head';
 
-import { TimeSeriesData } from '../../types';
-import { LinePlot, LineProps } from '../../components';
-import { generateGaussForPeaks } from '../../utils';
+// local import
+import * as msb from '../..';
+// import from npm library
+// import * as msb from 'meta-storyboard';
+
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 
 const WIDTH = 1500,
@@ -25,11 +25,11 @@ const TestNFToGaussianPage = () => {
   const chartRef = useRef(null);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
-    {},
-  );
+  const [casesData, setCasesData] = useState<
+    Record<string, msb.TimeSeriesData>
+  >({});
 
-  const plot = useRef(new LinePlot()).current;
+  const plot = useRef(new msb.LinePlot()).current;
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -43,7 +43,7 @@ const TestNFToGaussianPage = () => {
             y: +y,
           })),
         ]),
-      ) as Record<string, TimeSeriesData>;
+      ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       const loadedRegions = Object.keys(casesData).sort();
       setRegions(loadedRegions);
@@ -58,15 +58,15 @@ const TestNFToGaussianPage = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
-    const data: TimeSeriesData = casesData[region];
-    const gauss: TimeSeriesData[] = generateGaussForPeaks(data, '', 10);
+    const data: msb.TimeSeriesData = casesData[region];
+    const gauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data, '', 10);
     console.debug('data: ', data);
     console.debug('gauss: ', gauss);
 
     // Add the original timeseries data as the first curve
     gauss.unshift(data);
 
-    new LinePlot()
+    new msb.LinePlot()
       .setData(gauss)
       .setPlotProps({
         xLabel: 'Date',
@@ -80,13 +80,13 @@ const TestNFToGaussianPage = () => {
             return {
               stroke: '#D3D3D3',
               strokeWidth: 1,
-            } as LineProps;
+            };
           } else {
             return {
               stroke: schemeCategory10[i - 1],
               strokeWidth: 2,
               onRightAxis: true,
-            } as LineProps;
+            };
           }
         }),
       )
@@ -94,7 +94,7 @@ const TestNFToGaussianPage = () => {
       .plot();
   }, [region]);
 
-  const handleSelectRegion = (event: SelectChangeEvent) => {
+  const handleSelectRegion = (event: any) => {
     const region = event.target.value;
     if (region) {
       setRegion(region);

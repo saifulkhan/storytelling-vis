@@ -70,12 +70,13 @@ class SynchronizedLoopsController {
     }
   };
   play = () => {
-    this.loops.forEach(loop => loop.play());
+    this.loops.forEach((loop) => loop.play());
   };
   pause = () => {
-    this.loops.forEach(loop => loop.pause());
+    this.loops.forEach((loop) => loop.pause());
   };
-  getIsPlaying = () => this.loops.some(loop => (loop as any).isPlayingRef?.current);
+  getIsPlaying = () =>
+    this.loops.some((loop) => (loop as any).isPlayingRef?.current);
 }
 
 // Minimal PlayPauseController for Loop
@@ -109,7 +110,9 @@ class LoopController {
 const SingleLoopComponent: React.FC = () => {
   const loop = useRef(new Loop()).current;
   const [frameCount, setFrameCount] = useState(0);
-  const [controller, isPlaying] = useControllerWithState(LoopController, [loop]);
+  const [controller, isPlaying] = useControllerWithState(LoopController, [
+    loop,
+  ]);
 
   useEffect(() => {
     loop.onFrame = () => setFrameCount(loop.getFrameCount());
@@ -151,7 +154,10 @@ const SynchronizedLoopsComponent: React.FC = () => {
   const loopB = useRef(new Loop()).current;
   const [frameCountA, setFrameCountA] = useState(0);
   const [frameCountB, setFrameCountB] = useState(0);
-  const [controller, isPlaying] = useControllerWithState(SynchronizedLoopsController, [[loopA, loopB]]);
+  const [controller, isPlaying] = useControllerWithState(
+    SynchronizedLoopsController,
+    [[loopA, loopB]],
+  );
 
   useEffect(() => {
     loopA.onFrame = () => setFrameCountA(loopA.getFrameCount());

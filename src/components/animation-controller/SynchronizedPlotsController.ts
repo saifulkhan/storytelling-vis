@@ -19,7 +19,7 @@ export class SynchronizedPlotsController {
    */
   togglePlayPause(): void {
     this.isPlaying = !this.isPlaying;
-    
+
     this.plots.forEach((plot) => {
       if (plot && typeof plot.togglePlayPause === 'function') {
         plot.togglePlayPause();
@@ -32,7 +32,7 @@ export class SynchronizedPlotsController {
    */
   pause(): void {
     this.isPlaying = false;
-    
+
     this.plots.forEach((plot) => {
       if (plot && typeof plot.pause === 'function') {
         plot.pause();
@@ -45,7 +45,7 @@ export class SynchronizedPlotsController {
    */
   play(): void {
     this.isPlaying = true;
-    
+
     this.plots.forEach((plot) => {
       if (plot && typeof plot.play === 'function') {
         plot.play();

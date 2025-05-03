@@ -4,11 +4,12 @@ import { Min } from './Min';
 import { Max } from './Max';
 import { Fall } from './Fall';
 import { Rise } from './Raise';
-import { TimeSeriesData } from 'src/types/TimeSeriesPoint';
+import { TimeSeriesData } from '../types';
 import { findDateIdx, maxIndex, mean, minIndex, normalise } from '../common';
 import { Current } from './Current';
 import { Last } from './Last';
 import { CategoricalFeature } from './CategoricalFeature';
+import { NumericalFeature } from './NumericalFeature';
 
 const WINDOW = 10;
 
@@ -583,6 +584,22 @@ export function searchLast(
 }
 
 /**
+ * Finds the numerical feature for a given date from a list of numerical features.
+ * @param features - Array of NumericalFeature objects
+ * @param date - The date to search for (Date object)
+ * @returns The NumericalFeature for the given date, or undefined if not found
+ */
+export function findNumericalFeatureByDate(
+  features: NumericalFeature[],
+  date: Date,
+): NumericalFeature | undefined {
+  return features.find((feature) => {
+    // compare dates ignoring time
+    return feature.getDate().toDateString() === date.toDateString();
+  });
+}
+
+/**
  * Finds the categorical feature for a given date from a list of categorical features.
  * @param features - Array of CategoricalFeature objects
  * @param date - The date to search for (Date object)
@@ -593,7 +610,6 @@ export function findCategoricalFeatureByDate(
   date: Date,
 ): CategoricalFeature | undefined {
   return features.find((feature) => {
-    // Compare dates ignoring time
     return feature.getDate().toDateString() === date.toDateString();
   });
 }
@@ -602,7 +618,7 @@ export function findCategoricalFeatureByDate(
  * Finds the categorical feature closest to a given date from a list of categorical features.
  * If an exact match is found, it returns that feature. Otherwise, it returns the feature
  * with the closest date within a specified maximum difference (in days).
- * 
+ *
  * @param features - Array of CategoricalFeature objects
  * @param date - The date to search for (Date object)
  * @param maxDaysDifference - Maximum allowed difference in days (default: 3)
@@ -611,32 +627,32 @@ export function findCategoricalFeatureByDate(
 export function findClosestCategoricalFeature(
   features: CategoricalFeature[],
   date: Date,
-  maxDaysDifference: number = 3
+  maxDaysDifference: number = 3,
 ): CategoricalFeature | undefined {
-  // First try to find an exact match
-  const exactMatch = features.find((feature) => 
-    feature.getDate().toDateString() === date.toDateString()
+  // first, try to find an exact match
+  const exactMatch = features.find(
+    (feature) => feature.getDate().toDateString() === date.toDateString(),
   );
-  
+
   if (exactMatch) {
     return exactMatch;
   }
-  
-  // If no exact match, find the closest one within maxDaysDifference
+
+  // if no exact match, find the closest one within maxDaysDifference
   const targetTime = date.getTime();
   let closestFeature: CategoricalFeature | undefined;
   let minDifference = Number.MAX_SAFE_INTEGER;
-  
+
   for (const feature of features) {
     const featureTime = feature.getDate().getTime();
     const timeDifference = Math.abs(featureTime - targetTime);
-    const daysDifference = timeDifference / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-    
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24); // convert milliseconds to days
+
     if (daysDifference <= maxDaysDifference && daysDifference < minDifference) {
       minDifference = daysDifference;
       closestFeature = feature;
     }
   }
-  
+
   return closestFeature;
 }

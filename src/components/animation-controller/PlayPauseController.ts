@@ -19,7 +19,7 @@ export class PlayPauseController {
    */
   togglePlayPause(): void {
     this.isPlaying = !this.isPlaying;
-    
+
     if (this.isPlaying) {
       this.controlledObject.play();
     } else {
@@ -57,4 +57,3 @@ export class PlayPauseController {
     this.pause();
   }
 }
- 

@@ -16,15 +16,14 @@
     "access": "public"
   },
   "scripts": {
+    "format": "prettier --write .",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx && prettier --check .",
     "type-check": "tsc",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "build:lib": "rimraf dist && rollup -c && node scripts/fix-declaration-paths.js",
-    "prepublishOnly": "npm run build:lib"
+    "build:lib": "rimraf dist && rollup -c && node scripts/fix-declaration-paths.js"
   },
   "browserslist": [
     "> 0.5%",
@@ -39,8 +38,7 @@
   },
   "dependencies": {
     "d3": ">=7.0.0",
-    "d3-scale-chromatic": ">=3.0.0",
-    "meta-storyboard": "^0.1.9"
+    "d3-scale-chromatic": ">=3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

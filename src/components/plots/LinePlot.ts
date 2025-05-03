@@ -8,7 +8,7 @@ import {
   HorizontalAlign,
   VerticalAlign,
 } from '../../types';
-import { findDateIdx, findIndexOfDate } from '../../utils';
+import { findDateIdx, findIndexOfDate } from '../../common';
 import { Action } from '../actions';
 
 const ID_AXIS_SELECTION = '#id-axes-selection',

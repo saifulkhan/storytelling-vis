@@ -1,6 +1,5 @@
-// Export all feature-action utilities
 export * from './CategoricalFeature';
-export * from './Condition';
+export * from '../types/Condition';
 export * from './Current';
 export * from './Fall';
 export * from './FeatureSearchProps';
@@ -9,7 +8,7 @@ export * from './Last';
 export * from './Feature';
 export * from './FeatureActionFactory';
 export * from './FeatureFactory';
-export * from './FeatureName';
+export * from '../types/FeatureName';
 export * from './Max';
 export * from './Min';
 export * from './NumericalFeature';
@@ -18,3 +17,5 @@ export * from './Raise';
 export * from './Slope';
 export * from './feature-search';
 export * from './ranking';
+export * from './gaussian';
+export * from './segmentation';

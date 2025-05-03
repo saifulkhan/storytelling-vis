@@ -15,30 +15,30 @@ export type MirroredBarChartProps = PlotProps & {
   bar1Color: string;
   bar2Color: string;
   barWidth: number;
-  barXAxisGap?: number;
+  barXAxisGap: number;
   xLabel: string;
   y1Label: string;
   y2Label: string;
 };
 
+export const defaultMirroredBarChartProps: MirroredBarChartProps = {
+  fontSize: '12px',
+  yAxisLabelFontSize: '14px',
+  yAxisLabelOffset: 10,
+  bar1Color: Colors.CornflowerBlue,
+  bar2Color: Colors.DarkGrey,
+  barWidth: 3,
+  barXAxisGap: 2,
+  xLabel: 'x axis',
+  y1Label: 'y1 axis',
+  y2Label: 'y2 axis',
+  ticks: true,
+};
+
 const ID_AXIS_SELECTION = '#id-axes-selection';
 
 export class MirroredBarChart extends Plot {
-  protected props: MirroredBarChartProps = {
-    ...defaultPlotProps,
-    margin: { top: 150, right: 50, bottom: 60, left: 60 },
-    fontSize: '12px',
-    yAxisLabelFontSize: '14px',
-    yAxisLabelOffset: 10,
-    bar1Color: Colors.CornflowerBlue,
-    bar2Color: Colors.DarkGrey,
-    barWidth: 3,
-    barXAxisGap: 2,
-    xLabel: 'x axis',
-    y1Label: 'y1 axis',
-    y2Label: 'y2 axis',
-    ticks: true,
-  };
+  protected props: MirroredBarChartProps = defaultMirroredBarChartProps;
 
   data: TimeSeriesData = [];
   name: string = '';
@@ -66,7 +66,7 @@ export class MirroredBarChart extends Plot {
     super();
   }
 
-  public setPlotProps(props: PlotProps): this {
+  public setPlotProps(props: MirroredBarChartProps): this {
     const mirroredProps: Partial<MirroredBarChartProps> = { ...props };
     this.props = { ...this.props, ...mirroredProps };
     return this;

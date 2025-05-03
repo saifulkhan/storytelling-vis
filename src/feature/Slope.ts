@@ -1,5 +1,5 @@
 import { NumericalFeature } from './NumericalFeature';
-import { FeatureName } from './FeatureName';
+import { FeatureName } from '../types';
 
 export class Slope extends NumericalFeature {
   protected slope: number = 0;

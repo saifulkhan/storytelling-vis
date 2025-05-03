@@ -13,9 +13,9 @@ const TestFeaturePropertiesTablePage = () => {
   });
 
   return (
-    <div>
+    <>
       <msb.FeaturePropertiesTable data={data} setData={setData} />
-    </div>
+    </>
   );
 };
 

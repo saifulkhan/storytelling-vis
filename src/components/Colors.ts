@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { FeatureName } from '../utils';
+
+import { FeatureName } from '../types';
 
 export enum Colors {
   DarkGreen = '#006400',
@@ -27,7 +28,6 @@ export enum Colors {
   PlatinumGrey = '#E5E4E2',
   WhiteGrey = '#F5F5F5',
   Red = '#E84A5F',
-
 }
 
 export const LineColor = {} as any;

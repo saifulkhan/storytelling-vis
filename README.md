@@ -1,15 +1,17 @@
 # Meta-Storyboard
 
-
 [![npm version](https://img.shields.io/npm/v/meta-storyboard.svg)](https://www.npmjs.com/package/meta-storyboard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-meta--storyboard-181717.svg?style=flat&logo=github)](https://github.com/saifulkhan/meta-storyboard)
+
 <!-- [![Build Status](https://github.com/saifulkhan/meta-storyboard/actions/workflows/ci.yml/badge.svg)](https://github.com/saifulkhan/meta-storyboard/actions) -->
 
 ---
 
 ## Table of Contents
+
 - [Overview](#overview)
+
   - [Features](#features)
   - [Installation](#installation)
   - [Steps & Template](#steps--template)
@@ -40,12 +42,13 @@
 A JavaScript/TypeScript library for building scalable interactive, animated data stories with the meta-storyboard (MSB) and feature-action design pattern.
 
 ## Features
-- 🟢 **Feature Detection**: Built-in peak and event detection utilities.
-- 🟣 **Action Mapping**: Map features to visual actions (dots, circles, connectors, text boxes, etc.).
-- 🔵 **Animated Plots**: Animate transitions and storytelling sequences.
-- 🟡 **Extensible Components**: Easily add new plot or action types.
-- 🟤 **Example Stories and Playground**: Test and explore components in isolation.
-<!-- - 🟠 **Interactive Tables**: UI for editing feature-action tables. -->
+
+- **Feature Detection**: Built-in peak and event detection utilities.
+- **Action Mapping**: Map features to visual actions (dots, circles, connectors, text boxes, etc.).
+- **Animated Plots**: Animate transitions and storytelling sequences.
+- **Extensible Components**: Easily add new plot or action types.
+- **Example Stories and Playground**: Test and explore components in isolation.
+<!-- - **Interactive Tables**: UI for editing feature-action tables. -->
 
 ## Installation
 
@@ -104,7 +107,6 @@ onClick={controller.togglePlayPause};
 
 Template using gaussian mixture model for segmenting timeseries based on importance.
 
-
 ```tsx
 import * as msb from 'meta-storyboard';
 
@@ -115,7 +117,7 @@ const categoricalFeatures = ...; // categorical features table
 
 // Gaussian Mixture Model (TODO: add more details)
 const gaussian = msb.gmm(data, categoricalFeatures);
-const segments = msb.segmentByImportantPeaks(gaussian, numSegment);  
+const segments = msb.segmentByImportantPeaks(gaussian, numSegment);
 
 // 2. Create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
@@ -203,9 +205,11 @@ The implementation of the playground pages is in [GitHub](https://github.com/sai
 ## Testing
 
 Run unit tests:
+
 ```bash
 yarn test
 ```
+
 _Note: Unit tests are under development._
 
 ---
@@ -225,7 +229,7 @@ _Note: Unit tests are under development._
     │   └── playground       # Playground pages
     ├── types                # TypeScript types
     └── utils
-        ├── feature-action 
+        ├── feature-action
         └── gaussian
 ```
 
@@ -484,18 +488,19 @@ new LinePlot()
 
 This is an experimental feature and incomplete functionality. To add a new table, see `src/services/TableService.ts`
 
-
 ## Additional Information
 
 ### Build & Release
 
 To build the library:
+
 ```bash
 yarn install
 yarn build:lib
 ```
 
 To publish to npm:
+
 ```bash
 npm login
 npm publish
@@ -512,9 +517,9 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 ### Support
 
 If you need help, open a [GitHub issue](https://github.com/saifulkhan/meta-storyboard/issues). For additional plots and early prototypes, see:
+
 - [Observable notebook prototype](https://observablehq.com/d/0a6e9c35a809660e)
 - [First React.js prototype](https://github.com/saifulkhan/storytelling-vis-v.0.1)
-
 
 ### References
 
@@ -524,6 +529,7 @@ If you need help, open a [GitHub issue](https://github.com/saifulkhan/meta-story
 - [Material UI](https://mui.com)
 
 Our work is described in:
+
 > Khan, S., Jones, S., Bach, B., Cha, J., Chen, M., Meikle, J., Roberts, J. C., Thiyagalingam, J., Wood, J., & Ritsos, P. D. (2024). Feature-Action Design Patterns for Storytelling Visualizations with Time Series Data. _arXiv preprint arXiv:2402.03116_.
 
 Please cite our paper as follows:

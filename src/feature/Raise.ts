@@ -1,5 +1,5 @@
 import { NumericalFeature } from './NumericalFeature';
-import { FeatureName } from './FeatureName';
+import { FeatureName } from '../types';
 
 export class Rise extends NumericalFeature {
   protected grad: number = 0;

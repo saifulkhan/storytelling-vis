@@ -7,32 +7,13 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  SelectChangeEvent,
   Slider,
 } from '@mui/material';
 
-import { TimeSeriesData } from '../../types';
-import {
-  CategoricalFeature,
-  generateGaussForPeaks,
-  searchPeaks,
-  segmentByImportantPeaks1,
-  combineSeries,
-  segmentByImportantPeaks,
-  maxAcrossSeries,
-  generateGaussForCatFeatures,
-  gmm,
-  Peak,
-  findCategoricalFeatureByDate,
-  findClosestCategoricalFeature,
-} from '../../utils';
-import {
-  Circle,
-  Dot,
-  getSchemeTableau10,
-  LinePlot,
-  LineProps,
-} from '../../components';
+// local import
+import * as msb from '../..';
+// import from npm library
+// import * as msb from 'meta-storyboard';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
@@ -46,13 +27,13 @@ const TestCombinedGaussianPage = () => {
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
-  const [casesData, setCasesData] = useState<Record<string, TimeSeriesData>>(
-    {},
-  );
+  const [casesData, setCasesData] = useState<
+    Record<string, msb.TimeSeriesData>
+  >({});
   const [categoricalFeatures, setCategoricalFeatures] = useState<
-    CategoricalFeature[]
+    msb.CategoricalFeature[]
   >([]);
-  const [numericalFATable, setNumericalFATable] = useState<any>(null);
+  const [numericalFeatures, setNumericalFeatures] = useState<any>(null);
 
   // slider formatted value
   const valuetext = (value: number) => `${value}`;
@@ -70,7 +51,7 @@ const TestCombinedGaussianPage = () => {
             y: +y,
           })),
         ]),
-      ) as Record<string, TimeSeriesData>;
+      ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
       console.log(
@@ -81,17 +62,19 @@ const TestCombinedGaussianPage = () => {
       // 1.2 Get categorical features
       setCategoricalFeatures(
         covid19CategoricalFATable.map((d) =>
-          new CategoricalFeature()
+          new msb.CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
             .setDescription(d.event),
         ),
       );
-      console.log('Categorical features: ', categoricalFeatures);
+      // prettier-ignore
+      console.debug('TestCombinedGaussianPage: Categorical features: ', categoricalFeatures);
 
       // 1.3 Get numerical feature-action table
-      setNumericalFATable(covid19NumFATable);
-      console.log('Numerical feature-action table: ', numericalFATable);
+      setNumericalFeatures(covid19NumFATable);
+      // prettier-ignore
+      console.debug('TestCombinedGaussianPage: Numerical features: ', numericalFeatures);
 
       setRegion('Bolton');
     } catch (error) {
@@ -109,19 +92,25 @@ const TestCombinedGaussianPage = () => {
     //
 
     // Generate Gaussian time series for numerical peaks
-    const ntsGauss: TimeSeriesData[] = generateGaussForPeaks(data);
+    const ntsGauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data);
     // Generate Gaussian time series for categorical features
-    const ctsGauss: TimeSeriesData[] = generateGaussForCatFeatures(
+    const ctsGauss: msb.TimeSeriesData[] = msb.generateGaussForCatFeatures(
       data,
       categoricalFeatures,
     );
     // Compute the maximum value across all numerical and categorical Gaussian series
-    const ntsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ntsGauss);
-    const ctsBoundGauss: TimeSeriesData = maxAcrossSeries(data, ctsGauss);
+    const ntsBoundGauss: msb.TimeSeriesData = msb.maxAcrossSeries(
+      data,
+      ntsGauss,
+    );
+    const ctsBoundGauss: msb.TimeSeriesData = msb.maxAcrossSeries(
+      data,
+      ctsGauss,
+    );
     console.log('ntsBoundGauss:', ntsBoundGauss);
     console.log('ctsBoundGauss:', ctsBoundGauss);
     // Combine the bounded Gaussian series into a single time series
-    let combined = combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
+    let combined = msb.combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
     console.log('combined:', combined);
 
     //
@@ -129,24 +118,22 @@ const TestCombinedGaussianPage = () => {
     //
 
     // Use the gmm function to generate and combine Gaussian series in one step
-    combined = gmm(data, categoricalFeatures);
+    combined = msb.gmm(data, categoricalFeatures);
     console.log('combined:', combined);
 
     //
     // --- Test segmentation - we have two functions implemented slightly differently ---
     //
 
-    // Option-1: Using segmentByImportantPeaks with k=4 segments
+    /*
+    // Option-1: Using segmentByImportantPeaks 
     const segmentPoints1 = segmentByImportantPeaks(combined, segment, 0.15);
-    console.log('Segmentation points (method 1):', segmentPoints1);
-
-    // Option-2: Using segmentByImportantPeaks1 with user-defined segment count
-    const segmentPoints2 = segmentByImportantPeaks1(combined, segment, 0.15);
-    console.log('Segmentation points (method 2):', segmentPoints2);
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: Segmentation points (method 1):', segmentPoints1);
 
     // Find categorical features at segmentation points
     const featuresAtSegmentPoints1 = segmentPoints1.map((point) => {
-      const feature = findClosestCategoricalFeature(
+      const feature = findCategoricalFeatureByDate(
         categoricalFeatures,
         point.date,
       );
@@ -156,13 +143,21 @@ const TestCombinedGaussianPage = () => {
         feature: feature ? feature.getDescription() : 'No feature found',
       };
     });
-    console.log(
-      'Categorical features at segmentation points (method 1):',
-      featuresAtSegmentPoints1,
-    );
+    
+    // Option-2: Using segmentByImportantPeaks1 
+    const segmentPoints2 = segmentByImportantPeaks1(combined, segment, 0.15);
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: Segmentation points (method 2):', segmentPoints2);
+    */
 
-    const featuresAtSegmentPoints2 = segmentPoints2.map((point) => {
-      const feature = findClosestCategoricalFeature(
+    // Option-3: Using segmentByPeaks
+    const segmentedPoints = msb.segmentByPeaks(combined, segment);
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: segmentedPoints:', segmentedPoints);
+
+    // Find categorical features at segmentation points
+    const catFeaturesAtSegments = segmentedPoints.map((point) => {
+      const feature = msb.findCategoricalFeatureByDate(
         categoricalFeatures,
         point.date,
       );
@@ -172,17 +167,29 @@ const TestCombinedGaussianPage = () => {
         feature: feature ? feature.getDescription() : 'No feature found',
       };
     });
-    console.log(
-      'Categorical features at segmentation points (method 2):',
-      featuresAtSegmentPoints2,
-    );
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: catFeaturesAtSegments:', catFeaturesAtSegments);
+
+    const numFeaturesAtSegments = segmentedPoints.map((point) => {
+      const feature = msb.findNumericalFeatureByDate(
+        numericalFeatures,
+        point.date,
+      );
+      return {
+        segmentIndex: point.idx,
+        date: point.date,
+        // feature: feature ? feature.getDescription() : 'No feature found',
+      };
+    });
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: numFeaturesAtSegments:', numFeaturesAtSegments);
 
     //
     // --- Draw everything ---
     //
 
     // show original timeseries, gaussians, and combined
-    const plot = new LinePlot()
+    const plot = new msb.LinePlot()
       .setData([data, ntsBoundGauss, ctsBoundGauss, combined])
       .setPlotProps({
         xLabel: 'Date',
@@ -197,14 +204,14 @@ const TestCombinedGaussianPage = () => {
               stroke: '#D3D3D3',
               strokeWidth: 2,
               showPoints: false,
-            } as LineProps;
+            };
           } else {
             return {
-              stroke: getSchemeTableau10(i - 1),
+              stroke: msb.getSchemeTableau10(i - 1),
               strokeWidth: 2,
               onRightAxis: true,
               showPoints: false,
-            } as LineProps;
+            };
           }
         }),
       )
@@ -212,11 +219,11 @@ const TestCombinedGaussianPage = () => {
       .plot();
 
     // show peaks for debugging purpose
-    const peaks: Peak[] = searchPeaks(data);
-    peaks.forEach((d: Peak, i: number) => {
+    const peaks: msb.Peak[] = msb.searchPeaks(data);
+    peaks.forEach((d: msb.Peak, i: number) => {
       if (!chartRef.current) return;
 
-      new Dot()
+      new msb.Dot()
         .setProps({
           size: 4,
           color: 'blue',
@@ -228,9 +235,9 @@ const TestCombinedGaussianPage = () => {
     });
 
     // Visualize segmentation points from method 1
-    segmentPoints1.forEach((point) => {
+    segmentedPoints.forEach((point) => {
       if (!chartRef.current) return;
-      new Circle()
+      new msb.Circle()
         .setProps({
           size: 8,
           color: 'blue',
@@ -241,12 +248,12 @@ const TestCombinedGaussianPage = () => {
         .show();
 
       // If there's a categorical feature at this point, add a label or different visualization
-      const feature = findClosestCategoricalFeature(
+      const feature = msb.findCategoricalFeatureByDate(
         categoricalFeatures,
         point.date,
       );
       if (feature) {
-        new Circle()
+        new msb.Circle()
           .setProps({
             size: 12,
             color: 'green',
@@ -258,6 +265,7 @@ const TestCombinedGaussianPage = () => {
       }
     });
 
+    /*
     // Visualize segmentation points from method 2
     segmentPoints2.forEach((point) => {
       if (!chartRef.current) return;
@@ -273,7 +281,7 @@ const TestCombinedGaussianPage = () => {
         .show();
 
       // If there's a categorical feature at this point, add a label or different visualization
-      const feature = findClosestCategoricalFeature(
+      const feature = findCategoricalFeatureByDate(
         categoricalFeatures,
         point.date,
       );
@@ -289,11 +297,12 @@ const TestCombinedGaussianPage = () => {
           .show();
       }
     });
+    */
 
     return () => {};
   }, [region, segment]);
 
-  const handleSelectRegion = (event: SelectChangeEvent) => {
+  const handleSelectRegion = (event: any) => {
     const region = event.target.value;
     if (region) {
       setRegion(region);
