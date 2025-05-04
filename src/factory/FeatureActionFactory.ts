@@ -38,9 +38,10 @@ export class FeatureActionFactory {
 
   private numericalFeatures: NumericalFeature[] = [];
   private categoricalFeatures: CategoricalFeature[] = [];
-  private timelineActions: TimelineAction[] = [];
+
   private actionFactory = new ActionFactory();
   private featureFactory = new FeatureFactory();
+  private timelineActions: TimelineAction[] = [];
   private segments: Segment[] = [];
 
   constructor() {}
@@ -201,28 +202,34 @@ export class FeatureActionFactory {
 
       if (!feature) return;
 
-      const existingAction = this.timelineActions.find(
+      const index = this.timelineActions.findIndex(
         (d) => d[0].getTime() === feature.getDate().getTime(),
-      ) as TimelineActions | undefined;
+      );
 
-      if (existingAction) {
+      if (index >= 0) {
         // prettier-ignore
         console.debug('FeatureActionFactory:actionsForSegments: action already exists');
-        const pasueAction = this.createPauseAction('Numerical', 'Date');
-        this.timelineActions.splice(
-          this.timelineActions.indexOf(existingAction as any),
-          0,
-          [feature.getDate(), pasueAction],
-        );
+        this.timelineActions[index][1].updateProps({ pause: true } as any);
+        // prettier-ignore
+        console.debug('FeatureActionFactory:actionsForSegments: timelineAction:', this.timelineActions[index][1]);
+
+        // const pasueAction = this.createPauseAction('Numerical', 'Date');
+        // this.timelineActions.splice(
+        //   this.timelineActions.indexOf(existingAction as any),
+        //   0,
+        //   [feature.getDate(), pasueAction],
+        // );
+
+        // prettier-ignore
       } else {
         // prettier-ignore
         console.debug('FeatureActionFactory:actionsForSegments: action does not exist');
-        const pasueAction = this.createPauseAction('Categorical', 'Date');
-        this.timelineActions.splice(
-          this.timelineActions.indexOf(existingAction as any),
-          0,
-          [feature.getDate(), pasueAction],
-        );
+        // const pasueAction = this.createPauseAction('Categorical', 'Date');
+        // this.timelineActions.splice(
+        //   this.timelineActions.indexOf(this.timelineActions[index][1]),
+        //   0,
+        //   [feature.getDate(), pasueAction],
+        // );
       }
 
       features.push(feature);
@@ -230,6 +237,8 @@ export class FeatureActionFactory {
 
     // prettier-ignore
     console.debug('FeatureActionFactory:actionsForSegments: features:', features);
+    // prettier-ignore
+    console.debug('FeatureActionFactory:actionsForSegments: timelineActions:', this.timelineActions);
   }
 
   /**
@@ -243,7 +252,7 @@ export class FeatureActionFactory {
     let actions: Action[] = [];
     actionRows.forEach((d: ActionTableRow) => {
       const action = this.actionFactory
-        .create(d.action, d.properties, point)
+        .create(d.action, { ...d.properties, templateVariables: point } as any)
         ?.setFeatureType(feature?.getType());
       if (action) {
         actions.push(action);

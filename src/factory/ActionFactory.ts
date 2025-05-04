@@ -30,7 +30,7 @@ export class ActionFactory {
       case ActionName.DOT:
         return new Dot().setProps(props as DotProps);
       case ActionName.TEXT_BOX:
-        return new TextBox().setProps(props as TextBoxProps, data);
+        return new TextBox().setProps(props as TextBoxProps);
       case ActionName.CIRCLE:
         return new Circle().setProps(props as CircleProps);
       case ActionName.CONNECTOR:

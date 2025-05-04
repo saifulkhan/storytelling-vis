@@ -2,12 +2,19 @@ import * as d3 from 'd3';
 import { ActionName } from './ActionName';
 import { NumericalFeatureName, Coordinate } from '../../types';
 
-const DELAY = 0,
-  DURATION = 1000;
+export type ActionProps = {
+  hide: boolean;
+  pause: boolean;
+};
+
+export const defaultActionProps: ActionProps = {
+  hide: true,
+  pause: false,
+};
 
 export abstract class Action {
   protected type!: ActionName;
-  protected props: any = {};
+  protected props: ActionProps = defaultActionProps;
   protected svg!: SVGGElement;
   protected node: any = null;
   protected coordOrigin!: Coordinate;
@@ -16,8 +23,8 @@ export abstract class Action {
 
   constructor() {}
 
-  public abstract setProps(properties: unknown): this;
-  public abstract updateProps(properties: any): this;
+  public abstract setProps(properties: ActionProps): this;
+  public abstract updateProps(properties: ActionProps): this;
 
   public getType(): ActionName {
     return this.type;
@@ -30,7 +37,7 @@ export abstract class Action {
    **/
   public abstract setCoordinate(coordinate: [Coordinate, Coordinate]): this;
 
-  public show(delay = DELAY, duration = DURATION) {
+  public show(delay = 0, duration = 1000) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.node)
         .transition()
@@ -48,7 +55,11 @@ export abstract class Action {
     });
   }
 
-  public hide(delay = DELAY, duration = DURATION) {
+  public hide(delay = 0, duration = 1000) {
+    if (!this.props.hide) {
+      return Promise.resolve(0);
+    }
+
     return new Promise<number>((resolve, reject) => {
       d3.select(this.node)
         .transition()
@@ -95,5 +106,9 @@ export abstract class Action {
 
   public getFeatureType() {
     return this.featureType;
+  }
+
+  public getProps() {
+    return this.props;
   }
 }

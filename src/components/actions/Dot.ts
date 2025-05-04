@@ -1,15 +1,16 @@
 import * as d3 from 'd3';
 import { ActionName } from './ActionName';
-import { Action } from './Action';
+import { Action, ActionProps, defaultActionProps } from './Action';
 import { Coordinate } from '../../types';
 
-export type DotProps = {
-  size?: number;
-  color?: string;
-  opacity?: number;
+export type DotProps = ActionProps & {
+  size: number;
+  color: string;
+  opacity: number;
 };
 
 export const defaultDotProps: DotProps = {
+  ...defaultActionProps,
   size: 5,
   color: '#000000',
   opacity: 1,
@@ -24,8 +25,8 @@ export class Dot extends Action {
     this.type = ActionName.DOT;
   }
 
-  public setProps(props: DotProps = {}) {
-    this.props = { ...defaultDotProps, ...props };
+  public setProps(props: DotProps) {
+    this.props = { ...this.props, ...props };
     return this;
   }
   public setCanvas(svg: SVGGElement) {
@@ -39,9 +40,9 @@ export class Dot extends Action {
     this.dotNode = d3
       .create('svg')
       .append('circle')
-      .attr('r', this.props.size!)
-      .attr('fill', this.props.color!)
-      .attr('opacity', this.props.opacity!)
+      .attr('r', this.props.size)
+      .attr('fill', this.props.color)
+      .attr('opacity', this.props.opacity)
       .node();
 
     this.node.appendChild(this.dotNode);
@@ -60,9 +61,11 @@ export class Dot extends Action {
     return this;
   }
 
-  public updateProps(properties: any): this {
+  public updateProps(properties: DotProps): this {
+    this.props = { ...this.props, ...properties };
     return this;
   }
+
   public move(
     coordinate: Coordinate,
     delay?: number | undefined,

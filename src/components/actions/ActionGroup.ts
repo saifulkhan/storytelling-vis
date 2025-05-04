@@ -1,4 +1,4 @@
-import { Action } from './Action';
+import { Action, ActionProps } from './Action';
 import { ActionZOrder } from './ActionName';
 import { Coordinate } from '../../types';
 
@@ -14,12 +14,16 @@ export class ActionGroup extends Action {
     return this;
   }
 
-  public setProps(properties: unknown): this {
+  public setProps(props: ActionProps): this {
+    this.props = { ...this.props, ...props };
+
+    this.actions.map((d: Action) => d.setProps(props));
     return this;
   }
 
-  public updateProps(extraObj: any) {
-    this.actions.map((d: Action) => d.updateProps(extraObj));
+  public updateProps(props: ActionProps) {
+    this.props = { ...this.props, ...props };
+    this.actions.map((d: Action) => d.updateProps(props));
     return this;
   }
 

@@ -41,7 +41,7 @@ const StoryCovid19Gaussian = () => {
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [numSegment, setNumSegment] = useState<number>(3);
+  const [numSegment, setNumSegment] = useState<number>(4);
   const [regions, setRegions] = useState<string[]>([]);
   const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<
@@ -116,7 +116,7 @@ const StoryCovid19Gaussian = () => {
       .setData(data)
       .setNumericalFeatures(numericalFATable) // <- feature-action table
       .setCategoricalFeatures(categoricalFeatureTable)
-      .segment(numSegment, 'gmm')
+      .segment(numSegment, 'peak')
       .create();
 
     console.log('StoryCovid19Gaussian: timelineActions: ', timelineActions);
@@ -216,12 +216,12 @@ const StoryCovid19Gaussian = () => {
                     <Slider
                       disabled={false}
                       aria-label="Segments"
-                      defaultValue={3}
+                      defaultValue={4}
                       getAriaValueText={valuetext}
                       step={1}
                       marks
                       min={0}
-                      max={5}
+                      max={10}
                       value={numSegment}
                       valueLabelDisplay="auto"
                       onChange={handleChangeSlider}

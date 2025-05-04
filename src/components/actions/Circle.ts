@@ -1,16 +1,17 @@
 import * as d3 from 'd3';
 import { ActionName } from './ActionName';
-import { Action } from './Action';
+import { Action, ActionProps, defaultActionProps } from './Action';
 import { Coordinate } from '../../types';
 
-export type CircleProps = {
-  size?: number;
-  strokeWidth?: number;
-  color?: string;
-  opacity?: number;
+export type CircleProps = ActionProps & {
+  size: number;
+  strokeWidth: number;
+  color: string;
+  opacity: number;
 };
 
 export const defaultCircleProps: CircleProps = {
+  ...defaultActionProps,
   size: 10,
   strokeWidth: 2,
   color: '#000000',
@@ -26,7 +27,7 @@ export class Circle extends Action {
     this.type = ActionName.CIRCLE;
   }
 
-  public setProps(properties: CircleProps = {}) {
+  public setProps(properties: CircleProps) {
     this.props = { ...defaultCircleProps, ...properties };
     return this;
   }
@@ -45,8 +46,8 @@ export class Circle extends Action {
       .attr('fill', 'none')
       .attr('r', this.props.size!)
       .attr('stroke-width', this.props.strokeWidth!)
-      .attr('stroke', this.props.color!)
-      .attr('opacity', this.props.opacity!)
+      .attr('stroke', this.props.color)
+      .attr('opacity', this.props.opacity)
       .node();
     this.node.appendChild(this.circleNode);
   }
@@ -62,7 +63,8 @@ export class Circle extends Action {
     return this;
   }
 
-  public updateProps(properties: any): this {
+  public updateProps(properties: CircleProps): this {
+    this.props = { ...this.props, ...properties };
     return this;
   }
 

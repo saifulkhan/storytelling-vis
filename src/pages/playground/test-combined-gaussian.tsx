@@ -242,7 +242,7 @@ const TestCombinedGaussianPage = () => {
           size: 4,
           color: 'blue',
           opacity: 0.5,
-        })
+        } as any)
         .setCanvas(chartRef.current)
         .setCoordinate(plot.getCoordinates(d.getDate(), 3))
         .show();
@@ -256,7 +256,7 @@ const TestCombinedGaussianPage = () => {
           size: 8,
           color: 'blue',
           opacity: 1,
-        })
+        } as any)
         .setCanvas(chartRef.current)
         .setCoordinate(plot.getCoordinates(point.date, 3))
         .show();
@@ -272,7 +272,7 @@ const TestCombinedGaussianPage = () => {
             size: 12,
             color: 'green',
             opacity: 1,
-          })
+          } as any)
           .setCanvas(chartRef.current)
           .setCoordinate(plot.getCoordinates(point.date, 3))
           .show();

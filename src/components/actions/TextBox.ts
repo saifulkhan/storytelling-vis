@@ -1,14 +1,9 @@
 import * as d3 from 'd3';
 import { ActionName } from './ActionName';
-import { Action } from './Action';
-import {
-  HorizontalAlign,
-  VerticalAlign,
-  Coordinate,
-  TimeSeriesPoint,
-} from '../../types';
+import { Action, ActionProps, defaultActionProps } from './Action';
+import { HorizontalAlign, VerticalAlign, Coordinate } from '../../types';
 
-export type TextBoxProps = {
+export type TextBoxProps = ActionProps & {
   title: string;
   message: string;
   backgroundColor: string;
@@ -19,9 +14,11 @@ export type TextBoxProps = {
   padding: number;
   fontFamily: string;
   fontSize: string;
+  templateVariables: any;
 };
 
 export const defaultTextBoxProps: TextBoxProps = {
+  ...defaultActionProps,
   title: '...',
   message: '...',
   backgroundColor: '#F8F8F8',
@@ -32,6 +29,7 @@ export const defaultTextBoxProps: TextBoxProps = {
   padding: 3,
   fontFamily: 'Arial Narrow',
   fontSize: '12px',
+  templateVariables: {},
 };
 
 export class TextBox extends Action {
@@ -48,32 +46,55 @@ export class TextBox extends Action {
     this.type = ActionName.TEXT_BOX;
   }
 
-  public setProps(props: TextBoxProps, data?: TimeSeriesPoint) {
+  public setProps(props: TextBoxProps) {
     this.props = { ...defaultTextBoxProps, ...props };
+    // update template variables
+    this.props.templateVariables = {
+      ...defaultTextBoxProps.templateVariables,
+      ...props.templateVariables,
+    };
 
-    if (data) {
-      this.props.message = this.updateStringTemplate(this.props.message!, data);
-      this.props.title = this.updateStringTemplate(this.props.title!, data);
+    if (this.props.templateVariables) {
+      // update message
+      this.props.message = this.updateStringTemplate(
+        this.props.message,
+        this.props.templateVariables,
+      );
+
+      // update title
+      this.props.title = this.updateStringTemplate(
+        this.props.title,
+        this.props.templateVariables,
+      );
     }
     return this;
   }
 
-  public updateProps(args: any) {
-    console.log(
-      'TextBox:updateProps: args: ',
-      args,
-      '\nthis.props:',
-      this.props,
-    );
-    this.props.message = this.updateStringTemplate(
-      this.props.message!,
-      args.data,
-    );
-    this.props.title = this.updateStringTemplate(this.props.title!, args.data);
-    // console.log("TextBox:updateProps: ", this.props.message, this.props.title);
+  public updateProps(props: TextBoxProps) {
+    this.props = { ...this.props, ...props };
+    // update template variables
+    this.props.templateVariables = {
+      ...defaultTextBoxProps.templateVariables,
+      ...props.templateVariables,
+    };
 
-    this.props.horizontalAlign = args.horizontalAlign;
-    this.props.verticalAlign = args.verticalAlign;
+    // prettier-ignore
+    console.debug('TextBox:updateProps: props: ', props, '\nthis.props:', this.props);
+    if (this.props.templateVariables) {
+      this.props.message = this.updateStringTemplate(
+        this.props.message,
+        this.props.templateVariables,
+      );
+      this.props.title = this.updateStringTemplate(
+        this.props.title,
+        this.props.templateVariables,
+      );
+    }
+    // prettier-ignore
+    console.debug("TextBox:updateProps: ", this.props.message, this.props.title);
+
+    this.props.horizontalAlign = props.horizontalAlign;
+    this.props.verticalAlign = props.verticalAlign;
     return this;
   }
 
@@ -351,33 +372,37 @@ export class TextBox extends Action {
    ** const result = updateStringTemplate(templateString, variables);
    ** console.log(result); // Output: "Hello, John Doe! You are 30 years old."
    **/
-  private updateStringTemplate(
-    template: string,
-    data: TimeSeriesPoint,
-  ): string {
-    // regex to match variable placeholders
+
+  private updateStringTemplate(template: string, object: any): string {
     const variableRegex = /\${(\w+)}/g;
 
-    return template.replace(variableRegex, (match, variableName) => {
-      const value = data[variableName];
+    return template.replace(variableRegex, (match, variableName, offset) => {
+      let variableValue = object[variableName];
 
-      if (value === undefined) {
+      // fallback: if "value" not found, try "y" (for time series data)
+      if (
+        (variableName === 'value' || variableName === 'y') &&
+        variableValue === undefined
+      ) {
+        variableValue = object[variableName === 'value' ? 'y' : 'value'];
+      }
+
+      if (variableValue === undefined) {
         return match;
       }
 
-      // handle date formatting if the value is a Date object
-      if (variableName === 'date' && value instanceof Date) {
-        return value.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+      // date formatting
+      if (variableValue instanceof Date) {
+        return variableValue.toLocaleDateString('en-GB');
       }
 
-      // check if this variable is being used with a percentage sign
-      // handle percentage formatting if the template has % after the variable
-      const isFollowedByPercent = template.includes(`${match}%`);
-      if (isFollowedByPercent && typeof value === 'number') {
-        return (value * 100).toFixed(2);
+      // percentage formatting: check if the next character in the template is '%'
+      const nextChar = template[offset + match.length];
+      if (nextChar === '%' && typeof variableValue === 'number') {
+        return (variableValue * 100).toFixed(2);
       }
 
-      return value.toString();
+      return variableValue.toString();
     });
   }
 }

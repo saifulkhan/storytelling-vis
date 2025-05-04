@@ -1,14 +1,15 @@
 import * as d3 from 'd3';
 import { ActionName } from './ActionName';
-import { Action } from './Action';
+import { Action, ActionProps, defaultActionProps } from './Action';
 import { Coordinate } from '../../types';
 
-export type ConnectorProps = {
-  stroke?: string;
-  opacity?: number;
+export type ConnectorProps = ActionProps & {
+  stroke: string;
+  opacity: number;
 };
 
 export const defaultConnectorProperties: ConnectorProps = {
+  ...defaultActionProps,
   stroke: '#000000',
   opacity: 1,
 };
@@ -22,7 +23,7 @@ export class Connector extends Action {
     this.type = ActionName.CONNECTOR;
   }
 
-  public setProps(properties: ConnectorProps = {}) {
+  public setProps(properties: ConnectorProps) {
     this.props = { ...defaultConnectorProperties, ...properties };
     return this;
   }
@@ -38,8 +39,8 @@ export class Connector extends Action {
     this.connectorNode = d3
       .create('svg')
       .append('line')
-      .attr('stroke', this.props.stroke!)
-      .attr('opacity', this.props.opacity!)
+      .attr('stroke', this.props.stroke)
+      .attr('opacity', this.props.opacity)
       .style('stroke-dasharray', '5,5')
       .node();
     this.node.appendChild(this.connectorNode);
@@ -60,9 +61,11 @@ export class Connector extends Action {
     return this;
   }
 
-  public updateProps(properties: any): this {
+  public updateProps(properties: ConnectorProps): this {
+    this.props = { ...this.props, ...properties };
     return this;
   }
+
   public move(
     coordinate: Coordinate,
     delay?: number | undefined,
