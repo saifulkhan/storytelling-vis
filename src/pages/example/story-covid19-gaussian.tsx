@@ -103,6 +103,11 @@ const StoryCovid19Gaussian = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
+    // reset the plot when region or slider changes
+    if (plot.svg) {
+      plot.reset();
+    }
+
     // 1.1 Get timeseries data of a single region.
     const data = casesData[region];
     // console.log(`Selected region ${region}'s data: ${data}`);

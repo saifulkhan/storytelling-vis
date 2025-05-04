@@ -115,6 +115,8 @@ export class LinePlot extends Plot {
 
   public setData(data: TimeSeriesData[]) {
     this.data = data;
+    // reset line properties when data changes
+    this.lineProps = [];
     return this;
   }
 
@@ -200,9 +202,14 @@ export class LinePlot extends Plot {
    ** Set the list of actions to be animated
    **/
   public setActions(timelineActions: TimelineAction[] = []) {
-    this.timelineActions = timelineActions?.sort(
-      (a, b) => a[0].getTime() - b[0].getTime(),
-    );
+    this.timelineActions = timelineActions.sort((a, b) => {
+      return a[0].getTime() - b[0].getTime();
+    });
+
+    this.lastTimelineAction = undefined;
+    this.playActionIdx = 0;
+    this.startDataIdx = 0;
+    this.endDataIdx = 0;
     return this;
   }
 
@@ -504,5 +511,36 @@ export class LinePlot extends Plot {
     // The state change in isPlayingRef.current has happened in either pause() or play()
     // This method is overridden by useControllerWithState to update React state
     // which ensures the UI reflects the current state immediately
+  }
+
+  /**
+   * Reset the plot to its initial state
+   * This is useful when changing data or when needing to restart the animation
+   */
+  public reset() {
+    // reset animation state
+    this.playActionIdx = 0;
+    this.startDataIdx = 0;
+    this.endDataIdx = 0;
+    this.lastTimelineAction = undefined;
+
+    // clean the SVG and redraw
+    if (this.svg) {
+      this.clean();
+
+      // recreate the selector
+      this.selector = d3
+        .select(this.svg)
+        .append('g')
+        .attr('id', ID_AXIS_SELECTION);
+
+      // redraw the axis
+      this._drawAxis();
+    }
+
+    // ensure we're in a paused state
+    this.pause();
+
+    return this;
   }
 }
