@@ -46,8 +46,8 @@ const StoryCovid19Single = () => {
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
-    msb.PlayPauseController,
-    plot,
+    msb.SynchronizedPlotsController,
+    [plot],
   );
 
   useEffect(() => {
