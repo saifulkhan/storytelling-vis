@@ -86,13 +86,13 @@ const FeaturesPage = () => {
           xLabel: 'Date',
           title: `${region}`,
           leftAxisLabel: 'Number of cases',
-        })
+        } as any)
         .setLineProps(
           peaksStartEnd.map((d, i) => {
             return {
               stroke: schemeTableau10[i],
               strokeWidth: 1.5,
-            };
+            } as any;
           }),
         )
         .setCanvas(chartRef.current)
@@ -103,7 +103,7 @@ const FeaturesPage = () => {
         // Add null check for chartRef.current
         if (chartRef.current) {
           new msb.Dot()
-            .setProps({ color: '#FF5349' })
+            .setProps({ color: '#FF5349' } as any)
             .setCanvas(chartRef.current)
             .setCoordinate(plot.getCoordinates(peak.getDate()))
             .show();
