@@ -31,8 +31,9 @@ import * as msb from '../..';
 
 import { useControllerWithState } from '../useControllerWithState';
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
-import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
+import covid19NumericalFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-fa-table.json';
+import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table.json';
 
 const StoryCovid19Gaussian = () => {
   const WIDTH = 1200,
@@ -48,9 +49,8 @@ const StoryCovid19Gaussian = () => {
     Record<string, msb.TimeSeriesData>
   >({});
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
-  const [categoricalFeatureTable, setCategoricalFeatureTable] = useState<
-    msb.CategoricalFeature[]
-  >([]);
+  const [categoricalEventsData, setCategoricalEventsData] = useState<any>(null);
+  const [categoricalFATable, setCategoricalFATable] = useState<any>(null);
 
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
@@ -77,17 +77,10 @@ const StoryCovid19Gaussian = () => {
       setRegions(Object.keys(casesData).sort());
 
       // 1.2 Load numerical feature-action table
-      setNumericalFATable(covid19NumFATable);
-
-      // 1.3 Load categorical feature table
-      setCategoricalFeatureTable(
-        covid19CategoricalData.map((d) =>
-          new msb.CategoricalFeature()
-            .setDate(new Date(d.date))
-            .setRank(d.rank)
-            .setDescription(d.event),
-        ),
-      );
+      setNumericalFATable(covid19NumericalFATable);
+      // 1.3 Load categorical events data and feature-action table
+      setCategoricalEventsData(covid19CategoricalData);
+      setCategoricalFATable(covid19CategoricalFATable);
 
       console.log('Cases data: ', casesData);
       console.log('Numerical feature-action table data: ', numericalFATable);
@@ -120,8 +113,8 @@ const StoryCovid19Gaussian = () => {
       })
       .setData(data)
       .setNumericalFeatures(numericalFATable) // <- feature-action table
-      .setCategoricalFeatures(categoricalFeatureTable)
-      .segment(numSegment, 'peak')
+      .setCategoricalFeatures(categoricalEventsData, categoricalFATable)
+      .segment(numSegment, 'gmm')
       .create();
 
     console.log('StoryCovid19Gaussian: timelineActions: ', timelineActions);
@@ -143,13 +136,7 @@ const StoryCovid19Gaussian = () => {
     controller.pause();
 
     return () => {};
-  }, [
-    region,
-    casesData,
-    numericalFATable,
-    categoricalFeatureTable,
-    numSegment,
-  ]);
+  }, [region, casesData, numericalFATable, categoricalEventsData, numSegment]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;

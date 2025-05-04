@@ -16,7 +16,7 @@ import * as msb from '../..';
 // import * as msb from 'meta-storyboard';
 
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-table-1.json';
+import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-table.json';
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 
 const WIDTH = 1500,
