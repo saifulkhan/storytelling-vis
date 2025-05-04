@@ -1,4 +1,4 @@
-export enum FeatureName {
+export enum NumericalFeatureName {
   FIRST = 'FIRST',
   CURRENT = 'CURRENT',
   LAST = 'LAST',

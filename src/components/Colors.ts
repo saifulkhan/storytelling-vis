@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import { FeatureName } from '../types';
+import { NumericalFeatureName } from '../types';
 
 export enum Colors {
   DarkGreen = '#006400',
@@ -31,28 +31,28 @@ export enum Colors {
 }
 
 export const LineColor = {} as any;
-LineColor[FeatureName.CURRENT] = Colors.Orange;
-LineColor[FeatureName.LAST] = Colors.PaleCyan;
-LineColor[FeatureName.MAX] = Colors.Green;
-LineColor[FeatureName.MIN] = Colors.Purple;
-LineColor[FeatureName.PEAK] = Colors.LightGreen;
-LineColor[FeatureName.VALLEY] = Colors.PalePurple;
+LineColor[NumericalFeatureName.CURRENT] = Colors.Orange;
+LineColor[NumericalFeatureName.LAST] = Colors.PaleCyan;
+LineColor[NumericalFeatureName.MAX] = Colors.Green;
+LineColor[NumericalFeatureName.MIN] = Colors.Purple;
+LineColor[NumericalFeatureName.PEAK] = Colors.LightGreen;
+LineColor[NumericalFeatureName.VALLEY] = Colors.PalePurple;
 
 export const DotColor = {} as any;
-DotColor[FeatureName.CURRENT] = Colors.Orange;
-DotColor[FeatureName.LAST] = Colors.PaleCyan;
-DotColor[FeatureName.MAX] = Colors.Green;
-DotColor[FeatureName.MIN] = Colors.Purple;
-DotColor[FeatureName.PEAK] = Colors.LightGreen;
-DotColor[FeatureName.VALLEY] = Colors.PalePurple;
+DotColor[NumericalFeatureName.CURRENT] = Colors.Orange;
+DotColor[NumericalFeatureName.LAST] = Colors.PaleCyan;
+DotColor[NumericalFeatureName.MAX] = Colors.Green;
+DotColor[NumericalFeatureName.MIN] = Colors.Purple;
+DotColor[NumericalFeatureName.PEAK] = Colors.LightGreen;
+DotColor[NumericalFeatureName.VALLEY] = Colors.PalePurple;
 
 export const TextColor = {} as any;
-TextColor[FeatureName.CURRENT] = Colors.DarkOrange;
-TextColor[FeatureName.LAST] = Colors.DarkCyan;
-TextColor[FeatureName.MAX] = Colors.DarkGreen;
-TextColor[FeatureName.MIN] = Colors.DarkPurple;
-TextColor[FeatureName.PEAK] = Colors.LightGreen;
-TextColor[FeatureName.VALLEY] = Colors.PalePurple;
+TextColor[NumericalFeatureName.CURRENT] = Colors.DarkOrange;
+TextColor[NumericalFeatureName.LAST] = Colors.DarkCyan;
+TextColor[NumericalFeatureName.MAX] = Colors.DarkGreen;
+TextColor[NumericalFeatureName.MIN] = Colors.DarkPurple;
+TextColor[NumericalFeatureName.PEAK] = Colors.LightGreen;
+TextColor[NumericalFeatureName.VALLEY] = Colors.PalePurple;
 
 export function getSchemeTableau10(n: number) {
   const colorScheme = d3.schemeTableau10;

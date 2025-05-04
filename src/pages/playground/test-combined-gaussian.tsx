@@ -196,7 +196,7 @@ const TestCombinedGaussianPage = () => {
         title: `${region}`,
         leftAxisLabel: 'Number of cases',
         rightAxisLabel: 'Rank',
-      })
+      } as any)
       .setLineProps(
         ctsBoundGauss.map((d, i) => {
           if (i === 0) {
@@ -204,14 +204,14 @@ const TestCombinedGaussianPage = () => {
               stroke: '#D3D3D3',
               strokeWidth: 2,
               showPoints: false,
-            };
+            } as any;
           } else {
             return {
               stroke: msb.getSchemeTableau10(i - 1),
               strokeWidth: 2,
               onRightAxis: true,
               showPoints: false,
-            };
+            } as any;
           }
         }),
       )

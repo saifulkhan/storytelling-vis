@@ -1,4 +1,4 @@
-import { Condition, FeatureName } from '../../feature';
+import { Condition, NumericalFeatureName } from '../../types';
 import {
   CircleProps,
   DotProps,
@@ -13,7 +13,7 @@ export type ActionTableRow = {
 };
 
 export type FeatureActionTableRow = {
-  feature: FeatureName;
+  feature: NumericalFeatureName;
   properties: Condition;
   rank: number;
   actions: ActionTableRow[];

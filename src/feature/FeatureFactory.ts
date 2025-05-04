@@ -7,16 +7,13 @@ import {
   searchPeaks,
   searchSlopes,
 } from './feature-search';
-import { FeatureName } from '../types/FeatureName';
-import { TimeSeriesData } from 'src/types/TimeSeriesPoint';
+import { NumericalFeatureName, TimeSeriesData, Condition } from '../types';
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
 } from './FeatureSearchProps';
-
-import { Feature } from './Feature';
 import { createPredicate } from '../common';
-import { Condition } from '../types/Condition';
+import { NumericalFeature } from './NumericalFeature';
 
 export class FeatureFactory {
   private data: TimeSeriesData;
@@ -40,27 +37,27 @@ export class FeatureFactory {
   /**
    ** Search for feature and returns list of feature objects.
    **/
-  public search(
-    feature: FeatureName,
+  public searchNumericalFeature(
+    feature: NumericalFeatureName,
     condition: Condition | string,
     rank: number,
-  ): Feature[] | undefined {
+  ): NumericalFeature[] | undefined {
     console.log('FeatureFactory:search: props =', this.props);
     console.log('FeatureFactory:search: data =', this.data);
     // prettier-ignore
     console.log("FeatureFactory:search: feature: ", feature, ", condition: ", condition, ", rank:", rank);
 
     switch (feature) {
-      case FeatureName.FIRST:
+      case NumericalFeatureName.FIRST:
         return searchFirst(this.data, rank, this.props.metric || '');
 
-      case FeatureName.CURRENT:
+      case NumericalFeatureName.CURRENT:
         return searchCurrent(this.data, rank, this.props.metric || '');
 
-      case FeatureName.LAST:
+      case NumericalFeatureName.LAST:
         return searchLast(this.data, rank, this.props.metric || '');
 
-      case FeatureName.PEAK:
+      case NumericalFeatureName.PEAK:
         return searchPeaks(
           this.data,
           rank,
@@ -68,13 +65,13 @@ export class FeatureFactory {
           this.props.window || 10,
         );
 
-      case FeatureName.MAX:
+      case NumericalFeatureName.MAX:
         return searchGlobalMax(this.data, rank, this.props.metric || '');
 
-      case FeatureName.MIN:
+      case NumericalFeatureName.MIN:
         return searchGlobalMin(this.data, rank, this.props.metric || '');
 
-      case FeatureName.SLOPE:
+      case NumericalFeatureName.SLOPE:
         let slopes = searchSlopes(
           this.data,
           rank,

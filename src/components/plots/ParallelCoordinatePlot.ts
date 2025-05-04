@@ -5,7 +5,7 @@ import {
   Coordinate,
   HorizontalAlign,
   VerticalAlign,
-  FeatureName,
+  NumericalFeatureName,
 } from '../../types';
 import { Colors, LineColor } from '../Colors';
 import { Action } from '../actions';
@@ -427,7 +427,7 @@ export class ParallelCoordinatePlot extends Plot {
     loop();
   }
 
-  private showLine(date: Date, type: FeatureName) {
+  private showLine(date: Date, type: NumericalFeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -444,7 +444,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideLine(date: Date, type: FeatureName) {
+  private hideLine(date: Date, type: NumericalFeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -460,7 +460,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private showDots(date: Date, type: FeatureName) {
+  private showDots(date: Date, type: NumericalFeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // return group
@@ -478,7 +478,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideDots(date: Date, type: FeatureName) {
+  private hideDots(date: Date, type: NumericalFeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // returns group
@@ -496,7 +496,7 @@ export class ParallelCoordinatePlot extends Plot {
 
   private showAction(
     date: Date,
-    type: FeatureName,
+    type: NumericalFeatureName,
     action: Action,
   ): Promise<number> {
     return new Promise<number>((resolve, reject) => {
@@ -529,7 +529,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideAction(date: Date, type: FeatureName, action: Action) {
+  private hideAction(date: Date, type: NumericalFeatureName, action: Action) {
     return new Promise<number>((resolve, reject) => {
       return action.hide();
     });
@@ -543,20 +543,26 @@ export class ParallelCoordinatePlot extends Plot {
     return `id-dot-${date.getTime()}`;
   }
 
-  private colorOnShow(type: FeatureName): string {
+  private colorOnShow(type: NumericalFeatureName): string {
     return LineColor[type];
   }
 
-  private colorOnHideLine(type: FeatureName) {
-    if (type === FeatureName.MAX || type === FeatureName.MIN) {
+  private colorOnHideLine(type: NumericalFeatureName) {
+    if (
+      type === NumericalFeatureName.MAX ||
+      type === NumericalFeatureName.MIN
+    ) {
       return LineColor[type];
     } else {
       return Colors.LightGrey1;
     }
   }
 
-  private opacityOnHideLine(type: FeatureName) {
-    if (type === FeatureName.MAX || type === FeatureName.MIN) {
+  private opacityOnHideLine(type: NumericalFeatureName) {
+    if (
+      type === NumericalFeatureName.MAX ||
+      type === NumericalFeatureName.MIN
+    ) {
       return 1;
     } else {
       return 0.3;

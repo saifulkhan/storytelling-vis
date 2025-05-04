@@ -1,12 +1,12 @@
 import { NumericalFeature } from './NumericalFeature';
-import { FeatureName } from '../types';
+import { NumericalFeatureName } from '../types';
 
 export class Slope extends NumericalFeature {
   protected slope: number = 0;
 
   constructor() {
     super();
-    this.type = FeatureName.SLOPE;
+    this.type = NumericalFeatureName.SLOPE;
   }
 
   setSlope(slope: number) {

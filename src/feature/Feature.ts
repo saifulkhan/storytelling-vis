@@ -1,11 +1,11 @@
-import { FeatureName } from '../types';
+import { NumericalFeatureName } from '../types';
 
 export abstract class Feature {
   protected date: Date;
   protected start: Date;
   protected end: Date;
   protected rank: number;
-  protected type: FeatureName;
+  protected type: NumericalFeatureName;
   protected metric: string;
   protected dataIndex: number;
 
@@ -14,7 +14,7 @@ export abstract class Feature {
     this.start = new Date();
     this.end = new Date();
     this.rank = 0;
-    this.type = FeatureName.UNKNOWN;
+    this.type = NumericalFeatureName.UNKNOWN;
     this.metric = '';
     this.dataIndex = 0;
   }
@@ -28,7 +28,7 @@ export abstract class Feature {
     return this.date;
   }
 
-  setType(type: FeatureName) {
+  setType(type: NumericalFeatureName) {
     this.type = type;
     return this;
   }

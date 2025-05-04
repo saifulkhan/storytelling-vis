@@ -1,9 +1,9 @@
 import { NumericalFeature } from './NumericalFeature';
-import { FeatureName } from '../types/FeatureName';
+import { NumericalFeatureName } from '../types/NumericalFeatureName';
 
 export class Current extends NumericalFeature {
   constructor() {
     super();
-    this.type = FeatureName.CURRENT;
+    this.type = NumericalFeatureName.CURRENT;
   }
 }

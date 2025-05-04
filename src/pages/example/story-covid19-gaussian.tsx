@@ -48,14 +48,14 @@ const StoryCovid19Gaussian = () => {
     Record<string, msb.TimeSeriesData>
   >({});
   const [numericalFATable, setNumericalFATable] = useState<any>(null);
-  const [categoricalFeatures, setCategoricalFeatures] = useState<
+  const [categoricalFeatureTable, setCategoricalFeatureTable] = useState<
     msb.CategoricalFeature[]
   >([]);
 
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
     msb.PlayPauseController,
-    [plot],
+    plot,
   );
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const StoryCovid19Gaussian = () => {
       setNumericalFATable(covid19NumFATable);
 
       // 1.3 Load categorical feature table
-      setCategoricalFeatures(
+      setCategoricalFeatureTable(
         covid19CategoricalData.map((d) =>
           new msb.CategoricalFeature()
             .setDate(new Date(d.date))
@@ -105,10 +105,7 @@ const StoryCovid19Gaussian = () => {
 
     // 1.1 Get timeseries data of a single region.
     const data = casesData[region];
-    console.log(`Selected region ${region}'s data: ${data}`);
-
-    const gaussian = msb.gmm(data, categoricalFeatures);
-    const segments = msb.segmentByImportantPeaks(gaussian, numSegment);
+    // console.log(`Selected region ${region}'s data: ${data}`);
 
     // 2. Create timeline actions
     const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
@@ -116,8 +113,10 @@ const StoryCovid19Gaussian = () => {
         metric: 'Number of cases',
         window: 10,
       })
+      .setData(data)
       .setNumericalFeatures(numericalFATable) // <- feature-action table
-      .setData(data) // <- timeseries data
+      .setCategoricalFeatures(categoricalFeatureTable)
+      .segment(numSegment, 'gmm')
       .create();
 
     // 3. Create story in a line plot
@@ -128,7 +127,7 @@ const StoryCovid19Gaussian = () => {
         title: `${region}`,
         xLabel: 'Date',
         leftAxisLabel: 'Number of cases',
-      })
+      } as any)
       .setLineProps([])
       .setCanvas(chartRef.current)
       // .plot() // <- draw the static plot, useful for testing
@@ -138,7 +137,13 @@ const StoryCovid19Gaussian = () => {
     controller.pause();
 
     return () => {};
-  }, [region, casesData, numericalFATable]);
+  }, [
+    region,
+    casesData,
+    numericalFATable,
+    categoricalFeatureTable,
+    numSegment,
+  ]);
 
   const handleSelection = (event: SelectChangeEvent) => {
     const newRegion = event.target.value;
@@ -150,10 +155,7 @@ const StoryCovid19Gaussian = () => {
   const handleChangeSlider = (event: Event, newValue: number | number[]) => {
     const selectedSegment = newValue as number;
     if (selectedSegment !== undefined && selectedSegment !== numSegment) {
-      // setSegment(selectedSegment);
-      // segmentData(selectedSegment);
-      setNumSegment(1);
-      // segmentData(1);
+      setNumSegment(selectedSegment);
     }
   };
 

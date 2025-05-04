@@ -8,7 +8,6 @@ export * from './Last';
 export * from './Feature';
 export * from './FeatureActionFactory';
 export * from './FeatureFactory';
-export * from '../types/FeatureName';
 export * from './Max';
 export * from './Min';
 export * from './NumericalFeature';

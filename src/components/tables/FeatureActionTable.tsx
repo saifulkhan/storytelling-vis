@@ -22,7 +22,7 @@ import {
   defaultConnectorProperties,
   ActionName,
 } from '../actions';
-import { FeatureName } from '../../feature';
+import { NumericalFeatureName } from '../../types';
 import { ActionTable, FeaturePropertiesTable } from './index';
 import { FeatureActionTableRow } from './FeatureActionTableRow';
 
@@ -133,7 +133,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     setRows([
       ...rows,
       {
-        feature: FeatureName.MAX, // Default feature
+        feature: NumericalFeatureName.MAX, // Default feature
         properties: {}, // Empty condition
         rank: rows.length + 1, // Default rank
         actions: [{ action: ActionName.DOT, properties: defaultDotProps }], // Default action
@@ -147,7 +147,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, feature: FeatureName) => {
+  const handleActionChange = (index: number, feature: NumericalFeatureName) => {
     console.log('FeatureActionTable: index = ', index, ', action = ', feature);
 
     /*
@@ -210,10 +210,13 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   sx={styles.selectField}
                   value={row.feature}
                   onChange={(e) =>
-                    handleActionChange(index, e.target.value as FeatureName)
+                    handleActionChange(
+                      index,
+                      e.target.value as NumericalFeatureName,
+                    )
                   }
                 >
-                  {Object.values(FeatureName).map((feature) => (
+                  {Object.values(NumericalFeatureName).map((feature) => (
                     <MenuItem key={feature} value={feature}>
                       {feature}
                     </MenuItem>

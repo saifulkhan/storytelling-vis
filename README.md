@@ -86,8 +86,8 @@ const featureActionTable = ...; // feature-action table
 // 2. Create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
   .setFAProps({ /* properties */ })
-  .setTable(featureActionTable)
   .setData(data)
+  .setNumericalFeatures(featureActionTable)
   .create();
 
 // 3. Initialize a plot and animation controller
@@ -115,15 +115,13 @@ const data = ...; // time series data
 const numericalFeatures = ...; // numerical feature-action table
 const categoricalFeatures = ...; // categorical features table
 
-// Gaussian Mixture Model (TODO: add more details)
-const gaussian = msb.gmm(data, categoricalFeatures);
-const segments = msb.segmentByImportantPeaks(gaussian, numSegment);
-
 // 2. Create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
   .setFAProps({ /* properties */ })
-  .setTable(numericalFeatures)
   .setData(data)
+  .setNumericalFeatures(numericalFeatures)
+  .setCategoricalFeatures(categoricalFeatures)
+  .segment(numSegment, 'gmm')
   .create();
 
 // 3. Initialize a plot and animation controller

@@ -1,6 +1,8 @@
 import { TimeSeriesData, TimeSeriesPoint } from '../types';
 import { findDateIdx } from '../common';
-import { Peak, searchPeaks, CategoricalFeature } from '.';
+import { Peak } from './Peak';
+import { CategoricalFeature } from './CategoricalFeature';
+import { searchPeaks } from './feature-search';
 import { rankPeaksByNormHeight } from './ranking';
 
 // TODO: These magic numbers should be defined better way
@@ -56,13 +58,15 @@ export function generateGaussForPeaks(
   metric: string = '',
   window: number = WINDOW_SIZE,
 ): TimeSeriesData[] {
+  if (!data || data.length === 0) {
+    throw new Error('No data provided');
+  }
+
   const peaks = searchPeaks(data, 0, metric, window);
   rankPeaksByNormHeight(peaks); // or rankPeaksByHeight
 
-  console.log(
-    'generateGaussForPeaks: peaks:',
-    peaks.map((d) => d.getNormHeight()),
-  );
+  // prettier-ignore
+  console.debug('generateGaussForPeaks: peaks:', peaks.map((d) => d.getNormHeight()));
 
   const gaussTSData: TimeSeriesData[] = peaks.map((d: Peak) => {
     const index = findDateIdx(d.getDate(), data);

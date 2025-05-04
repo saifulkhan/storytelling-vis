@@ -1,5 +1,5 @@
 import { NumericalFeature } from './NumericalFeature';
-import { FeatureName } from '../types/FeatureName';
+import { NumericalFeatureName } from '../types/NumericalFeatureName';
 
 export class Fall extends NumericalFeature {
   protected grad: number = 0;
@@ -14,7 +14,7 @@ export class Fall extends NumericalFeature {
     end?: Date,
   ) {
     super();
-    this.type = FeatureName.FALL;
+    this.type = NumericalFeatureName.FALL;
     this.setDate(date);
     this.setHeight(height);
     if (rank !== undefined) this.setRank(rank);
