@@ -8,6 +8,13 @@ export class SynchronizedPlotsController {
 
   constructor(plots: any[]) {
     this.plots = plots;
+
+    // Set the onPauseCallback on each plot if supported
+    this.plots.forEach((plot) => {
+      if (plot && typeof plot.setOnPauseCallback === 'function') {
+        plot.setOnPauseCallback(() => this.pause());
+      }
+    });
   }
 
   togglePlayPause(): void {

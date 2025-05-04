@@ -15,7 +15,6 @@
       }
     ]
   },
-
   {
     "feature": "PEAK",
     "properties": {},
@@ -35,7 +34,8 @@
         "properties": {
           "color": "#FFA500",
           "size": 5,
-          "opacity": 0.6
+          "opacity": 0.6,
+          "hide": false
         }
       },
       {

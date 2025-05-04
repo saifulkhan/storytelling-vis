@@ -9,6 +9,7 @@ import {
   TimelineAction,
 } from '../../types';
 import { findDateIdx, findIndexOfDate } from '../../common';
+import { Action } from '../actions';
 
 const ID_AXIS_SELECTION = '#id-axes-selection';
 
@@ -75,8 +76,11 @@ export class LinePlot extends Plot {
   leftAxis: any;
   rightAxis: any;
 
-  actions: any = [];
-  startDataIdx: number = 0; // index of data for animation
+  // animation related
+  timelineActions: TimelineAction[] = [];
+  lastTimelineAction: TimelineAction | undefined = undefined;
+  playActionIdx: number = 0;
+  startDataIdx: number = 0;
   endDataIdx: number = 0;
 
   constructor() {
@@ -195,13 +199,10 @@ export class LinePlot extends Plot {
   /**
    ** Set the list of actions to be animated
    **/
-  public setActions(actions: TimelineAction[] = []) {
-    this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
-    this.playActionIdx = 0;
-    this.lastAction = null;
-    this.startDataIdx = 0;
-    this.endDataIdx = 0;
-
+  public setActions(timelineActions: TimelineAction[] = []) {
+    this.timelineActions = timelineActions?.sort(
+      (a, b) => a[0].getTime() - b[0].getTime(),
+    );
     return this;
   }
 
@@ -209,42 +210,75 @@ export class LinePlot extends Plot {
     const loop = async () => {
       if (
         !this.isPlayingRef.current ||
-        this.playActionIdx >= this.actions.length
+        this.playActionIdx >= this.timelineActions.length
       ) {
         return;
       }
 
-      if (this.lastAction) {
-        await this.lastAction.hide();
+      if (this.lastTimelineAction) {
+        const durationHide = await this.lastTimelineAction[1].hide();
       }
 
       const lineNum = 0; // TODO: we can animate first line at the moment
-      let [date, action]: TimelineAction = this.actions[this.playActionIdx];
+      const timelineAction: TimelineAction =
+        this.timelineActions[this.playActionIdx];
+
+      const action: Action = timelineAction[1];
+      const date: Date = timelineAction[0];
       const dataX = this.data[lineNum];
       const dataIdx = findIndexOfDate(dataX, date);
 
       action
         .updateProps({
-          data: { ...dataX[dataIdx], name: this.name, value: dataX[dataIdx].y },
+          templateVariables: {
+            ...dataX[dataIdx],
+            name: this.name,
+            value: dataX[dataIdx].y,
+          },
           horizontalAlign: this.getHorizontalAlign(date),
           verticalAlign: 'top' as VerticalAlign,
-        })
+        } as any)
         .setCanvas(this.svg)
         .setCoordinate(this.getCoordinates(date, lineNum));
 
-      await this._animate(this.startDataIdx, dataIdx, lineNum);
-      await action.show();
+      const durationAnimateLine = await this._animateLine(
+        this.startDataIdx,
+        dataIdx,
+        lineNum,
+      );
+      const durationShow = await action.show();
 
-      this.lastAction = action;
+      this.lastTimelineAction = timelineAction;
       this.startDataIdx = dataIdx;
       this.playActionIdx++;
-      this.animationRef = requestAnimationFrame(loop);
+
+      if (this.lastTimelineAction[1].getProps().pause) {
+        console.log('LinePlot: paused at ', this.lastTimelineAction[0]);
+        // always pause the animation first
+        this.pause();
+        // then notify the controller to update UI state if callback exists
+        if (this.onPauseCallback) {
+          this.onPauseCallback();
+        }
+        // don't continue the animation loop
+        return;
+      } else {
+        this.animationRef = requestAnimationFrame(loop);
+      }
     };
 
     loop();
   }
 
-  private _animate(start: number, stop: number, lineNum: number = 0) {
+  /**
+   * Animates the line for the given range and returns a Promise that resolves to
+   * the total animation duration (delay + duration) in milliseconds.
+   */
+  private _animateLine(
+    start: number,
+    stop: number,
+    lineNum: number = 0,
+  ): Promise<number> {
     // prettier-ignore
     // console.log(`LinePlot: lineIndex = ${lineIndex}, start = ${start}, stop = ${stop}`)
     // console.log(this._data, this._data[lineIndex]);
@@ -283,7 +317,7 @@ export class LinePlot extends Plot {
       const transition = path
         .transition()
         .ease(d3.easeLinear)
-        .delay(1000)
+        .delay(delay)
         .duration(duration)
         .attr('stroke-dashoffset', 0)
         .on('end', () => {
@@ -466,5 +500,9 @@ export class LinePlot extends Plot {
     } else {
       this.play();
     }
+
+    // The state change in isPlayingRef.current has happened in either pause() or play()
+    // This method is overridden by useControllerWithState to update React state
+    // which ensures the UI reflects the current state immediately
   }
 }

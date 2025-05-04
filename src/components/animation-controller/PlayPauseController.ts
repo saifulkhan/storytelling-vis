@@ -8,6 +8,11 @@ export class PlayPauseController {
 
   constructor(controlledObject: any) {
     this.plots = controlledObject;
+
+    // Set the onPauseCallback if the plot supports it
+    if (this.plots && typeof this.plots.setOnPauseCallback === 'function') {
+      this.plots.setOnPauseCallback(() => this.pause());
+    }
   }
 
   togglePlayPause(): void {

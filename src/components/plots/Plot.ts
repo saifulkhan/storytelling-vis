@@ -7,8 +7,9 @@ export abstract class Plot {
 
   protected animationRef: number | null = null;
   protected isPlayingRef: { current: boolean } = { current: false };
-  protected lastAction: any = null;
+  protected lastTimelineAction: any = null;
   protected playActionIdx: number = 0;
+  protected onPauseCallback: (() => void) | null = null;
 
   constructor() {}
 
@@ -45,5 +46,15 @@ export abstract class Plot {
     if (this.animationRef) {
       cancelAnimationFrame(this.animationRef);
     }
+  }
+
+  /**
+   * Sets a callback function to be called when the animation is paused automatically
+   * due to a pause action in the timeline.
+   * @param callback The function to call when auto-paused
+   */
+  setOnPauseCallback(callback: () => void) {
+    this.onPauseCallback = callback;
+    return this;
   }
 }
