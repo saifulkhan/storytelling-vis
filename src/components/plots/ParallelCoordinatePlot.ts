@@ -379,7 +379,7 @@ export class ParallelCoordinatePlot extends Plot {
   /**
    ** Actions that will be animated.
    **/
-  public setActions(actions: TimelineActions) {
+  public setActions(actions: TimelineAction[]) {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
 
     this.drawAxis();
@@ -504,10 +504,11 @@ export class ParallelCoordinatePlot extends Plot {
 
       action
         .updateProps({
-          data: data,
+          templateVariables: data,
           horizontalAlign: 'middle' as HorizontalAlign,
           verticalAlign: 'top' as VerticalAlign,
-        })
+        } as any)
+
         .setCanvas(this.svg)
         // .setCoordinate([[0, 0], this.topMidCoordinate()]);
         .setCoordinate([[0, 0], this.coordinateOnAxis(date)]);
@@ -612,5 +613,24 @@ export class ParallelCoordinatePlot extends Plot {
         this.height - this.props.margin.bottom,
       ],
     ];
+  }
+
+  /**
+   * Reset the plot by clearing the SVG and resetting state
+   */
+  public reset() {
+    if (this.svg) {
+      d3.select(this.svg).selectAll('*').remove();
+    }
+
+    this.data = [];
+    this.actions = [];
+    this.AxisNames = [];
+    this.selectedAxis = '';
+    this.xScaleMap = null;
+    this.yScale = null;
+    this.staticLineColorMap = null;
+
+    return this;
   }
 }

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { ActionName } from './ActionName';
-import { NumericalFeatureName, Coordinate } from '../../types';
+import { NumericalFeatureName, CategoricalFeatureName, Coordinate } from '../../types';
 
 export type ActionProps = {
   hide: boolean;
@@ -19,7 +19,7 @@ export abstract class Action {
   protected node: any = null;
   protected coordOrigin!: Coordinate;
   protected coordDestination!: Coordinate;
-  protected featureType?: NumericalFeatureName;
+  protected featureType?: NumericalFeatureName | CategoricalFeatureName;
 
   constructor() {}
 
@@ -99,7 +99,7 @@ export abstract class Action {
     d3.select(this.svg).append(() => this.node);
   }
 
-  public setFeatureType(featureType: NumericalFeatureName) {
+  public setFeatureType(featureType: NumericalFeatureName | CategoricalFeatureName) {
     this.featureType = featureType;
     return this;
   }

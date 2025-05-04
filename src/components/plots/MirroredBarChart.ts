@@ -61,7 +61,7 @@ export class MirroredBarChart extends Plot {
   barElements: any[] = [];
   isPlayingRef: { current: boolean } = { current: false };
   playActionIdx: number = 0;
-  lastAction: any = null;
+  lastTimelineAction: any = null;
   animationRef: number = 0;
 
   constructor() {
@@ -110,7 +110,7 @@ export class MirroredBarChart extends Plot {
   public setActions(actions: TimelineAction[] = []): this {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
     this.playActionIdx = 0;
-    this.lastAction = null;
+    this.lastTimelineAction = null;
     this.startDataIdx = 0;
     this.endDataIdx = 0;
 
@@ -301,7 +301,7 @@ export class MirroredBarChart extends Plot {
 
       // don't hide the previous action, but simulate the time it would take
       // simulate the time action.hide() would take with a delay
-      if (this.lastAction) {
+      if (this.lastTimelineAction) {
         await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
@@ -333,7 +333,7 @@ export class MirroredBarChart extends Plot {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       // update state for next animation
-      this.lastAction = action;
+      this.lastTimelineAction = action;
       this.startDataIdx = dataIdx;
       this.playActionIdx++;
       this.animationRef = requestAnimationFrame(loop);
@@ -480,5 +480,9 @@ export class MirroredBarChart extends Plot {
     } else {
       this.play();
     }
+
+    // The state change in isPlayingRef.current has happened in either pause() or play()
+    // This method is overridden by useControllerWithState to update React state
+    // which ensures the UI reflects the current state immediately
   }
 }

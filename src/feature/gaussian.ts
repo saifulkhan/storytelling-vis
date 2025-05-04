@@ -172,6 +172,10 @@ export function maxAcrossSeries(
   const featuresGauss = inputSeries.map((g) => g.map((d) => d.y ?? 0));
   // console.log('featuresGauss: ', featuresGauss);
 
+  if (!featuresGauss || featuresGauss.length === 0 || !featuresGauss[0]) {
+    return [];
+  }
+
   const len = featuresGauss[0].length;
   const maxValues = Array(len).fill(Number.NEGATIVE_INFINITY);
 
@@ -195,7 +199,6 @@ export function maxAcrossSeries(
 /**
  * Combines multiple time series into a single representative timeseries.
  *
- * This versatile function can:
  * 1. Compute the average (mean) of multiple time series
  * 2. Create a new timeseries with values derived from multiple input series
  *

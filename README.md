@@ -179,7 +179,6 @@ The implementation of the example stories is in [GitHub](https://github.com/saif
 - [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
-- [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
 
 ### Playground (For Component Testing & Development)
 
@@ -197,6 +196,7 @@ The implementation of the playground pages is in [GitHub](https://github.com/sai
 - [Test Action Properties Table](http://localhost:3000/playground/test-action-properties-table)
 - [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
 - [Test Action Table](http://localhost:3000/playground/test-action-table)
+- [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
 
 ---
 

@@ -80,6 +80,11 @@ const StoryMLPCP = () => {
   useEffect(() => {
     if (!hyperparam || !mlData || !chartRef.current) return;
 
+    // reset the plot when hyperparameter changes
+    if (plot.svg) {
+      plot.reset();
+    }
+
     const data = msb.sortTimeseriesData(mlData, hyperparam);
     console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
 
