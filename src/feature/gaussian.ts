@@ -3,7 +3,7 @@ import { findDateIdx } from '../common';
 import { Peak } from './Peak';
 import { CategoricalFeature } from './CategoricalFeature';
 import { searchPeaks } from './feature-search';
-import { rankPeaksByNormHeight } from './ranking';
+import { rankPeaksByHeight, setPeaksNormHeight } from './ranking';
 
 // TODO: These magic numbers should be defined better way
 const WINDOW_SIZE = 10;
@@ -24,7 +24,7 @@ export function gmm(
   categoricalFeatures: CategoricalFeature[],
 ): TimeSeriesData {
   const ntsGauss: TimeSeriesData[] = generateGaussForPeaks(data);
-  const ctsGauss: TimeSeriesData[] = generateGaussForCatFeatures(
+  const ctsGauss: TimeSeriesData[] = generateGaussForCategoricalFeatures(
     data,
     categoricalFeatures,
   );
@@ -61,12 +61,16 @@ export function generateGaussForPeaks(
   if (!data || data.length === 0) {
     throw new Error('No data provided');
   }
-
   const peaks = searchPeaks(data, 0, metric, window);
-  rankPeaksByNormHeight(peaks); // or rankPeaksByHeight
-
   // prettier-ignore
-  console.debug('generateGaussForPeaks: peaks:', peaks.map((d) => d.getNormHeight()));
+  console.debug('generateGaussForPeaks: peaks height:', peaks.map((d) => d.getHeight()));
+
+  setPeaksNormHeight(peaks);
+  rankPeaksByHeight(peaks);
+  // prettier-ignore
+  console.debug('generateGaussForPeaks: peaks norm height:', peaks.map((d) => d.getNormHeight()));
+  // prettier-ignore
+  console.debug('generateGaussForPeaks: peaks rank:', peaks.map((d) => d.getRank()));
 
   const gaussTSData: TimeSeriesData[] = peaks.map((d: Peak) => {
     const index = findDateIdx(d.getDate(), data);
@@ -90,7 +94,7 @@ export function generateGaussForPeaks(
  * @param categoricalFeatures - Array of categorical features/events
  * @returns An array of TimeSeriesData, each representing a Gaussian curve for a categorical feature
  */
-export function generateGaussForCatFeatures(
+export function generateGaussForCategoricalFeatures(
   data: TimeSeriesData,
   categoricalFeatures: CategoricalFeature[],
 ): TimeSeriesData[] {

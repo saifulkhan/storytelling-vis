@@ -77,7 +77,7 @@ const StoryMLMirroredBar = () => {
 
     console.log('ML data: ', mlData);
     console.log('Numerical feature-action table data: ', numericalFATable);
-
+    setSelectedHyperparam('channels');
     setLoading(false);
   }, []);
 

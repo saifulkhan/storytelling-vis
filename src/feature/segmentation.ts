@@ -1,6 +1,6 @@
 import { TimeSeriesData } from '../types';
 import { Peak } from './Peak';
-import { rankPeaksByNormHeight } from './ranking';
+import { setPeaksNormHeight } from './ranking';
 import { Segment } from '../types';
 import { searchPeaks } from './feature-search';
 
@@ -15,7 +15,7 @@ import { searchPeaks } from './feature-search';
  */
 export function segmentByPeaks(data: TimeSeriesData, k: number): Segment[] {
   let peaks: Peak[] = searchPeaks(data);
-  rankPeaksByNormHeight(peaks);
+  setPeaksNormHeight(peaks);
 
   // create peaks with just index and height
   const peakIndices: { idx: number; h: number }[] = peaks.map((d: Peak) => ({
@@ -47,7 +47,7 @@ export function segmentByImportantPeaks(
 ): Segment[] {
   // Find and rank all peaks in the data
   let peaks: Peak[] = searchPeaks(data);
-  rankPeaksByNormHeight(peaks);
+  setPeaksNormHeight(peaks);
   const dataLength = data.length;
 
   // Create a simplified representation of peaks with just index and height

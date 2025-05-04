@@ -1,11 +1,19 @@
-import { Action } from './Action';
-import { ActionName } from './ActionName';
-import { Circle, CircleProps } from './Circle';
-import { ActionGroup } from './ActionGroup';
-import { Connector, ConnectorProps } from './Connector';
-import { Dot, DotProps } from './Dot';
-import { TextBox, TextBoxProps } from './TextBox';
-import { TimeSeriesPoint } from '../../types';
+import {
+  Action,
+  ActionName,
+  Circle,
+  CircleProps,
+  ActionGroup,
+  Connector,
+  ConnectorProps,
+  Dot,
+  DotProps,
+  TextBox,
+  TextBoxProps,
+  Pause,
+  PauseProps,
+} from '../components';
+import { TimeSeriesPoint } from '../types';
 
 export class ActionFactory {
   constructor() {}
@@ -27,6 +35,8 @@ export class ActionFactory {
         return new Circle().setProps(props as CircleProps);
       case ActionName.CONNECTOR:
         return new Connector().setProps(props as ConnectorProps);
+      case ActionName.PAUSE:
+        return new Pause().setProps(props as PauseProps);
       default:
         console.error(`Action ${action} is not implemented!`);
     }

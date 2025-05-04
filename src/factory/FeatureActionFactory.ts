@@ -1,32 +1,33 @@
 import {
+  TimeSeriesData,
+  TimeSeriesPoint,
+  TimelineActions,
+  Segment,
+  CategoricalFeatureName,
+} from '../types';
+import {
+  Feature,
+  gmm,
+  NumericalFeature,
+  defaultFeatureSearchProps,
+  FeatureSearchProps,
+  CategoricalFeature,
+  segmentByImportantPeaks,
+  segmentByPeaks,
+  findCategoricalFeatureByDate,
+  findClosestFeature,
+  findNumericalFeatureByDate,
+} from '../feature';
+import {
   Action,
   ActionFactory,
   FeatureActionTableRow,
   ActionTableRow,
   FeatureActionTableData,
+  ActionName,
 } from '../components';
-
-import {
-  TimeSeriesData,
-  TimeSeriesPoint,
-  TimelineActions,
-  Segment,
-} from '../types';
-import { Feature } from './Feature';
-import { FeatureFactory } from './FeatureFactory';
 import { getTimeSeriesPointByDate } from '../common';
-import { gmm } from './gaussian';
-import {
-  defaultFeatureSearchProps,
-  FeatureSearchProps,
-} from './FeatureSearchProps';
-import { CategoricalFeature } from './CategoricalFeature';
-import { segmentByImportantPeaks, segmentByPeaks } from './segmentation';
-import {
-  findCategoricalFeatureByDate,
-  findNumericalFeatureByDate,
-} from './feature-search';
-import { NumericalFeature } from './NumericalFeature';
+import { FeatureFactory } from './FeatureFactory';
 
 export class FeatureActionFactory {
   private data: TimeSeriesData = [];
@@ -36,7 +37,7 @@ export class FeatureActionFactory {
 
   private numericalFeatures: NumericalFeature[] = [];
   private categoricalFeatures: CategoricalFeature[] = [];
-  private dataActionArray: TimelineActions = [];
+  private timelineActions: TimelineActions = [];
   private actionFactory = new ActionFactory();
   private featureFactory = new FeatureFactory();
   private segments: Segment[] = [];
@@ -54,12 +55,16 @@ export class FeatureActionFactory {
   }
 
   public setCategoricalFeatures(table: any) {
-    this.categoricalFeatures = table.map((d: any) =>
-      new CategoricalFeature()
+    this.categoricalFeatures = table.map((d: any) => {
+      return new CategoricalFeature()
         .setDate(new Date(d.date))
         .setRank(d.rank)
-        .setDescription(d.event),
-    );
+        .setDescription(d.description)
+        .setType(CategoricalFeatureName.UNKNOWN);
+    });
+
+    // prettier-ignore
+    console.debug('FeatureActionFactory: categoricalFeatures: ', this.categoricalFeatures);
     return this;
   }
 
@@ -96,27 +101,29 @@ export class FeatureActionFactory {
 
   /**
    * Create timeline actions
+   */
+  public create() {
+    this.featureFactory.setProps(this.props).setData(this.data);
+    this.actionsForNumericalFeatures();
+    this.actionsForSegments();
+
+    return this.timelineActions;
+  }
+
+  /**
    * 1. Iterate over the numerical features in the table.
    * 2. For each feature, search the data using FeatureFactory.
    * 3. For each feature found, create all actions using createActions method.
    * 4. Group all actions belonging to the found feature.
    */
-  public create() {
-    this.featureFactory.setProps(this.props).setData(this.data);
-    this.createActionsForNumericalFeatures();
-    this.createActionsForSegments();
-
-    return this.dataActionArray;
-  }
-
-  private createActionsForNumericalFeatures() {
+  private actionsForNumericalFeatures() {
     // prettier-ignore
-    console.debug('FeatureActionFactory:createActionsForNumericalFeatures: data: ', this.data);
+    console.debug('FeatureActionFactory:actionsForNumericalFeatures: data: ', this.data);
 
     // 1.
     this.numericalFATable.forEach((row: FeatureActionTableRow) => {
       // prettier-ignore
-      console.debug('FeatureActionFactory:createActionsForNumericalFeatures: row = ', row);
+      console.debug('FeatureActionFactory:actionsForNumericalFeatures: row = ', row);
       // 2.
       const numericalFeatures: NumericalFeature[] =
         this.featureFactory.searchNumericalFeature(
@@ -128,9 +135,9 @@ export class FeatureActionFactory {
       this.numericalFeatures.push(...numericalFeatures);
 
       // prettier-ignore
-      console.debug('FeatureActionFactory:createActionsForNumericalFeatures: row.feature:', row.feature);
+      console.debug('FeatureActionFactory:actionsForNumericalFeatures: row.feature:', row.feature);
       // prettier-ignore
-      console.debug('FeatureActionFactory:createActionsForNumericalFeatures: numericalFeatures = ', numericalFeatures);
+      console.debug('FeatureActionFactory:actionsForNumericalFeatures: numericalFeatures = ', numericalFeatures);
 
       // 3.
       numericalFeatures.forEach((feature: NumericalFeature) => {
@@ -142,7 +149,7 @@ export class FeatureActionFactory {
 
         if (!point) {
           // prettier-ignore
-          console.error('FeatureActionFactory:createActionsForNumericalFeatures: point not found for date: ', date);
+          console.error('FeatureActionFactory: Point not found!');
           return;
         }
 
@@ -158,22 +165,22 @@ export class FeatureActionFactory {
           .group(actions)
           ?.setFeatureType(feature?.getType());
 
-        this.dataActionArray.push([date, action]);
+        this.timelineActions.push([date, action]);
 
         // prettier-ignore
-        console.debug('FeatureActionFactory:createActionsForNumericalFeatures: action:', action);
+        console.debug('FeatureActionFactory:actionsForNumericalFeatures: action:', action);
       });
     });
 
     // 5.
     // prettier-ignore
-    console.debug('FeatureActionFactory:createActionsForNumericalFeatures: dataActionArray = ', this.dataActionArray);
-    this.dataActionArray.sort((a, b) => b[0].getTime() - a[0].getTime());
+    console.debug('FeatureActionFactory:actionsForNumericalFeatures: dataActionArray = ', this.timelineActions);
+    this.timelineActions.sort((a, b) => b[0].getTime() - a[0].getTime());
   }
 
-  private createActionsForCategoricalFeatures() {
+  private actionsForCategoricalFeatures() {
     // prettier-ignore
-    console.error('FeatureActionFactory:createActionsForCategoricalFeatures: not implemented!');
+    console.error('FeatureActionFactory:actionsForCategoricalFeatures: not implemented!');
   }
 
   /**
@@ -181,33 +188,43 @@ export class FeatureActionFactory {
    * Search the feature-action tables
    * Create action objects and group them
    */
-  private createActionsForSegments() {
+  private actionsForSegments() {
+    const features: Feature[] = [];
+
     this.segments.forEach((segment: Segment) => {
-      const feature1 = findCategoricalFeatureByDate(
+      const feature = findClosestFeature(
         this.categoricalFeatures,
-        segment.date,
-      );
-      const feature2 = findNumericalFeatureByDate(
         this.numericalFeatures,
         segment.date,
       );
-      // prettier-ignore
-      console.debug('FeatureActionFactory:createActionsForSegments: feature1:', feature1);
-      // prettier-ignore
-      console.debug('FeatureActionFactory:createActionsForSegments: feature2:', feature2);
 
-      // const action: Action = this.actionFactory
-      //   .create('segment', {}, segment)
-      //   ?.setFeatureType('segment');
-      // this.dataActionArray.push([segment.getDate(), action]);
+      if (!feature) return;
+
+      const existingAction = this.timelineActions.find(
+        (d) => d[0].getTime() === feature.getDate().getTime(),
+      ) as TimelineActions | undefined;
+
+      if (existingAction) {
+        // prettier-ignore
+        console.debug('FeatureActionFactory:actionsForSegments: action already exists');
+        return;
+      } else {
+        // prettier-ignore
+        console.debug('FeatureActionFactory:actionsForSegments: action does not exist');
+      }
+
+      features.push(feature);
     });
+
+    // prettier-ignore
+    console.debug('FeatureActionFactory:actionsForSegments: features:', features);
   }
 
   /**
    * For each feature create action objects and group them
    */
   private createActions(
-    feature: Feature,
+    feature: NumericalFeature,
     actionRows: ActionTableRow[],
     point: TimeSeriesPoint,
   ) {
@@ -222,5 +239,9 @@ export class FeatureActionFactory {
     });
 
     return actions;
+  }
+
+  private createPauseAction() {
+    const action = this.actionFactory.create(ActionName.PAUSE, {}, {});
   }
 }

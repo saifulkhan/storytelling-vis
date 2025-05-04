@@ -53,7 +53,7 @@ export function searchPeaks(
   }
 
   // sort from lowest to highest
-  peaks.sort((p1, p2) => p1.getHeight() - p2.getHeight());
+  // peaks.sort((p1, p2) => p1.getHeight() - p2.getHeight());
 
   // peak intersection detection function
   const peaksIntersect = (p1: Peak, p2: Peak) => {
@@ -593,7 +593,8 @@ export function findNumericalFeatureByDate(
   features: NumericalFeature[],
   date: Date,
 ): NumericalFeature | undefined {
-  return features.find((feature) => {
+  return features.find((feature: NumericalFeature) => {
+    console.log('findNumericalFeatureByDate: feature = ', feature);
     // compare dates ignoring time
     return feature.getDate().toDateString() === date.toDateString();
   });
@@ -615,6 +616,11 @@ export function findCategoricalFeatureByDate(
 }
 
 /**
+ *  --- The following functions are used to find the closest feature to a given date ---
+ *  --- Mainly used after gaussian and segmentation ---
+ */
+
+/**
  * Finds the categorical feature closest to a given date from a list of categorical features.
  * If an exact match is found, it returns that feature. Otherwise, it returns the feature
  * with the closest date within a specified maximum difference (in days).
@@ -629,30 +635,163 @@ export function findClosestCategoricalFeature(
   date: Date,
   maxDaysDifference: number = 3,
 ): CategoricalFeature | undefined {
-  // first, try to find an exact match
+  // 1. Try to find an exact match
   const exactMatch = features.find(
     (feature) => feature.getDate().toDateString() === date.toDateString(),
   );
+  if (exactMatch) return exactMatch;
 
-  if (exactMatch) {
-    return exactMatch;
-  }
-
-  // if no exact match, find the closest one within maxDaysDifference
+  // 2. Find all features within maxDaysDifference
   const targetTime = date.getTime();
-  let closestFeature: CategoricalFeature | undefined;
-  let minDifference = Number.MAX_SAFE_INTEGER;
+  let minDaysDifference = Number.MAX_SAFE_INTEGER;
+  let candidates: CategoricalFeature[] = [];
 
   for (const feature of features) {
     const featureTime = feature.getDate().getTime();
-    const timeDifference = Math.abs(featureTime - targetTime);
-    const daysDifference = timeDifference / (1000 * 60 * 60 * 24); // convert milliseconds to days
-
-    if (daysDifference <= maxDaysDifference && daysDifference < minDifference) {
-      minDifference = daysDifference;
-      closestFeature = feature;
+    const daysDifference =
+      Math.abs(featureTime - targetTime) / (1000 * 60 * 60 * 24);
+    if (daysDifference <= maxDaysDifference) {
+      if (daysDifference < minDaysDifference) {
+        minDaysDifference = daysDifference;
+        candidates = [feature];
+      } else if (daysDifference === minDaysDifference) {
+        candidates.push(feature);
+      }
     }
   }
 
-  return closestFeature;
+  if (candidates.length === 0) return undefined;
+  if (candidates.length === 1) return candidates[0];
+
+  // 3. If multiple candidates, pick the one with closest rank (to the target date's rank if available)
+  // Assume rank 0 if not set on target date
+  let targetRank = 0;
+  // Try to find a feature on the target date to get its rank
+  const targetFeature = features.find(
+    (feature) => feature.getDate().toDateString() === date.toDateString(),
+  );
+  if (targetFeature && typeof (targetFeature as any).getRank === 'function') {
+    targetRank = (targetFeature as any).getRank();
+  }
+  // Otherwise, use the minimum rank difference
+  let minRankDiff = Number.MAX_SAFE_INTEGER;
+  let closestByRank = candidates[0];
+  for (const feature of candidates) {
+    let rank =
+      typeof (feature as any).getRank === 'function'
+        ? (feature as any).getRank()
+        : 0;
+    const rankDiff = Math.abs(rank - targetRank);
+    if (rankDiff < minRankDiff) {
+      minRankDiff = rankDiff;
+      closestByRank = feature;
+    }
+  }
+  return closestByRank;
+}
+
+/**
+ * Finds the numerical feature closest to a given date from a list of numerical features.
+ * If an exact match is found, it returns that feature. Otherwise, it returns the feature
+ * with the closest date within a specified maximum difference (in days). If there are multiple
+ * candidates at the same minimum date distance, use the one with the closest rank.
+ *
+ * @param features - Array of NumericalFeature objects
+ * @param date - The date to search for (Date object)
+ * @param maxDaysDifference - Maximum allowed difference in days (default: 3)
+ * @returns The closest NumericalFeature, or undefined if none found within the allowed range
+ */
+export function findClosestNumericalFeature(
+  features: NumericalFeature[],
+  date: Date,
+  maxDaysDifference: number = 3,
+): NumericalFeature | undefined {
+  // 1. Try to find an exact match
+  const exactMatch = features.find(
+    (feature) => feature.getDate().toDateString() === date.toDateString(),
+  );
+  if (exactMatch) return exactMatch;
+
+  // 2. Find all features within maxDaysDifference
+  const targetTime = date.getTime();
+  let minDaysDifference = Number.MAX_SAFE_INTEGER;
+  let candidates: NumericalFeature[] = [];
+
+  for (const feature of features) {
+    const featureTime = feature.getDate().getTime();
+    const daysDifference =
+      Math.abs(featureTime - targetTime) / (1000 * 60 * 60 * 24);
+    if (daysDifference <= maxDaysDifference) {
+      if (daysDifference < minDaysDifference) {
+        minDaysDifference = daysDifference;
+        candidates = [feature];
+      } else if (daysDifference === minDaysDifference) {
+        candidates.push(feature);
+      }
+    }
+  }
+
+  if (candidates.length === 0) return undefined;
+  if (candidates.length === 1) return candidates[0];
+
+  // 3. If multiple candidates, pick the one with closest rank (to the target date's rank if available)
+  let targetRank = 0;
+  const targetFeature = features.find(
+    (feature) => feature.getDate().toDateString() === date.toDateString(),
+  );
+  if (targetFeature && typeof (targetFeature as any).getRank === 'function') {
+    targetRank = (targetFeature as any).getRank();
+  }
+  let minRankDiff = Number.MAX_SAFE_INTEGER;
+  let closestByRank = candidates[0];
+  for (const feature of candidates) {
+    let rank =
+      typeof (feature as any).getRank === 'function'
+        ? (feature as any).getRank()
+        : 0;
+    const rankDiff = Math.abs(rank - targetRank);
+    if (rankDiff < minRankDiff) {
+      minRankDiff = rankDiff;
+      closestByRank = feature;
+    }
+  }
+  return closestByRank;
+}
+
+/**
+ * Finds the closest feature (categorical or numerical) to a given date.
+ * Returns the closest feature (by date) among all categorical and numerical features.
+ *
+ * @param categoricalFeatures - Array of CategoricalFeature objects
+ * @param numericalFeatures - Array of NumericalFeature objects
+ * @param date - The date to search for (Date object)
+ * @param maxDaysDifference - Maximum allowed difference in days (default: 3)
+ * @returns The closest feature (CategoricalFeature | NumericalFeature), or undefined if none found within the allowed range
+ */
+export function findClosestFeature(
+  categoricalFeatures: CategoricalFeature[],
+  numericalFeatures: NumericalFeature[],
+  date: Date,
+  maxDaysDifference: number = 3,
+): CategoricalFeature | NumericalFeature | undefined {
+  const closestCat = findClosestCategoricalFeature(
+    categoricalFeatures,
+    date,
+    maxDaysDifference,
+  );
+  const closestNum = findClosestNumericalFeature(
+    numericalFeatures,
+    date,
+    maxDaysDifference,
+  );
+
+  if (!closestCat && !closestNum) return undefined;
+  if (closestCat && !closestNum) return closestCat;
+  if (!closestCat && closestNum) return closestNum;
+
+  // Both exist: compare which is closer in date
+  const catDiff = Math.abs(closestCat!.getDate().getTime() - date.getTime());
+  const numDiff = Math.abs(closestNum!.getDate().getTime() - date.getTime());
+
+  return catDiff <= numDiff ? closestCat : closestNum;
 }

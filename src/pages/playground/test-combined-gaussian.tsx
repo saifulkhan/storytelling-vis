@@ -33,7 +33,7 @@ const TestCombinedGaussianPage = () => {
   const [categoricalFeatures, setCategoricalFeatures] = useState<
     msb.CategoricalFeature[]
   >([]);
-  const [numericalFeatures, setNumericalFeatures] = useState<any>(null);
+  const [numericalFATable, setNumericalFATable] = useState<any>(null);
 
   // slider formatted value
   const valuetext = (value: number) => `${value}`;
@@ -69,12 +69,12 @@ const TestCombinedGaussianPage = () => {
         ),
       );
       // prettier-ignore
-      console.debug('TestCombinedGaussianPage: Categorical features: ', categoricalFeatures);
+      console.debug('TestCombinedGaussianPage: categoricalFeatures: ', categoricalFeatures);
 
       // 1.3 Get numerical feature-action table
-      setNumericalFeatures(covid19NumFATable);
+      setNumericalFATable(covid19NumFATable);
       // prettier-ignore
-      console.debug('TestCombinedGaussianPage: Numerical features: ', numericalFeatures);
+      console.debug('TestCombinedGaussianPage: numericalFATable: ', numericalFATable);
 
       setRegion('Bolton');
     } catch (error) {
@@ -91,35 +91,36 @@ const TestCombinedGaussianPage = () => {
     // --- Test individual Gaussian generation functions ---
     //
 
-    // Generate Gaussian time series for numerical peaks
-    const ntsGauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data);
-    // Generate Gaussian time series for categorical features
-    const ctsGauss: msb.TimeSeriesData[] = msb.generateGaussForCatFeatures(
+    const peakGauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data);
+    const catagoricalFeatureGauss: msb.TimeSeriesData[] =
+      msb.generateGaussForCategoricalFeatures(data, categoricalFeatures);
+    const peakGaussBounds: msb.TimeSeriesData = msb.maxAcrossSeries(
       data,
-      categoricalFeatures,
+      peakGauss,
     );
-    // Compute the maximum value across all numerical and categorical Gaussian series
-    const ntsBoundGauss: msb.TimeSeriesData = msb.maxAcrossSeries(
-      data,
-      ntsGauss,
-    );
-    const ctsBoundGauss: msb.TimeSeriesData = msb.maxAcrossSeries(
-      data,
-      ctsGauss,
-    );
-    console.log('ntsBoundGauss:', ntsBoundGauss);
-    console.log('ctsBoundGauss:', ctsBoundGauss);
-    // Combine the bounded Gaussian series into a single time series
-    let combined = msb.combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
-    console.log('combined:', combined);
+    const catagoricalFeatureGaussBounds: msb.TimeSeriesData =
+      msb.maxAcrossSeries(data, catagoricalFeatureGauss);
+
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: peakGaussBounds:', peakGaussBounds);
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: catagoricalFeatureGaussBounds:', catagoricalFeatureGaussBounds);
+
+    let combinedGauss1: msb.TimeSeriesData = msb.combineSeries(data, [
+      peakGaussBounds,
+      catagoricalFeatureGaussBounds,
+    ]);
+
+    // prettier-ignore
+    console.debug('TestCombinedGaussianPage: combinedGauss1:', combinedGauss1);
 
     //
     // --- Test the all-in-one GMM function ---
+    // single gmm function to generate and combine Gaussian series
     //
 
-    // Use the gmm function to generate and combine Gaussian series in one step
-    combined = msb.gmm(data, categoricalFeatures);
-    console.log('combined:', combined);
+    const combinedGauss2 = msb.gmm(data, categoricalFeatures);
+    console.debug('TestCombinedGaussianPage: combinedGauss2:', combinedGauss2);
 
     //
     // --- Test segmentation - we have two functions implemented slightly differently ---
@@ -151,34 +152,42 @@ const TestCombinedGaussianPage = () => {
     */
 
     // Option-3: Using segmentByPeaks
-    const segmentedPoints = msb.segmentByPeaks(combined, segment);
+    const segmentedGaussianPeakPoints = msb.segmentByPeaks(
+      combinedGauss2,
+      segment,
+    );
     // prettier-ignore
-    console.debug('TestCombinedGaussianPage: segmentedPoints:', segmentedPoints);
+    console.debug('TestCombinedGaussianPage: segmentedGaussianPeakPoints:', segmentedGaussianPeakPoints);
 
     // Find categorical features at segmentation points
-    const catFeaturesAtSegments = segmentedPoints.map((point) => {
-      const feature = msb.findCategoricalFeatureByDate(
+    const catFeaturesAtSegments = segmentedGaussianPeakPoints.map((point) => {
+      let catFeature = msb.findClosestCategoricalFeature(
         categoricalFeatures,
         point.date,
       );
-      return {
-        segmentIndex: point.idx,
-        date: point.date,
-        feature: feature ? feature.getDescription() : 'No feature found',
-      };
+
+      let numFeature = msb.findClosestNumericalFeature(
+        msb.searchPeaks(data, 0, ''),
+        point.date,
+      );
+
+      let closestFeature = msb.findClosestFeature(
+        categoricalFeatures,
+        msb.searchPeaks(data, 0, ''),
+        point.date,
+      );
+
+      // prettier-ignore
+      console.debug('TestCombinedGaussianPage: matches at date:', point.date, '\ncatFeature:', catFeature, '\nnumFeature:', numFeature, '\nclosestFeature:', closestFeature);
     });
+
     // prettier-ignore
     console.debug('TestCombinedGaussianPage: catFeaturesAtSegments:', catFeaturesAtSegments);
 
-    const numFeaturesAtSegments = segmentedPoints.map((point) => {
-      const feature = msb.findNumericalFeatureByDate(
-        numericalFeatures,
-        point.date,
-      );
+    const numFeaturesAtSegments = segmentedGaussianPeakPoints.map((point) => {
       return {
         segmentIndex: point.idx,
         date: point.date,
-        // feature: feature ? feature.getDescription() : 'No feature found',
       };
     });
     // prettier-ignore
@@ -190,7 +199,12 @@ const TestCombinedGaussianPage = () => {
 
     // show original timeseries, gaussians, and combined
     const plot = new msb.LinePlot()
-      .setData([data, ntsBoundGauss, ctsBoundGauss, combined])
+      .setData([
+        data,
+        peakGaussBounds,
+        catagoricalFeatureGaussBounds,
+        combinedGauss1,
+      ])
       .setPlotProps({
         xLabel: 'Date',
         title: `${region}`,
@@ -198,7 +212,7 @@ const TestCombinedGaussianPage = () => {
         rightAxisLabel: 'Rank',
       } as any)
       .setLineProps(
-        ctsBoundGauss.map((d, i) => {
+        combinedGauss1.map((d, i) => {
           if (i === 0) {
             return {
               stroke: '#D3D3D3',
@@ -235,7 +249,7 @@ const TestCombinedGaussianPage = () => {
     });
 
     // Visualize segmentation points from method 1
-    segmentedPoints.forEach((point) => {
+    segmentedGaussianPeakPoints.forEach((point) => {
       if (!chartRef.current) return;
       new msb.Circle()
         .setProps({

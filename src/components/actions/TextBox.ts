@@ -9,28 +9,30 @@ import {
 } from '../../types';
 
 export type TextBoxProps = {
-  title?: string;
-  message?: string;
-  backgroundColor?: string;
-  width?: number;
-  showConnector?: boolean;
-  horizontalAlign?: HorizontalAlign;
-  verticalAlign?: VerticalAlign;
+  title: string;
+  message: string;
+  backgroundColor: string;
+  width: number;
+  showConnector: boolean;
+  horizontalAlign: HorizontalAlign;
+  verticalAlign: VerticalAlign;
+  padding: number;
+  fontFamily: string;
+  fontSize: string;
 };
 
 export const defaultTextBoxProps: TextBoxProps = {
-  title: '...T...',
-  message: '...M...',
+  title: '...',
+  message: '...',
   backgroundColor: '#F8F8F8',
   width: 300,
   showConnector: false,
   horizontalAlign: 'center',
   verticalAlign: 'middle',
+  padding: 3,
+  fontFamily: 'Arial Narrow',
+  fontSize: '12px',
 };
-
-const PADDING = 3;
-const FONT_FAMILY = 'Arial Narrow';
-const FONT_SIZE = '12px';
 
 export class TextBox extends Action {
   protected props: TextBoxProps = defaultTextBoxProps;
@@ -46,7 +48,7 @@ export class TextBox extends Action {
     this.type = ActionName.TEXT_BOX;
   }
 
-  public setProps(props: TextBoxProps = {}, data?: TimeSeriesPoint) {
+  public setProps(props: TextBoxProps, data?: TimeSeriesPoint) {
     this.props = { ...defaultTextBoxProps, ...props };
 
     if (data) {
@@ -95,8 +97,8 @@ export class TextBox extends Action {
     this.titleNode = d3
       .create('svg')
       .append('text')
-      .attr('font-size', FONT_SIZE)
-      .attr('font-family', FONT_FAMILY)
+      .attr('font-size', this.props.fontSize)
+      .attr('font-family', this.props.fontFamily)
       .attr('fill', 'black')
       .attr('font-weight', 'bold')
       .node();
@@ -104,8 +106,8 @@ export class TextBox extends Action {
     this.messageNode = d3
       .create('svg')
       .append('text')
-      .attr('font-size', FONT_SIZE)
-      .attr('font-family', FONT_FAMILY)
+      .attr('font-size', this.props.fontSize)
+      .attr('font-family', this.props.fontFamily)
       .attr('fill', 'black')
       .node();
 
@@ -134,11 +136,11 @@ export class TextBox extends Action {
 
     // y position of message, give some space after title
     let height = this.titleNode.getBoundingClientRect().height;
-    this.messageNode.setAttribute('y', `${height + PADDING}px`);
+    this.messageNode.setAttribute('y', `${height + this.props.padding}px`);
 
     // y position of rect
     height = this.textNode.getBoundingClientRect().height;
-    this.rectNode.setAttribute('height', `${height + PADDING}px`);
+    this.rectNode.setAttribute('height', `${height + this.props.padding}px`);
 
     return this;
   }
@@ -194,7 +196,7 @@ export class TextBox extends Action {
     // keep adding words to row until width exceeds span then create new row
     let accumulatedWidth = 0;
     let wordsInLine: string[] = [];
-    const messageWidth = this.props.width! - PADDING;
+    const messageWidth = this.props.width! - this.props.padding;
 
     for (let i = 0; i < wordWidthArr.length; i++) {
       const word = wordWidthArr[i].word,
@@ -252,7 +254,7 @@ export class TextBox extends Action {
     d3.select(this.rectNode).attr('transform', `translate(${x},${y})`);
     d3.select(this.textNode).attr(
       'transform',
-      `translate(${x + PADDING},${y})`,
+      `translate(${x + this.props.padding},${y})`,
     );
 
     // align texts
@@ -306,7 +308,7 @@ export class TextBox extends Action {
         .transition()
         .ease(d3.easeQuadIn)
         .duration(duration)
-        .attr('transform', `translate(${x + PADDING},${y})`)
+        .attr('transform', `translate(${x + this.props.padding},${y})`)
         .on('end', () => {
           resolve(delay + duration);
         });

@@ -76,7 +76,7 @@ const TestCFToGaussianPage = () => {
 
     const data = casesData[region];
     const categoricalGauss: msb.TimeSeriesData[] =
-      msb.generateGaussForCatFeatures(data, categoricalFeatures);
+      msb.generateGaussForCategoricalFeatures(data, categoricalFeatures);
 
     console.debug('Categorical features: ', categoricalFeatures);
     console.debug('categoricalGauss:', categoricalGauss);

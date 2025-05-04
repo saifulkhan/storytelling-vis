@@ -5,7 +5,6 @@ export abstract class Feature {
   protected start: Date;
   protected end: Date;
   protected rank: number;
-  protected type: NumericalFeatureName;
   protected metric: string;
   protected dataIndex: number;
 
@@ -14,7 +13,6 @@ export abstract class Feature {
     this.start = new Date();
     this.end = new Date();
     this.rank = 0;
-    this.type = NumericalFeatureName.UNKNOWN;
     this.metric = '';
     this.dataIndex = 0;
   }
@@ -26,15 +24,6 @@ export abstract class Feature {
 
   getDate() {
     return this.date;
-  }
-
-  setType(type: NumericalFeatureName) {
-    this.type = type;
-    return this;
-  }
-
-  getType() {
-    return this.type;
   }
 
   setRank(rank: number) {

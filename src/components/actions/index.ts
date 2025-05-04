@@ -1,5 +1,4 @@
 export * from './Action';
-export * from './ActionFactory';
 export * from './ActionGroup';
 export * from './ActionName';
 export * from './Circle';

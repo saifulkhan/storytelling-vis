@@ -2,16 +2,18 @@ import { TextBox, TextBoxProps, defaultTextBoxProps } from './TextBox';
 import { ActionName } from './ActionName';
 
 export type PauseProps = TextBoxProps & {
-  duration?: number;
+  duration: number;
 };
 
 export const defaultPauseProps: PauseProps = {
   ...defaultTextBoxProps,
-  duration: 0,
+  backgroundColor: 'red',
+  duration: Infinity,
 };
 
 /**
- * Pause action for animation sequencing. This action renders a textbox and can be used in an animation timeline to represent a pause.
+ * Pause action for animation sequencing.
+ * This action renders a textbox and can be used in an animation timeline to represent a pause.
  */
 export class Pause extends TextBox {
   protected props: PauseProps = defaultPauseProps;
@@ -21,7 +23,7 @@ export class Pause extends TextBox {
     this.type = ActionName.PAUSE;
   }
 
-  public setProps(properties: PauseProps = {}) {
+  public setProps(properties: PauseProps) {
     this.props = { ...defaultPauseProps, ...properties };
     return this;
   }
@@ -30,5 +32,6 @@ export class Pause extends TextBox {
     this.props = { ...this.props, ...properties };
     return this;
   }
+
   // All rendering and animation logic is inherited from TextBox
 }

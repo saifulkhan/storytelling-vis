@@ -17,22 +17,27 @@ const MAX_RANK = 10;
  * @returns The same array of Peak objects, each with its rank set via setRank().
  */
 export function rankPeaksByHeight(peaks: Peak[]) {
-  peaks.sort((p1, p2) => p1.getHeight() - p2.getHeight());
-  // console.log('rankPeaksByHeight: peaks:', peaks);
-  const numPeaks = peaks.length;
+  if (peaks.length === 0) return;
+  // create a sorted copy for ranking
+  const sorted = [...peaks].sort((p1, p2) => p1.getHeight() - p2.getHeight());
+  const numPeaks = sorted.length;
   const groupSize = numPeaks / MAX_RANK;
 
-  peaks.forEach((p: Peak, i: number) => {
+  // map from Peak to its rank
+  const peakToRank = new Map<Peak, number>();
+  sorted.forEach((p: Peak, i: number) => {
     const rank = 1 + Math.floor(i / groupSize);
-    p.setRank(rank);
+    peakToRank.set(p, rank);
   });
 
-  // console.log('rankPeaksByHeight: peaks:', peaks);
-  return peaks;
+  // assign rank in original order
+  peaks.forEach((p) => {
+    p.setRank(peakToRank.get(p) || 1);
+  });
 }
 
 /**
- * Assigns normalized ranks to an array of Peak objects based on their height.
+ * Assigns normalized height to an array of Peak objects based on their height.
  * Continuous, normalized values (good for smooth, relative comparisons).
  *
  * - Sorts the peaks in ascending order of height.
@@ -43,23 +48,25 @@ export function rankPeaksByHeight(peaks: Peak[]) {
  * @param peaks Array of Peak objects to be ranked.
  * @returns The same array of Peak objects, each with its normalized rank set via setNormHeight().
  */
-export function rankPeaksByNormHeight(peaks: Peak[]) {
-  peaks.sort((p1, p2) => p1.getHeight() - p2.getHeight());
-  // console.log('rankPeaksByNormHeight: peaks:', peaks);
-  const maxValue = peaks.reduce(
-    (max: number, obj: Peak) => (obj.getHeight() > max ? obj.getHeight() : max),
-    peaks[0].getHeight(),
-  );
+export function setPeaksNormHeight(peaks: Peak[]) {
+  if (peaks.length === 0) return;
+  // create a sorted copy for normalization
+  const sorted = [...peaks].sort((p1, p2) => p1.getHeight() - p2.getHeight());
 
-  const minValue = peaks.reduce(
-    (min: number, obj: Peak) => (obj.getHeight() < min ? obj.getHeight() : min),
-    peaks[0].getHeight(),
-  );
+  const maxValue = sorted[sorted.length - 1].getHeight();
+  const minValue = sorted[0].getHeight();
 
-  peaks.forEach((p: Peak) => {
-    p.setNormHeight(scaleValue(p.getHeight(), minValue, maxValue, 1, MAX_RANK));
+  // map from Peak to its normalized height
+  const peakToNorm = new Map<Peak, number>();
+  sorted.forEach((p) => {
+    peakToNorm.set(
+      p,
+      scaleValue(p.getHeight(), minValue, maxValue, 1, MAX_RANK),
+    );
   });
 
-  // console.log('rankPeaksByNormHeight: peaks:', peaks);
-  return peaks;
+  // assign normalized height in original order
+  peaks.forEach((p) => {
+    p.setNormHeight(peakToNorm.get(p) || 1);
+  });
 }

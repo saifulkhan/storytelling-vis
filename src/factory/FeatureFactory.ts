@@ -6,14 +6,14 @@ import {
   searchLast,
   searchPeaks,
   searchSlopes,
-} from './feature-search';
+} from '../feature/feature-search';
 import { NumericalFeatureName, TimeSeriesData, Condition } from '../types';
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
-} from './FeatureSearchProps';
+} from '../feature/FeatureSearchProps';
 import { createPredicate } from '../common';
-import { NumericalFeature } from './NumericalFeature';
+import { NumericalFeature } from '../feature/NumericalFeature';
 
 export class FeatureFactory {
   private data: TimeSeriesData;
