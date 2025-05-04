@@ -20,7 +20,7 @@ export class ActionFactory {
 
   public create(
     action: ActionName,
-    props: CircleProps | ConnectorProps | DotProps | TextBoxProps,
+    props: CircleProps | ConnectorProps | DotProps | TextBoxProps | PauseProps,
     data?: TimeSeriesPoint,
   ): Action | undefined {
     // prettier-ignore

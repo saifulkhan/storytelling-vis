@@ -50,12 +50,12 @@ export class Dot extends Action {
   }
 
   public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
-    this.coordinate0 = coordinate[0];
-    this.coordinate1 = coordinate[1];
+    this.coordOrigin = coordinate[0];
+    this.coordDestination = coordinate[1];
 
     d3.select(this.dotNode)
-      .attr('cx', this.coordinate1[0])
-      .attr('cy', this.coordinate1[1]);
+      .attr('cx', this.coordDestination[0])
+      .attr('cy', this.coordDestination[1]);
 
     return this;
   }

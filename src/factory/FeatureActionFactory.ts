@@ -1,7 +1,7 @@
 import {
   TimeSeriesData,
   TimeSeriesPoint,
-  TimelineActions,
+  TimelineAction,
   Segment,
   CategoricalFeatureName,
 } from '../types';
@@ -20,14 +20,15 @@ import {
 } from '../feature';
 import {
   Action,
-  ActionFactory,
   FeatureActionTableRow,
   ActionTableRow,
   FeatureActionTableData,
   ActionName,
+  PauseProps,
 } from '../components';
 import { getTimeSeriesPointByDate } from '../common';
 import { FeatureFactory } from './FeatureFactory';
+import { ActionFactory } from './ActionFactory';
 
 export class FeatureActionFactory {
   private data: TimeSeriesData = [];
@@ -37,7 +38,7 @@ export class FeatureActionFactory {
 
   private numericalFeatures: NumericalFeature[] = [];
   private categoricalFeatures: CategoricalFeature[] = [];
-  private timelineActions: TimelineActions = [];
+  private timelineActions: TimelineAction[] = [];
   private actionFactory = new ActionFactory();
   private featureFactory = new FeatureFactory();
   private segments: Segment[] = [];
@@ -207,10 +208,21 @@ export class FeatureActionFactory {
       if (existingAction) {
         // prettier-ignore
         console.debug('FeatureActionFactory:actionsForSegments: action already exists');
-        return;
+        const pasueAction = this.createPauseAction('Numerical', 'Date');
+        this.timelineActions.splice(
+          this.timelineActions.indexOf(existingAction as any),
+          0,
+          [feature.getDate(), pasueAction],
+        );
       } else {
         // prettier-ignore
         console.debug('FeatureActionFactory:actionsForSegments: action does not exist');
+        const pasueAction = this.createPauseAction('Categorical', 'Date');
+        this.timelineActions.splice(
+          this.timelineActions.indexOf(existingAction as any),
+          0,
+          [feature.getDate(), pasueAction],
+        );
       }
 
       features.push(feature);
@@ -241,7 +253,10 @@ export class FeatureActionFactory {
     return actions;
   }
 
-  private createPauseAction() {
-    const action = this.actionFactory.create(ActionName.PAUSE, {}, {});
+  private createPauseAction(featureType: string, title: string) {
+    return this.actionFactory.create(ActionName.PAUSE, {
+      message: featureType,
+      title: title,
+    } as PauseProps);
   }
 }

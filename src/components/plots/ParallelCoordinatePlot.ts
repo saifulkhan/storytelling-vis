@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { findIndexOfDate, getObjectKeysArray } from '../../common';
 import {
-  TimelineActions,
+  TimelineAction,
   Coordinate,
   HorizontalAlign,
   VerticalAlign,

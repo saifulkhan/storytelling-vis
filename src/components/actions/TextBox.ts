@@ -225,8 +225,8 @@ export class TextBox extends Action {
   }
 
   public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
-    this.coordinate0 = coordinate[0];
-    this.coordinate1 = coordinate[1];
+    this.coordOrigin = coordinate[0];
+    this.coordDestination = coordinate[1];
 
     const [x1, y1] = coordinate[0];
     const [x2, y2] = coordinate[1];
@@ -278,8 +278,12 @@ export class TextBox extends Action {
     delay = 500,
     duration = 1500,
   ): Promise<any> {
-    this.coordinate1 = coordinate;
-    console.log('TextBox:move: coordinate1:', coordinate, this.coordinate1);
+    this.coordDestination = coordinate;
+    console.log(
+      'TextBox:move: coordinate1:',
+      coordinate,
+      this.coordDestination,
+    );
 
     const { width, height } = this.rectNode.getBoundingClientRect();
 
@@ -289,8 +293,8 @@ export class TextBox extends Action {
     // const x = dest[0] - width / 2;
 
     // right align
-    const x = this.coordinate1[0];
-    const y = this.coordinate1[1] - height;
+    const x = this.coordDestination[0];
+    const y = this.coordDestination[1] - height;
 
     const promise1 = new Promise<number>((resolve, reject) => {
       d3.select(this.rectNode)

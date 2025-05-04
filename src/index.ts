@@ -4,7 +4,7 @@ export type {
   TimeSeriesPoint,
   TimeSeriesData,
   Coordinate,
-  TimelineActions,
+  TimelineAction,
 } from './types';
 
 export type {

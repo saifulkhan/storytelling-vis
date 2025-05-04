@@ -86,7 +86,7 @@ const StoryMLPCP = () => {
     // build story based on selected hyperparameter's data and feature-action table
 
     // 2. Create timeline actions
-    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
+    const timelineActions: msb.TimelineAction[] = new msb.FeatureActionFactory()
       .setProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
       .setNumericalFeatures(numericalFATable) // <- feature-action table

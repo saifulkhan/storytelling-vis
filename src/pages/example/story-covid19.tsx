@@ -90,7 +90,7 @@ const StoryCovid19Single = () => {
     console.log(`Selected region ${region}'s data: ${data}`);
 
     // 2. Create timeline actions
-    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
+    const timelineActions: msb.TimelineAction[] = new msb.FeatureActionFactory()
       .setProps({
         metric: 'Number of cases',
         window: 10,

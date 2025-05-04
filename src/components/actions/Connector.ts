@@ -48,14 +48,14 @@ export class Connector extends Action {
   }
 
   public setCoordinate(coordinate: [Coordinate, Coordinate]): this {
-    this.coordinate0 = coordinate[0];
-    this.coordinate1 = coordinate[1];
+    this.coordOrigin = coordinate[0];
+    this.coordDestination = coordinate[1];
 
     d3.select(this.connectorNode)
-      .attr('x1', this.coordinate0[0])
-      .attr('y1', this.coordinate0[1])
-      .attr('x2', this.coordinate1[0])
-      .attr('y2', this.coordinate1[1]);
+      .attr('x1', this.coordOrigin[0])
+      .attr('y1', this.coordOrigin[1])
+      .attr('x2', this.coordDestination[0])
+      .attr('y2', this.coordDestination[1]);
 
     return this;
   }

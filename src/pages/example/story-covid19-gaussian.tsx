@@ -108,7 +108,7 @@ const StoryCovid19Gaussian = () => {
     // console.log(`Selected region ${region}'s data: ${data}`);
 
     // 2. Create timeline actions
-    const timelineActions: msb.TimelineActions = new msb.FeatureActionFactory()
+    const timelineActions: msb.TimelineAction[] = new msb.FeatureActionFactory()
       .setProps({
         metric: 'Number of cases',
         window: 10,
@@ -119,6 +119,7 @@ const StoryCovid19Gaussian = () => {
       .segment(numSegment, 'gmm')
       .create();
 
+    console.log('StoryCovid19Gaussian: timelineActions: ', timelineActions);
     // 3. Create story in a line plot
     plot
       .setData([data]) // <- timeseries data

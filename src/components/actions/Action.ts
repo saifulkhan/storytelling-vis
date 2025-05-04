@@ -10,8 +10,8 @@ export abstract class Action {
   protected props: any = {};
   protected svg!: SVGGElement;
   protected node: any = null;
-  protected coordinate0!: Coordinate;
-  protected coordinate1!: Coordinate;
+  protected coordOrigin!: Coordinate;
+  protected coordDestination!: Coordinate;
   protected featureType?: NumericalFeatureName;
 
   constructor() {}
