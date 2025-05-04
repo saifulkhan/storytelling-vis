@@ -14,29 +14,55 @@ import { NumericalFeature } from './NumericalFeature';
 const WINDOW = 10;
 
 /**
- ** The function search peaks in a given timeseries.
- ** The steps involve searching for peaks in segments for defined window sizes,
- ** remove duplicates, and eliminate peaks that are part of a larger peak.
- **/
+ * Searches for significant peaks in a time series dataset.
+ *
+ * This function identifies peaks in the data by:
+ * 1. Finding local maxima using a sliding window approach
+ * 2. Determining the start and end points of each peak
+ * 3. Creating Peak objects with relevant metadata
+ * 4. Filtering out overlapping peaks to keep only the most significant ones
+ *
+ * @param data - The time series data to analyze
+ * @param rank - Importance rank to assign to detected peaks (default: 0)
+ * @param metric - Name of the metric being analyzed (default: '')
+ * @param window - Size of the sliding window for peak detection (default: WINDOW)
+ * @returns Array of unique Peak objects representing significant peaks in the data
+ */
 export function searchPeaks(
   data: TimeSeriesData,
   rank: number = 0,
   metric: string = '',
   window: number = WINDOW,
 ): Peak[] {
-  const peaks: Peak[] = [];
+  if (!data || data.length < window) {
+    console.warn(
+      'searchPeaks: Insufficient data points for the specified window size',
+    );
+    return [];
+  }
+
+  // Find potential peak indices
   const maxes = searchMaxes(data, window);
+  if (maxes.length === 0) {
+    return [];
+  }
+
+  // Normalize y-values for consistent peak analysis
   const norm = normalise(data.map((d) => d.y ?? 0));
 
-  console.log('maxes:', maxes);
-
-  let start, end;
+  // Create Peak objects for each detected maximum
+  const peaks: Peak[] = [];
   for (const idx of maxes) {
-    start = searchPeakStart(idx, norm);
-    end = searchPeakEnd(idx, norm);
+    // Find the boundaries of each peak
+    const start = searchPeakStart(idx, norm);
+    const end = searchPeakEnd(idx, norm);
 
-    // console.log("idx:", idx);
+    // Skip invalid peaks (where start/end couldn't be properly determined)
+    if (start >= end || start < 0 || end >= data.length) {
+      continue;
+    }
 
+    // Create and configure the Peak object
     const peak = new Peak()
       .setDate(data[idx].date)
       .setHeight(data[idx].y ?? 0)
@@ -49,32 +75,60 @@ export function searchPeaks(
       .setDataIndex(idx);
 
     peaks.push(peak);
-    // console.log("peaks:", peaks);
   }
 
-  // sort from lowest to highest
-  // peaks.sort((p1, p2) => p1.getHeight() - p2.getHeight());
+  // Sort peaks by height (descending) to prioritize larger peaks when filtering
+  peaks.sort((p1, p2) => p2.getHeight() - p1.getHeight());
 
-  // peak intersection detection function
-  const peaksIntersect = (p1: Peak, p2: Peak) => {
-    const p1PeakIdx = findDateIdx(p1.getDate(), data);
-    const p2PeakIdx = findDateIdx(p2.getDate(), data);
+  // Efficient peak intersection detection using cached indices
+  const dateIndices = new Map<Date, number>();
+
+  // Pre-compute date indices for faster lookups
+  const getDateIndex = (date: Date): number => {
+    if (dateIndices.has(date)) {
+      return dateIndices.get(date)!;
+    }
+    const idx = findDateIdx(date, data);
+    dateIndices.set(date, idx);
+    return idx;
+  };
+
+  // Improved peak intersection detection
+  const peaksIntersect = (p1: Peak, p2: Peak): boolean => {
+    const p1PeakIdx = getDateIndex(p1.getDate());
+    const p2PeakIdx = getDateIndex(p2.getDate());
+    const p1StartIdx = getDateIndex(p1.getStart());
+    const p1EndIdx = getDateIndex(p1.getEnd());
+    const p2StartIdx = getDateIndex(p2.getStart());
+    const p2EndIdx = getDateIndex(p2.getEnd());
 
     return (
-      (p1PeakIdx <= findDateIdx(p2.getEnd(), data) &&
-        p1PeakIdx >= findDateIdx(p2.getStart(), data)) ||
-      (p2PeakIdx <= findDateIdx(p1.getEnd(), data) &&
-        p2PeakIdx >= findDateIdx(p1.getStart(), data))
+      (p1PeakIdx <= p2EndIdx && p1PeakIdx >= p2StartIdx) ||
+      (p2PeakIdx <= p1EndIdx && p2PeakIdx >= p1StartIdx)
     );
   };
 
-  // for each peak if there is a larger peak that intersects it do not add to uniquePeaks
+  // Filter out overlapping peaks, keeping the most significant ones
   const uniquePeaks: Peak[] = [];
-  peaks.forEach((p1, i) => {
-    const largerPeaks = peaks.slice(i + 1);
-    const intersect = largerPeaks.find((p2) => peaksIntersect(p1, p2));
-    if (!intersect) uniquePeaks.push(p1);
-  });
+  const isOverlapping = new Array(peaks.length).fill(false);
+
+  // Mark peaks that overlap with more significant peaks
+  for (let i = 0; i < peaks.length; i++) {
+    if (isOverlapping[i]) continue;
+
+    for (let j = i + 1; j < peaks.length; j++) {
+      if (!isOverlapping[j] && peaksIntersect(peaks[i], peaks[j])) {
+        isOverlapping[j] = true;
+      }
+    }
+  }
+
+  // Add non-overlapping peaks to the result
+  for (let i = 0; i < peaks.length; i++) {
+    if (!isOverlapping[i]) {
+      uniquePeaks.push(peaks[i]);
+    }
+  }
 
   return uniquePeaks;
 }
