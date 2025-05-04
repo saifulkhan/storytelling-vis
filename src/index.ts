@@ -12,7 +12,6 @@ export type {
   FeatureActionTableRow,
   FeatureActionTableData,
   AnimationType,
-  LineProps,
 } from './components';
 
 export * from './components';

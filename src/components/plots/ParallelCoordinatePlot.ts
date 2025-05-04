@@ -9,11 +9,27 @@ import {
 } from '../../types';
 import { Colors, LineColor } from '../Colors';
 import { Action } from '../actions';
-import { Plot, PlotProps, defaultPlotProps } from './Plot';
+import { Plot } from './Plot';
 
-export type ParallelCoordinatePlotProperties = {};
+export type PCPProps = {
+  title?: string;
+  ticks?: boolean;
+  xLabel?: string;
+  rightAxisLabel?: string;
+  leftAxisLabel?: string;
+  margin: { top: number; right: number; bottom: number; left: number };
+};
 
-const MARGIN = { top: 70, right: 50, bottom: 30, left: 50 };
+export const defaultPCPProps: PCPProps = {
+  title: 'title...',
+  ticks: true,
+  xLabel: 'x axis label...',
+  rightAxisLabel: 'right axis label...',
+  leftAxisLabel: 'left axis label...',
+  margin: { top: 70, right: 50, bottom: 30, left: 50 },
+};
+
+// TODO: may be move to props
 
 const STATIC_LINE_COLOR_MAP = d3.interpolateBrBG,
   STATIC_LINE_OPACITY = 0.4,
@@ -79,14 +95,13 @@ const yScale = (
 
 export class ParallelCoordinatePlot extends Plot {
   data: any[] = [];
-  plotProps: PlotProps = { ...defaultPlotProps };
+  props: PCPProps = defaultPCPProps;
   svg!: SVGSVGElement;
   name: string = '';
   actions: any[] = [];
 
   width: number = 0;
   height: number = 0;
-  margin = MARGIN;
 
   AxisNames: string[] = [];
   selectedAxis: string = '';
@@ -101,10 +116,8 @@ export class ParallelCoordinatePlot extends Plot {
     super();
   }
 
-  public setPlotProps(props: PlotProps) {
-    this.plotProps = { ...defaultPlotProps, ...props };
-    this.margin = this.plotProps.margin || MARGIN;
-    console.log('margin:', this.margin);
+  public setPlotProps(props: PCPProps) {
+    this.props = { ...defaultPCPProps, ...props };
     return this;
   }
 
@@ -164,10 +177,10 @@ export class ParallelCoordinatePlot extends Plot {
       this.data,
       this.AxisNames,
       this.width,
-      this.margin,
+      this.props.margin,
     );
 
-    this.yScale = yScale(this.AxisNames, this.height, this.margin);
+    this.yScale = yScale(this.AxisNames, this.height, this.props.margin);
 
     this.staticLineColorMap = d3.scaleSequential(
       this.xScaleMap.get(this.selectedAxis).domain().reverse(),
@@ -203,7 +216,7 @@ export class ParallelCoordinatePlot extends Plot {
       .call((g) =>
         g
           .append('text')
-          .attr('x', this.margin.left)
+          .attr('x', this.props.margin.left)
           .attr('y', -6)
           .attr('text-anchor', 'start')
           .attr('fill', (d) =>
@@ -570,22 +583,28 @@ export class ParallelCoordinatePlot extends Plot {
   }
 
   private topLeftCoordinate(): Coordinate {
-    return [this.margin.right + ANNO_X_POS, ANNO_Y_POS + this.margin.top / 2];
+    return [
+      this.props.margin.right + ANNO_X_POS,
+      ANNO_Y_POS + this.props.margin.top / 2,
+    ];
   }
 
   private topMidCoordinate(): Coordinate {
-    return [this.midXCoordinate(), ANNO_Y_POS + this.margin.top / 2];
+    return [this.midXCoordinate(), ANNO_Y_POS + this.props.margin.top / 2];
   }
 
   private topRightCoordinate(): Coordinate {
-    return [this.width - this.margin.left - ANNO_X_POS, ANNO_Y_POS];
+    return [this.width - this.props.margin.left - ANNO_X_POS, ANNO_Y_POS];
   }
 
   public getCoordinates(...args: unknown[]): [Coordinate, Coordinate] {
     // Return coordinates based on the plot's dimensions
     return [
-      [this.margin.left, this.margin.top],
-      [this.width - this.margin.right, this.height - this.margin.bottom],
+      [this.props.margin.left, this.props.margin.top],
+      [
+        this.width - this.props.margin.right,
+        this.height - this.props.margin.bottom,
+      ],
     ];
   }
 }

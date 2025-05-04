@@ -47,7 +47,7 @@ const StoryCovid19Single = () => {
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
     msb.PlayPauseController,
-    [plot],
+    plot,
   );
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const StoryCovid19Single = () => {
         title: `${region}`,
         xLabel: 'Date',
         leftAxisLabel: 'Number of cases',
-      })
+      } as any)
       .setLineProps([])
       .setCanvas(chartRef.current)
       // .plot() // <- draw the static plot, useful for testing

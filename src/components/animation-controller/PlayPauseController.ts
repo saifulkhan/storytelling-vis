@@ -4,55 +4,36 @@
  */
 export class PlayPauseController {
   private isPlaying: boolean = false;
-  private controlledObject: any;
+  private plots: any;
 
-  /**
-   * Create a new PlayPauseController
-   * @param controlledObject - Object that implements play(), pause(), and togglePlayPause() methods
-   */
   constructor(controlledObject: any) {
-    this.controlledObject = controlledObject;
+    this.plots = controlledObject;
   }
 
-  /**
-   * Toggle between play and pause states
-   */
   togglePlayPause(): void {
     this.isPlaying = !this.isPlaying;
 
     if (this.isPlaying) {
-      this.controlledObject.play();
+      this.plots.play();
     } else {
-      this.controlledObject.pause();
+      this.plots.pause();
     }
   }
 
-  /**
-   * Force pause state
-   */
   pause(): void {
     this.isPlaying = false;
-    this.controlledObject.pause();
+    this.plots.pause();
   }
 
-  /**
-   * Force play state
-   */
   play(): void {
     this.isPlaying = true;
-    this.controlledObject.play();
+    this.plots.play();
   }
 
-  /**
-   * Get current playing state
-   */
   getIsPlaying(): boolean {
     return this.isPlaying;
   }
 
-  /**
-   * Clean up resources
-   */
   cleanup(): void {
     this.pause();
   }

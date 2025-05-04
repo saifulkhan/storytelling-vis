@@ -51,7 +51,7 @@ const StoryMLPCP = () => {
   const plot = useRef(new msb.ParallelCoordinatePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
     msb.PlayPauseController,
-    [plot],
+    plot,
   );
 
   useEffect(() => {
@@ -71,6 +71,8 @@ const StoryMLPCP = () => {
 
     console.log('ML data: ', mlData);
     console.log('Numerical feature-action table data: ', numericalFATable);
+
+    setHyperparam('channels');
 
     setLoading(false);
   }, []);
@@ -96,8 +98,8 @@ const StoryMLPCP = () => {
       .setName(hyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRef.current)
-      .plot();
-    //.setActions(timelineActions);
+      //.plot(); // static plot
+      .setActions(timelineActions);
 
     // 4. Pause the animation, start when play button is clicked
     controller.pause();

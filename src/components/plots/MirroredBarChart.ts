@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Plot, PlotProps, defaultPlotProps } from './Plot';
+import { Plot } from './Plot';
 import {
   TimeSeriesData,
   TimeSeriesPoint,
@@ -8,7 +8,9 @@ import {
 } from '../../types';
 import { Colors } from '../Colors';
 
-export type MirroredBarChartProps = PlotProps & {
+export type MirroredBarChartProps = {
+  ticks: number;
+  margin: { top: number; right: number; bottom: number; left: number };
   fontSize: string;
   yAxisLabelFontSize: string;
   yAxisLabelOffset: number;
@@ -21,7 +23,9 @@ export type MirroredBarChartProps = PlotProps & {
   y2Label: string;
 };
 
-export const defaultMirroredBarChartProps: MirroredBarChartProps = {
+export const defaultProps: MirroredBarChartProps = {
+  ticks: 5,
+  margin: { top: 50, right: 50, bottom: 60, left: 60 },
   fontSize: '12px',
   yAxisLabelFontSize: '14px',
   yAxisLabelOffset: 10,
@@ -32,13 +36,12 @@ export const defaultMirroredBarChartProps: MirroredBarChartProps = {
   xLabel: 'x axis',
   y1Label: 'y1 axis',
   y2Label: 'y2 axis',
-  ticks: true,
 };
 
 const ID_AXIS_SELECTION = '#id-axes-selection';
 
 export class MirroredBarChart extends Plot {
-  protected props: MirroredBarChartProps = defaultMirroredBarChartProps;
+  protected props: MirroredBarChartProps = defaultProps;
 
   data: TimeSeriesData = [];
   name: string = '';
@@ -46,7 +49,6 @@ export class MirroredBarChart extends Plot {
   selector: any;
   width: number = 0;
   height: number = 0;
-  margin: any = {};
   xScale: any;
   yScale1: any;
   yScale2: any;
@@ -90,7 +92,6 @@ export class MirroredBarChart extends Plot {
     const bounds = svg.getBoundingClientRect();
     this.height = bounds.height;
     this.width = bounds.width;
-    this.margin = this.props.margin;
     console.log('setCanvas: bounds: ', bounds);
 
     this.selector = d3
@@ -172,7 +173,7 @@ export class MirroredBarChart extends Plot {
         d3.extent(this.data, (d: TimeSeriesPoint) => d.date) as [Date, Date],
       )
       .nice()
-      .range([this.margin.left, this.width - this.margin.right]);
+      .range([this.props.margin.left, this.width - this.props.margin.right]);
 
     // adjust yScale1 to use top half of the available space
     this.yScale1 = d3
@@ -187,7 +188,7 @@ export class MirroredBarChart extends Plot {
       .nice()
       .range([
         middlePoint, // bottom of top half is exactly at the middle
-        this.margin.top, // top of the chart
+        this.props.margin.top, // top of the chart
       ]);
 
     // adjust yScale2 to use bottom half of the available space
@@ -203,7 +204,7 @@ export class MirroredBarChart extends Plot {
       .nice()
       .range([
         middlePoint, // top of bottom half is exactly at the middle
-        this.height - this.margin.bottom, // bottom of the chart
+        this.height - this.props.margin.bottom, // bottom of the chart
       ]);
 
     const selection = d3
@@ -232,17 +233,17 @@ export class MirroredBarChart extends Plot {
 
     // Create the top Y-axis
     const yAxisTop = d3.axisLeft(this.yScale1);
-    yAxisTop.ticks(5);
+    yAxisTop.ticks(this.props.ticks);
     selection
       .append('g')
-      .attr('transform', `translate(${this.margin.left}, 0)`)
+      .attr('transform', `translate(${this.props.margin.left}, 0)`)
       .call(yAxisTop)
       .style('font-size', this.props.fontSize)
       // label
       .append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('x', -(middlePoint + this.margin.top) / 2) // center the label in the top half
-      .attr('y', -this.margin.left + this.props.yAxisLabelOffset)
+      .attr('x', -(middlePoint + this.props.margin.top) / 2) // center the label in the top half
+      .attr('y', -this.props.margin.left + this.props.yAxisLabelOffset)
       .attr('class', 'y label')
       .attr('text-anchor', 'middle')
       .text(this.props.y1Label)
@@ -260,14 +261,14 @@ export class MirroredBarChart extends Plot {
 
     selection
       .append('g')
-      .attr('transform', `translate(${this.margin.left}, 0)`)
+      .attr('transform', `translate(${this.props.margin.left}, 0)`)
       .call(yAxisBottom)
       .style('font-size', this.props.fontSize)
       // label
       .append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('x', -(middlePoint + this.height - this.margin.bottom) / 2) // Center the label in the bottom half
-      .attr('y', -this.margin.left + this.props.yAxisLabelOffset)
+      .attr('x', -(middlePoint + this.height - this.props.margin.bottom) / 2) // Center the label in the bottom half
+      .attr('y', -this.props.margin.left + this.props.yAxisLabelOffset)
       .attr('class', 'y label')
       .attr('text-anchor', 'middle')
       .text(this.props.y2Label)
@@ -277,9 +278,9 @@ export class MirroredBarChart extends Plot {
     // Add a horizontal line at the middle to emphasize the split
     selection
       .append('line')
-      .attr('x1', this.margin.left)
+      .attr('x1', this.props.margin.left)
       .attr('y1', middlePoint)
-      .attr('x2', this.width - this.margin.right)
+      .attr('x2', this.width - this.props.margin.right)
       .attr('y2', middlePoint)
       .attr('stroke', this.props.bar1Color)
       .attr('stroke-width', 1);
@@ -465,8 +466,11 @@ export class MirroredBarChart extends Plot {
 
     // otherwise return the bounds of the visualization area
     return [
-      [this.margin.left, this.margin.top],
-      [this.width - this.margin.right, this.height - this.margin.bottom],
+      [this.props.margin.left, this.props.margin.top],
+      [
+        this.width - this.props.margin.right,
+        this.height - this.props.margin.bottom,
+      ],
     ];
   }
 

@@ -90,7 +90,7 @@ const TestCFToGaussianPage = () => {
         title: `${region}`,
         leftAxisLabel: 'Number of cases',
         rightAxisLabel: 'Rank',
-      })
+      } as any)
       .setLineProps(
         data.map((d, i) => {
           if (i === 0) {

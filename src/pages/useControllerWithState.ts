@@ -16,30 +16,34 @@ export function useControllerWithState<
   },
 >(
   ControllerClass: new (...args: any[]) => T,
-  controllerArgs: any[],
+  controllerArgs: any,
 ): [T, boolean] {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const controller = useMemo(() => {
-    const ctrl = new ControllerClass(...controllerArgs);
-    // Override the togglePlayPause method to update React state
+    const ctrl = new ControllerClass(controllerArgs);
+
+    // override the togglePlayPause method to update React state
     const originalToggle = ctrl.togglePlayPause;
     ctrl.togglePlayPause = () => {
       originalToggle.call(ctrl);
       setIsPlaying(ctrl.getIsPlaying());
     };
-    // Override the pause method to update React state
+
+    // override the pause method to update React state
     const originalPause = ctrl.pause;
     ctrl.pause = () => {
       originalPause.call(ctrl);
       setIsPlaying(false);
     };
-    // Override the play method to update React state
+
+    // override the play method to update React state
     const originalPlay = ctrl.play;
     ctrl.play = () => {
       originalPlay.call(ctrl);
       setIsPlaying(true);
     };
+
     return ctrl;
   }, controllerArgs);
 

@@ -55,9 +55,9 @@ const StoryMLMirroredBar = () => {
   // control both plots together
   const [controller, isPlaying] = useControllerWithState(
     msb.SynchronizedPlotsController,
-    [[linePlot, mirroredBarChart]],
+    [linePlot, mirroredBarChart],
   );
-  // control each plot separately
+  // test control each plot separately
   // const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [mirroredBarChart]);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const StoryMLMirroredBar = () => {
         title: `${selectedHyperparam}`,
         xLabel: 'Date',
         leftAxisLabel: y1AxisName,
-      })
+      } as any)
       .setLineProps([])
       .setCanvas(chartRefLine.current)
       // .plot() // <- draw the static plot, useful for testing

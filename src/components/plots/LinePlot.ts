@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Plot, PlotProps, defaultPlotProps } from './Plot';
+import { Plot } from './Plot';
 import {
   Coordinate,
   TimeSeriesPoint,
@@ -11,30 +11,61 @@ import {
 import { findDateIdx, findIndexOfDate } from '../../common';
 import { Action } from '../actions';
 
-const ID_AXIS_SELECTION = '#id-axes-selection',
-  // TODO: move to props
-  MAGIC_NO = 10,
-  LINE_STROKE_WIDTH = 2,
-  LINE_STROKE = '#2a363b',
-  DOT_SIZE = 2,
-  TITLE_FONT_FAMILY = 'Arial Narrow',
-  TITLE_FONT_SIZE = '14px',
-  AXIS_FONT_FAMILY = 'Arial Narrow',
-  AXIS_FONT_SIZE = '12px',
-  YAXIS_LABEL_OFFSET = 12;
+const ID_AXIS_SELECTION = '#id-axes-selection';
 
-export type LineProps = PlotProps & {
+// we need to pass the line properties for each line
+export type LineProps = {
   stroke: string;
-  strokeWidth?: number;
-  showPoints?: boolean;
-  onRightAxis?: boolean;
+  strokeWidth: number;
+  onRightAxis: boolean;
+  showPoints: boolean;
+  dotSize: number;
+};
+
+export const defaultLineProps: LineProps = {
+  stroke: '#2a363b',
+  strokeWidth: 2,
+  onRightAxis: false,
+  showPoints: false,
+  dotSize: 2,
+};
+
+// overall plot props
+export type LinePlotProps = {
+  title: string;
+  ticks: boolean;
+  xLabel: string;
+  rightAxisLabel: string;
+  leftAxisLabel: string;
+  margin: { top: number; right: number; bottom: number; left: number };
+  titleYOffset: number;
+  titleFontFamily: string;
+  titleFontSize: string;
+  axisFontFamily: string;
+  axisFontSize: string;
+  yAxisLabelOffset: number;
+};
+
+export const defaultLinePlotProps: LinePlotProps = {
+  title: 'title...',
+  ticks: true,
+  xLabel: 'x axis label...',
+  rightAxisLabel: 'right axis label...',
+  leftAxisLabel: 'left axis label...',
+  margin: { top: 50, right: 50, bottom: 60, left: 60 },
+  titleYOffset: 10,
+  titleFontFamily: 'Arial Narrow',
+  titleFontSize: '14px',
+  axisFontFamily: 'Arial Narrow',
+  axisFontSize: '12px',
+  yAxisLabelOffset: 12,
 };
 
 export class LinePlot extends Plot {
   data: TimeSeriesData[] = [];
   name = '';
   lineProps: LineProps[] = [];
-  plotProps: PlotProps = { ...defaultPlotProps };
+  plotProps: LinePlotProps = defaultLinePlotProps;
 
   svg!: SVGSVGElement;
   selector: any;
@@ -53,26 +84,26 @@ export class LinePlot extends Plot {
     super();
   }
 
-  public setPlotProps(props: PlotProps) {
-    this.plotProps = { ...defaultPlotProps, ...props };
+  public setPlotProps(props: LinePlotProps) {
+    this.plotProps = { ...defaultLinePlotProps, ...props };
     return this;
   }
 
-  public setLineProps(p: LineProps[] = []) {
+  public setLineProps(propsList: LineProps[] = []) {
     if (!this.data) {
       throw new Error('LinePlot: Can not set line properties before data!');
     }
 
-    this.data.forEach((_, i: number) => {
+    const numTimeSeries = this.data.length;
+    for (let i = 0; i < numTimeSeries; i++) {
       this.lineProps.push({
-        stroke: p[i]?.stroke || LINE_STROKE,
-        strokeWidth: p[i]?.strokeWidth || LINE_STROKE_WIDTH,
-        onRightAxis:
-          typeof p[i]?.onRightAxis === undefined ? false : p[i]?.onRightAxis,
-        showPoints:
-          typeof p[i]?.showPoints === undefined ? false : p[i]?.showPoints,
+        stroke: propsList[i]?.stroke || defaultLineProps.stroke,
+        strokeWidth: propsList[i]?.strokeWidth || defaultLineProps.strokeWidth,
+        showPoints: propsList[i]?.showPoints || defaultLineProps.showPoints,
+        onRightAxis: propsList[i]?.onRightAxis || defaultLineProps.onRightAxis,
+        dotSize: propsList[i]?.dotSize || defaultLineProps.dotSize,
       });
-    });
+    }
 
     console.log('LinePlot: lineProps = ', this.lineProps);
 
@@ -151,7 +182,7 @@ export class LinePlot extends Plot {
           .selectAll('circle')
           .data(dataX.map(Object.values))
           .join('circle')
-          .attr('r', DOT_SIZE)
+          .attr('r', this.lineProps[i].dotSize ?? 2)
           .attr('cx', (d: any) => this.xAxis(d[0]))
           .attr('cy', (d: any) => yAxis(d[1]))
           .style('fill', p.stroke)
@@ -304,8 +335,8 @@ export class LinePlot extends Plot {
       .attr('text-anchor', 'start')
       .attr('x', this.width / 2)
       .attr('y', this.height - 5)
-      .style('font-size', AXIS_FONT_SIZE)
-      .style('font-family', AXIS_FONT_FAMILY)
+      .style('font-size', this.plotProps.axisFontSize ?? '12px')
+      .style('font-family', this.plotProps.axisFontFamily ?? 'Arial Narrow')
 
       .text(`${this.plotProps.xLabel}→`);
 
@@ -328,9 +359,9 @@ export class LinePlot extends Plot {
         .attr('fill', 'currentColor')
         .attr('text-anchor', 'start')
         .attr('x', -this.height / 2)
-        .attr('y', YAXIS_LABEL_OFFSET)
-        .style('font-size', AXIS_FONT_SIZE)
-        .style('font-family', AXIS_FONT_FAMILY)
+        .attr('y', this.plotProps.yAxisLabelOffset ?? 12)
+        .style('font-size', this.plotProps.axisFontSize ?? '12px')
+        .style('font-family', this.plotProps.axisFontFamily ?? 'Arial Narrow')
         .text(`${this.plotProps.leftAxisLabel}→`);
     }
 
@@ -351,11 +382,11 @@ export class LinePlot extends Plot {
         .append('text')
         .attr('transform', 'rotate(90)')
         .attr('x', this.height / 2)
-        .attr('y', -this.width + YAXIS_LABEL_OFFSET)
+        .attr('y', -this.width + (this.plotProps.yAxisLabelOffset ?? 12))
         .attr('fill', 'currentColor')
         .attr('text-anchor', 'start')
-        .style('font-size', AXIS_FONT_SIZE)
-        .style('font-family', AXIS_FONT_FAMILY)
+        .style('font-size', this.plotProps.axisFontSize ?? '12px')
+        .style('font-family', this.plotProps.axisFontFamily ?? 'Arial Narrow')
         .text(`←${this.plotProps.rightAxisLabel}`);
     }
 
@@ -366,10 +397,10 @@ export class LinePlot extends Plot {
       .style('fill', '#696969')
       .attr('text-anchor', 'start')
       .attr('font-weight', 'bold')
-      .style('font-size', TITLE_FONT_SIZE)
-      .style('font-family', TITLE_FONT_FAMILY)
+      .style('font-size', this.plotProps.titleFontSize ?? '14px')
+      .style('font-family', this.plotProps.titleFontFamily ?? 'Arial Narrow')
       .attr('x', this.width / 2)
-      .attr('y', this.margin.top + MAGIC_NO)
+      .attr('y', this.margin.top + (this.plotProps.titleYOffset ?? 10))
       .text(this.plotProps.title);
 
     return this;
