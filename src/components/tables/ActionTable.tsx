@@ -33,7 +33,8 @@ const getInitialProperties = (action: ActionName) => {
     case ActionName.CONNECTOR:
       return defaultConnectorProperties;
     default:
-      return {};
+      // Return defaultDotProps instead of empty object to satisfy type constraints
+      return defaultDotProps;
   }
 };
 

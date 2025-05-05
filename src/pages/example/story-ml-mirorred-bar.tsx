@@ -117,7 +117,8 @@ const StoryMLMirroredBar = () => {
       .setLineProps([])
       .setCanvas(chartRefLine.current)
       // .plot() // <- draw the static plot, useful for testing
-      .setActions(timelineActions);
+      .setActions(timelineActions)
+      .animate();
 
     // 3. Create mirrored bar chart
     mirroredBarChart

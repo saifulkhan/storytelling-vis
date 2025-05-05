@@ -3,7 +3,15 @@ import { Input, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import * as d3 from 'd3';
 import { styled } from '@mui/material/styles';
 
-import { ActionFactory, ActionName } from '../actions';
+import {
+  ActionName,
+  CircleProps,
+  ConnectorProps,
+  DotProps,
+  TextBoxProps,
+  PauseProps,
+} from '../actions';
+import { ActionFactory } from '../../factory';
 
 // Define styled components to replace makeStyles
 const StyledTable = styled(Table)({
@@ -100,7 +108,16 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
       data.message = 'Message';
     }
     console.log({ ...data });
-    const action = actionFactory.create(data.action, data);
+    // Cast data to the appropriate props type based on action name
+    const action = actionFactory.create(
+      data.action,
+      data as
+        | CircleProps
+        | ConnectorProps
+        | DotProps
+        | TextBoxProps
+        | PauseProps,
+    );
     action
       ?.setCanvas(chartRef.current as unknown as SVGGElement)
       .setCoordinate([

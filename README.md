@@ -11,29 +11,28 @@
 ## Table of Contents
 
 - [Overview](#overview)
-
   - [Features](#features)
   - [Installation](#installation)
   - [Steps & Template](#steps--template)
-
 - [API Design & Development](#api-design--development)
   - [Development Setup](#development-setup)
-  - [Examples](#examples)
-    - [Stories](#stories)
-    - [Playground (Component Testing)](#playground-component-testing)
+  - [Example Stories](#example-stories)
+  - [Playground (For Component Testing & Development)](#playground-for-component-testing--development)
+  - [Testing](#testing)
   - [Project Structure](#project-structure)
-  - [Meta-Storyboard (MSB) API](#meta-storyboard-msb-api)
-    - [Feature Action Table Data Structures](#feature-action-table-data-structures)
-    - [MSB Action API](#msb-action-api)
-    - [Animated Plots API](#animated-plots-api)
-    - [Creating Story](#creating-story)
-    - [Feature Action Tables UI](#feature-action-tables-ui)
-  - [Additional Information](#additional-information)
-    - [Build & Release](#build--release)
-    - [Contribution](#contribution)
-    - [License](#license)
-    - [Support](#support)
-    - [References](#references)
+- [Meta-Storyboard (MSB) API](#meta-storyboard-msb-api)
+  - [Feature Action Table Data Structures](#feature-action-table-data-structures)
+  - [MSB Feature API](#msb-feature-api)
+  - [MSB Action API](#msb-action-api)
+  - [Feature Search & Gaussian API](#feature-search--gaussian-api)
+  - [Animated Plots API](#animated-plots-api)
+  - [Deatiled Workflow for Creating Story](#deatiled-workflow-for-creating-story)
+- [Additional Information](#additional-information)
+  - [Build & Release](#build--release)
+  - [Contribution](#contribution)
+  - [License](#license)
+  - [Support](#support)
+  - [References](#references)
 
 ---
 
@@ -81,13 +80,13 @@ import * as msb from 'meta-storyboard';
 
 // 1. Load your data and feature-action table
 const data = ...; // time series data
-const featureActionTable = ...; // feature-action table
+const numericalFATable = ...; // feature-action table
 
 // 2. Create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
-  .setFAProps({ /* properties */ })
+  .setProps({ /* properties */ })
   .setData(data)
-  .setNumericalFeatures(featureActionTable)
+  .setNumericalFeatures(numericalFATable)
   .create();
 
 // 3. Initialize a plot and animation controller
@@ -96,10 +95,11 @@ const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, 
 
 plot
   .setData(data)
-  .setName('My Plot')
+  .setName(/* name of the plot */)
   .setPlotProps({ /* plot properties */ })
-  .setCanvas(svgRef)
-  .setActions(timelineActions);
+  .setCanvas(/* svg element */)
+  .setActions(timelineActions)
+  .animate();
 
 // 4. Animate
 onClick={controller.togglePlayPause};
@@ -112,16 +112,20 @@ import * as msb from 'meta-storyboard';
 
 // 1. Load your data and feature-action table
 const data = ...; // time series data
-const numericalFeatures = ...; // numerical feature-action table
-const categoricalFeatures = ...; // categorical features table
+const categoricalEventsData = ...; // categorical events timeseries data
+const numericalFATable = ...; // numerical feature-action table
+const categoricalFATable = ...; // categorical feature-action table
+
+const numSegment = ...; // number of segments
+const method = ...; // segmentation method, e.g., gaussian mixture model
 
 // 2. Create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
-  .setFAProps({ /* properties */ })
+  .setProps({ /* properties */ })
   .setData(data)
   .setNumericalFeatures(numericalFeatures)
-  .setCategoricalFeatures(categoricalFeatures)
-  .segment(numSegment, 'gmm')
+  .setCategoricalFeatures(categoricalEventsData, categoricalFATable)
+  .segment(numSegment, method)
   .create();
 
 // 3. Initialize a plot and animation controller
@@ -130,10 +134,11 @@ const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, 
 
 plot
   .setData(data)
-  .setName('My Plot')
+  .setName(/* name of the plot */)
   .setPlotProps({ /* plot properties */ })
-  .setCanvas(svgRef)
-  .setActions(timelineActions);
+  .setCanvas(/* svg element */)
+  .setActions(timelineActions)
+  .animate();
 
 // 4. Animate
 onClick={controller.togglePlayPause};
@@ -184,14 +189,20 @@ The implementation of the example stories is in [GitHub](https://github.com/saif
 
 The implementation of the playground pages is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground) and links:
 
+Plots, features, actions, etc.
+
 - [Test Play/Pause Loop](http://localhost:3000/playground/test-play-pause-loop)
 - [Test Actions](http://localhost:3000/playground/test-actions)
 - [Test Line Plot](http://localhost:3000/playground/test-line-plot)
 - [Test Features](http://localhost:3000/playground/test-features)
 
+Gaussian
+
 - [Test Categorical Features to Gaussian](http://localhost:3000/playground/test-categorical-features-to-gaussian)
 - [Test Numerical Features to Gaussian](http://localhost:3000/playground/test-numerical-features-to-gaussian)
 - [Test Gaussian Combined](localhost:3000/playground/test-combined-gaussian)
+
+Tables (experimental)
 
 - [Test Action Properties Table](http://localhost:3000/playground/test-action-properties-table)
 - [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
@@ -215,20 +226,21 @@ _Note: Unit tests are under development._
 ## Project Structure
 
 ```
-.
-└── src
-    ├── animation-controller # Animation controllers
-    ├── components
-    │   ├── actions          # VIS action components, e.g., Circle, Dot, etc.
-    │   ├── plots            # Plots, e.g., LinePlot, etc.
-    │   └── tables           # Tables for features/actions
-    ├── pages
-    │   ├── example          # Example stories
-    │   └── playground       # Playground pages
-    ├── types                # TypeScript types
-    └── utils
-        ├── feature-action
-        └── gaussian
+src
+├── assets                    # Assets to implement and test MSB
+│   ├── data
+│   └── feature-action-table
+├── components
+│   ├── actions               # VIS action components, e.g., Circle, Dot, etc.
+│   ├── animation-controller  # Animation controllers
+│   ├── plots                 # Plots, e.g., LinePlot, etc.
+│   └── tables                # Tables for features/actions (experimental)
+├── factory                   # Factories for creating features/actions
+├── feature                   # Feature classes, gaussian functions, etc.
+├── pages                     # Pages for examples and playground
+│   ├── example
+│   └── playground
+└── types                     # TypeScript types
 ```
 
 ## Meta-Storyboard (MSB) API
@@ -281,22 +293,16 @@ We implemented a user interface for meta-story authors for creating and updating
   },
 ```
 
-TODO: Refactor the key / variable name in the code!
-
-**MSB Feature Action Factory:** The `MSBFeatureActionFactory` translates the meta-stories defined as feature action tables to MSB feature objects and MSB action objects. It internally uses the `MSBFeatureFactory` and `MSBActionFactory` classes, which will be discussed later, to do so. Instantiate this class as follows:
+**MSB Feature Action Factory:** The `FeatureActionFactory` translates the meta-stories defined as feature action tables to MSB feature objects and MSB action objects. It internally uses the `FeatureFactory` and `ActionFactory` classes, which will be discussed later, to do so. Instantiate this class as follows:
 
 ```js
-new MSBFeatureActionFactory(...)
+new FeatureActionFactory(...)
     .setProperties(...)
     .setNFATable(...)
     .setNFATable(...)
     .setData(...)
     .create();
 ```
-
-**Code:** See the implementation of all tables as nested components in `src/components/storyboards/tables` folder and feature action table reader, feature to action mapping classes in `src/utils/storyboards/feature-action` folder. The web templates or pages of feature action tables are in `public/static/storyboards`.
-
-**Example:** See the examples/tests in the UI.
 
 ### MSB Feature API
 
@@ -307,12 +313,12 @@ new MSBFeatureActionFactory(...)
     <br><br>
 </div>
 
-The `MSBFeature` is an abstract class that encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serve as the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of time series data. Developers can extend this base class to implement new features.
+The `Feature` is an abstract class that encapsulates both numerical and semantic attributes of time series data through its subclasses, `NumericalFeature` and `CategoricalFeature`. These base classes serve as the foundation for concrete classes such as specific implementations like `Peak`, `Min`, `Max`, etc., it provides a structured approach to define features of time series data. Developers can extend this base class to implement new features.
 
 **Feature Names:** Features are defined as enumerators, e.g.,
 
 ```ts
-export enum MSBFeatureName {
+export enum NumericalFeatureName {
   FIRST = "FIRST",
   CURRENT = "CURRENT",
   LAST = "LAST",
@@ -342,18 +348,14 @@ new Peak()
     .setDataIndex(...);
 ```
 
-**MSB Feature Factory:** The `MSBFeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
+**MSB Feature Factory:** The `FeatureFactory` class implements a factory design pattern for streamlined feature creation, utilizing search functions to dynamically generate feature instances based on input feature action table and time series data.
 
 ```js
-new MSBFeatureFactory()
+new FeatureFactory()
     .setProperties()
     .setData()
     .search(<feature name>, <properties>, ...);
 ```
-
-**Code:** Explore the `src/utils/storyboards/feature` directory for details on the available features and their implementations.
-
-**Example:** See the examples/tests in the UI.
 
 ### MSB Action API
 
@@ -416,10 +418,6 @@ new ActionFactory()
     .create(<action name>, <action properties>)
 ```
 
-**Code:** See the available actions in the `src/components/storyboards/actions` folder.
-
-**Example:** See the examples/tests in the UI.
-
 ### Feature Search & Gaussian API
 
 The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions. The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
@@ -435,10 +433,6 @@ searchPeaks(<time series>, <properties, e.g., window>)
 ```ts
 gaussian(<mean>, <std>, ...)
 ```
-
-**Code:** See the available feature search or detection functions in `src/utils/storyboards/feature/feature-search.ts` and all Gaussian functions in `src/utils/storyboards/data-processing/Gaussian.ts`.
-
-**Example:** See the examples/tests in the UI.
 
 ### Animated Plots API
 
@@ -464,11 +458,7 @@ new LinePlot()
     .animate()
 ```
 
-**Code:** See various plots and their API in `src/components/storyboards/plots` folder.
-
-**Example:** See the examples/tests in the UI.
-
-### Creating Story
+### Deatiled Workflow for Creating Story
 
 <!-- <div align="center">  -->
 <div>
@@ -477,14 +467,6 @@ new LinePlot()
     <small><i>Figure 1: Sequence diagram demonstrating a story creation process and important classes and methods involved.</i></small>
     <br><br>
 </div>
-
-**Code:** See the implementation of story pages in `src/pages/storyboards` folder.
-
-**Example:** See COVID-19 story with a single time series and Machine learning multi-variate story in the UI.
-
-### Feature Action Tables UI
-
-This is an experimental feature and incomplete functionality. To add a new table, see `src/services/TableService.ts`
 
 ## Additional Information
 

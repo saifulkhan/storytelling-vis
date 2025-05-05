@@ -12,16 +12,20 @@
         {
           "url": "webpack://_N_E/",
           "path": "${workspaceFolder}/"
+        },
+        {
+          "url": "webpack:///_N_E/",
+          "path": "${workspaceFolder}/"
+        },
+        {
+          "url": "webpack:///",
+          "path": "${workspaceFolder}/"
         }
       ],
-      "log": {
-        "consoleLevel": {
-          // "default": "Debug"
-        }
-      },
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
-        "${workspaceFolder}/.next/**/*.js"
+        "${workspaceFolder}/.next/**/*.js",
+        "<node_internals>/**"
       ]
     },
     {

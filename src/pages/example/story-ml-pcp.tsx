@@ -104,7 +104,8 @@ const StoryMLPCP = () => {
       .setData(data) // <- timeseries data
       .setCanvas(chartRef.current)
       //.plot(); // static plot
-      .setActions(timelineActions);
+      .setActions(timelineActions)
+      .animate();
 
     // 4. Pause the animation, start when play button is clicked
     controller.pause();

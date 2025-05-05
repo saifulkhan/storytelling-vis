@@ -130,7 +130,8 @@ const StoryCovid19Gaussian = () => {
       .setLineProps([])
       .setCanvas(chartRef.current)
       // .plot() // <- draw the static plot, useful for testing
-      .setActions(timelineActions);
+      .setActions(timelineActions)
+      .animate();
 
     // 4. Pause the animation, start when play button is clicked
     controller.pause();

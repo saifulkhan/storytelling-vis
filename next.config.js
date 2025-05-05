@@ -3,7 +3,7 @@ const withTM = require('next-transpile-modules')(['@babel/preset-react']);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack(config) {
+  webpack(config, { dev, isServer }) {
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -22,6 +22,10 @@ const nextConfig = {
         },
       ],
     });
+
+    if (dev) {
+      config.devtool = 'eval-source-map';
+    }
 
     return config;
   },
