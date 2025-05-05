@@ -16,6 +16,6 @@ export type {
 
 export * from './components';
 export type { MirroredBarChartProps } from './components/plots/MirroredBarChart';
-export * from './components/animation-controller';
+export * from './components/animation';
 export * from './feature';
 export * from './common';
