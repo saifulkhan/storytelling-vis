@@ -200,7 +200,7 @@ Gaussian
 
 - [Test Categorical Features to Gaussian](http://localhost:3000/playground/test-categorical-features-to-gaussian)
 - [Test Numerical Features to Gaussian](http://localhost:3000/playground/test-numerical-features-to-gaussian)
-- [Test Gaussian Combined](localhost:3000/playground/test-combined-gaussian)
+- [Test Gaussian Combined](http://localhost:3000/playground/test-combined-gaussian)
 
 Tables (experimental)
 
@@ -253,13 +253,13 @@ We implemented a user interface for meta-story authors for creating and updating
 
 ```json
 {
-    "featureName": "...",
-    "featureProperties": {"..."},
+    "feature": "...",
+    "featureProps": {"..."},
     "rank": "...",
     "actions": [
       {
-        "actionName": "...",
-        "actionProperties": {
+        "action": "...",
+        "actionProps": {
           "size": "...",
           "color": "...",
           "...": "...",
@@ -275,14 +275,14 @@ We implemented a user interface for meta-story authors for creating and updating
 ```json
 
   {
-    "featureName": "...",
+    "feature": "...",
     "date": "...",
     "description": "...",
     "rank": "...",
     "actions": [
       {
-        "actionName": "...",
-        "actionProperties": {
+        "action": "...",
+        "actionProps": {
           "size": "...",
           "color": "...",
           "...": "...",
@@ -297,9 +297,9 @@ We implemented a user interface for meta-story authors for creating and updating
 
 ```js
 new FeatureActionFactory(...)
-    .setProperties(...)
-    .setNFATable(...)
-    .setNFATable(...)
+    .setProps(...)
+    .setNumericalFeatures(...)
+    .setCategoricalFeatures(...)
     .setData(...)
     .create();
 ```
@@ -352,9 +352,9 @@ new Peak()
 
 ```js
 new FeatureFactory()
-    .setProperties()
+    .setProps()
     .setData()
-    .search(<feature name>, <properties>, ...);
+    .searchNumericalFeatures(<feature name>, <properties>, ...);
 ```
 
 ### MSB Action API
@@ -420,18 +420,16 @@ new ActionFactory()
 
 ### Feature Search & Gaussian API
 
-The feature search or detection functions are implemented in `feature-search.ts`. These functions are implemented as pure functions. The `gaussian.ts` file contains functions for calculating the Gaussian distributions of both numerical and categorical time series, as well as for generating a combined Gaussian useful for segmentation. These functions are designed as pure functions.
-
-**Feature Detection:** The following are examples API for peak detection.
+**Feature Detection:** The `Search` class implements various feature detection algorithms. The following is an example API for peak detection. Similarly, additional feature detection APIs have also been implemented.
 
 ```ts
-searchPeaks(<time series>, <properties, e.g., window>)
+Search.searchPeaks(<time series>, <properties, e.g., window>)
 ```
 
-**Gaussian:** The following are API for computing Gaussian distributions.
+**Gaussian:** The `Gaussian` class implements various Gaussian algorithms. The following is an API for the Gaussian mixture model to compute combined Gaussians from numerical time series (peaks) and categorical time series.
 
 ```ts
-gaussian(<mean>, <std>, ...)
+Gaussian.gmm(<time series>, <categorial events>)
 ```
 
 ### Animated Plots API

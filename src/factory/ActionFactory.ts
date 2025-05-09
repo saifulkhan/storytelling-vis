@@ -10,8 +10,6 @@ import {
   DotProps,
   TextBox,
   TextBoxProps,
-  Pause,
-  PauseProps,
 } from '../components';
 import { TimeSeriesPoint } from '../types';
 
@@ -20,11 +18,11 @@ export class ActionFactory {
 
   public create(
     action: ActionName,
-    props: CircleProps | ConnectorProps | DotProps | TextBoxProps | PauseProps,
+    props: CircleProps | ConnectorProps | DotProps | TextBoxProps,
     data?: TimeSeriesPoint,
   ): Action | undefined {
     // prettier-ignore
-    // console.log("ActionFactory:create: action = ", action, ", properties = ", properties);
+    // console.debug("ActionFactory:create: action = ", action, ", props = ", props);
 
     switch (action) {
       case ActionName.DOT:
@@ -35,8 +33,6 @@ export class ActionFactory {
         return new Circle().setProps(props as CircleProps);
       case ActionName.CONNECTOR:
         return new Connector().setProps(props as ConnectorProps);
-      case ActionName.PAUSE:
-        return new Pause().setProps(props as PauseProps);
       default:
         console.error(`Action ${action} is not implemented!`);
     }

@@ -25,7 +25,6 @@ import {
   ActionTableRow,
   FeatureActionTableData,
   ActionName,
-  PauseProps,
 } from '../components';
 import { getTimeSeriesPointByDate } from '../common';
 import { FeatureFactory } from './FeatureFactory';
@@ -308,12 +307,5 @@ export class FeatureActionFactory {
     });
 
     return actions;
-  }
-
-  private createPauseAction(featureType: string, title: string) {
-    return this.actionFactory.create(ActionName.PAUSE, {
-      message: featureType,
-      title: title,
-    } as PauseProps);
   }
 }

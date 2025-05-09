@@ -30,7 +30,7 @@ const TestActionsPage = () => {
           size: 5,
           color: '#FF0000',
           opacity: 0.5,
-        })
+        } as any)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst])
         .show();
@@ -40,7 +40,7 @@ const TestActionsPage = () => {
           size: 10,
           color: 'green',
           opacity: 1,
-        })
+        } as any)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst])
         .show();
@@ -53,13 +53,13 @@ const TestActionsPage = () => {
           horizontalAlign: 'right',
           verticalAlign: 'top',
           backgroundColor: 'lightgrey',
-        })
+        } as any)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst1])
         .show();
 
       const connector = new msb.Connector()
-        .setProps({})
+        .setProps({} as any)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst])
         .show();
@@ -73,10 +73,10 @@ const TestActionsPage = () => {
         verticalAlign: 'top',
         backgroundColor: 'lightgrey',
         width: 100,
-      });
+      } as any);
       const actions = [
-        new msb.Dot().setProps(),
-        new msb.Circle().setProps(),
+        new msb.Dot().setProps({} as any),
+        new msb.Circle().setProps({} as any),
         textbox2,
       ];
 

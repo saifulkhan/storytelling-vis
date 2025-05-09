@@ -1,2 +1,2 @@
 export * from './PlayPauseController';
-export * from './SynchronizedPlotsController';
+export * from './SyncPlotsController';
