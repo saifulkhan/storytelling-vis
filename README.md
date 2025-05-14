@@ -238,7 +238,7 @@ src
 │   └── feature-action-table
 ├── components
 │   ├── actions               # VIS action components, e.g., Circle, Dot, etc.
-│   ├── animation-controller  # Animation controllers
+│   ├── animation             # Animation controllers
 │   ├── plots                 # Plots, e.g., LinePlot, etc.
 │   └── tables                # Tables for features/actions (experimental)
 ├── factory                   # Factories for creating features/actions
