@@ -4,5 +4,4 @@ export * from './ActionName';
 export * from './Circle';
 export * from './Connector';
 export * from './Dot';
-export * from './Pause';
 export * from './TextBox';

@@ -8,23 +8,17 @@ import {
 } from '../types';
 import {
   Feature,
-  gmm,
-  NumericalFeature,
-  defaultFeatureSearchProps,
   FeatureSearchProps,
+  defaultFeatureSearchProps,
+  NumericalFeature,
   CategoricalFeature,
-  segmentByImportantPeaks,
-  segmentByPeaks,
-  findCategoricalFeatureByDate,
-  findClosestFeature,
-  findNumericalFeatureByDate,
 } from '../feature';
+import { Search, Gaussian, Utils } from '../processing';
 import {
   Action,
   FeatureActionTableRow,
   ActionTableRow,
   FeatureActionTableData,
-  ActionName,
 } from '../components';
 import { getTimeSeriesPointByDate } from '../common';
 import { FeatureFactory } from './FeatureFactory';
@@ -91,10 +85,10 @@ export class FeatureActionFactory {
 
     // currently segment by gmm or peaks are only supported
     if (method === 'gmm') {
-      const combined = gmm(this.data, this.categoricalFeatures);
-      this.segments = segmentByPeaks(combined, this.numSegment);
+      const combined = Gaussian.gmm(this.data, this.categoricalFeatures);
+      this.segments = Utils.segmentByPeaks(combined, this.numSegment);
     } else {
-      this.segments = segmentByPeaks(this.data, this.numSegment);
+      this.segments = Utils.segmentByPeaks(this.data, this.numSegment);
     }
 
     // prettier-ignore
@@ -242,7 +236,7 @@ export class FeatureActionFactory {
     // prettier-ignore
     console.debug('FeatureActionFactory:actionsForSegments: tempTimelineActions:', this.tempTimelineActions);
     this.segments.forEach((segment: Segment) => {
-      const feature = findClosestFeature(
+      const feature = Search.findClosestFeature(
         this.categoricalFeatures,
         this.numericalFeatures,
         segment.date,

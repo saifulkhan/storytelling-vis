@@ -1,19 +1,11 @@
-import {
-  searchCurrent,
-  searchFirst,
-  searchGlobalMax,
-  searchGlobalMin,
-  searchLast,
-  searchPeaks,
-  searchSlopes,
-} from '../feature/feature-search';
+import { Search } from '../processing';
 import { NumericalFeatureName, TimeSeriesData, Condition } from '../types';
 import {
   FeatureSearchProps,
   defaultFeatureSearchProps,
-} from '../feature/FeatureSearchProps';
+  NumericalFeature,
+} from '../feature';
 import { createPredicate } from '../common';
-import { NumericalFeature } from '../feature/NumericalFeature';
 
 export class FeatureFactory {
   private data: TimeSeriesData;
@@ -49,16 +41,16 @@ export class FeatureFactory {
 
     switch (feature) {
       case NumericalFeatureName.FIRST:
-        return searchFirst(this.data, rank, this.props.metric || '');
+        return Search.searchFirst(this.data, rank, this.props.metric || '');
 
       case NumericalFeatureName.CURRENT:
-        return searchCurrent(this.data, rank, this.props.metric || '');
+        return Search.searchCurrent(this.data, rank, this.props.metric || '');
 
       case NumericalFeatureName.LAST:
-        return searchLast(this.data, rank, this.props.metric || '');
+        return Search.searchLast(this.data, rank, this.props.metric || '');
 
       case NumericalFeatureName.PEAK:
-        return searchPeaks(
+        return Search.searchPeaks(
           this.data,
           rank,
           this.props.metric || '',
@@ -66,13 +58,13 @@ export class FeatureFactory {
         );
 
       case NumericalFeatureName.MAX:
-        return searchGlobalMax(this.data, rank, this.props.metric || '');
+        return Search.searchGlobalMax(this.data, rank, this.props.metric || '');
 
       case NumericalFeatureName.MIN:
-        return searchGlobalMin(this.data, rank, this.props.metric || '');
+        return Search.searchGlobalMin(this.data, rank, this.props.metric || '');
 
       case NumericalFeatureName.SLOPE:
-        let slopes = searchSlopes(
+        let slopes = Search.searchSlopes(
           this.data,
           rank,
           this.props.metric || '',
