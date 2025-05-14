@@ -78,11 +78,11 @@ For example (using React but you can use any other framework):
 ```tsx
 import * as msb from 'meta-storyboard';
 
-// 1. Load your data and feature-action table
+// 1. Load data and feature-action table
 const data = ...; // time series data
 const numericalFATable = ...; // feature-action table
 
-// 2. Create timeline actions
+// 2. Process feature-action table and create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
   .setProps({ /* properties */ })
   .setData(data)
@@ -93,6 +93,7 @@ const timelineActions = new msb.FeatureActionFactory()
 const plot = useRef(new msb.LinePlot()).current;
 const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
 
+// 4. Configure plot and animate
 plot
   .setData(data)
   .setName(/* name of the plot */)
@@ -101,25 +102,25 @@ plot
   .setActions(timelineActions)
   .animate();
 
-// 4. Animate
 onClick={controller.togglePlayPause};
 ```
 
-Template using gaussian mixture model for segmenting timeseries based on importance.
+For applications requiring the integration of both numerical and categorical time series with automated segmentation using Gaussian mixture models, the `FeatureActionFactory` provides two additional methods `setCategoricalFeatures` and `segment`; use them as follows:
 
 ```tsx
 import * as msb from 'meta-storyboard';
 
-// 1. Load your data and feature-action table
+// 1. Load data and feature-action table
 const data = ...; // time series data
-const categoricalEventsData = ...; // categorical events timeseries data
 const numericalFATable = ...; // numerical feature-action table
+
+const categoricalEventsData = ...; // categorical events timeseries data
 const categoricalFATable = ...; // categorical feature-action table
 
 const numSegment = ...; // number of segments
 const method = ...; // segmentation method, e.g., gaussian mixture model
 
-// 2. Create timeline actions
+// 2. Process feature-action table and create timeline actions
 const timelineActions = new msb.FeatureActionFactory()
   .setProps({ /* properties */ })
   .setData(data)
@@ -132,6 +133,7 @@ const timelineActions = new msb.FeatureActionFactory()
 const plot = useRef(new msb.LinePlot()).current;
 const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [plot]);
 
+// 4. Configure plot and animate
 plot
   .setData(data)
   .setName(/* name of the plot */)
@@ -140,7 +142,6 @@ plot
   .setActions(timelineActions)
   .animate();
 
-// 4. Animate
 onClick={controller.togglePlayPause};
 ```
 
@@ -178,36 +179,40 @@ Open <http://localhost:3000> in your browser and access the following examples s
 
 ### Example Stories
 
-The implementation of the example stories is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example) and links:
+Make sure the development server is running (`yarn dev`) else the example links will not work.
 
 - [COVID-19 Case Story](http://localhost:3000/example/story-covid19-single)
 - [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
 
+The implementation of the example stories is in [GitHub src>pages>example](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example).
+
 ### Playground (For Component Testing & Development)
 
-The implementation of the playground pages is in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground) and links:
+Make sure the development server is running (`yarn dev`) else the playground links will not work.
 
-Plots, features, actions, etc.
+**Plots, features, actions, etc.**
 
 - [Test Play/Pause Loop](http://localhost:3000/playground/test-play-pause-loop)
 - [Test Actions](http://localhost:3000/playground/test-actions)
 - [Test Line Plot](http://localhost:3000/playground/test-line-plot)
 - [Test Features](http://localhost:3000/playground/test-features)
 
-Gaussian
+**Gaussian**
 
 - [Test Categorical Features to Gaussian](http://localhost:3000/playground/test-categorical-features-to-gaussian)
 - [Test Numerical Features to Gaussian](http://localhost:3000/playground/test-numerical-features-to-gaussian)
 - [Test Gaussian Combined](http://localhost:3000/playground/test-combined-gaussian)
 
-Tables (experimental)
+**Tables (experimental feature)**
 
 - [Test Action Properties Table](http://localhost:3000/playground/test-action-properties-table)
 - [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
 - [Test Action Table](http://localhost:3000/playground/test-action-table)
 - [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
+
+The implementation of the playground pages is in [GitHub src>pages>playground](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground).
 
 ---
 
