@@ -14,13 +14,13 @@
   - [Features](#features)
   - [Installation](#installation)
   - [Steps & Template](#steps--template)
-- [API Design & Development](#api-design--development)
+- [API Development](#api-development)
   - [Development Setup](#development-setup)
   - [Example Stories](#example-stories)
-  - [Playground (For Component Testing & Development)](#playground-for-component-testing--development)
+  - [Playground](#playground)
   - [Testing](#testing)
   - [Project Structure](#project-structure)
-- [Meta-Storyboard (MSB) API](#meta-storyboard-msb-api)
+- [Meta-Storyboard (MSB) API Design](#meta-storyboard-msb-api-design)
   - [Feature Action Table Data Structures](#feature-action-table-data-structures)
   - [MSB Feature API](#msb-feature-api)
   - [MSB Action API](#msb-action-api)
@@ -149,7 +149,7 @@ See more complete [examples](#examples) and their implementation in [GitHub](htt
 
 ---
 
-# API Design & Development
+# API Development
 
 For more details of available APIs or extending the existing APIs, see the documents below.
 
@@ -188,7 +188,9 @@ Make sure the development server is running (`yarn dev`) else the example links 
 
 The implementation of the example stories is in [GitHub src>pages>example](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example).
 
-### Playground (For Component Testing & Development)
+### Playground
+
+The playground pages are useful for testing and developing various indi components.
 
 Make sure the development server is running (`yarn dev`) else the playground links will not work.
 
@@ -248,7 +250,7 @@ src
 └── types                     # TypeScript types
 ```
 
-## Meta-Storyboard (MSB) API
+## Meta-Storyboard (MSB) API Design
 
 ### Feature Action Table Data Structures
 
