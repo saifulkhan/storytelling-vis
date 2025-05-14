@@ -63,15 +63,14 @@ Story development is a four-step process:
 
 1. **Load data and feature-action table**:
 
-   1.1 **Load timeseries data**: See some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
-
-   1.2 **Load feature-action table**: See some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
+   - **Load timeseries data**: See some example COVID-19 and Machine Learning training provenance data in GitHub repository `src/assets/data`.
+   - **Load feature-action table**: See some example feature-action tables in GitHub repository `src/assets/feature-action-table`.
 
 2. **Create timeline actions**: Use the `FeatureActionFactory` class to create timeline actions from the timeseries data and feature-action table.
 
-3. **Create story**: Create a plot and set its data and plot properties. We provide some example plots such as `LinePlot`, `MirroredBarChart`, `ParallelCoordinatePlot`, available in `src/components/plots` GitHub repository.
+3. **Initialize plot and animation controller**: Create a plot and animation controller. We developed some plots, such as `LinePlot`, `MirroredBarChart`, and `ParallelCoordinatePlot`, available in the `src/components/plots`, and animation controllers in `src/animation`.
 
-4. **Animate the story**: Use play and pause button to animate the story. See the animation controllers in GitHub repository `src/animation-controller`.
+4. **Configure plot and animate**: Use play and pause button to animate.
 
 For example (using React but you can use any other framework):
 
