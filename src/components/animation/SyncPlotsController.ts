@@ -1,8 +1,8 @@
 /**
- * SynchronizedPlotsController provides functionality to control play/pause state
+ * SyncPlotsController provides functionality to control play/pause state
  * for multiple animation objects without depending on any specific framework.
  */
-export class SynchronizedPlotsController {
+export class SyncPlotsController {
   private isPlaying: boolean = false;
   private plots: any[];
 

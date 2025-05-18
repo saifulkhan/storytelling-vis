@@ -15,17 +15,15 @@
   - [Steps & Template](#steps--template)
 - [Examples](#examples)
   - [React](#react)
-    - [Example Stories](#example-stories)
-    - [Example Playground Components](#example-playground-components)
 - [MSB Development](#msb-development)
-  - [Project Structure](#msb-project-structure)
-  - [MSB API Design](#msb-api-design)
-    - [Feature Action Table](#feature-action-table-data-structures)
-    - [Feature API](#msb-feature-api)
-    - [Action API](#msb-action-api)
+  - [Project Structure](#project-structure)
+  - [API Design](#api-design)
+    - [Feature Action Table Data Structures](#feature-action-table-data-structures)
+    - [Feature API](#feature-api)
+    - [Action API](#action-api)
     - [Search & Gaussian API](#feature-search--gaussian-api)
-    - [Animated Plots](#animated-plots-api)
-    - [Workflow](#detailed-workflow-for-creating-story)
+    - [Animated Plots API](#animated-plots-api)
+    - [Workflow for Creating Story](#detailed-workflow-for-creating-story)
   - [Build & Release](#build--release)
 - [Additional Information](#additional-information)
   - [License](#license)
@@ -175,10 +173,9 @@ Open <http://localhost:3000> in your browser and access the following examples s
 
 The implementation of the example stories is in [GitHub: meta-storyboard-examples](https://github.com/saifulkhan/meta-storyboard-examples/tree/main/react/src/pages/example).
 
-
 # MSB Development
 
-## MSB Project Structure
+## Project Structure
 
 ```
 src
@@ -192,7 +189,7 @@ src
 └── types                     # TypeScript types
 ```
 
-## MSB API Design
+## API Design
 
 ### Feature Action Table Data Structures
 
@@ -253,7 +250,7 @@ new FeatureActionFactory(...)
     .create();
 ```
 
-### MSB Feature API
+### Feature API
 
 <div>
     <img width="350px" src="https://github.com/saifulkhan/meta-storyboard/raw/main/doc/feature-classes.png" alt="Feature Classes" />
@@ -306,7 +303,7 @@ new FeatureFactory()
     .searchNumericalFeatures(<feature name>, <properties>, ...);
 ```
 
-### MSB Action API
+### Action API
 
 <div>
     <img width="450px" src="https://github.com/saifulkhan/meta-storyboard/raw/main/doc/action-classes.png" alt="Action Classes" />
