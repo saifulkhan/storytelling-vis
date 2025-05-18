@@ -173,6 +173,8 @@ Open <http://localhost:3000> in your browser and access the following examples s
 
 The implementation of the example stories is in [GitHub: meta-storyboard-examples](https://github.com/saifulkhan/meta-storyboard-examples/tree/main/react/src/pages/example).
 
+> Note: Examples using other frameworks to be added soon.
+
 # MSB Development
 
 ## Project Structure
