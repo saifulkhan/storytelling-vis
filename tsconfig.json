@@ -2,24 +2,23 @@
   "compilerOptions": {
     "target": "es2020",
     "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+      "es2020",
+      "dom"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
     "declaration": true,
-    "moduleResolution": "node",
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
-    "jsxImportSource": "@emotion/react",
+    "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
       "src/*": [
@@ -27,17 +26,16 @@
       ]
     },
     "typeRoots": [
-      "src/types",
-      "node_modules/@types"
-    ],
-    "noFallthroughCasesInSwitch": true,
-    "incremental": true
+      "./node_modules/@types",
+      "./src/types"
+    ]
   },
   "include": [
-    "src",
-    "assets"
+    "src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
+    "**/*.test.ts"
   ]
 }

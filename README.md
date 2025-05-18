@@ -1,4 +1,4 @@
-# Meta-Storyboard
+# Meta-Storyboard (MSB)
 
 [![npm version](https://img.shields.io/npm/v/meta-storyboard.svg)](https://www.npmjs.com/package/meta-storyboard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -11,25 +11,23 @@
 ## Table of Contents
 
 - [Overview](#overview)
-  - [Features](#features)
   - [Installation](#installation)
   - [Steps & Template](#steps--template)
-- [API Development](#api-development)
-  - [Development Setup](#development-setup)
-  - [Example Stories](#example-stories)
-  - [Playground](#playground)
-  - [Testing](#testing)
-  - [Project Structure](#project-structure)
-- [Meta-Storyboard (MSB) API Design](#meta-storyboard-msb-api-design)
-  - [Feature Action Table Data Structures](#feature-action-table-data-structures)
-  - [MSB Feature API](#msb-feature-api)
-  - [MSB Action API](#msb-action-api)
-  - [Feature Search & Gaussian API](#feature-search--gaussian-api)
-  - [Animated Plots API](#animated-plots-api)
-  - [Deatiled Workflow for Creating Story](#deatiled-workflow-for-creating-story)
-- [Additional Information](#additional-information)
+- [Examples](#examples)
+  - [React](#react)
+    - [Example Stories](#example-stories)
+    - [Example Playground Components](#example-playground-components)
+- [MSB Development](#msb-development)
+  - [Project Structure](#msb-project-structure)
+  - [MSB API Design](#msb-api-design)
+    - [Feature Action Table](#feature-action-table-data-structures)
+    - [Feature API](#msb-feature-api)
+    - [Action API](#msb-action-api)
+    - [Search & Gaussian API](#feature-search--gaussian-api)
+    - [Animated Plots](#animated-plots-api)
+    - [Workflow](#detailed-workflow-for-creating-story)
   - [Build & Release](#build--release)
-  - [Contribution](#contribution)
+- [Additional Information](#additional-information)
   - [License](#license)
   - [Support](#support)
   - [References](#references)
@@ -38,9 +36,7 @@
 
 # Overview
 
-A JavaScript/TypeScript library for building scalable interactive, animated data stories with the meta-storyboard (MSB) and feature-action design pattern.
-
-## Features
+Meta-Storyboard (MSB) is a JavaScript/TypeScript library that enables the creation of scalable, interactive, and animated data visualizations using feature-action design pattern. The library offers a set of APIs with the following key features:
 
 - **Feature Detection**: Built-in peak and event detection utilities.
 - **Action Mapping**: Map features to visual actions (dots, circles, connectors, text boxes, etc.).
@@ -52,8 +48,7 @@ A JavaScript/TypeScript library for building scalable interactive, animated data
 ## Installation
 
 ```bash
-npm install meta-storyboard
-# or
+npm install meta-storyboard # or
 yarn add meta-storyboard
 ```
 
@@ -148,11 +143,9 @@ See more complete [examples](#examples) and their implementation in [GitHub](htt
 
 ---
 
-# API Development
+# Examples
 
-For more details of available APIs or extending the existing APIs, see the documents below.
-
-## Development Setup
+## React
 
 The following environment and packages are required.
 
@@ -187,11 +180,11 @@ Make sure the development server is running (`yarn dev`) else the example links 
 
 The implementation of the example stories is in [GitHub src>pages>example](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example).
 
-### Playground
+### Example Playground Components
 
-The playground pages are useful for testing and developing various indi components.
+The example components are useful for testing and developing various indi components.
 
-Make sure the development server is running (`yarn dev`) else the playground links will not work.
+Make sure the development server is running (`yarn dev`) else the example links will not work.
 
 **Plots, features, actions, etc.**
 
@@ -215,27 +208,12 @@ Make sure the development server is running (`yarn dev`) else the playground lin
 
 The implementation of the playground pages is in [GitHub src>pages>playground](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground).
 
----
+# MSB Development
 
-## Testing
-
-Run unit tests:
-
-```bash
-yarn test
-```
-
-_Note: Unit tests are under development._
-
----
-
-## Project Structure
+## MSB Project Structure
 
 ```
 src
-├── assets                    # Assets to implement and test MSB
-│   ├── data
-│   └── feature-action-table
 ├── components
 │   ├── actions               # VIS action components, e.g., Circle, Dot, etc.
 │   ├── animation             # Animation controllers
@@ -243,13 +221,10 @@ src
 │   └── tables                # Tables for features/actions (experimental)
 ├── factory                   # Factories for creating features/actions
 ├── feature                   # Feature classes, gaussian functions, etc.
-├── pages                     # Pages for examples and playground
-│   ├── example
-│   └── playground
 └── types                     # TypeScript types
 ```
 
-## Meta-Storyboard (MSB) API Design
+## MSB API Design
 
 ### Feature Action Table Data Structures
 
@@ -462,7 +437,7 @@ new LinePlot()
     .animate()
 ```
 
-### Deatiled Workflow for Creating Story
+### Workflow for Creating Story
 
 <!-- <div align="center">  -->
 <div>
@@ -472,9 +447,7 @@ new LinePlot()
     <br><br>
 </div>
 
-## Additional Information
-
-### Build & Release
+## Build & Release
 
 To build the library:
 
@@ -483,6 +456,8 @@ yarn install
 yarn build:lib
 ```
 
+# Additional Information
+
 To publish to npm:
 
 ```bash
@@ -490,15 +465,11 @@ npm login
 npm publish
 ```
 
-### Contribution
-
-Contributions are welcome! Please open issues or pull requests on [GitHub](https://github.com/saifulkhan/meta-storyboard). For major changes, please discuss them via issue first.
-
-### License
+## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-### Support
+## Support
 
 If you need help, open a [GitHub issue](https://github.com/saifulkhan/meta-storyboard/issues). For additional plots and early prototypes, see:
 

@@ -1,6 +1,6 @@
-import { Action, ActionProps } from './Action';
-import { ActionZOrder } from './ActionName';
-import { Coordinate } from '../../types';
+import { Action } from './Action';
+import { ActionZOrder } from '../../types/ActionName';
+import { Coordinate, ActionProps } from '../../types';
 
 export class ActionGroup extends Action {
   private actions: Action[] = [];

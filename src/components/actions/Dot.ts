@@ -1,13 +1,7 @@
 import * as d3 from 'd3';
-import { ActionName } from './ActionName';
-import { Action, ActionProps, defaultActionProps } from './Action';
-import { Coordinate } from '../../types';
-
-export type DotProps = ActionProps & {
-  size: number;
-  color: string;
-  opacity: number;
-};
+import { ActionName } from '../../types/ActionName';
+import { Action, defaultActionProps } from './Action';
+import { Coordinate, DotProps } from '../../types';
 
 export const defaultDotProps: DotProps = {
   ...defaultActionProps,

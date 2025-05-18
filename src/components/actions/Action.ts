@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
-import { ActionName } from './ActionName';
-import { NumericalFeatureName, CategoricalFeatureName, Coordinate } from '../../types';
-
-export type ActionProps = {
-  hide: boolean;
-  pause: boolean;
-};
+import { ActionName } from '../../types/ActionName';
+import {
+  NumericalFeatureName,
+  CategoricalFeatureName,
+  Coordinate,
+  ActionProps,
+} from '../../types';
 
 export const defaultActionProps: ActionProps = {
   hide: true,
@@ -99,7 +99,9 @@ export abstract class Action {
     d3.select(this.svg).append(() => this.node);
   }
 
-  public setFeatureType(featureType: NumericalFeatureName | CategoricalFeatureName) {
+  public setFeatureType(
+    featureType: NumericalFeatureName | CategoricalFeatureName,
+  ) {
     this.featureType = featureType;
     return this;
   }

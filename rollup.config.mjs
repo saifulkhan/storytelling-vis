@@ -36,18 +36,27 @@ export default [
         declarationDir: 'dist',
         // Skip type checking to avoid TypeScript errors during build
         noEmitOnError: false,
-        exclude: ['src/pages/**/*'],
+        exclude: ['**/__tests__/**', '**/*.test.ts'],
       }),
       babel({
         babelHelpers: 'runtime',
         exclude: 'node_modules/**',
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: ['.js', '.ts'],
         presets: [
-          '@babel/preset-env',
-          '@babel/preset-react',
-          '@babel/preset-typescript',
+          ['@babel/preset-env', {
+            modules: false,
+            useBuiltIns: 'usage',
+            corejs: 3
+          }],
+          '@babel/preset-typescript'
         ],
-        plugins: [['@babel/plugin-transform-runtime', { regenerator: true }]],
+        plugins: [
+          ['@babel/plugin-transform-runtime', {
+            corejs: 3,
+            helpers: true,
+            regenerator: true
+          }]
+        ]
       }),
       terser(),
     ],

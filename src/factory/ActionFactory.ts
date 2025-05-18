@@ -2,16 +2,18 @@ import {
   Action,
   ActionName,
   Circle,
-  CircleProps,
   ActionGroup,
   Connector,
-  ConnectorProps,
   Dot,
-  DotProps,
   TextBox,
-  TextBoxProps,
 } from '../components';
-import { TimeSeriesPoint } from '../types';
+import {
+  TimeSeriesPoint,
+  CircleProps,
+  ConnectorProps,
+  DotProps,
+  TextBoxProps,
+} from '../types';
 
 export class ActionFactory {
   constructor() {}

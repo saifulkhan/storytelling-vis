@@ -1,5 +1,3 @@
-import { NumericalFeatureName } from '../types';
-
 export abstract class Feature {
   protected date: Date;
   protected start: Date;

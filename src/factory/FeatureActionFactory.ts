@@ -5,7 +5,11 @@ import {
   Segment,
   CategoricalFeatureName,
   NumericalFeatureName,
+  FeatureActionTableRow,
+  ActionTableRow,
+  FeatureActionTableData,
 } from '../types';
+import { Action } from '../components';
 import {
   Feature,
   FeatureSearchProps,
@@ -14,12 +18,7 @@ import {
   CategoricalFeature,
 } from '../feature';
 import { Search, Gaussian, Utils } from '../processing';
-import {
-  Action,
-  FeatureActionTableRow,
-  ActionTableRow,
-  FeatureActionTableData,
-} from '../components';
+import {} from '../types';
 import { getTimeSeriesPointByDate } from '../common';
 import { FeatureFactory } from './FeatureFactory';
 import { ActionFactory } from './ActionFactory';
