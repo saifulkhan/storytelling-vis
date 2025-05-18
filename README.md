@@ -139,7 +139,7 @@ plot
 onClick={controller.togglePlayPause};
 ```
 
-See more complete [examples](#examples) and their implementation in [GitHub](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages).
+See more complete [examples](#examples) and their implementation in [GitHub: meta-storyboard-examples](https://github.com/saifulkhan/meta-storyboard-examples).
 
 ---
 
@@ -155,9 +155,8 @@ The following environment and packages are required.
 Clone the repository.
 
 ```bash
-git clone https://github.com/saifulkhan/meta-storyboard.git
-cd meta-storyboard
-
+git clone https://github.com/saifulkhan/meta-storyboard-examples.git
+cd meta-storyboard-examples/react
 ```
 
 Install all dependent packages and start the development server to view the UI.
@@ -167,46 +166,15 @@ yarn install
 yarn dev
 ```
 
-Open <http://localhost:3000> in your browser and access the following examples stories:
-
-### Example Stories
-
-Make sure the development server is running (`yarn dev`) else the example links will not work.
+Open <http://localhost:3000> in your browser and access the following examples stories.
 
 - [COVID-19 Case Story](http://localhost:3000/example/story-covid19-single)
 - [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
 
-The implementation of the example stories is in [GitHub src>pages>example](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/example).
+The implementation of the example stories is in [GitHub: meta-storyboard-examples](https://github.com/saifulkhan/meta-storyboard-examples/tree/main/react/src/pages/example).
 
-### Example Playground Components
-
-The example components are useful for testing and developing various indi components.
-
-Make sure the development server is running (`yarn dev`) else the example links will not work.
-
-**Plots, features, actions, etc.**
-
-- [Test Play/Pause Loop](http://localhost:3000/playground/test-play-pause-loop)
-- [Test Actions](http://localhost:3000/playground/test-actions)
-- [Test Line Plot](http://localhost:3000/playground/test-line-plot)
-- [Test Features](http://localhost:3000/playground/test-features)
-
-**Gaussian**
-
-- [Test Categorical Features to Gaussian](http://localhost:3000/playground/test-categorical-features-to-gaussian)
-- [Test Numerical Features to Gaussian](http://localhost:3000/playground/test-numerical-features-to-gaussian)
-- [Test Gaussian Combined](http://localhost:3000/playground/test-combined-gaussian)
-
-**Tables (experimental feature)**
-
-- [Test Action Properties Table](http://localhost:3000/playground/test-action-properties-table)
-- [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
-- [Test Action Table](http://localhost:3000/playground/test-action-table)
-- [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
-
-The implementation of the playground pages is in [GitHub src>pages>playground](https://github.com/saifulkhan/meta-storyboard/tree/main/src/pages/playground).
 
 # MSB Development
 
