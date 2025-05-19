@@ -60,7 +60,7 @@ export class MirroredBarChart extends Plot {
   // animation related
   barElements: any[] = [];
   isPlayingRef: { current: boolean } = { current: false };
-  playActionIdx: number = 0;
+  currentTimelineActionIdx: number = 0;
   lastTimelineAction: any = null;
   animationRef: number = 0;
 
@@ -109,7 +109,7 @@ export class MirroredBarChart extends Plot {
    **/
   public setActions(actions: TimelineAction[] = []): this {
     this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
-    this.playActionIdx = 0;
+    this.currentTimelineActionIdx = 0;
     this.lastTimelineAction = null;
     this.startDataIdx = 0;
     this.endDataIdx = 0;
@@ -292,7 +292,7 @@ export class MirroredBarChart extends Plot {
     const loop = async () => {
       if (
         !this.isPlayingRef.current ||
-        this.playActionIdx >= this.actions.length
+        this.currentTimelineActionIdx >= this.actions.length
       ) {
         return;
       }
@@ -306,10 +306,10 @@ export class MirroredBarChart extends Plot {
       }
 
       // get the current action and its date
-      const [date, action] = this.actions[this.playActionIdx];
+      const [date, action] = this.actions[this.currentTimelineActionIdx];
       console.log(
         'playActionIdx',
-        this.playActionIdx,
+        this.currentTimelineActionIdx,
         'length',
         this.actions.length,
       );
@@ -320,7 +320,7 @@ export class MirroredBarChart extends Plot {
       );
       if (dataIdx === -1) {
         console.error('Could not find data point for date:', date);
-        this.playActionIdx++;
+        this.currentTimelineActionIdx++;
         this.animationRef = requestAnimationFrame(loop);
         return;
       }
@@ -335,7 +335,7 @@ export class MirroredBarChart extends Plot {
       // update state for next animation
       this.lastTimelineAction = action;
       this.startDataIdx = dataIdx;
-      this.playActionIdx++;
+      this.currentTimelineActionIdx++;
       this.animationRef = requestAnimationFrame(loop);
     };
 

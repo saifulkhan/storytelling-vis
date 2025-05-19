@@ -26,17 +26,24 @@ export class Gaussian {
     categoricalFeatures: CategoricalFeature[],
   ): TimeSeriesData {
     const ntsGauss: TimeSeriesData[] = Gaussian.generateGaussForPeaks(data);
-    const ctsGauss: TimeSeriesData[] = Gaussian.generateGaussForCategoricalFeatures(
+    const ctsGauss: TimeSeriesData[] =
+      Gaussian.generateGaussForCategoricalFeatures(data, categoricalFeatures);
+    const ntsBoundGauss: TimeSeriesData = Gaussian.maxAcrossSeries(
       data,
-      categoricalFeatures,
+      ntsGauss,
     );
-    const ntsBoundGauss: TimeSeriesData = Gaussian.maxAcrossSeries(data, ntsGauss);
-    const ctsBoundGauss: TimeSeriesData = Gaussian.maxAcrossSeries(data, ctsGauss);
+    const ctsBoundGauss: TimeSeriesData = Gaussian.maxAcrossSeries(
+      data,
+      ctsGauss,
+    );
 
     console.log('gmm: ntsBoundGauss:', ntsBoundGauss);
     console.log('gmm: ctsBoundGauss:', ctsBoundGauss);
 
-    const combined = Gaussian.combineSeries(data, [ntsBoundGauss, ctsBoundGauss]);
+    const combined = Gaussian.combineSeries(data, [
+      ntsBoundGauss,
+      ctsBoundGauss,
+    ]);
     console.log('gmm: combined:', combined);
 
     return combined;
@@ -63,7 +70,7 @@ export class Gaussian {
     if (!data || data.length === 0) {
       throw new Error('No data provided');
     }
-    
+
     const peaks = Search.searchPeaks(data, 0, metric, window);
     // prettier-ignore
     console.debug('generateGaussForPeaks: peaks height:', peaks.map((d) => d.getHeight()));
@@ -81,7 +88,7 @@ export class Gaussian {
       const gauss: number[] = Gaussian.gaussian(index, height, data.length);
       return Gaussian.mapGaussToTimeSeries(gauss, data);
     });
-    
+
     return gaussTSData;
   }
 
@@ -142,7 +149,12 @@ export class Gaussian {
    * @param w (Optional) The width of the peak. If not specified, a default is calculated.
    * @returns Array of length `len` containing the Gaussian curve values.
    */
-  public static gaussian(μ: number, h: number, len: number, w?: number): number[] {
+  public static gaussian(
+    μ: number,
+    h: number,
+    len: number,
+    w?: number,
+  ): number[] {
     const σ = w
       ? w / 3 // 99.7% of the area under the curve lies within ±3 standard deviations from the mean.
       : h * 2.355; // 2 * sqrt(2 * ln(2)) is the full-width at half-maximum (FWHM) of a Gaussian distribution, used to calculate the width of the peak.

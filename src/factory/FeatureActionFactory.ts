@@ -171,7 +171,7 @@ export class FeatureActionFactory {
 
     // 5.
     // prettier-ignore
-    console.debug('FeatureActionFactory:actionsForNumericalFeatures: dataActionArray = ', this.timelineActions);
+    console.debug('FeatureActionFactory:actionsForNumericalFeatures: timelineActions:', this.timelineActions);
     this.timelineActions.sort((a, b) => b[0].getTime() - a[0].getTime());
   }
 

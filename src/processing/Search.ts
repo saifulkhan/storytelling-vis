@@ -568,7 +568,7 @@ export class Search {
     data: TimeSeriesData,
     rank: number,
     metric: string,
-  ): Min[] {
+  ): Current[] {
     if (!data || data.length === 0) {
       return [];
     }

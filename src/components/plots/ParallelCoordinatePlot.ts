@@ -1,15 +1,22 @@
 import * as d3 from 'd3';
-import { findIndexOfDate, getObjectKeysArray } from '../../common';
+import {
+  findIndexByAnyDateField,
+  getObjectKeysArray,
+  findIndexByExactDate,
+  findTimelineActionByDate,
+} from '../../common';
 import {
   TimelineAction,
   Coordinate,
   HorizontalAlign,
   VerticalAlign,
   NumericalFeatureName,
+  TimeSeriesData,
 } from '../../types';
 import { Colors, LineColor } from '../Colors';
 import { Action } from '../actions';
 import { Plot } from './Plot';
+import { TimeSeriesPoint } from 'meta-storyboard';
 
 export type PCPProps = {
   title?: string;
@@ -98,19 +105,19 @@ export class ParallelCoordinatePlot extends Plot {
   props: PCPProps = defaultPCPProps;
   svg!: SVGSVGElement;
   name: string = '';
-  actions: any[] = [];
 
   width: number = 0;
   height: number = 0;
-
-  AxisNames: string[] = [];
+  axisNames: string[] = [];
   selectedAxis: string = '';
   xScaleMap: any;
   yScale: any;
   staticLineColorMap: any;
 
-  playDate!: Date;
-  playFeatureType: any;
+  // animation
+  timelineActions: TimelineAction[] = [];
+  currentTimelineActionIdx: number = 0;
+  currentDataIdx: number = 0;
 
   constructor() {
     super();
@@ -126,16 +133,16 @@ export class ParallelCoordinatePlot extends Plot {
     return this;
   }
 
-  public setData(data: any[]) {
+  public setData(data: TimeSeriesData) {
     // sort data by selected key, e.g, "kernel_size"
     this.data = data
       .slice()
       .sort((a, b) => d3.ascending(a[this.name], b[this.name]))
       .sort((a, b) => d3.ascending(a['date'], b['date']));
 
-    this.AxisNames = getObjectKeysArray(data);
+    this.axisNames = getObjectKeysArray(data);
     console.log('PCP:data = ', this.data);
-    console.log('PCP:data: _AxisNames = ', this.AxisNames);
+    console.log('PCP:data: _AxisNames = ', this.axisNames);
 
     return this;
   }
@@ -175,12 +182,12 @@ export class ParallelCoordinatePlot extends Plot {
 
     this.xScaleMap = xScaleMap(
       this.data,
-      this.AxisNames,
+      this.axisNames,
       this.width,
       this.props.margin,
     );
 
-    this.yScale = yScale(this.AxisNames, this.height, this.props.margin);
+    this.yScale = yScale(this.axisNames, this.height, this.props.margin);
 
     this.staticLineColorMap = d3.scaleSequential(
       this.xScaleMap.get(this.selectedAxis).domain().reverse(),
@@ -197,7 +204,7 @@ export class ParallelCoordinatePlot extends Plot {
     d3.select(this.svg)
       .append('g')
       .selectAll('g')
-      .data(this.AxisNames)
+      .data(this.axisNames)
       .join('g')
       .attr('transform', (d) => `translate(0,${this.yScale(d)})`)
       .style('font-size', FONT_SIZE)
@@ -244,7 +251,7 @@ export class ParallelCoordinatePlot extends Plot {
       .y(([key]) => this.yScale(key));
 
     const cross = (d: any) =>
-      d3.cross(this.AxisNames, [d], (key: string, d: any) => [key, +d[key]]);
+      d3.cross(this.axisNames, [d], (key: string, d: any) => [key, +d[key]]);
 
     //
     // Draw lines
@@ -313,7 +320,7 @@ export class ParallelCoordinatePlot extends Plot {
     const cross = (d: any) => {
       // given d is a row of the data, e.g., {date: 1677603855000, kernel_size: 11, layers: 13, ...},
       // cross returns an array of [key, value] pairs ['date', 1677603855000], ['mean_training_accuracy', 0.9], ['channels', 32], ['kernel_size', 3], ['layers', 13], ...
-      return d3.cross(this.AxisNames, [d], (key: string, d: any) => [
+      return d3.cross(this.axisNames, [d], (key: string, d: any) => [
         key,
         +d[key],
       ]);
@@ -380,7 +387,9 @@ export class ParallelCoordinatePlot extends Plot {
    ** Actions that will be animated.
    **/
   public setActions(actions: TimelineAction[]) {
-    this.actions = actions?.sort((a, b) => a[0].getTime() - b[0].getTime());
+    this.timelineActions = actions?.sort(
+      (a, b) => a[0].getTime() - b[0].getTime(),
+    );
 
     this.drawAxis();
     this.drawLinesAndDotsHidden();
@@ -392,42 +401,98 @@ export class ParallelCoordinatePlot extends Plot {
    ** Animation related methods
    **/
 
+  /**
+   * Animates the parallel coordinate plot by iterating through data points
+   * and timeline actions. Shows/hides lines and dots as needed.
+   */
   animate() {
+    console.log('PCP:animate:starting animation with data:', this.data);
+    console.log(
+      'PCP:animate: starting animation with timeline actions:',
+      this.timelineActions,
+    );
+
     const loop = async () => {
-      if (
-        !this.isPlayingRef.current ||
-        this.playActionIdx >= this.actions.length
-      ) {
+      // stop animation if no data
+      if (!this.data.length) {
         return;
       }
 
-      console.log('PCP:runLoop: ', this.playActionIdx, this.playDate);
-      if (this.playDate && this.playFeatureType) {
-        await Promise.all([
-          this.hideDots(this.playDate, this.playFeatureType),
-          this.hideLine(this.playDate, this.playFeatureType),
-        ]);
+      // stop animation if we've reached the end of data
+      if (this.currentDataIdx >= this.data.length) {
+        this.currentDataIdx = 0;
+        this.currentTimelineActionIdx = 0;
+        this.pause();
+        return;
       }
 
-      let [date, action] = this.actions[this.playActionIdx];
-      const featureType = action.getFeatureType();
-      await Promise.all([
-        this.showDots(date, featureType),
-        this.showLine(date, featureType),
-        this.showAction(date, featureType, action),
-      ]);
+      // hide previous elements if they exist
+      const previousDataIdx = this.currentDataIdx - 1;
+      if (previousDataIdx >= 0) {
+        const previousData = this.data[previousDataIdx];
+        try {
+          await Promise.all([
+            this.hideDots(previousData.date),
+            this.hideLine(
+              previousData.date,
+              this.selectedAxis as NumericalFeatureName,
+            ),
+          ]);
+        } catch (error) {
+          console.warn('Error hiding previous elements:', error);
+        }
+      }
 
-      this.playDate = date;
-      this.playFeatureType = featureType;
+      // show current data point
+      const currentData = this.data[this.currentDataIdx % this.data.length];
+      const currentDate = currentData?.date;
 
-      this.playActionIdx++;
-      this.animationRef = requestAnimationFrame(loop);
+      try {
+        // find timeline action for the current date if it exists
+        const currentAction = findTimelineActionByDate(
+          this.timelineActions,
+          currentDate,
+        );
+
+        if (currentAction) {
+          const [actionDate, action] = currentAction;
+          const featureName: NumericalFeatureName =
+            action.getFeatureType() as NumericalFeatureName;
+          await Promise.all([
+            this.showAction(actionDate, featureName, action),
+            this.showDots(currentDate, featureName),
+            this.showLine(currentDate, featureName),
+          ]);
+          // update timeline action index
+          this.currentTimelineActionIdx++;
+        } else {
+          await Promise.all([
+            this.showDots(currentDate),
+            this.showLine(currentDate),
+          ]);
+        }
+
+        // update state for next iteration
+        this.currentDataIdx++;
+        // prettier-ignore
+        console.debug('PCP:animate: timelineActionIdx:', this.currentTimelineActionIdx, 'currentDataIdx:', this.currentDataIdx);
+
+        // continue animation loop
+        this.animationRef = requestAnimationFrame(loop);
+      } catch (error) {
+        console.error('PCP:animate: Error:', error);
+        this.animationRef = requestAnimationFrame(loop);
+      }
     };
 
+    // start the animation loop
     loop();
   }
 
-  private showLine(date: Date, type: NumericalFeatureName) {
+  private showLine(
+    date: Date,
+    type: NumericalFeatureName = NumericalFeatureName.CURRENT,
+  ) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -444,7 +509,10 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideLine(date: Date, type: NumericalFeatureName) {
+  private hideLine(
+    date: Date,
+    type: NumericalFeatureName = NumericalFeatureName.CURRENT,
+  ) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getLineId(date)}`)
@@ -460,7 +528,10 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private showDots(date: Date, type: NumericalFeatureName) {
+  private showDots(
+    date: Date,
+    type: NumericalFeatureName = NumericalFeatureName.CURRENT,
+  ) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // return group
@@ -478,7 +549,7 @@ export class ParallelCoordinatePlot extends Plot {
     });
   }
 
-  private hideDots(date: Date, type: NumericalFeatureName) {
+  private hideDots(date: Date, type?: NumericalFeatureName) {
     return new Promise<number>((resolve, reject) => {
       d3.select(this.svg)
         .select(`#${this.getDotId(date)}`) // returns group
@@ -500,7 +571,7 @@ export class ParallelCoordinatePlot extends Plot {
     action: Action,
   ): Promise<number> {
     return new Promise<number>((resolve, reject) => {
-      const data = this.data[findIndexOfDate(this.data, date)];
+      const data = this.data[findIndexByAnyDateField(this.data, date)];
 
       action
         .updateProps({
@@ -581,7 +652,7 @@ export class ParallelCoordinatePlot extends Plot {
   }
 
   private coordinateOnAxis(date: Date): Coordinate {
-    const data = this.data[findIndexOfDate(this.data, date)];
+    const data = this.data[findIndexByAnyDateField(this.data, date)];
     console.log('data: ', data);
     const xScale = this.xScaleMap.get(this.selectedAxis);
     const x = xScale(data[this.selectedAxis]);
@@ -624,8 +695,8 @@ export class ParallelCoordinatePlot extends Plot {
     }
 
     this.data = [];
-    this.actions = [];
-    this.AxisNames = [];
+    this.timelineActions = [];
+    this.axisNames = [];
     this.selectedAxis = '';
     this.xScaleMap = null;
     this.yScale = null;

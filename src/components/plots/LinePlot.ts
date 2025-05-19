@@ -8,7 +8,7 @@ import {
   VerticalAlign,
   TimelineAction,
 } from '../../types';
-import { findDateIdx, findIndexOfDate } from '../../common';
+import { findIndexByExactDate, findIndexByAnyDateField } from '../../common';
 import { Action } from '../actions';
 
 const ID_AXIS_SELECTION = '#id-axes-selection';
@@ -79,7 +79,7 @@ export class LinePlot extends Plot {
   // animation related
   timelineActions: TimelineAction[] = [];
   lastTimelineAction: TimelineAction | undefined = undefined;
-  playActionIdx: number = 0;
+  currentTimelineActionIdx: number = 0;
   startDataIdx: number = 0;
   endDataIdx: number = 0;
 
@@ -207,7 +207,7 @@ export class LinePlot extends Plot {
     });
 
     this.lastTimelineAction = undefined;
-    this.playActionIdx = 0;
+    this.currentTimelineActionIdx = 0;
     this.startDataIdx = 0;
     this.endDataIdx = 0;
     return this;
@@ -217,7 +217,7 @@ export class LinePlot extends Plot {
     const loop = async () => {
       if (
         !this.isPlayingRef.current ||
-        this.playActionIdx >= this.timelineActions.length
+        this.currentTimelineActionIdx >= this.timelineActions.length
       ) {
         return;
       }
@@ -228,12 +228,12 @@ export class LinePlot extends Plot {
 
       const lineNum = 0; // TODO: we can animate first line at the moment
       const timelineAction: TimelineAction =
-        this.timelineActions[this.playActionIdx];
+        this.timelineActions[this.currentTimelineActionIdx];
 
       const action: Action = timelineAction[1];
       const date: Date = timelineAction[0];
       const dataX = this.data[lineNum];
-      const dataIdx = findIndexOfDate(dataX, date);
+      const dataIdx = findIndexByAnyDateField(dataX, date);
 
       action
         .updateProps({
@@ -257,7 +257,7 @@ export class LinePlot extends Plot {
 
       this.lastTimelineAction = timelineAction;
       this.startDataIdx = dataIdx;
-      this.playActionIdx++;
+      this.currentTimelineActionIdx++;
 
       if (this.lastTimelineAction[1].getProps().pause) {
         console.log('LinePlot: paused at ', this.lastTimelineAction[0]);
@@ -481,7 +481,7 @@ export class LinePlot extends Plot {
     lineIndex: number = 0,
   ): [Coordinate, Coordinate] {
     const dataX = this.data[lineIndex];
-    const index = findDateIdx(date, dataX);
+    const index = findIndexByExactDate(dataX, date);
     const yAxis = this.leftOrRightAxis(lineIndex);
 
     return [
@@ -519,7 +519,7 @@ export class LinePlot extends Plot {
    */
   public reset() {
     // reset animation state
-    this.playActionIdx = 0;
+    this.currentTimelineActionIdx = 0;
     this.startDataIdx = 0;
     this.endDataIdx = 0;
     this.lastTimelineAction = undefined;

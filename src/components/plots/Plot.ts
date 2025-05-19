@@ -8,7 +8,7 @@ export abstract class Plot {
   protected animationRef: number | null = null;
   protected isPlayingRef: { current: boolean } = { current: false };
   protected lastTimelineAction: any = null;
-  protected playActionIdx: number = 0;
+  protected currentTimelineActionIdx: number = 0;
   protected onPauseCallback: (() => void) | null = null;
 
   constructor() {}

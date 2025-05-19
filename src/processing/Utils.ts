@@ -170,7 +170,9 @@ export class Utils {
   public static getObjectKeysArray(obj: any[]): string[] {
     // function to check if a value is an object
     const isObject = (value: unknown): boolean => {
-      return value !== null && typeof value === 'object' && !Array.isArray(value);
+      return (
+        value !== null && typeof value === 'object' && !Array.isArray(value)
+      );
     };
 
     // ensure the array is not empty and contains objects

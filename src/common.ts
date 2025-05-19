@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { TimeSeriesPoint, TimeSeriesData } from './types/TimeSeriesPoint';
+import { TimeSeriesPoint, TimeSeriesData, TimelineAction } from './types';
 
 export function mean(data: number[]): number {
   return data.reduce((acc, val) => acc + val, 0) / data.length;
@@ -56,11 +56,14 @@ export function createPredicate(
  **  Function to find index of a date in the timeseries data
  **/
 
-export function findDateIdx(date: Date, data: TimeSeriesData): number {
+export function findIndexByExactDate(data: TimeSeriesData, date: Date): number {
   return data.findIndex((d) => d.date.getTime() == date.getTime());
 }
 
-export function findIndexOfDate(data: TimeSeriesData, date: Date): number {
+export function findIndexByAnyDateField(
+  data: TimeSeriesData,
+  date: Date,
+): number {
   return data.findIndex((d) => {
     for (const key in d) {
       if (
@@ -79,7 +82,7 @@ export function getTimeSeriesPointByDate(
   date: Date,
   data: TimeSeriesData,
 ): TimeSeriesPoint | undefined {
-  const idx = findDateIdx(date, data);
+  const idx = findIndexByExactDate(data, date);
   return data[idx];
 }
 
@@ -244,4 +247,11 @@ export function scaleValue(
     ((value - minInput) / (maxInput - minInput)) * (maxOutput - minOutput) +
     minOutput
   );
+}
+
+export function findTimelineActionByDate(
+  data: TimelineAction[],
+  date: Date,
+): TimelineAction | undefined {
+  return data.find(([actionDate]) => actionDate.getTime() === date.getTime());
 }
