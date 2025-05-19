@@ -2,7 +2,8 @@
 
 [![npm version](https://img.shields.io/npm/v/meta-storyboard.svg)](https://www.npmjs.com/package/meta-storyboard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![GitHub](https://img.shields.io/badge/GitHub-meta--storyboard-181717.svg?style=flat&logo=github)](https://github.com/saifulkhan/meta-storyboard)
+[![Source Code](https://img.shields.io/badge/GitHub-meta--storyboard-181717.svg?style=flat&logo=github)](https://github.com/saifulkhan/meta-storyboard)
+[![Examples](https://img.shields.io/badge/GitHub-meta--storyboard--examples-181717.svg?style=flat&logo=github&logoColor=white)](https://github.com/saifulkhan/meta-storyboard-examples/)
 
 <!-- [![Build Status](https://github.com/saifulkhan/meta-storyboard/actions/workflows/ci.yml/badge.svg)](https://github.com/saifulkhan/meta-storyboard/actions) -->
 
@@ -184,8 +185,7 @@ src
 ├── components
 │   ├── actions               # VIS action components, e.g., Circle, Dot, etc.
 │   ├── animation             # Animation controllers
-│   ├── plots                 # Plots, e.g., LinePlot, etc.
-│   └── tables                # Tables for features/actions (experimental)
+│   └── plots                 # Plots, e.g., LinePlot, etc.
 ├── factory                   # Factories for creating features/actions
 ├── feature                   # Feature classes, gaussian functions, etc.
 └── types                     # TypeScript types
