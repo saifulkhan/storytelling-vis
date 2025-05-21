@@ -167,7 +167,7 @@ yarn dev
 
 Open <http://localhost:3000> in your browser and access the following examples stories.
 
-- [COVID-19 Case Story](http://localhost:3000/example/story-covid19-single)
+- [COVID-19 Case Story](http://localhost:3000/example/story-covid19)
 - [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
