@@ -79,4 +79,15 @@ export class ActionGroup extends Action {
     this.actions.forEach((action: Action) => action.remove());
     return this;
   }
+
+  public getText(): { title?: string; message?: string } {
+    // return the text of the first child action that carries any, e.g., a text box
+    for (const action of this.actions) {
+      const text = action.getText();
+      if (text.title || text.message) {
+        return text;
+      }
+    }
+    return {};
+  }
 }

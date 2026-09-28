@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { Plot } from './Plot';
 import {
   Coordinate,
+  Seekable,
   TimeSeriesPoint,
   TimeSeriesData,
   HorizontalAlign,
@@ -71,7 +72,10 @@ export const defaultLinePlotProps: LinePlotProps = {
   animationDurationMsPerPixel: 4,
 };
 
-export class LinePlot extends Plot<TimeSeriesData[], LinePlotProps> {
+export class LinePlot
+  extends Plot<TimeSeriesData[], LinePlotProps>
+  implements Seekable
+{
   data: TimeSeriesData[] = [];
   name = '';
   lineProps: LineProps[] = [];
@@ -91,6 +95,8 @@ export class LinePlot extends Plot<TimeSeriesData[], LinePlotProps> {
   timelineActions: TimelineAction[] = [];
   startDataIdx: number = 0;
   endDataIdx: number = 0;
+  // invalidates the async tail of a superseded animateTo() call
+  private seekSeq: number = 0;
 
   constructor() {
     super();
@@ -229,21 +235,9 @@ export class LinePlot extends Plot<TimeSeriesData[], LinePlotProps> {
 
       const action = timelineAction[1];
       const date: Date = timelineAction[0];
-      const dataX = this.data[lineNum];
-      const dataIdx = findIndexByAnyDateField(dataX, date);
+      const dataIdx = findIndexByAnyDateField(this.data[lineNum], date);
 
-      action
-        .updateProps({
-          templateVariables: {
-            ...dataX[dataIdx],
-            name: this.name,
-            value: dataX[dataIdx].y,
-          },
-          horizontalAlign: this.getHorizontalAlign(date),
-          verticalAlign: 'top' as VerticalAlign,
-        })
-        .setCanvas(this.svg)
-        .setCoordinate(this.getCoordinates(date, lineNum));
+      this._placeAction(timelineAction, lineNum);
 
       await this._animateLine(this.startDataIdx, dataIdx, lineNum);
       await action.show();
@@ -268,6 +262,140 @@ export class LinePlot extends Plot<TimeSeriesData[], LinePlotProps> {
     };
 
     loop();
+  }
+
+  /**
+   * Reveals the story up to the given timeline action index; used by
+   * scroll-driven storyboards. The plot is redrawn idempotently for the
+   * requested index: a negative index shows only the axes; an index in
+   * [0, number of actions) draws the line statically up to the previous
+   * action, animates the segment ending at the indexed action and shows
+   * that action; an index past the last action reveals the remaining line.
+   * A subsequent play() resumes the story from the requested index.
+   */
+  public animateTo(index: number) {
+    if (!this.svg) {
+      return this;
+    }
+
+    // stop a running play() loop, if any
+    this.pause();
+
+    const seq = ++this.seekSeq;
+
+    // reset the canvas and redraw the axes
+    this.clean();
+    this.selector = d3
+      .select(this.svg)
+      .append('g')
+      .attr('id', ID_AXIS_SELECTION);
+    this._drawAxis();
+
+    const count = this.timelineActions.length;
+    const lineNum = 0; // TODO: only the first line is animated at the moment
+    const dataX = this.data[lineNum];
+
+    if (index < 0 || count === 0 || !dataX?.length) {
+      // initial state: axes only; play() would start from the beginning
+      this.lastTimelineAction = undefined;
+      this.currentTimelineActionIdx = 0;
+      this.startDataIdx = 0;
+      return this;
+    }
+
+    const idx = Math.min(index, count);
+
+    // segment to animate: from the previous action (or the beginning of the
+    // data) to the indexed action (or the end of the data)
+    const startIdx =
+      idx > 0
+        ? Math.max(
+            findIndexByAnyDateField(dataX, this.timelineActions[idx - 1][0]),
+            0,
+          )
+        : 0;
+    const endIdx =
+      idx < count
+        ? Math.max(
+            findIndexByAnyDateField(dataX, this.timelineActions[idx][0]),
+            0,
+          )
+        : dataX.length - 1;
+
+    // draw the line statically up to the start of the segment
+    if (startIdx > 0) {
+      this._drawLineSegment(0, startIdx, lineNum);
+    }
+
+    // replay the earlier actions instantly; the ones marked hide disappear
+    // again immediately, so only persistent actions (e.g., dots) remain
+    this.timelineActions.slice(0, idx).forEach((timelineAction) => {
+      this._placeAction(timelineAction, lineNum).show(0, 0);
+      timelineAction[1].hide(0, 0);
+    });
+
+    // keep the play()/pause() state in sync so that a subsequent play()
+    // resumes the story from here
+    this.lastTimelineAction =
+      idx < count ? this.timelineActions[idx] : undefined;
+    this.currentTimelineActionIdx = Math.min(idx + 1, count);
+    this.startDataIdx = endIdx;
+
+    // animate the segment, then reveal the indexed action
+    this._animateLine(startIdx, endIdx, lineNum).then(() => {
+      if (seq !== this.seekSeq) {
+        return;
+      }
+      if (idx < count) {
+        this._placeAction(this.timelineActions[idx], lineNum).show();
+      }
+    });
+
+    return this;
+  }
+
+  /**
+   * Updates an action's template variables and alignment, and places it on
+   * the canvas at its date's coordinates.
+   */
+  private _placeAction(timelineAction: TimelineAction, lineNum: number = 0) {
+    const [date, action] = timelineAction;
+    const dataX = this.data[lineNum];
+    const dataIdx = Math.max(findIndexByAnyDateField(dataX, date), 0);
+
+    return action
+      .updateProps({
+        templateVariables: {
+          ...dataX[dataIdx],
+          name: this.name,
+          value: dataX[dataIdx].y,
+        },
+        horizontalAlign: this.getHorizontalAlign(date),
+        verticalAlign: 'top' as VerticalAlign,
+      })
+      .setCanvas(this.svg)
+      .setCoordinate(this.getCoordinates(date, lineNum));
+  }
+
+  /**
+   * Draws a static line for the given data range (no animation).
+   */
+  private _drawLineSegment(start: number, stop: number, lineNum: number = 0) {
+    const dataX = this.data[lineNum].slice(start, stop + 1);
+    const p = this.lineProps[lineNum];
+    const yAxis = this.leftOrRightAxis(lineNum);
+
+    const line = d3
+      .line<TimeSeriesPoint>()
+      .x((d: TimeSeriesPoint) => this.xAxis(d.date))
+      .y((d: TimeSeriesPoint) => yAxis(d.y));
+
+    this.selector
+      .append('path')
+      .attr('stroke', p.stroke)
+      .attr('stroke-width', p.strokeWidth)
+      .attr('fill', 'none')
+      .attr('d', line(dataX));
   }
 
   /**

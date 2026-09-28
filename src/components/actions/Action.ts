@@ -103,11 +103,7 @@ export abstract class Action {
   public abstract draw(): void;
 
   protected canvas(): void {
-    this.node = d3
-      .create('svg')
-      .append('g')
-      .style('opacity', 0)
-      .node();
+    this.node = d3.create('svg').append('g').style('opacity', 0).node();
 
     d3.select(this.svg).append(() => this.node);
   }
@@ -125,5 +121,18 @@ export abstract class Action {
 
   public getProps(): ActionProps {
     return this.props;
+  }
+
+  /**
+   * Returns the action's display text (e.g., a text box's title and
+   * message), if any. Useful for rendering the story narration outside the
+   * SVG, e.g., in the cards of a scrollable storyboard.
+   */
+  public getText(): { title?: string; message?: string } {
+    const { title, message } = this.props as {
+      title?: string;
+      message?: string;
+    };
+    return { title, message };
   }
 }

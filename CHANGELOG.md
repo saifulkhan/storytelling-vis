@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Scrollable ("scrollytelling") storyboard support, ported from the original
+  Observable prototype:
+  - `LinePlot.animateTo(index)` reveals the story up to a given timeline
+    action index: the line is drawn statically up to the previous action,
+    the segment ending at the indexed action is animated, and persistent
+    actions (e.g., dots) are re-shown. A subsequent `play()` resumes from
+    that index.
+  - `TimelinePlot` draws a horizontal progress timeline with one checkpoint
+    per timeline action and an animated progress bar.
+  - `ScrollStoryController` synchronizes any `Seekable` plots with a
+    discrete story step computed by a scroll-driven UI.
+  - `Action.getText()` returns a text box's resolved title/message so the
+    narration can also be rendered outside the SVG (e.g., in scroll cards).
+
 ## 0.3.0 (2026-09-24)
 
 ### Fixed

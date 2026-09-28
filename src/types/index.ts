@@ -16,3 +16,4 @@ export * from './TextBoxProps';
 export * from './AnimationType';
 export * from './CategoricalEvent';
 export * from './Playable';
+export * from './Seekable';
