@@ -18,6 +18,9 @@ dist
 # production
 /build
 
+# mkdocs build output
+/site
+
 # misc
 .DS_Store
 

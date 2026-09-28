@@ -1,0 +1,87 @@
+site_name: Meta-Storyboard (MSB)
+site_description: A JavaScript/TypeScript library for scalable, interactive, and animated data visualization stories using the feature-action design pattern.
+site_url: https://saifulkhan.github.io/meta-storyboard/
+repo_url: https://github.com/saifulkhan/meta-storyboard
+repo_name: saifulkhan/meta-storyboard
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # light mode
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        # render ```mermaid blocks as live diagrams
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+# keep the pip requirements file out of the built site
+exclude_docs: |
+  requirements.txt
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Guide:
+      - Feature-Action Table: feature-action-table.md
+      - Customization & Debugging: customization.md
+  - API Design:
+      - Feature API: api/feature.md
+      - Action API: api/action.md
+      - Search & Gaussian API: api/search-gaussian.md
+      - Animated Plots API: api/plots.md
+      - Story Creation Workflow: api/workflow.md
+  - Examples: examples.md
+  - Development: development.md
+  - About: about.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/saifulkhan/meta-storyboard
+      name: Source code
+    - icon: fontawesome/brands/npm
+      link: https://www.npmjs.com/package/meta-storyboard
+      name: npm package
+    - icon: material/play-circle
+      link: https://saifulkhan.github.io/meta-storyboard-examples/
+      name: Live examples
